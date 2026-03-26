@@ -1,0 +1,31 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'staging'
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to staging
+        run: echo "TODO - SSH deploy to Hetzner staging"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'production'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to production
+        run: echo "TODO - SSH deploy to Hetzner production"

@@ -1,0 +1,79 @@
+[project]
+name = "atonota-studio"
+version = "0.1.0"
+description = "atonota Developer Studio — FastAPI + HTMX"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "sqlalchemy[asyncio]>=2.0",
+    "asyncpg>=0.30",
+    "alembic>=1.15",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.18",
+    "httpx[http2]>=0.28",
+    "celery>=5.4",
+    "redis>=5.2",
+    "structlog>=25.1",
+    "sentry-sdk[fastapi]>=2.20",
+    "slowapi>=0.1.9",
+    "sse-starlette>=2.0",
+    "strawberry-graphql[fastapi]>=0.262",
+    "instructor>=1.14",
+    "anthropic>=0.43",
+    "openai>=1.60",
+    "boto3>=1.36",
+    "resend>=2.5",
+    "pgvector>=0.3",
+    "uuid-utils>=0.10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "pytest-cov>=6.0",
+    "httpx>=0.28",
+    "testcontainers[postgres]>=4.0",
+    "ruff>=0.9",
+    "mypy>=1.14",
+    "bandit>=1.8",
+    "types-redis",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4",
+    "DTZ", "T20", "ICN", "PIE", "PT", "RSE", "RET", "SLF",
+    "SIM", "TCH", "ARG", "ERA", "PL", "TRY", "FLY", "PERF", "RUF",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "ARG", "PLR2004", "PLC0415"]
+"app/models/**" = ["RUF012"]
+"alembic/**" = ["ERA001"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.bandit]
+exclude_dirs = ["tests"]

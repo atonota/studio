@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+      - run: uv python install 3.12
+      - run: uv sync --frozen --all-extras
+      - name: Ruff check
+        run: uv run ruff check app/ tests/
+      - name: Ruff format check
+        run: uv run ruff format --check app/ tests/
+      - name: Mypy strict type check
+        run: uv run mypy app/
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: atonota
+          POSTGRES_PASSWORD: atonota_test
+          POSTGRES_DB: atonota_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+      - run: uv python install 3.12
+      - run: uv sync --frozen --all-extras
+      - name: Create DB schemas
+        run: |
+          PGPASSWORD=atonota_test psql -h localhost -U atonota -d atonota_test -c "
+            CREATE EXTENSION IF NOT EXISTS pgcrypto;
+            CREATE EXTENSION IF NOT EXISTS vector;
+            CREATE SCHEMA IF NOT EXISTS core;
+            CREATE SCHEMA IF NOT EXISTS crm;
+            CREATE SCHEMA IF NOT EXISTS tickets;
+            CREATE SCHEMA IF NOT EXISTS analytics;
+            CREATE SCHEMA IF NOT EXISTS billing;
+            CREATE SCHEMA IF NOT EXISTS audit;
+            CREATE SCHEMA IF NOT EXISTS telemetry;
+            CREATE SCHEMA IF NOT EXISTS vector;
+          "
+      - name: Run Alembic migrations
+        env:
+          DATABASE_URL: postgresql+asyncpg://atonota:atonota_test@localhost:5432/atonota_test
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: test-secret-key
+        run: uv run alembic upgrade head
+      - name: Run tests with coverage
+        env:
+          DATABASE_URL: postgresql+asyncpg://atonota:atonota_test@localhost:5432/atonota_test
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: test-secret-key
+        run: uv run pytest --cov=app --cov-fail-under=30 --cov-report=xml
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  security:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+      - run: uv python install 3.12
+      - run: uv sync --frozen --all-extras
+      - name: Bandit security scan
+        run: uv run bandit -r app/
+      - name: Semgrep scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: auto
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build Docker image (linux/amd64)
+        run: docker buildx build --platform linux/amd64 -f docker/studio.Dockerfile .
