@@ -81,21 +81,31 @@ NOT        : hx-trigger="every 30s" ile periyodik polling.
 ---
 
 ```
-ENDPOINT   : GET /api/v1/partials/shell/global-search
+ENDPOINT   : GET /api/v1/partials/shell/spotlight-search
 AUTH       : Bearer JWT (tum roller)
-RATE       : 20 req/min per user
+RATE       : 30 req/min per user
+TETIKLEME  : Cmd+K (macOS) / Ctrl+K (Windows/Linux) — Spotlight overlay
 
 QUERY
   q        : string (required, min 2 karakter)
-  scope    : string (optional: "all" | "tenants" | "workspaces" | "pages" | "settings")
+  scope    : string (optional, default: "all")
+             "all" | "tenants" | "workspaces" | "plugins" | "seo" |
+             "content" | "users" | "audit" | "pages" | "commands"
 
 RESPONSE 200
   Content-Type : text/html
-  Body         : search-results.html partial
-  Icerik       : Kategorize arama sonuclari (tenants, workspaces, sayfalar, ayarlar)
+  Body         : spotlight-results.html partial
+  Icerik       : Paneldeki HER SEYI arar — tenant, workspace, plugin, keyword,
+                 icerik sayfasi, kullanici, adaptor, audit log, bildirim, rapor,
+                 navigasyon sayfasi, hizli komut.
+                 Her kategori max 5 sonuc, relevance score ile sirali.
+                 Full-text search (tsvector) + ILIKE fallback.
 
-NOT        : Cmd+K command palette icinde hx-trigger="keyup changed delay:200ms"
-             ile debounce arama. Sonuclar kategorize gruplanir.
+NOT        : hx-trigger="keyup changed delay:150ms" ile debounce.
+             Tab tusu ile scope degistirme, ↑↓ ile gezinme, Enter ile navigasyon.
+             Son 5 arama localStorage'da saklanir.
+
+CACHE      : 30 sn (q + scope + user_id bazli)
 ```
 
 ---
@@ -157,7 +167,7 @@ RESPONSE 200
 | /api/v1/partials/shell/workspace-selector | GET | Workspace listesi | Dropdown acildiginda |
 | /api/v1/partials/shell/workspace-switch | POST | Aktif workspace degistir | Tek seferlik |
 | /api/v1/partials/shell/notification-badge | GET | Bildirim sayisi | Her 30 saniye |
-| /api/v1/partials/shell/global-search | GET | Arama sonuclari | Keystroke debounce |
+| /api/v1/partials/shell/spotlight-search | GET | Spotlight arama (Cmd+K / Ctrl+K) | Keystroke debounce 150ms |
 | /api/v1/partials/shell/breadcrumb | GET | Sayfa hiyerarsisi | Tab gecislerinde |
 | /api/v1/partials/shell/locale-switch | POST | Dil degistir | Tek seferlik |
 | /api/v1/partials/shell/user-dropdown | GET | Kullanici menusu | Sayfa yuklemede |

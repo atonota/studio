@@ -191,11 +191,32 @@ x-data="{
 
 ---
 
-## 4. CommandPalette (Cmd+K)
+## 4. SpotlightSearch (Cmd+K / Ctrl+K)
 
-**Amac**: Global arama ve hizli erisim paleti. Overlay modal, debounce arama.
+**Amac**: macOS Spotlight benzeri global arama. Paneldeki HER SEYI arayabilir:
+tenant, workspace, plugin, SEO keyword, icerik sayfasi, ayarlar, kullanici,
+audit log, bildirim, adaptor, rapor — tum moduller. Tam ekran overlay olarak acilir.
 
-**Konum**: `templates/modules/shell/partials/command-palette.html`
+**Tetikleme**: `Cmd+K` (macOS) veya `Ctrl+K` (Windows/Linux)
+**Konum**: `templates/modules/shell/partials/spotlight-search.html`
+
+**Aranabilir Kapsamlar (Paneldeki Her Sey)**:
+
+| Kategori | Kaynak | Ikon | Ornek |
+|----------|--------|------|-------|
+| Tenant'lar | core.tenants | ph-buildings | "Acme Corp" |
+| Workspace'ler | core.workspaces | ph-globe | "acme.com" |
+| Plugin'ler | core.plugins | ph-puzzle-piece | "SEO Analyzer" |
+| Kullanicilar | core.auth_users | ph-user | "admin@acme.com" |
+| Adaptorler | core.adapters | ph-plugs-connected | "WordPress REST API" |
+| SEO Keywords | analytics.keywords | ph-magnifying-glass | "organic seo tools" |
+| Icerik Sayfalari | analytics.content_pages | ph-file-text | "/blog/seo-rehberi" |
+| Audit Log | audit.events | ph-clock-counter-clockwise | "tenant.create" |
+| Bildirimler | notifications | ph-bell | "Trafik anomalisi" |
+| Raporlar | reports | ph-chart-bar | "Haftalik SEO Raporu" |
+| Sayfalar (navigasyon) | statik | ph-browsers | "SEO Dashboard" |
+| Ayarlar | statik | ph-gear | "API Anahtarlari" |
+| Komutlar (hizli aksiyon) | statik | ph-lightning | "Yeni Tenant Olustur" |
 
 **Alpine.js State**:
 ```javascript
@@ -203,12 +224,34 @@ x-data="{
     open: false,
     query: '',
     selectedIndex: 0,
+    activeScope: 'all',
     results: [],
-    recentSearches: [],
-    quickActions: [
-        { label: 'Dashboard', icon: 'ph-house', href: '/', shortcut: 'Ctrl+D' },
-        { label: 'Ayarlar', icon: 'ph-gear', href: '/settings', shortcut: 'Ctrl+,' },
-        { label: 'Yeni Tenant', icon: 'ph-plus', href: '/tenants/create', shortcut: 'Ctrl+N' },
+    resultCount: 0,
+    loading: false,
+    recentSearches: JSON.parse(localStorage.getItem('atonota_recent_searches') || '[]'),
+
+    scopes: [
+        { id: 'all',         label: 'Tumu',         icon: 'ph-magnifying-glass', shortcut: null },
+        { id: 'tenants',     label: 'Tenant',       icon: 'ph-buildings',        shortcut: null },
+        { id: 'workspaces',  label: 'Workspace',    icon: 'ph-globe',            shortcut: null },
+        { id: 'plugins',     label: 'Plugin',       icon: 'ph-puzzle-piece',     shortcut: null },
+        { id: 'seo',         label: 'SEO',          icon: 'ph-chart-line-up',    shortcut: null },
+        { id: 'content',     label: 'Icerik',       icon: 'ph-file-text',        shortcut: null },
+        { id: 'users',       label: 'Kullanici',    icon: 'ph-user',             shortcut: null },
+        { id: 'audit',       label: 'Audit Log',    icon: 'ph-clock-counter-clockwise', shortcut: null },
+        { id: 'pages',       label: 'Sayfalar',     icon: 'ph-browsers',         shortcut: null },
+        { id: 'commands',    label: 'Komutlar',     icon: 'ph-lightning',        shortcut: null },
+    ],
+
+    quickCommands: [
+        { label: 'Dashboard',         icon: 'ph-house',            href: '/',                  shortcut: 'Ctrl+D' },
+        { label: 'Ayarlar',           icon: 'ph-gear',             href: '/settings',          shortcut: 'Ctrl+,' },
+        { label: 'Yeni Tenant',       icon: 'ph-plus',             href: '/tenants/create',    shortcut: 'Ctrl+N' },
+        { label: 'Yeni Workspace',    icon: 'ph-plus-circle',      href: '/workspaces/create', shortcut: null },
+        { label: 'SEO Denetimi',      icon: 'ph-magnifying-glass', href: '/seo/audit',         shortcut: null },
+        { label: 'Icerik Analizi',    icon: 'ph-file-text',        href: '/content',           shortcut: null },
+        { label: 'Bildirimler',       icon: 'ph-bell',             href: '/notifications',     shortcut: null },
+        { label: 'AI Asistan',        icon: 'ph-robot',            href: '/ai',                shortcut: 'Ctrl+J' },
     ],
 
     toggle() {
@@ -217,6 +260,24 @@ x-data="{
             this.$nextTick(() => this.$refs.searchInput.focus());
             this.query = '';
             this.selectedIndex = 0;
+            this.activeScope = 'all';
+            this.results = [];
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    },
+
+    close() {
+        this.open = false;
+        document.body.style.overflow = '';
+    },
+
+    setScope(scopeId) {
+        this.activeScope = scopeId;
+        this.selectedIndex = 0;
+        if (this.query.length >= 2) {
+            this.$refs.searchInput.dispatchEvent(new Event('input'));
         }
     },
 
@@ -224,53 +285,166 @@ x-data="{
         if (event.key === 'ArrowDown') {
             event.preventDefault();
             this.selectedIndex = Math.min(this.selectedIndex + 1, this.totalResults - 1);
+            this.scrollToSelected();
         } else if (event.key === 'ArrowUp') {
             event.preventDefault();
             this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
+            this.scrollToSelected();
         } else if (event.key === 'Enter') {
             event.preventDefault();
             this.navigateToSelected();
         } else if (event.key === 'Escape') {
-            this.open = false;
+            this.close();
+        } else if (event.key === 'Tab') {
+            event.preventDefault();
+            // Tab ile scope degistir
+            const currentIdx = this.scopes.findIndex(s => s.id === this.activeScope);
+            const nextIdx = event.shiftKey
+                ? (currentIdx - 1 + this.scopes.length) % this.scopes.length
+                : (currentIdx + 1) % this.scopes.length;
+            this.setScope(this.scopes[nextIdx].id);
         }
     },
 
     get totalResults() {
-        return this.query ? this.results.length : this.quickActions.length;
+        return this.query.length >= 2 ? this.resultCount : this.quickCommands.length;
     },
 
     navigateToSelected() {
-        const items = this.query ? this.results : this.quickActions;
+        const items = this.query.length >= 2 ? this.results : this.quickCommands;
         if (items[this.selectedIndex]) {
+            this.saveRecentSearch(this.query || items[this.selectedIndex].label);
             window.location.href = items[this.selectedIndex].href;
         }
+    },
+
+    scrollToSelected() {
+        const el = document.querySelector('[data-spotlight-index=\"' + this.selectedIndex + '\"]');
+        if (el) el.scrollIntoView({ block: 'nearest' });
+    },
+
+    saveRecentSearch(term) {
+        if (!term || term.length < 2) return;
+        let recent = this.recentSearches.filter(r => r !== term);
+        recent.unshift(term);
+        this.recentSearches = recent.slice(0, 5);
+        localStorage.setItem('atonota_recent_searches', JSON.stringify(this.recentSearches));
+    },
+
+    clearRecent() {
+        this.recentSearches = [];
+        localStorage.removeItem('atonota_recent_searches');
     }
 }"
 
 x-init="
+    // Cmd+K (macOS) veya Ctrl+K (Windows/Linux) ile tetikle
     window.addEventListener('keydown', (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
             e.preventDefault();
             toggle();
         }
     });
-    $el.addEventListener('open-command-palette', () => toggle());
+    // Custom event ile de tetiklenebilir
+    $el.addEventListener('open-spotlight', () => toggle());
 "
 ```
 
 **HTMX Arama**:
 ```html
-<input x-ref="searchInput"
-       x-model="query"
-       hx-get="/api/v1/partials/shell/global-search"
-       hx-trigger="keyup changed delay:200ms"
-       hx-target="#search-results"
-       hx-swap="innerHTML"
-       hx-params="q"
-       name="q"
-       placeholder="Arama yapin..."
-       class="w-full bg-transparent border-0 text-white text-lg
-              placeholder-gray-500 focus:ring-0 focus:outline-none">
+<!-- Spotlight overlay -->
+<div x-show="open"
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     @click.self="close()"
+     class="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-sm
+            flex items-start justify-center pt-[15vh]">
+
+    <!-- Spotlight card -->
+    <div class="w-full max-w-2xl bg-gray-800 rounded-2xl shadow-2xl
+                border border-gray-700 overflow-hidden"
+         @click.outside="close()"
+         @keydown="handleKeydown($event)">
+
+        <!-- Arama input -->
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-700">
+            <i class="ph ph-magnifying-glass text-xl text-gray-400"></i>
+            <input x-ref="searchInput"
+                   x-model="query"
+                   hx-get="/api/v1/partials/shell/spotlight-search"
+                   hx-trigger="keyup changed delay:150ms"
+                   hx-target="#spotlight-results"
+                   hx-swap="innerHTML"
+                   hx-params="q,scope"
+                   hx-vals="js:{scope: activeScope}"
+                   hx-indicator="#spotlight-spinner"
+                   name="q"
+                   type="text"
+                   autocomplete="off"
+                   placeholder="Panelde ara... tenant, workspace, SEO, icerik, ayarlar..."
+                   class="w-full bg-transparent border-0 text-white text-lg
+                          placeholder-gray-500 focus:ring-0 focus:outline-none">
+            <div id="spotlight-spinner" class="htmx-indicator">
+                <svg class="animate-spin h-5 w-5 text-blue-400" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor"
+                            stroke-width="4" fill="none" opacity="0.25"/>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+                </svg>
+            </div>
+            <kbd class="hidden sm:inline-flex items-center gap-1 px-2 py-1
+                        bg-gray-700 text-gray-400 text-xs rounded border border-gray-600">
+                ESC
+            </kbd>
+        </div>
+
+        <!-- Scope tabs (kategori filtreleri) -->
+        <div class="flex items-center gap-1 px-4 py-2 border-b border-gray-700
+                    overflow-x-auto scrollbar-hide">
+            <template x-for="scope in scopes" :key="scope.id">
+                <button @click="setScope(scope.id)"
+                        :class="activeScope === scope.id
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-700 text-gray-400 hover:text-gray-200'"
+                        class="flex items-center gap-1.5 px-3 py-1 rounded-full
+                               text-sm whitespace-nowrap transition-colors">
+                    <i class="ph" :class="scope.icon"></i>
+                    <span x-text="scope.label"></span>
+                </button>
+            </template>
+        </div>
+
+        <!-- Sonuclar alani -->
+        <div id="spotlight-results"
+             class="max-h-[50vh] overflow-y-auto overscroll-contain">
+            <!-- HTMX ile doldurulur -->
+            <!-- Bos durum: son aramalar + hizli komutlar gosterilir -->
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-between px-4 py-2
+                    border-t border-gray-700 text-sm text-gray-500">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1">
+                    <kbd class="px-1.5 py-0.5 bg-gray-700 rounded text-xs">↑↓</kbd> gezin
+                </span>
+                <span class="flex items-center gap-1">
+                    <kbd class="px-1.5 py-0.5 bg-gray-700 rounded text-xs">Enter</kbd> ac
+                </span>
+                <span class="flex items-center gap-1">
+                    <kbd class="px-1.5 py-0.5 bg-gray-700 rounded text-xs">Tab</kbd> kapsam
+                </span>
+            </div>
+            <span x-show="resultCount > 0"
+                  x-text="resultCount + ' sonuc'"
+                  class="text-gray-500"></span>
+        </div>
+    </div>
+</div>
+```
 ```
 
 **Flowbite Ref**: Modal > Search modal

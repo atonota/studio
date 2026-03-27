@@ -104,13 +104,13 @@ NOT: 30 saniye aralikla polling yapilir.
 
 ---
 
-## 3. Global Arama (Command Palette)
+## 3. Spotlight Search (Cmd+K / Ctrl+K)
 
 ```
 Konum       : templates/modules/shell/partials/command-palette.html
 Element     : <input x-ref="searchInput" name="q">
 Trigger     : hx-trigger="keyup changed delay:200ms"
-Method      : hx-get="/api/v1/partials/shell/global-search"
+Method      : hx-get="/api/v1/partials/shell/spotlight-search"
 Target      : hx-target="#search-results"
 Swap        : hx-swap="innerHTML"
 Params      : hx-params="q"
@@ -275,7 +275,7 @@ NOT: Mobil menu HTMX kullanmaz cunku sidebar icerigi zaten
 |------|---------|----------|--------|------|---------|
 | Sidebar yukle | load | GET sidebar-nav | #sidebar-nav | innerHTML | Hayir |
 | Bildirim badge | load + every 30s | GET notification-badge | #notification-badge-container | innerHTML | 30s |
-| Global arama | keyup delay:200ms | GET global-search?q= | #search-results | innerHTML | Hayir |
+| Spotlight Search | Cmd+K/Ctrl+K, keyup delay:150ms | GET spotlight-search?q=&scope= | #spotlight-results | innerHTML | Hayir |
 | Workspace liste | intersect once | GET workspace-selector | #workspace-list | innerHTML | Hayir |
 | Workspace ara | keyup delay:300ms | GET workspace-selector?search= | #workspace-list | innerHTML | Hayir |
 | Workspace sec | click | POST workspace-switch | — | HX-Redirect | Hayir |

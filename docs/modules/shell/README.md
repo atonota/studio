@@ -48,7 +48,7 @@ Shell bir sayfa degil, layout'tur. Asagidaki alanlari icerir:
 | Topbar | Ust kenar, 64px | Arama, bildirimler, kullanici dropdown |
 | Breadcrumb | Topbar altinda | Sayfa hiyerarsisi |
 | Content Area | Ortada | Modullerin sayfa icerigi buraya gelir |
-| Command Palette | Overlay | Cmd+K ile acilir, global arama |
+| Spotlight Search | Overlay | Cmd+K / Ctrl+K ile acilir — paneldeki HER SEYI arar (tenant, workspace, plugin, SEO, icerik, kullanici, audit, komut) |
 | Footer | Alt kenar | Versiyon, destek linki (opsiyonel) |
 
 ## Responsive Davranis
@@ -75,7 +75,7 @@ studio/
       user-dropdown.html     <- kullanici menu dropdown
       workspace-selector.html <- workspace secici
       notification-badge.html <- bildirim sayaci
-      command-palette.html   <- Cmd+K arama
+      spotlight-search.html  <- Cmd+K / Ctrl+K Spotlight arama (paneldeki her seyi arar)
       locale-selector.html   <- dil secici (TR/EN/DE/FR/ES)
       mobile-menu.html       <- mobil hamburger menu overlay
     components/
