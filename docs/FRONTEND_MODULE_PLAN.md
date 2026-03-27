@@ -3,6 +3,7 @@
 > Enterprise-grade, modüler monolit mimari. Her modül bağımsız olarak aktif/pasif yapılabilir,
 > ileride ayrı paket olarak çıkarılabilir (Drupal modülü, WP plugin, Shopify app gibi).
 > Tek panel, rol bazlı görünürlük. Çoklu dil (TR, EN, DE, FR, ES).
+> **Mobile-first design & coding.** Spotlight Search (Cmd+K / Ctrl+K).
 
 ---
 
@@ -35,11 +36,30 @@ studio/
 | AN | Analyst | Analiz + rapor, yazma sınırlı |
 | VW | Viewer | Salt okunur |
 
+### Mobile-First Tasarım Kuralları (Zorunlu)
+
+```
+1. CSS: mobile-first yazılır — min-width media query (Tailwind default)
+   DOGRU:  class="block md:flex lg:grid-cols-3"  (mobilden başla, büyüt)
+   YANLIS: class="grid-cols-3 md:grid-cols-2 sm:block"  (desktop'tan küçült)
+
+2. Layout: tek kolon mobile default, md: 2 kolon, lg: 3+ kolon
+3. Touch target: min 44x44px (tüm tıklanabilir alanlar)
+4. Font-size: min 15px (base.html'de enforce edilir)
+5. Sidebar: mobile'da gizli, hamburger ile overlay açılır
+6. Tablolar: mobile'da kart görünümüne dönüşür
+7. Modal/Overlay: mobile'da tam ekran (max-w yerine inset-0)
+8. Formlar: input'lar w-full, butonlar w-full (mobile), inline (desktop)
+9. Spacing: mobile p-4, tablet p-6, desktop p-8
+10. Spotlight Search: mobile'da tam ekran overlay, input auto-focus
+11. Test: her modül mobile viewport'ta (375px) test edilmeli
+```
+
 ### Ortak Pattern'ler
 
 **HTMX**: Skeleton loading, cursor pagination, inline validation, periyodik yenileme, SSE streaming
 **Alpine.js**: Modal, tab, dropdown, form state, toggle
-**ECharts**: CDN, server'dan JSON config döner client render eder
+**ECharts**: CDN, server'dan JSON config döner client render eder, mobile'da responsive resize
 
 ---
 

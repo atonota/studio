@@ -33,6 +33,35 @@
             font-size: 1.25em;
             vertical-align: middle;
         }
+
+        /* Mobile-first: touch targets min 44px */
+        a, button, [role="button"], input[type="checkbox"], input[type="radio"] {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        /* Mobile-first: tables -> cards on small screens */
+        @media (max-width: 767px) {
+            .responsive-table { display: block; }
+            .responsive-table thead { display: none; }
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 0.5rem;
+                border: 1px solid #374151;
+                border-radius: 0.5rem;
+                padding: 0.75rem;
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.25rem 0;
+                border: none;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: 500;
+                color: #9ca3af;
+            }
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
