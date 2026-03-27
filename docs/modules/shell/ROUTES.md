@@ -1,0 +1,163 @@
+# shell — Route Haritasi
+
+> Shell modulu sayfa route'u icermez — partial endpoint'ler saglar.
+> Tum partial'lar authenticated kullanici gerektirir.
+
+---
+
+## Partial Endpoint'leri (HTMX)
+
+```
+ENDPOINT   : GET /api/v1/partials/shell/sidebar-nav
+AUTH       : Bearer JWT (tum roller)
+RATE       : 30 req/min per user
+
+RESPONSE 200
+  Content-Type : text/html
+  Body         : sidebar-nav.html partial
+  Icerik       : Rol bazli filtrelenmis navigasyon menusu
+
+CACHE      : 5 dk (kullanici + rol bazli ETag)
+NOT        : Sayfa yukleme sirasinda shell layout icinden hx-get ile cagirilir.
+             Rol degisirse (ornegin SA tenant'a gecis yaparsa) yeniden cekilir.
+```
+
+---
+
+```
+ENDPOINT   : GET /api/v1/partials/shell/workspace-selector
+AUTH       : Bearer JWT (SA, TO, TA)
+RATE       : 10 req/min per user
+
+QUERY
+  search   : string (optional, workspace arama)
+
+RESPONSE 200
+  Content-Type : text/html
+  Body         : workspace-selector.html partial
+  Icerik       : Erisim yetkisi olan workspace listesi, aktif workspace isaretli
+
+NOT        : Dropdown acildiginda hx-get ile yukler. Arama yaparken
+             hx-trigger="keyup changed delay:300ms" ile filtreleme yapar.
+```
+
+---
+
+```
+ENDPOINT   : POST /api/v1/partials/shell/workspace-switch
+AUTH       : Bearer JWT (SA, TO, TA)
+RATE       : 10 req/min per user
+
+REQUEST
+  workspace_uid : UUID (body, required)
+
+RESPONSE 200
+  Header   : HX-Redirect: / (dashboard'a yonlendir)
+  Cookie   : active_workspace={uid}; HttpOnly; Secure; SameSite=Lax
+
+ERRORS
+  403  FORBIDDEN   : bu workspace'e erisiniz yok
+  404  NOT_FOUND   : workspace bulunamadi
+
+AUDIT      : audit.events (action="shell.workspace_switch", workspace_uid)
+```
+
+---
+
+```
+ENDPOINT   : GET /api/v1/partials/shell/notification-badge
+AUTH       : Bearer JWT (tum roller)
+RATE       : 60 req/min per user
+
+RESPONSE 200
+  Content-Type : text/html
+  Body         : notification-badge.html partial
+  Icerik       : Okunmamis bildirim sayisi badge'i
+
+NOT        : hx-trigger="every 30s" ile periyodik polling.
+             Sayi 0 ise badge gizli, > 99 ise "99+" gosterir.
+```
+
+---
+
+```
+ENDPOINT   : GET /api/v1/partials/shell/global-search
+AUTH       : Bearer JWT (tum roller)
+RATE       : 20 req/min per user
+
+QUERY
+  q        : string (required, min 2 karakter)
+  scope    : string (optional: "all" | "tenants" | "workspaces" | "pages" | "settings")
+
+RESPONSE 200
+  Content-Type : text/html
+  Body         : search-results.html partial
+  Icerik       : Kategorize arama sonuclari (tenants, workspaces, sayfalar, ayarlar)
+
+NOT        : Cmd+K command palette icinde hx-trigger="keyup changed delay:200ms"
+             ile debounce arama. Sonuclar kategorize gruplanir.
+```
+
+---
+
+```
+ENDPOINT   : GET /api/v1/partials/shell/breadcrumb
+AUTH       : Bearer JWT (tum roller)
+RATE       : 30 req/min per user
+
+QUERY
+  path     : string (required, mevcut sayfa path'i: "/tenants/abc-123/users")
+
+RESPONSE 200
+  Content-Type : text/html
+  Body         : breadcrumb.html partial
+  Icerik       : Sayfa hiyerarsisi breadcrumb'i
+
+NOT        : Genellikle server-side render edilir (Jinja2 macro).
+             Ancak HTMX tab gecislerinde partial olarak guncellenebilir.
+```
+
+---
+
+```
+ENDPOINT   : POST /api/v1/partials/shell/locale-switch
+AUTH       : Bearer JWT (tum roller)
+RATE       : 5 req/min per user
+
+REQUEST
+  locale   : string (body, required: "tr" | "en" | "de" | "fr" | "es")
+
+RESPONSE 200
+  Header   : HX-Refresh: true (tam sayfa yenileme — dil degistigi icin)
+  Cookie   : locale={code}; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000
+
+AUDIT      : audit.events (action="shell.locale_switch", locale)
+```
+
+---
+
+```
+ENDPOINT   : GET /api/v1/partials/shell/user-dropdown
+AUTH       : Bearer JWT (tum roller)
+RATE       : 10 req/min per user
+
+RESPONSE 200
+  Content-Type : text/html
+  Body         : user-dropdown.html partial
+  Icerik       : Kullanici adi, avatar, rol, tenant adi, cikis butonu, ayarlar linki
+```
+
+---
+
+## Ozet Tablo
+
+| Endpoint | Method | Amac | Polling |
+|----------|--------|------|---------|
+| /api/v1/partials/shell/sidebar-nav | GET | Rol bazli menu | Sayfa yuklemede |
+| /api/v1/partials/shell/workspace-selector | GET | Workspace listesi | Dropdown acildiginda |
+| /api/v1/partials/shell/workspace-switch | POST | Aktif workspace degistir | Tek seferlik |
+| /api/v1/partials/shell/notification-badge | GET | Bildirim sayisi | Her 30 saniye |
+| /api/v1/partials/shell/global-search | GET | Arama sonuclari | Keystroke debounce |
+| /api/v1/partials/shell/breadcrumb | GET | Sayfa hiyerarsisi | Tab gecislerinde |
+| /api/v1/partials/shell/locale-switch | POST | Dil degistir | Tek seferlik |
+| /api/v1/partials/shell/user-dropdown | GET | Kullanici menusu | Sayfa yuklemede |
