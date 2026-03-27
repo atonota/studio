@@ -8,6 +8,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+    <style>
+        /* atonota Global Rules */
+        /* Min font-weight: 300 (light). Never thinner. */
+        * { font-weight: max(var(--tw-font-weight, inherit), 300) !important; }
+        body { font-weight: 300; }
+        h1, h2, h3, h4, h5, h6, th, strong, b, .font-bold, .font-semibold, .font-medium {
+            font-weight: revert !important;
+        }
+
+        /* Min font-size: 15px. Never smaller. */
+        body { font-size: 15px; line-height: 1.6; }
+        p, span, a, li, td, th, label, input, select, textarea, button, div {
+            font-size: max(inherit, 15px);
+        }
+        /* Exceptions: badges, tags keep slightly smaller but still readable */
+        .badge-sm, [class*="rounded-full"][class*="px-2"] {
+            font-size: 13px !important;
+        }
+
+        /* Phosphor Icons: ensure visibility */
+        .ph, [class*="ph-"] {
+            font-size: 1.25em;
+            vertical-align: middle;
+        }
+    </style>
     {% block head %}{% endblock %}
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">

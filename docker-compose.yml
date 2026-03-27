@@ -26,5 +26,42 @@ services:
       timeout: 5s
       retries: 5
 
+  # WordPress dev environment
+  wp-db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - wpdbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  wordpress:
+    image: wordpress:6.7-php8.3
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: wp-db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wpdata:/var/www/html
+      - ../core-plugin:/var/www/html/wp-content/plugins/atonota-core
+      - ../client-panel:/var/www/html/wp-content/plugins/atonota-core/client-panel
+    depends_on:
+      wp-db:
+        condition: service_healthy
+
 volumes:
   pgdata:
+  wpdbdata:
+  wpdata:

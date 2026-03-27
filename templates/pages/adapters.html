@@ -1,0 +1,45 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Adaptörler — atonota Studio{% endblock %}
+
+{% block content %}
+<div class="flex h-screen">
+    {% include "partials/sidebar.html" %}
+
+    <main class="flex-1 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Adaptörler</h2>
+                <p class="text-gray-500 dark:text-gray-400">Platform bağlantı durumları</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-5 shadow border border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">WordPress</h3>
+                    <span class="px-2 py-1 text-sm rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Aktif</span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">İlk platform adaptörü</p>
+                <p class="text-sm text-gray-400">Versiyon: 0.1.0</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-5 shadow border border-gray-200 dark:border-gray-700 opacity-50">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Shopify</h3>
+                    <span class="px-2 py-1 text-sm rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400">Yakında</span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">E-ticaret platform adaptörü</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-5 shadow border border-gray-200 dark:border-gray-700 opacity-50">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Drupal</h3>
+                    <span class="px-2 py-1 text-sm rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400">Yakında</span>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">CMS platform adaptörü</p>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
