@@ -129,10 +129,20 @@
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                                                                          │
-│  [☰]    Dashboard > Tenant'lar > Acme Corp.     [🔍 Ara... Cmd+K] [🔔3] [👤▼]│
-│  ^hamb   ^breadcrumb (clickable links)           ^arama     ^badge ^user │
+│ [Logo] [Brand ◀] [☰]  Breadcrumb...       [🔍 Cmd+K]  [🔔3]  [👤▼]      │
+│  96px   280px  ^toggle ^breadcrumb          ^arama    ^badge  ^user     │
+│        +collapse                                                        │
+│        butonu                                                            │
+│        (margin-                                                          │
+│        left:auto)                                                        │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
+
+Wide-Toggle [◀]:
+  - Topbar Brand cell icinde, margin-left:auto ile saga yaslenmis
+  - Desktop only (min-width 900px)
+  - Ikon: ph-caret-left, collapse durumunda 180 derece donus
+  - Tiklaninca: sidebar collapse/expand (GSAP animasyon)
 
 Hamburger [☰]:
   - Desktop: gizli
