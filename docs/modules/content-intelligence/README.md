@@ -62,6 +62,59 @@ oradan alinir. Ancak odak noktasi "sayfa icerigi" dir, "anahtar kelime" degil.
   icerik yapilandirma onerileri, schema markup onerisi.
 - `sse-starlette` ile server-sent events.
 
+### 6. Schema Markup Uretim Motoru
+- 20+ schema tipi destegi: Article, Product, FAQ, HowTo, LocalBusiness, Event, Recipe, Review, Organization, BreadcrumbList, VideoObject vb.
+- Gorsel JSON-LD editor: form-based UI ile schema olusturma, onizleme ve dogrulama.
+- URL crawl ile auto-populate: hedef URL taranir, sayfa iceriginden schema alanlari otomatik doldurulur.
+- Rakip schema import: rakip URL'lerin mevcut schema markup'ini ceker, analiz eder ve kendi sitenize uyarlanmis halde sunar.
+- **Olcekte uretim**: SEMrush ve Ahrefs sadece mevcut schema'yi tespit eder — uretim yapmaz. atonota schema'yi hem tespit eder hem uretir. Bu kritik bir farklilastiricidir.
+
+### 7. llms.txt Generator
+- Sitenin en onemli iceriklerini LLM'ler icin optimize edilmis markdown dosyasinda kurator.
+- `llms.txt` standardi: AI arama motorlarina "bu siteyi anlamak icin bunlari oku" diyen yapilandirilmis dosya.
+- Otomatik icerik secimi (skor, trafik, guncellik) + manuel kuratorluk imkani.
+- Yoast'in Mart 2026 lansmani ile populer olan ozellik — standalone SaaS'ta hicbir rakipte yok.
+
+### 8. Schema Aggregation Endpoint
+- Tum site entity'lerini tek API endpoint'te toplar.
+- Site genelindeki tum schema markup'larini birlestirerek LLM'lerin ve arama motorlarinin site yapisini butunsel olarak anlamasini saglar.
+- Yoast'in Mart 2026 lansmani ile paralel gelistirme — ayni konsept, platform-agnostik implementasyon.
+- Endpoint: `GET /api/v1/content/schema-aggregate` -> site geneli entity graph.
+
+### 9. AI Icerik Tespiti
+- Sayfadaki AI-uretilmis icerik oranini tespit eder (NLP-based classifier).
+- AI icerik orani ile ranking performansi arasinda korelasyon analizi.
+- Trend takibi: site genelinde AI icerik oraninin zaman icindeki degisimi.
+- Ahrefs Site Audit'te mevcut olan ozellik — SEMrush ve Moz'da henuz yok. Erken hareket avantaji.
+- Cikti: `{ai_content_ratio: float, confidence: float, segments: list[{text: str, is_ai: bool}]}`
+
+### 10. Readability Analysis
+- Flesch-Kincaid, cumle uzunlugu, pasif yapi orani, gecis kelimeleri analizi.
+- 20+ dil destegi — **Turkce DAHIL** (Turkce icin ozel cumle yapisal analiz kurallari).
+- Yoast'in acik kaynak okunabilirlik motoru (YoastSEO.js) uzerine insa, Python'a port edilmis ve genisletilmis.
+- Icerik puanlama motorunun `score_readability` boyutu bu analiz uzerine kuruludur.
+- Hedef kitle bazli okunabilirlik seviyesi onerisi (ilkokul / ortaokul / lise / universite / profesyonel).
+
+### 11. Orphaned Content Tespiti
+- Contextual ic link'i olmayan (yetim) icerik tespiti.
+- Crawler bazli link graph analizi: site genelinde tum dahili linkleri tarar, graph olusturur.
+- Yetim sayfalar = graph'ta incoming edge'i olmayan veya sadece sitemap/menu'den erisilebilen sayfalar.
+- Onceliklendirme: trafik potansiyeli yuksek yetim sayfalar once gosterilir.
+- Oneri: hangi sayfalardan link verilmesi gerektigi (anlam benzerligi + trafik verisine gore).
+
+### 12. Bot Blocker / AI Crawler Yonetimi
+- AI botlarini (GPTBot, CCBot, Google-Extended, anthropic-ai, Bytespider vb.) toggle ile yonetme onerisi.
+- `robots.txt` rule ureteci: secilen bot'lar icin otomatik robots.txt bloklari olusturur.
+- Mevcut robots.txt analizi: hangi bot'larin engellendigi, hangi sayfalarin korunmadigi.
+- **Analiz ve oneri uretir — dosya degistirmez** (NEVER_BUILD kurali).
+
+### 13. Content Decay + Refresh Workflow
+- Icerigin bozunma (decay) trendini tespit: trafik dususu, siralama kaybi, CTR azalmasi.
+- Refresh onceliklendirme: etki potansiyeli * bozunma hizi formuluyle siralama.
+- AI-destekli yenileme onerileri: hangi bolumlerin guncellenmesi, hangi bilgilerin eklenmesi gerektigi.
+- Yenileme sonrasi performans takibi: refresh yapilan iceriklerin sonraki 30/60/90 gun performansi.
+- Mevcut `decay_service.py` uzerine insa edilir, workflow katmani eklenir.
+
 ## Sayfalar
 
 | Sayfa | Route | Aciklama |

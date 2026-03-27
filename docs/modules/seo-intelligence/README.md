@@ -55,6 +55,48 @@ otomatik degisiklik yapmaz (NEVER_BUILD kurali).
 - Benzer sitelerin SERP gorunurluk verilerini karsilastirir.
 - LLM ile "kuvvetli yonler / zayif yonler / firsatlar" ozeti olusturur.
 
+### 6. GEO Entegrasyonu (Generative Engine Optimization)
+- AI arama motorlarinda gorunurluk takibi: ChatGPT, Gemini, Perplexity, Copilot, Claude, Meta AI.
+- Klasik SERP siralama verileriyle birlesik dashboard'da sunulur (ayri modul degil).
+- AI arama sonuclarinda markanin ne siklikta ve hangi baglamda gorundugunu izler.
+- Geleneksel SEO metrikleriyle yan yana karsilastirma imkani.
+
+### 7. AI Citability Skoru
+- Icerigin AI tarafindan cite edilme olasiligini tahmin eden predictive scoring.
+- NLP analizi (yapisal netlik, kaynak guvenirliligi, fact density) + LLM test pipeline (icerik parcasini AI'lara sorarak gercek citation oranini olcer).
+- Cikti: `{citability_score: int (0-100), factors: list[str], improvement_tips: list[str]}`
+- Icerik optimizasyonu icin aksiyonlanabilir oneriler uretir.
+
+### 8. Prompt Arastirma
+- 90M+ prompt database uzerinden keyword planner seviyesinde prompt discovery.
+- Kullanicilarin AI arama motorlarinda ne sordugunu analiz eder.
+- Prompt hacmi, trend, kategori ve niyet siniflandirmasi.
+- Icerik stratejisini AI arama cagina uyarlamak icin temel veri kaynagi.
+
+### 9. AI Overview Prediction
+- Hangi query'lerin Google AI Overview (SGE) tetikleyecegini ML ile tahmin eder.
+- Ozellikler: query tipi, SERP ozellikleri, icerik formati, rekabet yogunlugu.
+- Icerik stratejisini AI Overview gorunurlugune gore seklillendirir.
+- Binary siniflandirma: `{will_trigger: bool, confidence: float, contributing_factors: list[str]}`
+
+### 10. Entity SEO
+- Knowledge Graph araclari: entity extraction, NER (Named Entity Recognition), entity iliskileri.
+- Sayfa icerigindeki entity'leri tespit eder, Google Knowledge Graph ile eslestirir.
+- Entity gap analizi: rakiplerin Knowledge Graph'ta gorunup sizin gorunmediginiz entity'ler.
+- Entity iliskileri gorsellestirme (ECharts force-directed graph).
+
+### 11. Turkce Morfoloji Zekasi
+- Bitisken yapi destegi: `otel` -> `oteller`, `otele`, `otelde`, `otelcilik` vb. morfolojik varyantlari otomatik gruplayarak keyword clustering ve icerik analizinde kullanir.
+- Morfoloji-bilincli keyword gruplama: kok ayni olan farkli cekimleri tek kume altinda toplar.
+- Arapca lehce ayirimi destegi: Korfez Arapcasi, Misir Arapcasi ve MSA (Modern Standard Arabic) icin ayri morfolojik kurallar.
+- Turkce ve Arapca icin ozel tokenizer pipeline'i (instructor + NLP kutuphaneleri).
+
+### 12. SERP Feature Tracking
+- Featured snippets, People Also Ask (PAA), Knowledge Panel, AI Overview, video carousel, image pack, local pack, shopping results vb. tum SERP ozelliklerini izler.
+- Hangi query'lerde hangi SERP ozelliklerinin gorundugunun tarihsel takibi.
+- Rakiplerle SERP ozellik karsilastirmasi.
+- SERP ozellik kazanma/kaybetme trend analizi.
+
 ## Sayfalar
 
 | Sayfa | Route | Aciklama |
@@ -67,6 +109,34 @@ otomatik degisiklik yapmaz (NEVER_BUILD kurali).
 | Denetim Detay | `/seo/audit/{scan_id}` | Tekil denetim sonucu detayi |
 | Backlink'ler | `/seo/backlinks` | Backlink tablosu, referring domain grafigi |
 | SERP Ozellikleri | `/seo/serp` | SERP ozellik analizi (featured snippet, PAA vb.) |
+
+### Veri Saglayici Katmani
+
+| Saglayici | Rol | Kapsam |
+|-----------|-----|--------|
+| **DataForSEO** | Birincil veri omurgasi | SERP verileri, keyword metrikleri (hacim, zorluk, CPC), backlink profili, on-page analiz. Pay-as-you-go fiyatlandirma. Turkiye ve MENA bolgesinde genis kapsam. |
+| **Google GSC API** | Birinci-taraf performans verisi | Gercek gosterim, tiklanma, CTR, ortalama pozisyon. Sitenin kendi verisi — ek maliyet yok. |
+| **Google PSI API** | Core Web Vitals | LCP, FID/INP, CLS metrikleri. Teknik SEO denetiminde kullanilir. |
+| **Moz API** | Domain Authority & Link metrikleri | DA/PA skorlari, spam score. Backlink kalite degerlendirmesinde yardimci veri kaynagi. |
+| **Majestic API** | Trust Flow & Citation Flow | Backlink guvenirliligi ve baglanti kalitesi analizi. Referring domain profilleme. |
+
+DataForSEO birincil tercihtir: SERP, keyword, backlink ve on-page verilerinin tamami tek saglayicidan alinir. Diger kaynaklar tamamlayici ve dogrulama amacli kullanilir.
+
+### Stratejik Farklilastiriclar
+
+Bu modul, atonota platformunun **1 numarali rekabet avantajidir**. Sebebleri:
+
+1. **GEO + SEO birlesik gorunum**: Hicbir rakip (Ahrefs, SEMrush, Moz) geleneksel SEO ve AI arama motorlari gorunurlugunu tek panoda sunmuyor. atonota bunu seo-intelligence icinde birlesik olarak sunar.
+
+2. **AI Citability — yeni metrik kategorisi**: Icerigin AI tarafindan referans alinma olasiligini olcen predictive scoring, pazarda henuz standart degil. Erken hareket avantaji.
+
+3. **Turkce/MENA morfoloji zekasi**: Bitisken dil yapilarina ozel morfolojik analiz, global rakiplerin hicbirinde yok. Turkiye ve Arap pazarlarinda kritik farklilastirici.
+
+4. **Prompt arastirma**: Keyword planner'in AI cagi karsiligi. Kullanicilarin AI'lara ne sordugunu anlamak, gelecek 5 yilda SEO'nun temel taslaridan biri olacak.
+
+5. **DataForSEO maliyet avantaji**: Pay-as-you-go model, SEMrush/Ahrefs'in yuksek sabit maliyetlerine karsi olceklenebilir maliyet yapisi saglar. Ayni veri kalitesi, daha dusuk TCO.
+
+6. **Entity SEO**: Knowledge Graph odakli entity analizi, icerigi arama motorlarinin anlam katmaninda konumlandirmaya yardimci olur — cok az rakipte bu derinlikte mevcut.
 
 ## Temel Kurallar
 

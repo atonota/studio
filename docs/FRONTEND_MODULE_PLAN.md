@@ -126,18 +126,35 @@ BREAKPOINT HARİTASI:
 - **Bağımlılık**: workspace-manager
 
 ### 07. seo-intelligence ⭐
-- **Amaç**: Keyword araştırma, sıralama takibi, site denetim, backlink, SERP
-- **AI**: Keyword intent sınıflandırma, topic clustering (pgvector), sıralama tahminleme, teknik SEO önceliklendirme, rekabet analizi özeti
-- **Sayfalar**: /seo, /seo/keywords, /seo/keywords/{id}/cluster, /seo/rankings, /seo/audit, /seo/backlinks, /seo/serp
-- **ECharts**: Line (sıralama trendi), bubble/force (kümeler), radar (SEO sağlık), heatmap (pozisyon dağılımı), treemap (kaynak)
+- **Amaç**: Keyword araştırma, sıralama takibi, site denetim, backlink, SERP, GEO+SEO birleşik tracking
+- **AI**: Keyword intent sınıflandırma, topic clustering (pgvector), sıralama tahminleme, teknik SEO önceliklendirme, rekabet analizi özeti, AI citability skoru, AI Overview prediction (ML modeli), Türkçe morfoloji zekası (bitişken yapı: otel→oteller/otele/otelde)
+- **GEO+SEO Birleşik** (P0 seviyesinde, ayrı modül değil):
+  - 6 LLM platformu izleme (ChatGPT, Gemini, Perplexity, Copilot, Claude, Meta AI)
+  - AI citasyon takibi + cite edilme olasılık skoru
+  - Prompt araştırma (90M+ prompt database, DataForSEO)
+  - AI Overview prediction — hangi sorguların AIO tetikleyeceğini tahmin
+  - SERP feature tracking (featured snippets, PAA, AIO, knowledge panel)
+- **Entity SEO**: Entity extraction, Knowledge Graph araçları, NER tabanlı entity ilişkileri
+- **Veri Omurgası**: DataForSEO API (birincil — keyword, SERP, backlink, on-page)
+- **Sayfalar**: /seo, /seo/keywords, /seo/keywords/{id}/cluster, /seo/rankings, /seo/audit, /seo/backlinks, /seo/serp, /seo/geo, /seo/geo/mentions, /seo/geo/prompts, /seo/geo/citability, /seo/entities, /seo/entities/{id}/graph
+- **ECharts**: Line (sıralama trendi), bubble/force (kümeler), radar (SEO sağlık + GEO motor bazlı), heatmap (pozisyon dağılımı + sorgu×motor), treemap (kaynak), network graph (entity ilişkileri)
 - **Roller**: SA/TO/TA/AN→tam, VW→salt okunur
 - **Bağımlılık**: workspace-manager, adapter-registry
 
 ### 08. content-intelligence ⭐
-- **Amaç**: İçerik skorlama, bozunma tespiti, semantik harita, gap analizi
-- **AI**: İçerik puanlama motoru, bozunma tahmini, embedding similarity haritası, schema markup önerisi, AI iyileştirme önerileri
-- **Sayfalar**: /content, /content/pages, /content/pages/{id}, /content/gaps, /content/decay, /content/semantic-map
-- **ECharts**: Gauge (skor), scatter (semantik harita), line (bozunma trendi), sankey (gap akışı)
+- **Amaç**: İçerik skorlama, bozunma tespiti, semantik harita, gap analizi, schema markup ölçekte üretim, AI içerik tespiti, readability analizi
+- **AI**: İçerik puanlama motoru, bozunma tahmini, embedding similarity haritası, schema markup önerisi, AI iyileştirme önerileri, AI content detection + ranking korelasyonu, readability analizi (20+ dil, Türkçe dahil)
+- **Schema & Structured Data**:
+  - JSON-LD generator (20+ schema tipi, görsel editör)
+  - Rakip schema import (URL crawl ile)
+  - Schema Aggregation Endpoint (tüm site entity'leri tek API'de)
+  - Schema validasyon + zengin sonuç önizleme
+- **llms.txt Generator**: Crawl → trafik/backlink/freshness analizi → llms.txt üretimi
+- **Content Decay & Refresh**: Bozunma tespiti + yenileme workflow, öncelik sıralama
+- **Orphaned Content Tespiti**: Crawler tabanlı link graph analizi, iç link'i olmayan sayfa tespiti
+- **Bot Blocker Önerisi**: AI crawler yönetimi, robots.txt/CDN rule üreteci (öneri motoru — icra değil)
+- **Sayfalar**: /content, /content/pages, /content/pages/{id}, /content/gaps, /content/decay, /content/semantic-map, /content/schema, /content/schema/generator, /content/schema/aggregation, /content/llms-txt, /content/orphaned, /content/readability, /content/ai-detection
+- **ECharts**: Gauge (skor + readability), scatter (semantik harita), line (bozunma trendi), sankey (gap akışı), bar (AI content % vs ranking korelasyonu)
 - **Roller**: SA/TO/TA/AN→tam, VW→salt okunur (AI öneri isteyemez)
 - **Bağımlılık**: seo-intelligence
 
@@ -166,7 +183,7 @@ BREAKPOINT HARİTASI:
 
 ---
 
-## P1 — ÖNEMLİ (9 Modül)
+## P1 — ÖNEMLİ (13 Modül)
 
 ### 12. billing
 - **Amaç**: Plan seçimi, fatura, ödeme yöntemi, upgrade/downgrade, kullanım kotası
@@ -190,10 +207,16 @@ BREAKPOINT HARİTASI:
 - **Bağımlılık**: workspace-manager
 
 ### 15. geo-intelligence ⭐
-- **Amaç**: AI arama motorlarında görünürlük takibi (GEO)
-- **AI**: TAMAMI AI — ChatGPT/Gemini/Perplexity/Copilot'ta marka izleme, duygu analizi, citation tracking
-- **Sayfalar**: /geo, /geo/queries, /geo/mentions, /geo/competitors, /geo/recommendations
-- **ECharts**: Radar (motor bazlı), line (trend), heatmap (sorgu×motor), bar (rakip)
+- **Amaç**: Derinlemesine GEO analizi — platform-spesifik optimizasyon, AI citasyon widget, prompt araştırma ileri seviye, sentiment analizi
+- **Not**: Temel GEO+SEO birleşik tracking P0 seo-intelligence modülüne taşındı (gap analizindeki #1 fırsat). Bu modül ileri seviye GEO özellikleri için kalıyor.
+- **AI**: TAMAMI AI — 6 LLM platformu derin analizi (ChatGPT, Gemini, Perplexity, Copilot, Claude, Meta AI), platform-spesifik optimizasyon (ChatGPT ansiklopedik, Perplexity güncellik), Brand Radar benzeri sentiment analizi, AI citasyon widget
+- **Derinlik Özellikleri**:
+  - Platform-spesifik content score (her LLM'in tercih ettiği içerik yapısına göre)
+  - AI citasyon widget (site embed için)
+  - Prompt araştırma ileri filtreler + trend analizi
+  - GEO noktaçözüm konsolidasyonu (Profound, Evertune, Gauge, Otterly.ai gibi araçların sunduğu verileri tek panelde)
+- **Sayfalar**: /geo, /geo/queries, /geo/mentions, /geo/competitors, /geo/recommendations, /geo/platforms, /geo/platforms/{id}, /geo/sentiment, /geo/citation-widget
+- **ECharts**: Radar (motor bazlı), line (trend), heatmap (sorgu×motor), bar (rakip), gauge (platform-spesifik skor)
 - **Bağımlılık**: seo-intelligence
 
 ### 16. report-builder ⭐
@@ -225,38 +248,70 @@ BREAKPOINT HARİTASI:
 - **Bağımlılık**: workspace-manager
 
 ### 20. competitive-intelligence
-- **Amaç**: Rakip strateji analizi, pazar payı, erken uyarı
-- **AI**: Haftalık rakip özeti, erken uyarı sistemi, SWOT otomatik üretimi
-- **Sayfalar**: /competitors, /competitors/{id}, /competitors/compare, /competitors/alerts, /competitors/strategy
-- **ECharts**: Radar (çoklu rakip), line (trend karşılaştırma), treemap
+- **Amaç**: Rakip strateji analizi, pazar payı, erken uyarı, teknoloji profilleme
+- **AI**: Haftalık rakip özeti, erken uyarı sistemi, AI SWOT otomatik üretimi, pazar payı tahmini
+- **Ek Yetenekler**:
+  - Teknoloji profilleme (BuiltWith API entegrasyonu — rakibin tech stack'i)
+  - AI SWOT otomatik üretimi (SEO + GEO + içerik + teknik veriden)
+  - Pazar payları tahmini (SimilarWeb benzeri clickstream analizi)
+- **Sayfalar**: /competitors, /competitors/{id}, /competitors/compare, /competitors/alerts, /competitors/strategy, /competitors/{id}/tech-stack, /competitors/{id}/swot, /competitors/market-share
+- **ECharts**: Radar (çoklu rakip), line (trend karşılaştırma), treemap, stacked bar (pazar payı), network (tech stack)
+- **Bağımlılık**: seo-intelligence
+
+### 21. entity-seo
+- **Amaç**: Knowledge Graph araçları, entity extraction, entity ilişkileri, NER + graph DB
+- **AI**: NER tabanlı entity çıkarma, entity ilişki haritası, Knowledge Graph optimizasyon önerileri, entity gap analizi
+- **Sayfalar**: /entities, /entities/extract, /entities/{id}, /entities/graph, /entities/gaps, /entities/knowledge-panel
+- **ECharts**: Network graph (entity ilişkileri), treemap (entity kategorileri), sankey (entity akışı)
+- **Bağımlılık**: seo-intelligence, content-intelligence
+
+### 22. schema-engine
+- **Amaç**: Schema markup ölçekte üretim, 20+ schema tipi, JSON-LD editor, rakip schema import, Schema Aggregation Endpoint
+- **AI**: URL crawl ile auto-populate, schema öneri motoru, rakip schema analizi, validasyon + zengin sonuç önizleme
+- **Sayfalar**: /schema, /schema/generator, /schema/templates, /schema/{id}/edit, /schema/import, /schema/aggregation, /schema/validate
+- **ECharts**: Bar (schema tipi dağılımı), gauge (schema sağlık skoru)
+- **Bağımlılık**: content-intelligence
+
+### 23. marketplace-seo
+- **Amaç**: Trendyol/Hepsiburada/Amazon marketplace SEO (Turkiye ozel)
+- **AI**: Marketplace keyword araştırma, ürün listeleme optimizasyonu, rakip ürün analizi, fiyat pozisyon önerisi
+- **Sayfalar**: /marketplace, /marketplace/products, /marketplace/products/{id}, /marketplace/keywords, /marketplace/competitors, /marketplace/optimization
+- **ECharts**: Line (ürün sıralama trendi), bar (kategori performans), radar (listeleme sağlık skoru)
+- **Bağımlılık**: seo-intelligence
+
+### 24. local-seo
+- **Amaç**: Yerel dizin yönetimi, GBP monitor, map rank tracker, Türk dizinleri
+- **AI**: Yerel sıralama tahmin, GBP optimizasyon önerileri, yerel rakip analizi, dizin tutarlılık skoru
+- **Sayfalar**: /local, /local/locations, /local/locations/{id}, /local/rankings, /local/directories, /local/gbp, /local/reviews
+- **ECharts**: Map (yerel sıralama grid), bar (dizin kapsam), line (review trend), gauge (NAP tutarlılık skoru)
 - **Bağımlılık**: seo-intelligence
 
 ---
 
 ## P2 — GÜZELLEŞTİRİCİ (8 Modül)
 
-### 21. pixel-intelligence
+### 25. pixel-intelligence
 - Piksel sağlık kontrolü, gizlilik uyumluluk taraması
 
-### 22. social-intelligence
+### 26. social-intelligence
 - Sosyal medya duygu analizi, trend tespiti, rakip sosyal izleme
 
-### 23. crm-intelligence
+### 27. crm-intelligence
 - Müşteri segmentasyonu, churn tahmini, CLV hesaplama
 
-### 24. ecommerce-intelligence
+### 28. ecommerce-intelligence
 - Ürün performans skoru, fiyat analizi, mevsimsellik tespiti
 
-### 25. embedding-explorer
+### 29. embedding-explorer
 - pgvector embedding görselleştirme, 2D/3D scatter, küme keşfi
 
-### 26. plugin-marketplace
+### 30. plugin-marketplace
 - Topluluk modül kataloğu, yükleme/kaldırma, değerlendirme
 
-### 27. api-explorer
+### 31. api-explorer
 - İnteraktif API dokümantasyonu, webhook yönetimi, kullanım istatistikleri
 
-### 28. telemetry-dashboard
+### 32. telemetry-dashboard
 - Plugin check-in, platform sinyal izleme, sistem sağlığı (SA only)
 
 ---
@@ -266,20 +321,69 @@ BREAKPOINT HARİTASI:
 ```
 Faz 1 (Çerçeve):     auth → shell → settings → dashboard
 Faz 2 (Yönetim):     tenant-manager → workspace-manager → adapter-registry → audit-log → notification-center
-Faz 3 (Birincil AI): seo-intelligence → content-intelligence → web-analytics
-Faz 4 (İkincil AI):  performance → geo → competitive → security
+Faz 3 (Birincil AI): seo-intelligence (GEO+SEO dahil) → content-intelligence (schema+llms.txt dahil) → web-analytics
+Faz 4 (İkincil AI):  performance → geo (ileri seviye) → competitive → security
 Faz 5 (AI Katman):   ai-command → report-builder → insight-feed → embedding-explorer
 Faz 6 (Ekosistem):   billing → plugin-marketplace → api-explorer → telemetry
-Faz 7 (Dikey):       social → crm → ecommerce → pixel
+Faz 7 (Dikey):       entity-seo → schema-engine → local-seo → marketplace-seo
+Faz 8 (Dikey 2):     social → crm → ecommerce → pixel
 ```
 
 ---
 
-## Modül Sayıları
+## Veri Sağlayıcı Katmanı (Data Provider Layer)
 
-| Öncelik | Modül Sayısı | Toplam Sayfa |
+### Faz 1 — MVP Zorunlu
+
+| Sağlayıcı | Rol | Maliyet |
+|-----------|-----|---------|
+| **DataForSEO API** | Birincil veri omurgası — keyword, SERP, backlink, on-page, prompt DB | Pay-as-you-go ($50 depozit) |
+| **Google Search Console API** | Kullanıcının kendi performans verisi, BigQuery bulk export | Ucretsiz |
+| **Google PageSpeed Insights API** | Core Web Vitals, Lighthouse verisi | Ucretsiz |
+
+### Faz 2 — Rekabetcilik
+
+| Sağlayıcı | Rol | Maliyet |
+|-----------|-----|---------|
+| **Moz API** | DA/PA metrikleri (sektor standardı) | $5/ay |
+| **Majestic API** | Trust Flow/Citation Flow, 2006'ya kadar backlink gecmisi | $49.99/ay |
+| **Google Natural Language API** | Entity extraction, sentiment analizi | Kullanıma gore |
+
+### Faz 3+ — Ileri Aşama
+
+| Sağlayıcı | Rol | Maliyet |
+|-----------|-----|---------|
+| **SimilarWeb API** | Rekabetci trafik analizi | $199/ay+ |
+| **BuiltWith API** | Teknoloji profilleme (competitive-intelligence icin) | Ozel fiyat |
+| **Common Crawl** | Ozel backlink indexi | $1K-10K+/ay compute |
+
+### Tahmini Aylık Veri Maliyetleri
+
+| Olcek | DataForSEO | Moz | Google APIs | Majestic | **Toplam** |
+|-------|-----------|-----|------------|---------|------------|
+| Startup (1K kullanıcı) | $200-500 | $20 | Ucretsiz | $100 | **$320-620** |
+| Growth (10K kullanıcı) | $2,000-5,000 | $125 | Ucretsiz | $400 | **$2,525-5,525** |
+| Scale (50K kullanıcı) | $10,000-25,000 | $500 | Ucretsiz | $400+ | **$10,900-25,900** |
+
+---
+
+## Stratejik Farklılastiriclar
+
+| # | Farklılastirici | Neden Onemli |
+|---|----------------|-------------|
+| 1 | **Ilk AI-native GEO+SEO platform** | Rakipler (SEMrush, Ahrefs) GEO'yu eklenti olarak sunuyor — atonota'da P0 seviyesinde native |
+| 2 | **Turkce/Arapca morfoloji zekası** | Hicbir global rakipte yok; bitisken dil yapisi (otel→oteller/otele/otelde) keyword gruplama ve icerik analizinde islenmiyor |
+| 3 | **Yerel para birimi fiyatlandirma** | TRY/SAR/AED secenegi hicbir global rakipte yok; Turkiye/MENA satin alma gucuyle 3-5x fiyat avantaji |
+| 4 | **White-label multi-tenant** | P0'da native mimari (tenant-manager + workspace-manager); rakiplerde ya yok ya Enterprise kilidi |
+| 5 | **SEO-to-revenue atif zinciri** | HubSpot'un en guclu yani — CRM entegrasyonu (HubSpot, Salesforce, Pipedrive) ile organik arama→gelir native takibi |
+
+---
+
+## Modul Sayıları
+
+| Oncelik | Modul Sayısı | Toplam Sayfa |
 |---------|-------------|-------------|
-| P0 | 11 | ~45 |
-| P1 | 9 | ~40 |
+| P0 | 11 (zenginlestirildi) | ~55 |
+| P1 | 13 (+4 yeni modul) | ~55 |
 | P2 | 8 | ~25 |
-| **TOPLAM** | **28** | **~110** |
+| **TOPLAM** | **32** | **~135** |
