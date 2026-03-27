@@ -13,130 +13,125 @@
 | Faz | Faz 8 (Reklam) |
 | Bagimlillik | `ad-orchestrator` |
 | Roller | `studio_admin`, `studio_editor`, `studio_analyst` |
-| ECharts | SpendHeatmap (heatmap), CampaignTreemap (treemap), PlatformComparisonLine (multi-line), ConversionFunnel (funnel), CumulativeSpendArea (stacked area), AttributionSankey (sankey) |
+| ECharts | SpendHeatmapChart (heatmap — saat x gun), CampaignTreemapChart (treemap — kampanya agaci), PlatformCompareLineChart (multi-line — platform karsilastirma), ConversionFunnelChart (funnel — donusum), CumulativeSpendChart (stacked area — kumulatif harcama), AttributionSankeyChart (sankey — attribution akisi) |
 
 ## Amac
 
-`ad-reporting` modulu, tum reklam platformlarindan gelen performans verilerini birlestirerek
-tek bir raporlama katmani sunar. Cross-platform metrik karsilastirmasi, attribution modelleme,
-white-label PDF/HTML rapor uretimi ve zamanlanmis rapor gonderimi saglar.
+`ad-reporting` modulu, `ad-orchestrator` tarafindan yonetilen tum platformlardaki reklam
+performansini birlesmis bir gorunumde sunar. Cross-platform metrik birlestirme, attribution
+modelleme, white-label rapor uretimi ve zamanlanmis rapor gonderimiyle reklam performansinin
+tek kaynagi olur.
 
-Ajans modu ile musteri bazli white-label raporlar olusturulabilir. AI destekli performans
-ozetleri dogal dil ile haftalik/aylik analiz sunar.
+Ajans modu ile white-label PDF/HTML raporlar uretilir — musteriye sunulmaya hazir formatta.
+AI destekli performans ozeti, anomali aciklama ve tahminleme yetenekleri icerir.
 
 ## AI Yetenekleri
 
 ### 1. AI Performans Ozeti
-- Dogal dil ile haftalik/aylik performans analizi uretir.
-- `instructor` + LLM ile metrik verilerinden insan-okunabilir ozet olusturulur.
-- Trend tespiti, onemli degisimler ve oncelikli aksiyonlar vurgulanir.
-- Cikti: `{summary: str, highlights: list[str], action_items: list[str], period: str}`
+- Dogal dil ile haftalik/aylik performans analizi olusturur.
+- `instructor` + LLM ile KPI degisimlerini anlamli cumlelerle ozetler.
+- Yoneticiye yonelik "executive summary" formati.
+- Cikti: `{summary: str, highlights: list[str], concerns: list[str], period: str}`
 
 ### 2. Anomali Aciklama
-- Harcama artisi, CTR dususu gibi anomalilerin nedenini AI ile aciklar.
-- `ad-orchestrator` anomali tespitini alir, raporlama katmaninda derinlemesine analiz yapar.
-- Platform degisiklikleri, mevsimsellik, rekabet etkisi gibi olasi nedenleri siralar.
-- Cikti: `{anomaly: str, root_causes: list[RootCause], confidence: float, recommendation: str}`
+- Neden harcama artti, CTR dustu vb. metriklerdeki degisimi AI ile aciklar.
+- Korelasyon analizi (mevsimsellik, rakip aksiyonu, platform algoritmasi degisikligi).
+- Her anomali icin olasi nedenler ve onerilen aksiyonlar.
+- Cikti: `{anomaly: str, explanation: str, probable_causes: list[str], recommended_actions: list[str]}`
 
 ### 3. ROAS/CPA Tahminleme
-- Gelecek 7/30 gun performans forecast uretir.
-- Gecmis veri + mevsimsellik + butce plani girislerini kullanir.
+- Gelecek 7/30 gun icin performans forecast uretir.
+- Gecmis veri trendi + mevsimsellik + butce degisiklik plani girislerine dayanir.
 - Guven araligi ile gosterim (ECharts area chart).
-- Cikti: `{metric: str, forecast_7d: ForecastPoint, forecast_30d: ForecastPoint, confidence_interval: float}`
+- Cikti: `{metric: str, forecast_7d: float, forecast_30d: float, confidence_interval: tuple[float, float]}`
 
 ### 4. Cross-Channel Karsilastirma
 - Platformlar arasi benchmark ve oneri uretir.
-- Ayni kampanya hedefi icin farkli platformlarin performansini karsilastirir.
-- Hangi platform hangi hedef icin daha etkili oldugunu analiz eder.
-- Cikti: `{comparisons: list[ChannelComparison], winner_by_metric: dict, recommendations: list[str]}`
+- Ayni kampanya hedefine sahip farkli platformlardaki performans karsilastirmasi.
+- En iyi performans gosteren platform/kampanya/ad group onerileri.
+- Cikti: `{benchmarks: list[PlatformBenchmark], recommendations: list[str], best_performer: str}`
 
 ### 5. White-Label AI Rapor
-- Musteri icin AI-generated raporlar olusturur (ajans modu).
-- Ozellestirilmis logo, renk semasi ve marka kimligi ile PDF/HTML cikti.
-- AI, raporun yonetici ozeti ve sonuc bolumlerini dogal dil ile yazar.
-- Cikti: PDF veya HTML dosyasi (S3-compatible storage'a kaydedilir).
+- Musteri icin AI-generated raporlar (ajans modu).
+- Kisisellestirilebilir sablon: logo, renk, metin tonu.
+- PDF ve HTML cikti formati.
+- LLM ile rapor yorumlari ve onerileri otomatik olusturulur.
+- Cikti: PDF/HTML dosyasi + `{report_id: UUID, format: str, generated_at: ISO8601}`
 
 ## Sync Katmanlari
 
 | Katman | Aralik | Amac |
 |--------|--------|------|
-| Real-time | 15-30 dk | Spend pacing alert'leri — butce tukenmesi erken uyari |
-| Near-real-time | 1-3 saat | Aktif kampanya metrikleri — gunluk optimizasyon kararlari |
-| Daily | 1/gun | Tam raporlama reconciliation — kesin rakamlar, attribution |
+| Real-time | 15-30 dakika | Spend pacing alerts — butce tukenmesi erken uyari |
+| Near-real-time | 1-3 saat | Aktif kampanya metrikleri — guncel performans gorunumu |
+| Daily | Gunde 1 (gece) | Tam raporlama reconciliation — kesinlesmis veriler |
 
-- Real-time katman yalnizca kritik spend metrikleri icin kullanilir (maliyet etkinligi).
-- Daily reconciliation, platform API'lerinin 24-48 saat gecikmeli kesinlestirdigi metrikler icin zorunludur.
+Her katman ayri Celery task olarak calisir. Sync sonuclari SSE ile bildirilir.
 
 ## Attribution Modelleri
 
 | Model | Aciklama |
 |-------|----------|
-| Son Tiklama | Donusumu son tiklanan kanala atar |
-| Ilk Tiklama | Donusumu ilk tiklanan kanala atar |
-| Linear | Donusumu tum temas noktalarina esit dagitir |
-| Zaman Bazli | Donusume yakin temas noktalarina daha fazla agirlik verir |
-| Data-Driven | Platform API destegi olcusunde ML-bazli attribution |
+| Son Tiklama | Donusumun tamami son tiklanan kanala atanir |
+| Ilk Tiklama | Donusumun tamami ilk temas noktasina atanir |
+| Linear | Tum temas noktalarina esit dagitim |
+| Zaman Bazli | Donusume yakin temas noktalarina daha fazla agirlik |
+| Data-Driven | Platform API destegi olcusunde ML bazli attribution |
 
-- Attribution modeli rapor bazinda secilir.
-- Data-driven attribution yalnizca yeterli donusum hacmi olan kampanyalarda aktif olur.
-
-## ECharts Gorsellestirme
-
-| Chart | Tip | Kullanim |
-|-------|-----|----------|
-| SpendHeatmap | heatmap (saat x gun) | Hangi saat/gun kombinasyonunda en cok harcama yapildigi |
-| CampaignTreemap | treemap | Kampanya agaci — butce ve performans buyukluk orani |
-| PlatformComparisonLine | multi-line | Platformlar arasi metrik karsilastirmasi (CPC, CTR, ROAS) |
-| ConversionFunnel | funnel | Gosterim -> tiklama -> donusum funnel'i |
-| CumulativeSpendArea | stacked area | Kumulatif harcama — platform bazli yigilmali alan grafigi |
-| AttributionSankey | sankey | Attribution akisi — kanal -> donusum yolu gorsellestirmesi |
+Kullanici attribution modelini rapor bazinda secebilir. Varsayilan: son tiklama.
 
 ## Sayfalar
 
 | Sayfa | Route | Aciklama |
 |-------|-------|----------|
-| Rapor Panosu | `/ads/reports` | Aktif raporlar, son olusturulan raporlar, hizli metrik ozeti |
-| Rapor Olustur | `/ads/reports/create` | Metrik secimi, tarih araligi, platform filtresi, sablon secimi |
-| Rapor Detay | `/ads/reports/{id}` | Tekil rapor goruntuleme, PDF/HTML indirme, paylasim |
-| Zamanlanmis Raporlar | `/ads/reports/schedule` | Periyodik rapor zamanlama (gunluk/haftalik/aylik) |
-| Attribution | `/ads/attribution` | Attribution model secimi, kanal bazli donusum analizi |
-| Rapor Sablonlari | `/ads/reports/templates` | Yeniden kullanilabilir rapor sablonlari (white-label dahil) |
+| Raporlar | `/ads/reports` | Rapor listesi, son olusturulan raporlar, hizli filtreler |
+| Rapor Olustur | `/ads/reports/create` | Yeni rapor olusturma (metrik secimi, tarih, platform, sablon) |
+| Rapor Detay | `/ads/reports/{id}` | Tekil rapor gorunumu (PDF/HTML onizleme, paylasim) |
+| Zamanlanmis Raporlar | `/ads/reports/schedule` | Otomatik rapor zamanlama (gunluk/haftalik/aylik) |
+| Attribution | `/ads/attribution` | Attribution modeli secimi ve cross-channel donusum analizi |
+| Rapor Sablonlari | `/ads/reports/templates` | White-label sablon yonetimi (logo, renk, metin tonu) |
 
 ## Veri Modeli (Ozet)
 
 ```
-ads.report_templates
+ads.report_metrics (TimescaleDB hypertable)
   id              BIGSERIAL PRIMARY KEY
-  uid             UUID v7 UNIQUE NOT NULL
   tenant_id       UUID NOT NULL (RLS)
-  name            VARCHAR(255) NOT NULL
-  description     TEXT
-  template_type   VARCHAR(20) NOT NULL       -- standard | white_label
-  config          JSONB NOT NULL             -- metrik secimi, layout, branding
-  branding        JSONB                      -- logo_url, colors, company_name
-  is_default      BOOLEAN DEFAULT false
-  created_at      TIMESTAMPTZ NOT NULL
-  updated_at      TIMESTAMPTZ NOT NULL
-  deleted_at      TIMESTAMPTZ
+  workspace_id    BIGINT NOT NULL
+  connection_id   BIGINT NOT NULL REFERENCES ads.platform_connections(id)
+  campaign_id     BIGINT REFERENCES ads.campaigns(id)
+  ad_group_id     BIGINT REFERENCES ads.ad_groups(id)
+  ad_id           BIGINT REFERENCES ads.ads(id)
+  recorded_at     TIMESTAMPTZ NOT NULL      -- metrik zamani
+  granularity     VARCHAR(10) NOT NULL      -- hourly | daily | weekly
+  impressions     BIGINT DEFAULT 0
+  clicks          BIGINT DEFAULT 0
+  cost            DECIMAL(12,4) DEFAULT 0
+  conversions     INTEGER DEFAULT 0
+  conversion_value DECIMAL(12,4) DEFAULT 0
+  ctr             DECIMAL(8,6)
+  cpc             DECIMAL(10,4)
+  cpa             DECIMAL(10,4)
+  roas            DECIMAL(10,4)
+  platform_data   JSONB                     -- platform-spesifik metrikler
 
-  INDEX (tenant_id, template_type)
+  INDEX (tenant_id, workspace_id, recorded_at)
+  INDEX (tenant_id, campaign_id, recorded_at)
+  INDEX (tenant_id, connection_id, granularity, recorded_at)
 
 ads.reports
   id              BIGSERIAL PRIMARY KEY
   uid             UUID v7 UNIQUE NOT NULL
   tenant_id       UUID NOT NULL (RLS)
   workspace_id    BIGINT NOT NULL
-  template_id     BIGINT REFERENCES ads.report_templates(id)
   name            VARCHAR(255) NOT NULL
-  status          VARCHAR(20) NOT NULL       -- pending | generating | completed | failed
-  date_from       DATE NOT NULL
-  date_to         DATE NOT NULL
-  platforms       JSONB NOT NULL             -- secili platformlar listesi
-  metrics         JSONB NOT NULL             -- secili metrikler listesi
-  attribution_model VARCHAR(20)              -- last_click | first_click | linear | time_decay | data_driven
-  ai_summary      TEXT                       -- AI tarafindan uretilmis ozet
-  file_url        TEXT                       -- S3 URL (PDF/HTML)
-  file_format     VARCHAR(10)                -- pdf | html
+  report_type     VARCHAR(30) NOT NULL      -- performance | attribution | comparison | custom
+  template_id     BIGINT REFERENCES ads.report_templates(id)
+  config_json     JSONB NOT NULL            -- metrik secimi, filtreler, tarih araligi
+  status          VARCHAR(20) NOT NULL      -- draft | generating | ready | failed
+  format          VARCHAR(10) NOT NULL      -- pdf | html
+  file_url        TEXT                      -- S3 URL (olusturulduysa)
+  ai_summary      TEXT                      -- LLM tarafindan uretilmis ozet
   generated_at    TIMESTAMPTZ
   created_at      TIMESTAMPTZ NOT NULL
   updated_at      TIMESTAMPTZ NOT NULL
@@ -149,65 +144,52 @@ ads.report_schedules
   id              BIGSERIAL PRIMARY KEY
   uid             UUID v7 UNIQUE NOT NULL
   tenant_id       UUID NOT NULL (RLS)
-  workspace_id    BIGINT NOT NULL
-  template_id     BIGINT NOT NULL REFERENCES ads.report_templates(id)
-  name            VARCHAR(255) NOT NULL
-  frequency       VARCHAR(20) NOT NULL       -- daily | weekly | monthly
-  day_of_week     SMALLINT                   -- 0-6 (haftalik icin)
-  day_of_month    SMALLINT                   -- 1-28 (aylik icin)
-  hour            SMALLINT NOT NULL           -- 0-23
-  recipients      JSONB                      -- e-posta alicilari
+  report_id       BIGINT NOT NULL REFERENCES ads.reports(id)
+  frequency       VARCHAR(10) NOT NULL      -- daily | weekly | monthly
+  day_of_week     SMALLINT                  -- 0-6 (haftalik icin)
+  day_of_month    SMALLINT                  -- 1-31 (aylik icin)
+  time_of_day     TIME NOT NULL
+  recipients      JSONB NOT NULL            -- e-posta listesi
   is_active       BOOLEAN DEFAULT true
-  last_run_at     TIMESTAMPTZ
-  next_run_at     TIMESTAMPTZ
+  last_sent_at    TIMESTAMPTZ
+  next_send_at    TIMESTAMPTZ
   created_at      TIMESTAMPTZ NOT NULL
   updated_at      TIMESTAMPTZ NOT NULL
   deleted_at      TIMESTAMPTZ
 
-  INDEX (tenant_id, workspace_id, is_active)
-  INDEX (next_run_at) WHERE is_active = true
+  INDEX (tenant_id, is_active, next_send_at)
 
-ads.campaign_metrics (TimescaleDB hypertable)
+ads.report_templates
   id              BIGSERIAL PRIMARY KEY
+  uid             UUID v7 UNIQUE NOT NULL
   tenant_id       UUID NOT NULL (RLS)
-  workspace_id    BIGINT NOT NULL
-  campaign_id     BIGINT NOT NULL REFERENCES ads.campaigns(id)
-  platform        VARCHAR(30) NOT NULL
-  recorded_at     TIMESTAMPTZ NOT NULL       -- metrik snapshot zamani
-  impressions     BIGINT DEFAULT 0
-  clicks          BIGINT DEFAULT 0
-  conversions     INTEGER DEFAULT 0
-  spend           DECIMAL(12,2) DEFAULT 0
-  revenue         DECIMAL(12,2) DEFAULT 0
-  ctr             DECIMAL(8,6)
-  cpc             DECIMAL(10,4)
-  cpa             DECIMAL(10,2)
-  roas            DECIMAL(10,4)
-  impression_share DECIMAL(5,4)
-  quality_score   SMALLINT
-  platform_data   JSONB                      -- platform-spesifik ek metrikler
+  name            VARCHAR(255) NOT NULL
+  logo_url        TEXT
+  primary_color   VARCHAR(7)                -- hex renk kodu
+  secondary_color VARCHAR(7)
+  tone            VARCHAR(20) DEFAULT 'professional'  -- professional | casual | executive
+  header_html     TEXT
+  footer_html     TEXT
+  is_default      BOOLEAN DEFAULT false
+  created_at      TIMESTAMPTZ NOT NULL
+  updated_at      TIMESTAMPTZ NOT NULL
+  deleted_at      TIMESTAMPTZ
 
-  INDEX (tenant_id, campaign_id, recorded_at)
-  INDEX (tenant_id, workspace_id, recorded_at)
-  INDEX (tenant_id, platform, recorded_at)
+  INDEX (tenant_id, is_default)
 
 ads.attribution_events
   id              BIGSERIAL PRIMARY KEY
   tenant_id       UUID NOT NULL (RLS)
   workspace_id    BIGINT NOT NULL
-  conversion_id   VARCHAR(100) NOT NULL
-  touchpoint_platform VARCHAR(30) NOT NULL
-  touchpoint_campaign_id BIGINT
-  touchpoint_type VARCHAR(20) NOT NULL       -- impression | click
-  touchpoint_at   TIMESTAMPTZ NOT NULL
-  conversion_at   TIMESTAMPTZ
-  conversion_value DECIMAL(12,2)
-  attribution_model VARCHAR(20) NOT NULL
-  attributed_value DECIMAL(12,2)
+  conversion_id   VARCHAR(255) NOT NULL     -- platform donusum ID
+  touchpoints     JSONB NOT NULL            -- [{platform, campaign_id, timestamp, channel}]
+  model           VARCHAR(20) NOT NULL      -- last_click | first_click | linear | time_decay | data_driven
+  attributed_value DECIMAL(12,4)
+  recorded_at     TIMESTAMPTZ NOT NULL
   created_at      TIMESTAMPTZ NOT NULL
 
-  INDEX (tenant_id, workspace_id, conversion_at)
-  INDEX (tenant_id, attribution_model, conversion_at)
+  INDEX (tenant_id, workspace_id, recorded_at)
+  INDEX (tenant_id, model, recorded_at)
 ```
 
 ## Dosya Yapisi
@@ -215,67 +197,72 @@ ads.attribution_events
 ```
 studio/
   app/api/v1/modules/ads/
-    reporting_routes.py      <- rapor sayfa + API endpoint'leri
-    reporting_schemas.py     <- ReportResponse, MetricResponse, ScheduleResponse
+    reporting_routes.py       <- raporlama sayfa + API endpoint'leri
+    reporting_schemas.py      <- ReportResponse, MetricResponse, AttributionResponse
   app/models/ads/
-    report.py                <- Report, ReportTemplate, ReportSchedule modelleri
-    campaign_metric.py       <- CampaignMetric modeli (hypertable)
-    attribution.py           <- AttributionEvent modeli
+    report_metric.py          <- ReportMetric modeli (hypertable)
+    report.py                 <- Report modeli
+    report_schedule.py        <- ReportSchedule modeli
+    report_template.py        <- ReportTemplate modeli
+    attribution_event.py      <- AttributionEvent modeli
   app/services/ads/
-    reporting_service.py     <- rapor CRUD + uretim
-    metric_service.py        <- metrik aggregasyon + cross-platform birlestirme
-    attribution_service.py   <- attribution model hesaplama
-    forecast_service.py      <- ROAS/CPA tahminleme
-    ai_summary_service.py    <- AI performans ozeti uretimi
-    pdf_generator.py         <- white-label PDF uretimi
-    schedule_service.py      <- zamanlanmis rapor yonetimi
+    reporting_service.py      <- rapor CRUD + olusturma orkestrasyonu
+    metric_aggregator.py      <- cross-platform metrik birlestirme
+    attribution_service.py    <- attribution model hesaplama
+    forecast_service.py       <- ROAS/CPA tahminleme
+    report_generator.py       <- PDF/HTML rapor uretimi
+    schedule_service.py       <- zamanlanmis rapor yonetimi
+    template_service.py       <- white-label sablon yonetimi
+    ai_summarizer.py          <- AI performans ozeti + anomali aciklama
   app/tasks/ads/
-    metric_sync.py           <- periyodik metrik cekme (real-time / near-real-time / daily)
-    report_generate.py       <- asenkron rapor uretimi
-    scheduled_report.py      <- zamanlanmis rapor tetikleme (Celery Beat)
-    spend_pacing_alert.py    <- real-time spend pacing alert
+    sync_realtime.py          <- 15-30dk spend pacing sync
+    sync_nearrealtime.py      <- 1-3 saat aktif kampanya metrikleri
+    sync_daily.py             <- gunluk reconciliation
+    generate_report.py        <- asenkron rapor uretimi
+    send_scheduled.py         <- zamanlanmis rapor gonderimi
+    run_forecast.py           <- periyodik tahmin guncelleme
   templates/modules/ads/
     pages/
       reports.html
       report-create.html
       report-detail.html
-      report-schedules.html
+      report-schedule.html
       attribution.html
       report-templates.html
     partials/
-      report-table.html
+      report-list.html
       metric-summary.html
       attribution-chart.html
-      schedule-list.html
-      ai-summary-card.html
+      forecast-chart.html
+      schedule-table.html
     components/
       spend-heatmap.html
       campaign-treemap.html
-      platform-comparison-line.html
+      platform-compare-line.html
       conversion-funnel.html
       cumulative-spend-area.html
       attribution-sankey.html
+      report-preview-card.html
       metric-kpi-card.html
-      date-range-picker.html
 ```
 
 ## Temel Kurallar
 
-- Tum rapor verileri `ads` schemasinda saklanir.
-- Metrik verileri workspace + tenant bazli (RLS zorunlu).
-- `campaign_metrics` tablosu TimescaleDB hypertable olarak olusturulur (zaman serisi optimizasyonu).
+- Tum raporlama verileri `ads` schemasinda saklanir (`ad-orchestrator` ile ayni schema).
+- Metrik verileri TimescaleDB hypertable olarak saklanir (zaman serisi optimizasyonu).
+- Rapor verileri workspace + tenant bazli (RLS zorunlu).
 - Rapor uretimi asenkron Celery task olarak calisir, SSE ile ilerleme bildirilir.
-- PDF/HTML dosyalari S3-compatible storage'a kaydedilir (boto3).
+- PDF uretimi server-side (WeasyPrint veya benzeri — frontend JS yasak).
 - Pagination: cursor-based (`created_at, id` cifti) — offset yasak.
-- Daily reconciliation, platform API gecikmelerini tolere eder (24-48 saat).
-- Zamanlanmis raporlar Celery Beat ile tetiklenir, e-posta gonderimi Resend uzerinden yapilir.
+- Zamanlanmis raporlar Celery Beat ile tetiklenir, Resend ile gonderilir.
+- Attribution hesaplamalari batch olarak calisir (real-time attribution hesaplama yok).
+- Audit log: rapor olusturma, zamanlama, paylasim gibi islemler loglanir.
 
 ## Guvenlik Notlari
 
-- Tum rapor verileri tenant-scoped (RLS zorunlu).
-- White-label raporlardaki musteri bilgileri tenant izolasyonuna tabi.
-- Rapor PDF/HTML dosyalari pre-signed URL ile sunulur (sureli erisim).
+- Tum raporlama verileri tenant-scoped (RLS zorunlu).
+- White-label sablonlardaki HTML icerik sanitize edilir (XSS korunmasi).
+- Rapor PDF/HTML dosyalari S3'te tenant-scoped prefix ile saklanir.
 - Zamanlanmis rapor alicilari tenant admin tarafindan yonetilir.
-- Metrik sync islemleri audit log'a yazilir.
-- AI ozet uretimi rate limited (instructor cagrilari: 20 req/dk per tenant).
-- Rapor olustur/guncelle/sil islemleri audit log'a yazilir.
+- LLM API cagrilari rate limited (instructor cagrilari: 20 req/dk per tenant).
+- Audit log: tum rapor islemleri audit.events tablosuna yazilir (append-only).
