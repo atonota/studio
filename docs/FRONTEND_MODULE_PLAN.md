@@ -59,13 +59,27 @@ studio/
 12. Overflow: img, video, iframe, table, pre, code → max-width: 100%
 13. Grid: 320-374px arası grid TEK kolon zorunlu (grid-template-columns: 1fr)
 
-BREAKPOINT HARİTASI:
-  320px  — iPhone 5s/SE1 (minimum desteklenen)
-  375px  — iPhone SE2/SE3, standart Android
-  768px  — Tablet (iPad mini)
-  1024px — Tablet landscape / küçük laptop
-  1280px — Desktop (tam deneyim)
+BREAKPOINT HARİTASI (genişletilmiş — docs/CROSS_PLATFORM_COMPAT.md):
+  xs:  320px  — iPhone 5s/SE1 (minimum)
+  sm:  360px  — Galaxy S, Pixel, Redmi Note
+  md:  480px  — iPhone Plus, Galaxy Ultra
+  lg:  768px  — Tablet (iPad Mini)
+  xl:  1024px — Tablet landscape / küçük laptop
+  2xl: 1280px — Desktop (tam deneyim)
+  3xl: 1536px — Wide desktop (16" Laptop)
+  4xl: 1920px — Ultra-wide (27"+ Monitör)
 ```
+
+### Cross-Platform Uyumluluk (Zorunlu)
+
+> Detay: `docs/CROSS_PLATFORM_COMPAT.md`
+
+- **Tarayıcı**: Tier 1 (Chrome 110+, Safari 16+, Firefox 115+, Edge 110+), Tier 2 (Chrome 90+, Safari 14+)
+- **Viewport**: viewport-fit=cover, 100dvh, safe-area-inset-*, iOS input 16px zoom fix
+- **PWA**: manifest.json, Service Worker, apple-mobile-web-app-capable, Capacitor-ready
+- **A11y**: WCAG 2.1 AA, kontrast 4.5:1, focus outline korunur, prefers-reduced-motion
+- **Performans**: 4G < 3s TTI, 3G < 5s, offline Service Worker cache
+- **Görsel**: SVG ikon zorunlu, srcset+sizes, WebP, font-display: swap
 
 ### Ortak Pattern'ler
 
@@ -183,7 +197,7 @@ BREAKPOINT HARİTASI:
 
 ---
 
-## P1 — ÖNEMLİ (13 Modül)
+## P1 — ÖNEMLİ (16 Modül)
 
 ### 12. billing
 - **Amaç**: Plan seçimi, fatura, ödeme yöntemi, upgrade/downgrade, kullanım kotası
@@ -286,32 +300,58 @@ BREAKPOINT HARİTASI:
 - **ECharts**: Map (yerel sıralama grid), bar (dizin kapsam), line (review trend), gauge (NAP tutarlılık skoru)
 - **Bağımlılık**: seo-intelligence
 
+### 25. ad-orchestrator ⭐
+- **Amaç**: Çok kanallı reklam kampanya yönetimi — Google Ads, Meta Ads, Microsoft Ads, TikTok Ads, LinkedIn Ads
+- **AI**: Cross-channel bütçe optimizasyonu (AI spend shifting), performans anomali tespiti, bid strategy önerisi, audience overlap analizi
+- **Sayfalar**: /ads, /ads/campaigns, /ads/campaigns/create, /ads/campaigns/{id}, /ads/adgroups, /ads/adgroups/{id}, /ads/creatives, /ads/budgets, /ads/connect
+- **ECharts**: Line (spend/ROAS trend), stacked bar (platform bazlı harcama), sankey (conversion yolu), gauge (bütçe kullanımı)
+- **Roller**: SA/TO/TA→tam, AN→salt okunur, VW→yok
+- **Bağımlılık**: workspace-manager, adapter-registry
+- **Veri Kaynağı**: Platform API'leri (Google Ads gRPC, Meta Marketing API, Microsoft Ads REST, TikTok Marketing API, LinkedIn Marketing API)
+- **NOT**: MVP'de Unified.to middleware ile write, Faz 2'de direkt API. Queue-first mimari (platform başına ayrı kuyruk).
+
+### 26. ad-reporting ⭐
+- **Amaç**: Cross-platform reklam performans raporlama, attribution, white-label rapor
+- **AI**: AI performans özeti, anomali açıklama, tahminleme (spend/ROAS forecast), doğal dil rapor
+- **Sayfalar**: /ads/reports, /ads/reports/create, /ads/reports/{id}, /ads/reports/schedule, /ads/attribution
+- **ECharts**: Heatmap (saat×gün performans), treemap (kampanya ağacı), multi-line (platform karşılaştırma), funnel (dönüşüm)
+- **Roller**: SA/TO/TA/AN→tam, VW→sınırlı
+- **Bağımlılık**: ad-orchestrator
+
+### 27. ad-automation ⭐
+- **Amaç**: Kural tabanlı reklam otomasyon motoru — if/then tetikleyiciler, otomatik bütçe kaydırma, alert
+- **AI**: Predictive budget allocation, auto-pause underperforming ads, smart bidding önerisi, A/B test önerisi
+- **Sayfalar**: /ads/rules, /ads/rules/create, /ads/rules/{id}, /ads/alerts, /ads/budget-optimizer
+- **ECharts**: Timeline (kural tetiklenme geçmişi), before/after bar (optimizasyon etkisi)
+- **Roller**: SA/TO/TA→tam, AN→salt okunur, VW→yok
+- **Bağımlılık**: ad-orchestrator, ad-reporting
+
 ---
 
 ## P2 — GÜZELLEŞTİRİCİ (8 Modül)
 
-### 25. pixel-intelligence
+### 28. pixel-intelligence
 - Piksel sağlık kontrolü, gizlilik uyumluluk taraması
 
-### 26. social-intelligence
+### 29. social-intelligence
 - Sosyal medya duygu analizi, trend tespiti, rakip sosyal izleme
 
-### 27. crm-intelligence
+### 30. crm-intelligence
 - Müşteri segmentasyonu, churn tahmini, CLV hesaplama
 
-### 28. ecommerce-intelligence
+### 31. ecommerce-intelligence
 - Ürün performans skoru, fiyat analizi, mevsimsellik tespiti
 
-### 29. embedding-explorer
+### 32. embedding-explorer
 - pgvector embedding görselleştirme, 2D/3D scatter, küme keşfi
 
-### 30. plugin-marketplace
+### 33. plugin-marketplace
 - Topluluk modül kataloğu, yükleme/kaldırma, değerlendirme
 
-### 31. api-explorer
+### 34. api-explorer
 - İnteraktif API dokümantasyonu, webhook yönetimi, kullanım istatistikleri
 
-### 32. telemetry-dashboard
+### 35. telemetry-dashboard
 - Plugin check-in, platform sinyal izleme, sistem sağlığı (SA only)
 
 ---
@@ -326,7 +366,8 @@ Faz 4 (İkincil AI):  performance → geo (ileri seviye) → competitive → sec
 Faz 5 (AI Katman):   ai-command → report-builder → insight-feed → embedding-explorer
 Faz 6 (Ekosistem):   billing → plugin-marketplace → api-explorer → telemetry
 Faz 7 (Dikey):       entity-seo → schema-engine → local-seo → marketplace-seo
-Faz 8 (Dikey 2):     social → crm → ecommerce → pixel
+Faz 8 (Reklam):      ad-orchestrator → ad-reporting → ad-automation
+Faz 9 (Dikey 2):     social → crm → ecommerce → pixel
 ```
 
 ---
@@ -357,6 +398,17 @@ Faz 8 (Dikey 2):     social → crm → ecommerce → pixel
 | **BuiltWith API** | Teknoloji profilleme (competitive-intelligence icin) | Ozel fiyat |
 | **Common Crawl** | Ozel backlink indexi | $1K-10K+/ay compute |
 
+### Reklam Platform API'leri
+
+| Sağlayıcı | Rol | Not |
+|-----------|-----|-----|
+| **Google Ads API v23.2** | gRPC + REST, GAQL sorgu dili | Standard Access gerekli (Basic yetersiz) |
+| **Meta Marketing API v25.0** | Kampanya CRUD, raporlama, webhook destekli | Score-based rate limit (BUC skoru) |
+| **Microsoft Ads API v13** | REST, kampanya yönetimi | Google Ads Import API ile hızlı geçiş |
+| **TikTok Marketing API** | Kampanya CRUD, raporlama, webhook destekli | 24 saat token ömrü, refresh zorunlu |
+| **LinkedIn Marketing API** | Kampanya yönetimi, raporlama | Günlük limit, strict review süreci |
+| **Unified.to** | Aggregator middleware — MVP faz | Read+write, zero data storage, Faz 2'de direkt API'ye geçiş |
+
 ### Tahmini Aylık Veri Maliyetleri
 
 | Olcek | DataForSEO | Moz | Google APIs | Majestic | **Toplam** |
@@ -384,6 +436,6 @@ Faz 8 (Dikey 2):     social → crm → ecommerce → pixel
 | Oncelik | Modul Sayısı | Toplam Sayfa |
 |---------|-------------|-------------|
 | P0 | 11 (zenginlestirildi) | ~55 |
-| P1 | 13 (+4 yeni modul) | ~55 |
-| P2 | 8 | ~25 |
-| **TOPLAM** | **32** | **~135** |
+| P1 | 16 (+3 reklam modulu) | ~70 |
+| P2 | 8 (yeniden numaralandirildi: 28-35) | ~25 |
+| **TOPLAM** | **35** | **~150** |

@@ -2,7 +2,13 @@
 <html lang="tr" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f9fafb">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111827">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/static/manifest.json">
     <title>{% block title %}atonota Studio{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -87,6 +93,56 @@
                 content: attr(data-label);
                 font-weight: 500;
                 color: #9ca3af;
+            }
+        }
+
+        /* === Cross-Platform Uyumluluk === */
+
+        /* iOS safe-area (notch, Dynamic Island, home indicator) */
+        .app-container {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* Dynamic viewport height (iOS 100vh bug fix) */
+        .full-height {
+            height: 100dvh;
+            height: 100vh; /* fallback */
+        }
+
+        /* Tap highlight kaldır (app hissi) */
+        * { -webkit-tap-highlight-color: transparent; }
+
+        /* Touch scroll momentum (iOS) */
+        .scrollable { -webkit-overflow-scrolling: touch; }
+
+        /* App-mode: no-select for UI elements (not content) */
+        .no-select {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* iOS input zoom prevention: min 16px for inputs */
+        @media (max-width: 767px) {
+            input, select, textarea { font-size: 16px !important; }
+        }
+
+        /* Reduced motion: respect user preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Forced colors (Windows High Contrast) */
+        @media (forced-colors: active) {
+            .badge-sm, .status-badge {
+                border: 1px solid currentColor;
             }
         }
     </style>

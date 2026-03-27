@@ -24,11 +24,17 @@ Vizyon ufku    : 2030–2035
 ## 2. PLATFORM TANIMI
 
 atonota, **WordPress öncelikli** başlayan ve **83+ web platformuna** (Shopify, Drupal,
-Magento, Webflow ve diğerleri) açılan çok platformlu bir **pazarlama zekası platformudur.**
+Magento, Webflow ve diğerleri) açılan çok platformlu bir **pazarlama zekası ve reklam
+orkestrasyon platformudur.**
 
 Platform; SEO analitiği, içerik optimizasyonu, web analitiği, performans, güvenlik, reklam
-pikselleri, sosyal medya, CRM ve e-ticaret pazarlamasını tek ekosistemde birleştirir.
-Analiz üretir — kampanya icra etmez.
+pikselleri, sosyal medya, CRM, e-ticaret pazarlamasını ve **çok kanallı reklam yönetimini**
+tek ekosistemde birleştirir. Analiz üretir ve **reklam kampanyalarını orkestre eder.**
+
+**Reklam Orkestrasyon Katmanı**: Google Ads, Meta Ads, Microsoft Ads, TikTok Ads,
+LinkedIn Ads ve diğer reklam platformlarına API üzerinden bağlanır. Kampanya oluşturma,
+bütçe optimizasyonu, performans izleme ve AI destekli cross-channel bütçe dağıtımı yapar.
+Türkiye pazarı için Trendyol/Hepsiburada marketplace reklam entegrasyonu sunar.
 
 **21 ek "walled garden" platformu** SaaS API adaptörleri üzerinden desteklenir.
 
@@ -522,21 +528,25 @@ class PlatformAdapter(Protocol):
 
 ## 15. ASLA YAPILMAYACAKLAR (NEVER BUILD)
 
-Platformun kimliği **zeka üretmek**tir — **aksiyon icra etmek** değil.
+Platformun kimliği **zeka üretmek ve reklam orkestre etmek**tir.
+Aşağıdaki alanlar kapsam dışıdır:
 
 ```
 KAPSAM DISI                 GEREKCE
 ------------------------------------------------------
-Kampanya oluşturma/gönderme HubSpot/Marketo kopyası değiliz
-Otomasyon workflow motoru   Klaviyo/ActiveCampaign kopyası değiliz
-E-posta altyapısı           SendGrid/Mailgun kopyası değiliz
+E-posta kampanya altyapısı  SendGrid/Mailgun kopyası değiliz (Resend sadece transactional)
 SMS / WhatsApp gönderimi    TCPA riski: $500-$1,500/ihlal
-A/B test icra motoru        Optimizely kopyası değiliz
 Kişiselleştirme motoru      Dynamic Yield kopyası değiliz
 Ödeme işleme                PCI DSS engeli
 Envanter/sipariş yönetimi   ERP kapsam dışı
 Canlı sohbet/helpdesk       Intercom kopyası değiliz
+Reklam kreatif üretimi      Canva/Figma kopyası değiliz (AI öneri verir, üretmez)
 ```
+
+**NOT**: Reklam kampanya yönetimi (oluşturma/düzenleme/optimizasyon) artık kapsam
+İÇİNDEDİR. Platform, reklam platformları API'leri üzerinden kampanya orkestrasyon
+yapar. Bu, HubSpot/Marketo tarzı e-posta/nurturing otomasyonundan farklıdır —
+atonota reklam bütçe optimizasyonu ve cross-channel orkestrasyon yapar.
 
 ---
 
@@ -709,3 +719,4 @@ Bu dosyayı değiştiren her geliştirici aşağıya satır ekler:
 | Tarih | Değişiklik | Geliştirici |
 |---|---|---|
 | 2026-03 | İlk sürüm — claude.md + CLAUDE2.md birleştirme + Flowbite Pro, HTMX 2, pgvector, multi-platform kapsam | karaca |
+| 2026-03 | Kapsam genişletme — reklam orkestrasyon katmanı eklendi, NEVER_BUILD güncellendi, platform tanımı revize | karaca + claude |
