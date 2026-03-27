@@ -334,6 +334,140 @@ studio/
       ad-copy-editor.html
 ```
 
+## Sosyal Medya Reklam Platformlari
+
+### Platform Karsilastirma Tablosu
+
+| Platform | Complexity | Auth | Rate Limit | Token Suresi | MVP Oncelik |
+|---|---|---|---|---|---|
+| Meta (FB+IG+WhatsApp) | Hard | OAuth 2.0 + System User | Score: 9K pts/300s (Standard) | System User: suresiz; User: 60 gun | #1 |
+| TikTok | Medium-Hard | OAuth 2.0 | ~10 QPS (app-level) | Advertiser: suresiz; Creator: 24 saat | #2 |
+| LinkedIn | Hard | OAuth 2.0 (RestLi) | Yayinlanmamis; gunluk reset | 60 gun; refresh: 365 gun | #3 |
+| Pinterest | Easy-Medium | OAuth 2.0 | 100/s; analytics: 300/min | 30 gun | #4 |
+| Snapchat | Medium | OAuth 2.0 | App: 20/s; Token: 10/s | 1 saat (kisa!) | #5 |
+| Twitter/X | Medium-Hard | OAuth 1.0a (!) | 15-dk pencere | Oturum bazli | #6 |
+| Reddit | Medium | OAuth 2.0 | ~100 QPM (tahmini) | 1 saat | #7 |
+| YouTube (Google Ads) | Hard | OAuth 2.0 + gRPC | Token bucket QPS | 1 saat; refresh: uzun omurlu | #8 |
+
+### Kampanya Hiyerarsi Esleme
+
+| Platform | Seviye 1 | Seviye 2 | Seviye 3 | Ozel Fark |
+|---|---|---|---|---|
+| Meta | Campaign | Ad Set | Ad + Creative | CBO + Advantage+ otomasyon |
+| TikTok | Campaign | Ad Group | Ad | Spark Ads + Smart+ moduler |
+| LinkedIn | Campaign Group > Campaign | Campaign | Creative | B2B hedefleme; RestLi framework |
+| Pinterest | Campaign | Ad Group | Pin Promotion | Organik pin tanitimi; katalog |
+| Snapchat | Campaign | Ad Squad | Ad + Creative | AR Lens reklamlari |
+| Twitter/X | Campaign | Line Item | Promoted Tweet | Organik tweet tanitimi |
+| Reddit | Campaign | Ad Group | Ad | Subreddit hedefleme |
+| Google/YouTube | Campaign | Ad Group | Ad | Video kampanyalari API read-only |
+
+### Token Yonetimi Mimarisi
+
+- **Unified Token Management Service**: Tum platform tokenlarini tek bir servis uzerinden yonetir.
+  Platform bazli farkli token omurlerini ve yenileme stratejilerini soyutlar.
+- **Platform Bazli Token Omurleri**:
+  - Meta System User: suresiz (en guvenilir)
+  - Meta User Token: 60 gun — 55. gunde proaktif refresh
+  - TikTok Advertiser: suresiz; Creator: 24 saat — gunluk refresh
+  - LinkedIn: 60 gun; refresh token: 365 gun
+  - Pinterest: 30 gun — 25. gunde refresh
+  - Snapchat: 1 saat — her 50 dakikada refresh (en agresif)
+  - Twitter/X: oturum bazli — her istekte imzalama (OAuth 1.0a)
+  - Reddit: 1 saat — her 50 dakikada refresh
+  - YouTube/Google: 1 saat; refresh token uzun omurlu
+- **Proaktif Refresh Zamanlama**: Celery Beat ile platform bazli refresh schedule.
+  Token suresi dolmadan once yenileme islemi tetiklenir. Basarisiz refresh'lerde
+  kullaniciya otomatik bildirim gonderilir.
+- **AES-256 Sifrelenmis Credential Store**: Tum tokenlar, refresh tokenlar ve
+  platform credential'lari AES-256 ile sifrelenmis olarak PostgreSQL'de saklanir.
+  Plain text saklama YASAK. Sifreleme anahtari /etc/app/secrets/.env'de tutulur.
+- **Redis-Backed Rate Limit Tracking**: Her platform icin ayri Redis counter'lari
+  ile rate limit izleme. Sliding window algoritmasi ile platform bazli QPS/QPM
+  limitlerine uyum saglanir. Limit asildiginda kuyruga geri itme (backpressure).
+
+### Turkiye Sosyal Medya Pazari
+
+- **58.5M sosyal medya kullanicisi** — Turkiye nufusunun %68'i aktif sosyal medya kullanicisi.
+- **Platform penetrasyonu**:
+  - Instagram: 58.5M kullanici
+  - TikTok: 40.2M kullanici
+  - YouTube: 57.5M kullanici
+  - WhatsApp: %88.6 penetrasyon (neredeyse her akilli telefonda)
+- **$1.5B+ dijital reklam pazari** — yillik %25 YoY buyume ile hizla genisliyor.
+- **3.5M+ KOBI** — dijital donusum surecinde reklam yonetim araci arayan isletmeler.
+- **Sifir yerel cok platformlu reklam araci** — Turkiye pazarinda Meta+TikTok+LinkedIn+Pinterest
+  birlestiren hicbir yerel cozum mevcut degil.
+- **Click-to-WhatsApp reklamlari kritik** — WhatsApp'in %88.6 penetrasyonu nedeniyle
+  Meta Ads uzerinden Click-to-WhatsApp kampanyalari Turkiye'de en yuksek donusum oranina sahip
+  reklam formati. Bu format icin ozel kampanya sablonu ve raporlama gerekli.
+
+### Partner Programlari
+
+| Program | Gereksinim | Fayda | Oncelik |
+|---|---|---|---|
+| Meta Business Partner | $5K (Member), $2.5M (Badged) | Yuksek rate limit, beta erisim | Zorunlu |
+| TikTok Marketing Partner | 1000+ aktif reklamveren | Oncelikli API, beta | Yuksek |
+| LinkedIn Marketing Partner | Kalite + kullanici kabulü | Ozel API'ler, yuksek limit | Orta |
+| Pinterest Marketing Partner | Ekosistem katkisi | Beta, destek | Dusuk |
+
+### Ucuncu Taraf Aggregator Stratejisi
+
+- **Unified.to**: Tek read-write aggregator ($750-3K/ay), 13+ platform destegi.
+  MVP fazinda hizli entegrasyon icin birincil middleware.
+- **Supermetrics**: Raporlama + white-label ($29-499/ay). Cross-platform raporlama
+  ve musteri raporlari icin veri cekim katmani.
+- **Airbyte Embedded**: Acik kaynak ETL. Buyuk olcekli veri aktarimi ve
+  warehouse entegrasyonu icin alternatif pipeline.
+- **Windsor.ai**: Multi-touch attribution ($19/ay). Kanal bazli atif analizi
+  ve ROAS hesaplamasi icin ek veri katmani.
+
+**Fazli Gecis Plani**:
+
+```
+Faz 1: Unified.to (hizli MVP) + Supermetrics (raporlama)
+       -> Tum platformlara tek API uzerinden erisim
+       -> White-label raporlama altyapisi hazir
+Faz 2: Direkt API entegrasyonu (Meta, TikTok)
+       -> En yuksek hacimli 2 platform icin tam kontrol
+       -> Rate limit ve ozellik kisitlamalarindan kurtulma
+Faz 3: Tam direkt entegrasyon, aggregator sadece long-tail
+       -> Top 5-6 platform direkt API
+       -> Aggregator yalnizca dusuk hacimli/nis platformlar icin
+```
+
+### MVP Insaat Sirasi
+
+```
+1. Ay 1-3:  Meta (FB+IG+WhatsApp) + Raporlama temeli
+            -> Click-to-WhatsApp kampanya destegiyle baslangic
+            -> Cross-platform raporlama altyapisi
+2. Ay 3-5:  TikTok (Smart+, Spark Ads)
+            -> Organik icerigi reklama cevirme (Spark Ads)
+            -> Smart+ otomatik optimizasyon entegrasyonu
+3. Ay 5-7:  LinkedIn (B2B)
+            -> RestLi framework adaptoru
+            -> B2B hedefleme ve lead gen kampanyalari
+4. Ay 7-9:  Pinterest + Snapchat
+            -> Katalog entegrasyonu (Pinterest)
+            -> AR Lens reklam destegi (Snapchat)
+5. Ay 9-12: Reddit + X/Twitter + Kural motoru
+            -> Subreddit hedefleme (Reddit)
+            -> Cross-platform otomatik kural motoru tamamlama
+```
+
+### Rekabet Analizi — Missing Middle
+
+- **Enterprise ($3K+/ay)**: Smartly.io, Sprinklr, Skai — buyuk ajanslara ve enterprise
+  sirketlere yonelik. Yuksek fiyat, kompleks onboarding, minimum harcama gereksinimleri.
+- **SMB ($39-179/ay)**: Madgicx, Revealbot, AdEspresso — genellikle 1-2 platform
+  (cogunlukla sadece Meta). Sinirli cross-platform yetenek.
+- **EKSIK SEGMENT**: $99-500/ay arasi cok platformlu yonetim + AI optimizasyon + white-label.
+  Bu fiyat araliginda Meta+TikTok+LinkedIn+Pinterest birlestiren, AI destekli butce
+  optimizasyonu yapan ve ajanslara white-label sunan hicbir urun mevcut degil.
+- **Turkiye'de sifir yerel rakip**: Turkce arayuz, TRY butce yonetimi, KVKK uyumu
+  ve Trendyol/Hepsiburada entegrasyonu sunan hicbir reklam yonetim platformu yok.
+
 ## Turkiye Pazari Avantaji
 
 - **Turkce UI**: Tam Turkce arayuz ve Turkce reklam metin onerileri.

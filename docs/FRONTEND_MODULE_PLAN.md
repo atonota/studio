@@ -301,14 +301,15 @@ BREAKPOINT HARİTASI (genişletilmiş — docs/CROSS_PLATFORM_COMPAT.md):
 - **Bağımlılık**: seo-intelligence
 
 ### 25. ad-orchestrator ⭐
-- **Amaç**: Çok kanallı reklam kampanya yönetimi — Google Ads, Meta Ads, Microsoft Ads, TikTok Ads, LinkedIn Ads
-- **AI**: Cross-channel bütçe optimizasyonu (AI spend shifting), performans anomali tespiti, bid strategy önerisi, audience overlap analizi
-- **Sayfalar**: /ads, /ads/campaigns, /ads/campaigns/create, /ads/campaigns/{id}, /ads/adgroups, /ads/adgroups/{id}, /ads/creatives, /ads/budgets, /ads/connect
-- **ECharts**: Line (spend/ROAS trend), stacked bar (platform bazlı harcama), sankey (conversion yolu), gauge (bütçe kullanımı)
+- **Amaç**: Çok kanallı reklam kampanya yönetimi — Google Ads, Meta Ads, Microsoft Ads, TikTok Ads, LinkedIn Ads + sosyal medya reklam platformlari (Pinterest, Snapchat, Twitter/X, Reddit, YouTube)
+- **AI**: Cross-channel bütçe optimizasyonu (AI spend shifting), performans anomali tespiti, bid strategy önerisi, audience overlap analizi, creative fatigue tespiti, Turkce reklam metin onerisi
+- **Sayfalar**: /ads, /ads/campaigns, /ads/campaigns/create, /ads/campaigns/{id}, /ads/adgroups, /ads/adgroups/{id}, /ads/creatives, /ads/budgets, /ads/connect, /ads/meta (Meta kampanya yonetimi — FB+IG+WhatsApp, Advantage+ destegi), /ads/tiktok (TikTok kampanya yonetimi — Smart+, Spark Ads), /ads/linkedin (LinkedIn kampanya yonetimi — B2B hedefleme, RestLi), /ads/pinterest (Pinterest kampanya yonetimi — katalog, pin tanitimi), /ads/snapchat (Snapchat kampanya yonetimi — AR Lens reklamlari), /ads/accounts (baglanti yonetimi — tum platform hesaplarinin OAuth durumu), /ads/whatsapp (Click-to-WhatsApp kampanya yonetimi — Turkiye pazari icin kritik), /ads/tokens (token durumu izleme — platform bazli token omru, refresh zamanlama, saglik kontrolu)
+- **ECharts**: Line (spend/ROAS trend), stacked bar (platform bazlı harcama), sankey (conversion yolu), gauge (bütçe kullanımı), treemap (spend allocation), heatmap (creative fatigue)
 - **Roller**: SA/TO/TA→tam, AN→salt okunur, VW→yok
 - **Bağımlılık**: workspace-manager, adapter-registry
-- **Veri Kaynağı**: Platform API'leri (Google Ads gRPC, Meta Marketing API, Microsoft Ads REST, TikTok Marketing API, LinkedIn Marketing API)
+- **Veri Kaynağı**: Platform API'leri (Google Ads gRPC, Meta Marketing API, Microsoft Ads REST, TikTok Marketing API, LinkedIn Marketing API, Pinterest Ads API, Snapchat Marketing API, Twitter/X Ads API, Reddit Ads API)
 - **NOT**: MVP'de Unified.to middleware ile write, Faz 2'de direkt API. Queue-first mimari (platform başına ayrı kuyruk).
+- **ONEMLI**: Meta Advantage+ ve TikTok Smart+ otomasyon modlari kampanya hiyerarsi yapisini degistirir. Advantage+ Shopping ve Smart+ kampanyalarda geleneksel ad set/ad group seviyesi daraltilmis veya kaldirilmistir. Unified Data Model bu farkli hiyerarsileri platform_data JSONB alani uzerinden desteklemelidir. Yeni platform eklendikce kampanya esleme tablosu (Kampanya Hiyerarsi Esleme) referans alinmalidir.
 
 ### 26. ad-reporting ⭐
 - **Amaç**: Cross-platform reklam performans raporlama, attribution, white-label rapor
