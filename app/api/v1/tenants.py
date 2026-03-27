@@ -9,6 +9,7 @@ RATE       : 30 req/min per tenant
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_async_session
@@ -23,7 +24,10 @@ async def create_tenant(
     data: TenantCreate,
     session: AsyncSession = Depends(get_async_session),  # noqa: B008
 ) -> TenantResponse:
-    return await tenant_service.create_tenant(session, data)
+    try:
+        return await tenant_service.create_tenant(session, data)
+    except IntegrityError:
+        raise HTTPException(status_code=409, detail="SLUG_ALREADY_EXISTS") from None
 
 
 @router.get("", response_model=TenantListResponse)

@@ -2,7 +2,7 @@ services:
   db:
     image: pgvector/pgvector:pg17
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: atonota
       POSTGRES_PASSWORD: atonota_dev
@@ -19,7 +19,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

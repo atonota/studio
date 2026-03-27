@@ -1,16 +1,14 @@
-import os
-from unittest.mock import patch
-
 from app.core.config import Settings
 
 
 def test_settings_defaults() -> None:
-    with patch.dict(os.environ, {"ENVIRONMENT": "development"}, clear=False):
-        settings = Settings(
-            DATABASE_URL="postgresql+asyncpg://test:test@localhost/test",
-            JWT_SECRET="test-secret",
-            ENVIRONMENT="development",
-        )
+    settings = Settings(
+        DATABASE_URL="postgresql+asyncpg://test:test@localhost/test",
+        JWT_SECRET="test-secret",
+        ENVIRONMENT="development",
+        DEBUG=False,
+        _env_file=None,  # type: ignore[call-arg]
+    )
     assert settings.APP_NAME == "atonota-studio"
     assert settings.APP_VERSION == "0.1.0"
     assert settings.ENVIRONMENT == "development"
