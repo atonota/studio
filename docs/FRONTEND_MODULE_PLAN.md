@@ -39,20 +39,32 @@ studio/
 ### Mobile-First Tasarım Kuralları (Zorunlu)
 
 ```
+0. MIN VIEWPORT: 320px (iPhone 5s/SE1). Yatay scroll ASLA olmaz.
+   base.html'de html { min-width: 320px; overflow-x: hidden; } enforce edilir.
+
 1. CSS: mobile-first yazılır — min-width media query (Tailwind default)
    DOGRU:  class="block md:flex lg:grid-cols-3"  (mobilden başla, büyüt)
    YANLIS: class="grid-cols-3 md:grid-cols-2 sm:block"  (desktop'tan küçült)
 
 2. Layout: tek kolon mobile default, md: 2 kolon, lg: 3+ kolon
-3. Touch target: min 44x44px (tüm tıklanabilir alanlar)
-4. Font-size: min 15px (base.html'de enforce edilir)
+3. Touch target: min 44x44px (tüm tıklanabilir alanlar, WCAG 2.5.8)
+4. Font-size: min 15px (base.html'de enforce). 320px'de 14px'e düşer.
 5. Sidebar: mobile'da gizli, hamburger ile overlay açılır
-6. Tablolar: mobile'da kart görünümüne dönüşür
+6. Tablolar: mobile'da kart görünümüne dönüşür (.responsive-table class)
 7. Modal/Overlay: mobile'da tam ekran (max-w yerine inset-0)
 8. Formlar: input'lar w-full, butonlar w-full (mobile), inline (desktop)
-9. Spacing: mobile p-4, tablet p-6, desktop p-8
+9. Spacing: 320px p-2, mobile p-4, tablet p-6, desktop p-8
 10. Spotlight Search: mobile'da tam ekran overlay, input auto-focus
-11. Test: her modül mobile viewport'ta (375px) test edilmeli
+11. Test: her modül 320px + 375px + 768px + 1280px viewport'ta test edilmeli
+12. Overflow: img, video, iframe, table, pre, code → max-width: 100%
+13. Grid: 320-374px arası grid TEK kolon zorunlu (grid-template-columns: 1fr)
+
+BREAKPOINT HARİTASI:
+  320px  — iPhone 5s/SE1 (minimum desteklenen)
+  375px  — iPhone SE2/SE3, standart Android
+  768px  — Tablet (iPad mini)
+  1024px — Tablet landscape / küçük laptop
+  1280px — Desktop (tam deneyim)
 ```
 
 ### Ortak Pattern'ler

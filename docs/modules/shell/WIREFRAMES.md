@@ -307,6 +307,53 @@ ESC tusu ile de kapanir.
 
 ---
 
+## 6b. Ultra-Kucuk Ekran (320px — iPhone 5s/SE1)
+
+```
+┌────────────────────────────┐
+│ [=] ◆atonota  [🔍] [🔔] [👤]│  <- topbar: 44px yukseklik
+├────────────────────────────┤   <- tum ikonlar 44x44 touch
+│                            │
+│  CONTENT AREA              │
+│  (p-2, tek kolon)          │
+│                            │
+│  ┌────────────────────────┐│
+│  │ KPI Kart (w-full)      ││  <- grid: 1fr (tek kolon)
+│  └────────────────────────┘│
+│  ┌────────────────────────┐│
+│  │ KPI Kart (w-full)      ││
+│  └────────────────────────┘│
+│                            │
+│  ┌────────────────────────┐│
+│  │ Tablo -> Kart gorunum  ││  <- .responsive-table
+│  │ Baslik: Acme Corp.     ││
+│  │ Plan: Pro               ││
+│  │ Durum: Aktif            ││
+│  └────────────────────────┘│
+│  ┌────────────────────────┐│
+│  │ Baslik: Beta Ltd.      ││
+│  │ Plan: Free              ││
+│  │ Durum: Aktif            ││
+│  └────────────────────────┘│
+│                            │
+│  [Daha Fazla Yukle]        │  <- w-full, h-44px
+│                            │
+└────────────────────────────┘
+ w=320px
+```
+
+320px ozel kurallar:
+- Topbar: breadcrumb GIZLI, sadece hamburger + logo + arama + badge + avatar
+- Spacing: p-2 (8px), gap-2
+- Font: body 14px (base.html @media max-width:374px)
+- Grid: her sey tek kolon (grid-template-columns: 1fr !important)
+- Butonlar: w-full, min-height 44px
+- Spotlight: tam ekran (border-radius: 0, inset-0)
+- Input'lar: font-size 16px (iOS zoom engelleme)
+- Scroll: overflow-x hidden (yatay scroll ASLA)
+
+---
+
 ## 7. Workspace Switcher Dropdown
 
 ```

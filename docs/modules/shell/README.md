@@ -58,7 +58,8 @@ Shell bir sayfa degil, layout'tur. Asagidaki alanlari icerir:
 | >= 1280px | Acik (sabit) | Gorunur | Tam desktop deneyimi |
 | 1024-1279px | Daraltilmis (icon-only, 64px) | Gorunur | Hover ile tooltip |
 | 768-1023px | Gizli (overlay) | Gorunur + hamburger | Hamburger ile acilir |
-| < 768px | Gizli (tam ekran overlay) | Kompakt | Tam ekran menu |
+| 375-767px | Gizli (tam ekran overlay) | Kompakt | Tam ekran menu |
+| 320-374px | Gizli (tam ekran overlay) | Minimal (breadcrumb gizli) | p-2, tek kolon, 14px font |
 
 ## Dosya Yapisi
 
