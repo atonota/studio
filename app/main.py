@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import text
 
-from app.api.v1 import health, tenants
+from app.api.v1 import health, plugins, tenants, workspaces
 from app.core.auth import auth_backend, fastapi_users
 from app.core.config import get_settings
 from app.core.logging import get_logger, setup_logging
@@ -56,6 +56,8 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router, prefix="/api/v1", tags=["health"])
     app.include_router(tenants.router, prefix="/api/v1/tenants", tags=["tenants"])
+    app.include_router(workspaces.router, prefix="/api/v1/workspaces", tags=["workspaces"])
+    app.include_router(plugins.router, prefix="/api/v1/plugins", tags=["plugins"])
 
     # Auth routes
     app.include_router(
