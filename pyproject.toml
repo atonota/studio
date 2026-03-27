@@ -28,6 +28,8 @@ dependencies = [
     "resend>=2.5",
     "pgvector>=0.3",
     "uuid-utils>=0.10",
+    "fastapi-users[sqlalchemy]>=14.0",
+    "bcrypt>=4.2",
 ]
 
 [project.optional-dependencies]
@@ -60,10 +62,13 @@ select = [
     "DTZ", "T20", "ICN", "PIE", "PT", "RSE", "RET", "SLF",
     "SIM", "TCH", "ARG", "ERA", "PL", "TRY", "FLY", "PERF", "RUF",
 ]
+ignore = ["RUF002"]  # Turkish characters in docstrings
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106", "ARG", "PLR2004", "PLC0415"]
 "app/models/**" = ["RUF012"]
+"app/db/**" = ["RUF012"]
+"app/core/auth.py" = ["ARG002"]
 "alembic/**" = ["ERA001"]
 
 [tool.mypy]
