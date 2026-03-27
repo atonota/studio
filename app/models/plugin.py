@@ -23,6 +23,6 @@ class Plugin(BasePKMixin, TimestampMixin, Base):
     version: Mapped[str | None] = mapped_column(String(50), nullable=True)
     category: Mapped[str | None] = mapped_column(String(100), nullable=True)
     is_public: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
-    metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
+    metadata_: Mapped[dict] = mapped_column(  # type: ignore[type-arg]
         "metadata", JSONB, server_default="{}", nullable=False
     )

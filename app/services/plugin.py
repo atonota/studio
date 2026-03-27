@@ -119,7 +119,7 @@ async def soft_delete_plugin(
     if not plugin:
         return False
 
-    plugin.deleted_at = func.now()  # type: ignore[assignment]
+    plugin.deleted_at = func.now()
     await session.commit()
     logger.info("plugin_soft_deleted", plugin_uid=str(plugin_uid))
     return True

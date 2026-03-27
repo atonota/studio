@@ -5,6 +5,7 @@ CLAUDE.md §9: JWT flow -> middleware -> SET app.current_tenant_id -> RESET ALL
 """
 
 import uuid
+from collections.abc import AsyncGenerator
 from typing import Any
 
 from fastapi import Depends, Request
@@ -27,14 +28,14 @@ logger = get_logger(__name__)
 
 async def get_user_db(
     session: AsyncSession = Depends(get_async_session),  # noqa: B008
-) -> SQLAlchemyUserDatabase:  # type: ignore[type-arg]
-    yield SQLAlchemyUserDatabase(session, UserDB, OAuthAccount)  # type: ignore[misc]
+) -> AsyncGenerator[SQLAlchemyUserDatabase[UserDB, uuid.UUID], None]:
+    yield SQLAlchemyUserDatabase(session, UserDB, OAuthAccount)
 
 
 # --- User Manager ---
 
 
-class UserManager(UUIDIDMixin, BaseUserManager[UserDB, uuid.UUID]):  # type: ignore[type-var]
+class UserManager(UUIDIDMixin, BaseUserManager[UserDB, uuid.UUID]):
     reset_password_token_secret = settings.JWT_SECRET
     verification_token_secret = settings.JWT_SECRET
 
@@ -54,9 +55,9 @@ class UserManager(UUIDIDMixin, BaseUserManager[UserDB, uuid.UUID]):  # type: ign
 
 
 async def get_user_manager(
-    user_db: SQLAlchemyUserDatabase = Depends(get_user_db),  # type: ignore[type-arg, assignment]  # noqa: B008
-) -> UserManager:  # type: ignore[misc]
-    yield UserManager(user_db)  # type: ignore[misc]
+    user_db: SQLAlchemyUserDatabase[UserDB, uuid.UUID] = Depends(get_user_db),  # noqa: B008
+) -> AsyncGenerator[UserManager, None]:
+    yield UserManager(user_db)
 
 
 # --- Auth Backend ---
@@ -65,7 +66,7 @@ async def get_user_manager(
 bearer_transport = BearerTransport(tokenUrl="/api/v1/auth/login")
 
 
-def get_jwt_strategy() -> JWTStrategy:  # type: ignore[type-arg]
+def get_jwt_strategy() -> JWTStrategy[UserDB, uuid.UUID]:
     return JWTStrategy(
         secret=settings.JWT_SECRET,
         lifetime_seconds=settings.JWT_LIFETIME_SECONDS,

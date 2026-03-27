@@ -105,7 +105,7 @@ async def soft_delete_workspace(
     if not workspace:
         return False
 
-    workspace.deleted_at = func.now()  # type: ignore[assignment]
+    workspace.deleted_at = func.now()
     await session.commit()
     logger.info("workspace_soft_deleted", workspace_uid=str(workspace_uid))
     return True

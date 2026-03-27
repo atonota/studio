@@ -76,6 +76,24 @@ python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
 
+[[tool.mypy.overrides]]
+module = [
+    "celery.*",
+    "slowapi.*",
+    "fastapi_users.*",
+    "sse_starlette.*",
+    "strawberry.*",
+    "instructor.*",
+    "resend.*",
+]
+ignore_missing_imports = true
+follow_untyped_imports = true
+
+[[tool.mypy.overrides]]
+module = ["app.tasks.*"]
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

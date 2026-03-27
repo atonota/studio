@@ -103,7 +103,7 @@ async def soft_delete_tenant(
     if not tenant:
         return False
 
-    tenant.deleted_at = func.now()  # type: ignore[assignment]
+    tenant.deleted_at = func.now()
     await session.commit()
     logger.info("tenant_soft_deleted", tenant_uid=str(tenant_uid))
     return True

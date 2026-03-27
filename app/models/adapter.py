@@ -22,6 +22,6 @@ class Adapter(BasePKMixin, TimestampMixin, Base):
     )
     platform: Mapped[str] = mapped_column(String(50), nullable=False)
     adapter_version: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    credentials: Mapped[dict] = mapped_column(JSONB, server_default="{}", nullable=False)  # type: ignore[assignment]
+    credentials: Mapped[dict] = mapped_column(JSONB, server_default="{}", nullable=False)  # type: ignore[type-arg]
     status: Mapped[str] = mapped_column(String(50), server_default="disconnected", nullable=False)
     last_health_check_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)

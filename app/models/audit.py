@@ -26,7 +26,7 @@ class AuditEvent(Base):
     action: Mapped[str] = mapped_column(String(255), nullable=False)
     resource_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
     resource_id: Mapped[uuid.UUID | None] = mapped_column(PG_UUID(as_uuid=True), nullable=True)
-    metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
+    metadata_: Mapped[dict] = mapped_column(  # type: ignore[type-arg]
         "metadata", JSONB, server_default="{}", nullable=False
     )
     ip_address: Mapped[str | None] = mapped_column(INET, nullable=True)
