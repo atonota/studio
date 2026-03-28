@@ -267,17 +267,17 @@
             <tbody>
               <template x-for="(kw, i) in pagedKeywords" :key="i">
                 <tr>
-                  <td style="font-size:0.75rem;color:var(--muted)" x-text="(kwPage-1)*kwPerPage+i+1"></td>
-                  <td style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="kw.keyword"></td>
-                  <td>
+                  <td data-label="#" style="font-size:0.75rem;color:var(--muted)" x-text="(kwPage-1)*kwPerPage+i+1"></td>
+                  <td data-label="Keyword" style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="kw.keyword"></td>
+                  <td data-label="Pozisyon">
                     <span style="padding:3px 10px;border-radius:6px;font-size:0.75rem;font-weight:700"
                       :style="kw.position <= 3 ? 'background:rgba(34,197,94,0.12);color:#22c55e' : kw.position <= 10 ? 'background:rgba(59,130,246,0.12);color:#3b82f6' : 'background:var(--surface-2);color:var(--muted)'"
                       x-text="kw.position"></span>
                   </td>
-                  <td style="font-size:0.8125rem;color:var(--text)" x-text="kw.volume.toLocaleString('tr-TR')"></td>
-                  <td style="font-size:0.8125rem;color:var(--text)" x-text="kw.traffic.toLocaleString('tr-TR')"></td>
-                  <td style="font-size:0.8125rem;color:var(--muted)" x-text="kw.trafficPct + '%'"></td>
-                  <td style="font-size:0.6875rem;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="kw.url"></td>
+                  <td data-label="Hacim" style="font-size:0.8125rem;color:var(--text)" x-text="kw.volume.toLocaleString('tr-TR')"></td>
+                  <td data-label="Trafik" style="font-size:0.8125rem;color:var(--text)" x-text="kw.traffic.toLocaleString('tr-TR')"></td>
+                  <td data-label="Trafik %" style="font-size:0.8125rem;color:var(--muted)" x-text="kw.trafficPct + '%'"></td>
+                  <td data-label="URL" style="font-size:0.6875rem;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="kw.url"></td>
                 </tr>
               </template>
             </tbody>
@@ -311,11 +311,11 @@
             <tbody>
               <template x-for="(pg, i) in pagedPages" :key="i">
                 <tr>
-                  <td style="font-size:0.75rem;color:var(--muted)" x-text="(pgPage-1)*pgPerPage+i+1"></td>
-                  <td style="font-size:0.8125rem;color:var(--accent);font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="pg.url"></td>
-                  <td style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="pg.traffic.toLocaleString('tr-TR')"></td>
-                  <td style="font-size:0.8125rem;color:var(--text)" x-text="pg.keywords"></td>
-                  <td style="font-size:0.8125rem;color:var(--text)" x-text="pg.backlinks"></td>
+                  <td data-label="#" style="font-size:0.75rem;color:var(--muted)" x-text="(pgPage-1)*pgPerPage+i+1"></td>
+                  <td data-label="URL" style="font-size:0.8125rem;color:var(--accent);font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="pg.url"></td>
+                  <td data-label="Trafik" style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="pg.traffic.toLocaleString('tr-TR')"></td>
+                  <td data-label="Keywordler" style="font-size:0.8125rem;color:var(--text)" x-text="pg.keywords"></td>
+                  <td data-label="Backlinkler" style="font-size:0.8125rem;color:var(--text)" x-text="pg.backlinks"></td>
                 </tr>
               </template>
             </tbody>
@@ -343,7 +343,7 @@
             <tbody>
               <template x-for="(comp, i) in competitors" :key="i">
                 <tr>
-                  <td>
+                  <td data-label="Domain">
                     <div style="display:flex;align-items:center;gap:8px">
                       <div style="width:28px;height:28px;border-radius:7px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
                         <i class="ph ph-globe" style="font-size:0.875rem;color:var(--muted)"></i>
@@ -351,14 +351,14 @@
                       <span style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="comp.domain"></span>
                     </div>
                   </td>
-                  <td style="font-size:0.8125rem;color:var(--accent);font-weight:600" x-text="comp.overlapKw"></td>
-                  <td>
+                  <td data-label="Ortak Keywordler" style="font-size:0.8125rem;color:var(--accent);font-weight:600" x-text="comp.overlapKw"></td>
+                  <td data-label="DR">
                     <span style="padding:3px 10px;border-radius:6px;font-size:0.75rem;font-weight:700"
                       :style="'background:'+drColor(comp.dr)+'1a;color:'+drColor(comp.dr)"
                       x-text="comp.dr"></span>
                   </td>
-                  <td style="font-size:0.8125rem;color:var(--text)" x-text="comp.traffic.toLocaleString('tr-TR')"></td>
-                  <td>
+                  <td data-label="Organik Trafik" style="font-size:0.8125rem;color:var(--text)" x-text="comp.traffic.toLocaleString('tr-TR')"></td>
+                  <td data-label="Trend">
                     <span style="display:flex;align-items:center;gap:4px;font-size:0.75rem;font-weight:600"
                       :style="comp.trend==='up' ? 'color:#22c55e' : 'color:#ef4444'">
                       <i class="ph" :class="comp.trend==='up' ? 'ph-trend-up' : 'ph-trend-down'" style="font-size:0.875rem"></i>

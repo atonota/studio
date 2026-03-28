@@ -270,8 +270,8 @@
             <tbody>
               <template x-for="(kw, idx) in paged" :key="kw.keyword + '-' + idx">
                 <tr>
-                  <td><input type="checkbox" :checked="isSelected(kw.keyword)" @change="toggleSelect(kw.keyword)" style="accent-color:var(--accent);cursor:pointer"></td>
-                  <td>
+                  <td data-label="Sec"><input type="checkbox" :checked="isSelected(kw.keyword)" @change="toggleSelect(kw.keyword)" style="accent-color:var(--accent);cursor:pointer"></td>
+                  <td data-label="Keyword">
                     <div style="display:flex;align-items:center;gap:6px">
                       <button @click="expandedRow = expandedRow === idx ? -1 : idx; $nextTick(() => initAllSparklines())" style="background:none;border:none;cursor:pointer;padding:2px">
                         <i class="ph" :class="expandedRow === idx ? 'ph-caret-down' : 'ph-caret-right'" style="font-size:0.75rem;color:var(--muted)"></i>
@@ -279,14 +279,14 @@
                       <span style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="kw.keyword"></span>
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Intent">
                     <span style="padding:3px 10px;border-radius:6px;font-size:0.6875rem;font-weight:600;letter-spacing:0.02em"
                       :style="'background:' + intentBg(kw.intent) + ';color:' + intentColor(kw.intent)"
                       x-text="kw.intent"></span>
                   </td>
-                  <td style="color:var(--text);font-weight:500;font-size:0.8125rem" x-text="kw.volume.toLocaleString('tr-TR')"></td>
-                  <td style="color:var(--text);font-size:0.8125rem" x-text="'₺' + kw.cpc.toFixed(2)"></td>
-                  <td>
+                  <td data-label="Hacim" style="color:var(--text);font-weight:500;font-size:0.8125rem" x-text="kw.volume.toLocaleString('tr-TR')"></td>
+                  <td data-label="CPC" style="color:var(--text);font-size:0.8125rem" x-text="'₺' + kw.cpc.toFixed(2)"></td>
+                  <td data-label="KD">
                     <div style="display:flex;align-items:center;gap:8px">
                       <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:60px">
                         <div :style="'width:'+kw.kd+'%;height:100%;border-radius:2px;background:'+kdColor(kw.kd)"></div>
@@ -294,7 +294,7 @@
                       <span style="font-size:0.6875rem;font-weight:600;min-width:20px" :style="'color:'+kdColor(kw.kd)" x-text="kw.kd"></span>
                     </div>
                   </td>
-                  <td>
+                  <td data-label="SERP">
                     <div style="display:flex;gap:4px;flex-wrap:wrap">
                       <template x-for="sf in kw.serpFeatures.slice(0,3)" :key="sf">
                         <span :title="sf" style="width:22px;height:22px;border-radius:5px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
@@ -303,9 +303,9 @@
                       </template>
                     </div>
                   </td>
-                  <td><div :id="'km-spark-'+idx" style="width:64px;height:24px"></div></td>
-                  <td style="color:var(--text);font-size:0.8125rem" x-text="kw.clicks.toLocaleString('tr-TR')"></td>
-                  <td style="color:var(--text);font-size:0.8125rem" x-text="'₺' + kw.trafficValue.toLocaleString('tr-TR')"></td>
+                  <td data-label="Trend"><div :id="'km-spark-'+idx" style="width:64px;height:24px"></div></td>
+                  <td data-label="Clicks" style="color:var(--text);font-size:0.8125rem" x-text="kw.clicks.toLocaleString('tr-TR')"></td>
+                  <td data-label="Traffic Value" style="color:var(--text);font-size:0.8125rem" x-text="'₺' + kw.trafficValue.toLocaleString('tr-TR')"></td>
                 </tr>
               </template>
             </tbody>

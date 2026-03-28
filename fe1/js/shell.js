@@ -36,7 +36,7 @@ const SIDEBAR_DATA = {
     {l:'Anahtar Kelime',ch:['Keyword Magic||seo-keyword-magic.html','Arastirma||seo-keywords.html','Cluster||seo-cluster.html']},
     {l:'Siralama',ch:['Pozisyon Takibi||seo-position-tracker.html','SERP Ozellikleri||seo-serp.html','Organik Arastirma||seo-organic-research.html']},
     {l:'GEO (AI Gorunurluk)',ch:['GEO Dashboard||seo-geo.html','AI Mention||seo-geo-mentions.html','Prompt Arastirma||seo-geo-prompts.html','Citability||seo-geo-citability.html']},
-    {l:'Teknik SEO',ch:['Site Denetimi||seo-audit.html','On-Page Checker||seo-onpage-checker.html','Backlink|47|seo-backlinks.html','Toplu Analiz||seo-batch-analysis.html']},
+    {l:'Teknik SEO',ch:['Site Denetimi||seo-audit.html','On-Page Checker||seo-onpage-checker.html','Backlink|47|seo-backlinks.html','Backlink Denetimi||seo-backlink-audit.html','Backlink Gap||seo-backlink-gap.html','Link Kesisim||seo-link-intersect.html','Toplu Analiz||seo-batch-analysis.html']},
     {l:'Entity SEO',ch:['Entity Hub||entities.html','Knowledge Graph||seo-entities.html']},
     {l:'Marketplace SEO',ch:['Marketplace Hub||marketplace.html']},
     {l:'Local SEO',ch:['Local Dashboard||local.html']},
@@ -44,14 +44,14 @@ const SIDEBAR_DATA = {
   content: [
     {l:'Analiz',ch:['Sayfa Listesi||content-pages.html','Content Explorer||content-explorer.html','Gap Analizi||content-gaps.html','Bozunma||content-decay.html']},
     {l:'Schema Markup',ch:['Schema Hub||schema.html','Schema Yonetimi||content-schema.html']},
-    {l:'Uretim',ch:['SEO Yazim Asistani||content-writing-assistant.html','Konu Arastirma||content-topic-research.html','llms.txt||content-llmstxt.html']},
+    {l:'Uretim',ch:['SEO Yazim Asistani||content-writing-assistant.html','Konu Arastirma||content-topic-research.html','Icerik Sablonu||content-template.html','llms.txt||content-llmstxt.html']},
     {l:'Harita',ch:['Semantik Harita||content-semantic.html','Orphaned Icerik||content-orphaned.html','Readability||content-readability.html']},
   ],
   ads: [
     {l:'Kampanyalar',ch:['Tum Kampanyalar|8|ads.html','Reklam Gruplari||ads-adgroups.html','Kreatifler||ads-creatives.html']},
     {l:'Platformlar',ch:['Meta (FB+IG)|3|ads-meta.html','TikTok|2|ads-tiktok.html','LinkedIn||ads-linkedin.html']},
     {l:'Otomasyon',ch:['Kural Motoru||ads-rules.html','Butce Yonetimi||ads-budgets.html','AI Optimizer||ads-budget-optimizer.html','Uyarilar|1|ads-alerts.html']},
-    {l:'Raporlar',ch:['Performans||ads-reports.html','Attribution||ads-attribution.html']},
+    {l:'Raporlar',ch:['Performans||ads-reports.html','Attribution||ads-attribution.html','Rakip Reklam||ads-competitor-research.html']},
     {l:'Hesap',ch:['Bagli Hesaplar||ads-accounts.html','Token Durumu||ads-tokens.html']},
   ],
   analytics: [
@@ -243,6 +243,27 @@ function getCurrentKey() {
   return m ? m[1] : 'dashboard';
 }
 
+function showToast(msg, duration) {
+  duration = duration || 2500;
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.style.cssText = 'padding:10px 20px;background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:10px;font-size:0.8125rem;font-weight:500;box-shadow:0 4px 24px rgba(0,0,0,0.25);pointer-events:auto;opacity:0;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s;';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  requestAnimationFrame(() => { toast.style.opacity = '1'; toast.style.transform = 'translateY(0)'; });
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    setTimeout(() => toast.remove(), 200);
+  }, duration);
+}
+
 function initShell(pageKey) {
   const key = pageKey || getCurrentKey();
   window.__SHELL_KEY = key; // For empty state auto-detection
@@ -258,7 +279,7 @@ function initShell(pageKey) {
     <div class="tb-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="9" height="9" rx="3" fill="var(--accent)" opacity="0.9"/><rect x="13" y="2" width="9" height="9" rx="3" fill="var(--accent)" opacity="0.5"/><rect x="2" y="13" width="9" height="9" rx="3" fill="var(--accent)" opacity="0.5"/><rect x="13" y="13" width="9" height="9" rx="3" fill="var(--accent)" opacity="0.2"/></svg></div>
     <div class="tb-brand"><span style="font-size:1.125rem;font-weight:700;color:var(--text)">atonota</span><span style="font-size:0.625rem;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.06em">Studio</span><button id="wide-toggle-tb" title="Sidebar toggle"><span class="toggle-arrow"><i class="ph ph-caret-left" style="font-size:0.75rem"></i></span></button></div>
     <div class="tb-mid"><div class="tb-search" id="tb-search-btn" title="Ctrl+K / Cmd+K"><i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:var(--muted);flex-shrink:0"></i><span style="flex:1;font-size:0.8125rem;color:var(--muted)">Ara...</span><span style="font-size:0.625rem;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-family:monospace;flex-shrink:0">⌘K</span></div></div>
-    <div class="tb-right"><button class="tb-btn notif-dot" title="Bildirimler" onclick="location.href='${base}pages/notifications.html'"><i class="ph ph-bell" style="font-size:1.25rem"></i></button><button class="tb-btn" id="theme-toggle-btn" title="Tema"><i class="ph ${theme==='dark'?'ph-sun':'ph-moon'}" style="font-size:1.25rem"></i></button><div class="avatar" id="avatar-btn">IK</div></div>`;
+    <div class="tb-right"><button class="tb-btn" title="Bildirimler" onclick="location.href='${base}pages/notifications.html'" style="position:relative"><i class="ph ph-bell" style="font-size:1.25rem"></i><span id="notif-badge" style="position:absolute;top:6px;right:6px;background:var(--accent);color:white;font-size:0.625rem;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px;"></span></button><button class="tb-btn" id="theme-toggle-btn" title="Tema"><i class="ph ${theme==='dark'?'ph-sun':'ph-moon'}" style="font-size:1.25rem"></i></button><div class="avatar" id="avatar-btn">IK</div></div>`;
 
   // Top Menu
   buildTopMenu(key);
@@ -364,7 +385,110 @@ function initShell(pageKey) {
   if(ddBtn) ddBtn.onclick = toggleTheme;
 
   window.addEventListener('keydown', (e) => {
-    if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); spotBd.classList.add('open'); document.getElementById('sp-input').focus(); }
-    if(e.key==='Escape') { spotBd.classList.remove('open'); udBd.classList.remove('show'); tmCloseAll(); }
+    const mod = e.metaKey || e.ctrlKey;
+    if(mod && e.key==='k') { e.preventDefault(); spotBd.classList.add('open'); document.getElementById('sp-input').focus(); }
+    if(e.key==='Escape') { spotBd.classList.remove('open'); udBd.classList.remove('show'); tmCloseAll(); const hm = document.getElementById('shortcuts-help-modal'); if(hm) hm.remove(); }
+
+    // Cmd/Ctrl+N — new (navigate to create page based on current section)
+    if (mod && e.key === 'n') {
+      e.preventDefault();
+      const skey = window.__SHELL_KEY;
+      const createPages = {
+        yonetim: 'tenant-create.html',
+        seo: 'seo-keyword-magic.html',
+        content: 'content-writing-assistant.html',
+        ads: 'ads-campaign-create.html',
+      };
+      if (createPages[skey]) window.location.href = base + 'pages/' + createPages[skey];
+    }
+
+    // ? — show shortcuts help modal
+    if (e.key === '?' && !e.ctrlKey && !e.metaKey && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      showShortcutsHelp();
+    }
   });
+
+  function showShortcutsHelp() {
+    if (document.getElementById('shortcuts-help-modal')) return;
+    const mac = /mac/i.test(navigator.platform);
+    const modLabel = mac ? '\u2318' : 'Ctrl+';
+    const overlay = document.createElement('div');
+    overlay.id = 'shortcuts-help-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);';
+    overlay.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 32px;min-width:340px;max-width:420px;box-shadow:0 24px 48px rgba(0,0,0,0.4);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0">Klavye Kisayollari</h3><button id="shortcuts-close" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.25rem;padding:4px"><i class="ph ph-x"></i></button></div><div style="display:flex;flex-direction:column;gap:12px">${[
+      [modLabel + 'K', 'Spotlight Arama'],
+      [modLabel + 'N', 'Yeni Olustur'],
+      ['?', 'Kisayol Yardimi'],
+      ['ESC', 'Kapat'],
+    ].map(([k,v]) => `<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--text)">${v}</span><kbd style="font-size:0.75rem;font-weight:600;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);padding:3px 10px;border-radius:6px;font-family:monospace;min-width:48px;text-align:center">${k}</kbd></div>`).join('')}</div></div>`;
+    document.body.appendChild(overlay);
+    overlay.onclick = (ev) => { if (ev.target === overlay) overlay.remove(); };
+    document.getElementById('shortcuts-close').onclick = () => overlay.remove();
+  }
+
+  // PWA manifest injection
+  if (!document.querySelector('link[rel="manifest"]')) {
+    const manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    manifestLink.href = base + 'manifest.json';
+    document.head.appendChild(manifestLink);
+  }
+
+  // --- Notification Badge Polling (every 30s) ---
+  function updateNotifBadge() {
+    const badge = document.getElementById('notif-badge');
+    if (!badge) return;
+    const count = Math.floor(Math.random() * 13); // 0-12
+    if (count === 0) {
+      badge.style.display = 'none';
+      badge.textContent = '';
+    } else {
+      badge.style.display = 'flex';
+      badge.textContent = count > 99 ? '99+' : String(count);
+    }
+  }
+  updateNotifBadge();
+  setInterval(updateNotifBadge, 30000);
+
+  // --- Workspace Switcher in Sidebar ---
+  const WORKSPACES = ['acme.com', 'shop.beta.com', 'gamma.io'];
+  let currentWorkspace = WORKSPACES[0];
+  const wsHeader = document.querySelector('#sidebar-wide .ws-header');
+  if (wsHeader) {
+    const wsSwitcher = document.createElement('div');
+    wsSwitcher.id = 'ws-switcher';
+    wsSwitcher.style.cssText = 'padding:12px 20px;background:var(--surface-2);border-radius:10px;margin:12px 16px;cursor:pointer;position:relative;';
+    function renderSwitcher() {
+      wsSwitcher.innerHTML = `<div id="ws-switcher-trigger" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-size:0.8125rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${currentWorkspace}</span><i class="ph ph-caret-down" style="font-size:0.75rem;color:var(--muted);flex-shrink:0;transition:transform 0.2s"></i></div><div id="ws-switcher-list" style="display:none;margin-top:8px;border-top:1px solid var(--border);padding-top:8px"></div>`;
+      const list = wsSwitcher.querySelector('#ws-switcher-list');
+      WORKSPACES.forEach(ws => {
+        const item = document.createElement('div');
+        item.style.cssText = 'padding:6px 0;font-size:0.8125rem;cursor:pointer;border-radius:6px;';
+        item.style.color = ws === currentWorkspace ? 'var(--accent)' : 'var(--text)';
+        item.style.fontWeight = ws === currentWorkspace ? '700' : '400';
+        item.textContent = ws;
+        item.onmouseenter = () => { if (ws !== currentWorkspace) item.style.color = 'var(--accent)'; };
+        item.onmouseleave = () => { if (ws !== currentWorkspace) item.style.color = 'var(--text)'; };
+        item.onclick = (e) => {
+          e.stopPropagation();
+          currentWorkspace = ws;
+          list.style.display = 'none';
+          wsSwitcher.querySelector('#ws-switcher-trigger .ph-caret-down').style.transform = '';
+          renderSwitcher();
+          showToast('Workspace degistirildi: ' + ws);
+        };
+        list.appendChild(item);
+      });
+    }
+    renderSwitcher();
+    wsSwitcher.querySelector('#ws-switcher-trigger').onclick = () => {
+      const list = wsSwitcher.querySelector('#ws-switcher-list');
+      const caret = wsSwitcher.querySelector('#ws-switcher-trigger .ph-caret-down');
+      const isOpen = list.style.display !== 'none';
+      list.style.display = isOpen ? 'none' : 'block';
+      caret.style.transform = isOpen ? '' : 'rotate(180deg)';
+    };
+    wsHeader.insertAdjacentElement('afterend', wsSwitcher);
+  }
 }

@@ -241,18 +241,18 @@
             <tbody>
               <template x-for="(q, qi) in questions" :key="qi">
                 <tr>
-                  <td style="font-size:0.75rem;color:var(--muted)" x-text="qi+1"></td>
-                  <td>
+                  <td data-label="#" style="font-size:0.75rem;color:var(--muted)" x-text="qi+1"></td>
+                  <td data-label="Soru">
                     <div style="display:flex;align-items:center;gap:8px">
                       <i class="ph ph-question" style="font-size:0.875rem;color:var(--accent);flex-shrink:0"></i>
                       <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="q.q"></span>
                     </div>
                   </td>
-                  <td style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="q.volume.toLocaleString('tr-TR')"></td>
-                  <td>
+                  <td data-label="Hacim" style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="q.volume.toLocaleString('tr-TR')"></td>
+                  <td data-label="Kaynak">
                     <span style="padding:3px 10px;border-radius:6px;font-size:0.625rem;font-weight:600;background:var(--surface-2);color:var(--muted)" x-text="q.source"></span>
                   </td>
-                  <td>
+                  <td data-label="Aksiyon">
                     <button @click="createContent(q.q)"
                       style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;white-space:nowrap">
                       <i class="ph ph-pencil-simple-line" style="font-size:0.75rem"></i> Icerik Olustur
@@ -278,14 +278,14 @@
             <tbody>
               <template x-for="(h, hi) in headlines" :key="hi">
                 <tr>
-                  <td style="font-size:0.75rem;color:var(--muted)" x-text="hi+1"></td>
-                  <td>
+                  <td data-label="#" style="font-size:0.75rem;color:var(--muted)" x-text="hi+1"></td>
+                  <td data-label="Baslik Onerisi">
                     <div style="display:flex;align-items:center;gap:8px">
                       <i class="ph ph-text-h-one" style="font-size:0.875rem;color:var(--accent);flex-shrink:0"></i>
                       <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="h.title"></span>
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Etkilesim Skoru">
                     <div style="display:flex;align-items:center;gap:8px">
                       <div style="width:60px;height:4px;background:var(--border);border-radius:2px">
                         <div :style="'width:'+h.engagement+'%;height:100%;border-radius:2px;background:'+engagementColor(h.engagement)"></div>
@@ -293,7 +293,7 @@
                       <span style="font-size:0.75rem;font-weight:700;min-width:24px" :style="'color:'+engagementColor(h.engagement)" x-text="h.engagement"></span>
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Aksiyon">
                     <button @click="createContent(h.title)"
                       style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;white-space:nowrap">
                       <i class="ph ph-pencil-simple-line" style="font-size:0.75rem"></i> Icerik Olustur
