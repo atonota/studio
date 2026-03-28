@@ -433,4 +433,94 @@ document.addEventListener('DOMContentLoaded', () => {
     const msg = EMPTY_MESSAGES[key] || EMPTY_MESSAGES.default;
     return `<div class="empty-state"><i class="ph ${msg.icon}"></i><h3>${msg.title}</h3><p>${msg.desc}</p></div>`;
   };
+
+  /* ── LOADING SKELETON ──────────────────────────────
+     Auto-inject skeleton shimmer on page load.
+     Shows skeleton placeholders inside #main while content loads,
+     then fades in real content.
+
+     How it works:
+     1. On DOMContentLoaded, #main children get opacity:0
+     2. Skeleton overlay is injected on top
+     3. After a brief delay (simulating API load), skeleton fades out
+        and real content fades in
+     4. ECharts charts get skeleton until they render
+
+     No per-page changes needed — fully automatic.
+  ───────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    const main = document.getElementById('main');
+    if (!main) return;
+
+    // Don't skeleton auth pages (no shell)
+    if (!document.getElementById('rail')) return;
+
+    // Create skeleton overlay
+    const skel = document.createElement('div');
+    skel.id = 'skeleton-overlay';
+    skel.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:24px;z-index:10;transition:opacity 0.3s ease';
+    skel.innerHTML = `
+      <div style="margin-bottom:24px">
+        <div class="skeleton skeleton-text" style="width:200px;height:20px;margin-bottom:8px"></div>
+        <div class="skeleton skeleton-text" style="width:320px;height:14px"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+        <div class="skeleton skeleton-chart"></div>
+        <div class="skeleton skeleton-chart"></div>
+      </div>
+      <div class="skeleton" style="height:200px;border-radius:12px"></div>
+    `;
+
+    // Position main as relative for absolute skeleton
+    main.style.position = 'relative';
+
+    // Hide real content initially
+    const children = Array.from(main.children);
+    children.forEach(c => {
+      c.style.opacity = '0';
+      c.style.transition = 'opacity 0.3s ease';
+    });
+
+    // Insert skeleton
+    main.insertBefore(skel, main.firstChild);
+
+    // Simulate loading delay (300-600ms for realistic feel)
+    const loadTime = 300 + Math.random() * 300;
+    setTimeout(() => {
+      // Fade out skeleton
+      skel.style.opacity = '0';
+      setTimeout(() => {
+        skel.remove();
+        // Fade in real content with stagger
+        children.forEach((c, i) => {
+          setTimeout(() => { c.style.opacity = '1'; }, i * 50);
+        });
+      }, 300);
+    }, loadTime);
+  });
+
+  /* ── CHART SKELETON ──────────────────────────────
+     Any div with [data-chart-skeleton] shows skeleton until
+     ECharts renders inside it.
+  ───────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[id^="chart-"]').forEach(el => {
+      if (el.offsetHeight > 0 && !el.querySelector('canvas')) {
+        el.classList.add('skeleton', 'skeleton-chart');
+        const obs = new MutationObserver(() => {
+          if (el.querySelector('canvas')) {
+            el.classList.remove('skeleton', 'skeleton-chart');
+            obs.disconnect();
+          }
+        });
+        obs.observe(el, {childList: true, subtree: true});
+      }
+    });
+  });
 });

@@ -17,9 +17,9 @@
   --accent:#C2410C; --accent-h:#9A3412;
   --accent-soft:rgba(194,65,12,0.1); --accent-muted:rgba(194,65,12,0.2);
 
-  --glass-bg:rgba(255,255,255,0.06);
+  --glass-bg:rgba(255,255,255,0.7);
   --glass-blur:blur(18px) saturate(160%);
-  --glass-border:rgba(255,255,255,0.10);
+  --glass-border:rgba(0,0,0,0.08);
 
   --green:#22c55e; --blue:#3b82f6; --purple:#a855f7;
   --yellow:#eab308; --red:#ef4444;

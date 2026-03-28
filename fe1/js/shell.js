@@ -160,7 +160,16 @@ function initShell(pageKey) {
     theme = theme==='dark'?'light':'dark';
     document.documentElement.classList.toggle('dark', theme==='dark');
     localStorage.setItem('atonota-theme', theme);
-    location.reload();
+    // Refresh charts for new theme colors instead of full reload
+    if (typeof refreshAllCharts === 'function') refreshAllCharts();
+    // Update theme toggle icon
+    const btn = document.getElementById('theme-toggle-btn');
+    if (btn) btn.querySelector('i').className = 'ph ' + (theme==='dark'?'ph-sun':'ph-moon');
+    const ddBtn = document.getElementById('dd-theme-btn');
+    if (ddBtn) {
+      ddBtn.querySelector('i').className = 'ph ' + (theme==='dark'?'ph-sun':'ph-moon');
+      ddBtn.childNodes[1].textContent = theme==='dark'?' Light Tema':' Dark Tema';
+    }
   }
   document.getElementById('theme-toggle-btn').onclick = toggleTheme;
   const ddBtn = document.getElementById('dd-theme-btn');

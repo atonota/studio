@@ -142,20 +142,42 @@ const MOCK = {
 
 // --- Utility functions ---
 function getChartTheme() {
+  const isDark = document.documentElement.classList.contains('dark');
+  if (isDark) {
+    return {
+      text: '#F2EDE5', muted: '#7B7269', border: '#3C342C', bg: '#201C18',
+      accent: '#C2410C', accentSoft: 'rgba(194,65,12,0.15)',
+      green: '#22c55e', red: '#ef4444', blue: '#3b82f6', yellow: '#eab308', purple: '#a855f7',
+      tooltip: {backgroundColor:'#201C18',borderColor:'#3C342C',textStyle:{color:'#F2EDE5',fontSize:12}},
+    };
+  }
+  // Light theme
   return {
-    text: '#F2EDE5',
-    muted: '#7B7269',
-    border: '#3C342C',
-    bg: '#201C18',
-    accent: '#C2410C',
-    accentSoft: 'rgba(194,65,12,0.15)',
-    green: '#22c55e',
-    red: '#ef4444',
-    blue: '#3b82f6',
-    yellow: '#eab308',
-    purple: '#a855f7',
-    tooltip: {backgroundColor:'#201C18',borderColor:'#3C342C',textStyle:{color:'#F2EDE5',fontSize:12}},
+    text: '#1E1A14', muted: '#9B9485', border: '#D6D1C2', bg: '#F8F5EC',
+    accent: '#C2410C', accentSoft: 'rgba(194,65,12,0.1)',
+    green: '#16a34a', red: '#dc2626', blue: '#2563eb', yellow: '#ca8a04', purple: '#9333ea',
+    tooltip: {backgroundColor:'#FFFFFF',borderColor:'#D6D1C2',textStyle:{color:'#1E1A14',fontSize:12}},
   };
+}
+
+// Re-render all ECharts on theme change
+function refreshAllCharts() {
+  const theme = getChartTheme();
+  if (window._chartInstances) {
+    Object.values(window._chartInstances).forEach(chart => {
+      if (chart && chart.getOption) {
+        try {
+          const opt = chart.getOption();
+          // Update common theme properties
+          if (opt.xAxis) opt.xAxis.forEach(a => { if(a.axisLine) a.axisLine.lineStyle = {color:theme.border}; if(a.axisLabel) a.axisLabel.color = theme.muted; });
+          if (opt.yAxis) opt.yAxis.forEach(a => { if(a.splitLine) a.splitLine.lineStyle = {color:theme.border}; if(a.axisLabel) a.axisLabel.color = theme.muted; });
+          if (opt.legend) opt.legend.forEach(l => { if(l.textStyle) l.textStyle.color = theme.muted; });
+          if (opt.tooltip) opt.tooltip.forEach(t => { t.backgroundColor = theme.tooltip.backgroundColor; t.borderColor = theme.tooltip.borderColor; if(t.textStyle) t.textStyle.color = theme.tooltip.textStyle.color; });
+          chart.setOption(opt);
+        } catch(e) { /* ignore charts that can't be updated */ }
+      }
+    });
+  }
 }
 
 function exportToCSV(headers, rows, filename='export.csv') {
