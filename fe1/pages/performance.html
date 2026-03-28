@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Performans — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ dateRange: '30gun' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Performans</h1>
+      <p class="page-sub">Core Web Vitals ve site hizi</p>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
+        <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- CWV Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">LCP</span>
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">1.8s</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 2.5s</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">INP</span>
+        <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Iyilestir</span>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">180ms</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 200ms</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">CLS</span>
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">0.04</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 0.10</div>
+    </div>
+  </div>
+
+  <!-- CWV Trend -->
+  <div class="fade-in-d2 card">
+    <span class="section-label">CWV Trend (30 Gun)</span>
+    <div id="chart-cwv" style="width:100%;height:320px"></div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('performance'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const mutedColor = '#7B7269';
+  const borderColor = '#3C342C';
+  const days = Array.from({length:30}, (_,i) => (i+1) + ' Mar');
+
+  const cCwv = echarts.init(document.getElementById('chart-cwv'));
+  const lcpData = [2.1,2.0,1.9,2.0,1.9,1.8,1.9,1.8,1.7,1.8,1.9,1.8,1.7,1.8,1.8,1.7,1.8,1.7,1.8,1.8,1.7,1.8,1.9,1.8,1.7,1.8,1.8,1.7,1.8,1.8];
+  const inpData = [210,205,200,195,198,192,188,190,185,188,182,185,180,182,178,180,182,178,180,182,178,180,182,178,180,182,180,178,180,180];
+  const clsData = [0.08,0.07,0.07,0.06,0.06,0.05,0.06,0.05,0.05,0.04,0.05,0.04,0.04,0.05,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.05,0.04,0.04,0.04,0.04,0.04,0.04,0.04];
+
+  cCwv.setOption({
+    tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:12,itemHeight:3},
+    grid:{left:50,right:50,top:16,bottom:40},
+    xAxis:{type:'category',data:days,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
+    yAxis:[
+      {type:'value',name:'LCP (s) / CLS',nameTextStyle:{color:mutedColor,fontSize:10},splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
+      {type:'value',name:'INP (ms)',nameTextStyle:{color:mutedColor,fontSize:10},splitLine:{show:false},axisLabel:{color:mutedColor,fontSize:10}}
+    ],
+    series:[
+      {name:'LCP (s)',type:'line',data:lcpData,smooth:true,symbol:'none',lineStyle:{color:'#22c55e',width:2},yAxisIndex:0},
+      {name:'INP (ms)',type:'line',data:inpData,smooth:true,symbol:'none',lineStyle:{color:'#eab308',width:2},yAxisIndex:1},
+      {name:'CLS',type:'line',data:clsData,smooth:true,symbol:'none',lineStyle:{color:'#3b82f6',width:2},yAxisIndex:0}
+    ]
+  });
+
+  window.addEventListener('resize', () => cCwv.resize());
+});
+</script>
+</body>
+</html>

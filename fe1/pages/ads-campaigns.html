@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Tum Kampanyalar — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  platformFilter: 'Tumu',
+  statusFilter: 'Tumu',
+  platforms: ['Tumu','Meta','TikTok','LinkedIn'],
+  statuses: ['Tumu','Aktif','Duraklatildi','Taslak'],
+  allRows: [
+    { name:'Bahar Kampanyasi 2026', platform:'Meta', icon:'ph-meta-logo', iconColor:'#3b82f6', goal:'Donusum', status:'Aktif', statusColor:'#22c55e', statusBg:'rgba(34,197,94,0.1)', budget:'₺750', spend:'₺12,400', roas:'3.4x', roasColor:'#22c55e' },
+    { name:'B2B Lead Gen Q1', platform:'LinkedIn', icon:'ph-linkedin-logo', iconColor:'#3b82f6', goal:'Lead', status:'Aktif', statusColor:'#22c55e', statusBg:'rgba(34,197,94,0.1)', budget:'₺500', spend:'₺7,900', roas:'1.9x', roasColor:'#eab308' },
+    { name:'TikTok Farkindalik', platform:'TikTok', icon:'ph-tiktok-logo', iconColor:'var(--text)', goal:'Farkindalik', status:'Aktif', statusColor:'#22c55e', statusBg:'rgba(34,197,94,0.1)', budget:'₺600', spend:'₺18,420', roas:'2.4x', roasColor:'#22c55e' },
+    { name:'Retargeting Meta', platform:'Meta', icon:'ph-meta-logo', iconColor:'#3b82f6', goal:'Donusum', status:'Duraklatildi', statusColor:'#eab308', statusBg:'rgba(234,179,8,0.1)', budget:'₺300', spend:'₺4,200', roas:'4.1x', roasColor:'#22c55e' },
+    { name:'Yaz Indirimi Teaseri', platform:'Meta', icon:'ph-meta-logo', iconColor:'#3b82f6', goal:'Trafik', status:'Taslak', statusColor:'var(--muted)', statusBg:'var(--surface-2)', budget:'₺400', spend:'—', roas:'—', roasColor:'var(--muted)' },
+    { name:'LinkedIn Webinar Tanitimi', platform:'LinkedIn', icon:'ph-linkedin-logo', iconColor:'#3b82f6', goal:'Lead', status:'Aktif', statusColor:'#22c55e', statusBg:'rgba(34,197,94,0.1)', budget:'₺250', spend:'₺3,100', roas:'1.6x', roasColor:'#eab308' }
+  ],
+  get filtered() {
+    return this.allRows.filter(r => {
+      const matchPlatform = this.platformFilter === 'Tumu' || r.platform === this.platformFilter;
+      const matchStatus = this.statusFilter === 'Tumu' || r.status === this.statusFilter;
+      return matchPlatform && matchStatus;
+    });
+  }
+}">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-megaphone" style="color:#a855f7;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Tum Kampanyalar</h1>
+        <p class="page-sub">Cross-channel kampanya listesi</p>
+      </div>
+    </div>
+    <a href="ads-campaign-create.html" class="btn-primary" style="text-decoration:none"><i class="ph ph-plus"></i> Yeni Kampanya</a>
+  </div>
+
+  <!-- Platform Filter Pills -->
+  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <template x-for="p in platforms" :key="p">
+      <button @click="platformFilter = p"
+        :style="platformFilter === p
+          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
+          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
+        x-text="p"></button>
+    </template>
+  </div>
+
+  <!-- Status Filter Pills -->
+  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <template x-for="s in statuses" :key="s">
+      <button @click="statusFilter = s"
+        :style="statusFilter === s
+          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
+          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
+        x-text="s"></button>
+    </template>
+  </div>
+
+  <!-- Campaigns Table -->
+  <div class="fade-in-d2 card">
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Kampanya</th>
+          <th>Platform</th>
+          <th>Hedef</th>
+          <th>Durum</th>
+          <th>Gunluk Butce</th>
+          <th>Harcama</th>
+          <th>ROAS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.name">
+          <tr>
+            <td data-label="Kampanya" style="font-weight:500;color:var(--text)" x-text="row.name"></td>
+            <td data-label="Platform">
+              <div style="display:flex;align-items:center;gap:6px">
+                <i class="ph" :class="row.icon" :style="'color:'+row.iconColor+';font-size:1rem'"></i>
+                <span x-text="row.platform"></span>
+              </div>
+            </td>
+            <td data-label="Hedef" x-text="row.goal"></td>
+            <td data-label="Durum"><span class="badge" :style="'background:'+row.statusBg+';color:'+row.statusColor" x-text="row.status"></span></td>
+            <td data-label="Gunluk Butce" x-text="row.budget"></td>
+            <td data-label="Harcama" x-text="row.spend"></td>
+            <td data-label="ROAS" :style="'font-weight:600;color:'+row.roasColor" x-text="row.roas"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <div x-show="filtered.length === 0" style="padding:24px;text-align:center;color:var(--muted);font-size:0.875rem">
+      Secili filtrelere uygun kampanya bulunamadi.
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

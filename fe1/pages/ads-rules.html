@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Otomasyon Kurallari — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Otomasyon Kurallari</h1>
+      <p class="page-sub">Otomatik kampanya yonetim kurallari</p>
+    </div>
+    <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Kural</button>
+  </div>
+
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:16px" x-data="{ rules: [{name:'CPA Koruma',active:true},{name:'Butce Artirma',active:true},{name:'Dusuk CTR Uyari',active:false}] }">
+    <!-- Rule 1: CPA Koruma -->
+    <div class="card" style="padding:20px 24px" :style="!rules[0].active && 'opacity:0.6'">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-shield-warning" style="color:#ef4444;font-size:1.125rem"></i>
+            </div>
+            <div>
+              <div style="font-weight:500;color:var(--text)">CPA Koruma</div>
+              <span class="badge" :style="rules[0].active ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:var(--surface-2);color:var(--muted)'" x-text="rules[0].active ? 'Aktif' : 'Pasif'"></span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:32px">IF</span>
+              <span style="color:var(--text-soft)">CPA &gt; &#8378;60</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:32px">THEN</span>
+              <span style="color:var(--text-soft)">Kampanya Duraklat</span>
+            </div>
+          </div>
+          <div style="font-size:0.6875rem;color:var(--muted)">
+            <i class="ph ph-lightning" style="margin-right:4px"></i>12 tetikleme
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <button @click="$store.confirm.ask('Bu kurali silmek istediginize emin misiniz?', () => { $store.toast.show('Kural silindi', 'success') })" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.8125rem"><i class="ph ph-trash"></i></button>
+          <div @click="rules[0].active = !rules[0].active; $store.toast.show(rules[0].active ? 'Kural aktif edildi' : 'Kural pasif edildi', rules[0].active ? 'success' : 'warning')" :style="rules[0].active ? 'background:var(--accent)' : 'background:var(--surface-2);border:1px solid var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;flex-shrink:0;transition:all 0.2s">
+            <div :style="rules[0].active ? 'right:2px;background:white' : 'left:2px;background:var(--muted)'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;transition:all 0.2s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 2: Butce Artirma -->
+    <div class="card" style="padding:20px 24px" :style="!rules[1].active && 'opacity:0.6'">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+            </div>
+            <div>
+              <div style="font-weight:500;color:var(--text)">Butce Artirma</div>
+              <span class="badge" :style="rules[1].active ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:var(--surface-2);color:var(--muted)'" x-text="rules[1].active ? 'Aktif' : 'Pasif'"></span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:32px">IF</span>
+              <span style="color:var(--text-soft)">ROAS &gt; 3x</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:32px">THEN</span>
+              <span style="color:var(--text-soft)">Butce %20 Artir</span>
+            </div>
+          </div>
+          <div style="font-size:0.6875rem;color:var(--muted)">
+            <i class="ph ph-lightning" style="margin-right:4px"></i>5 tetikleme
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <button @click="$store.confirm.ask('Bu kurali silmek istediginize emin misiniz?', () => { $store.toast.show('Kural silindi', 'success') })" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.8125rem"><i class="ph ph-trash"></i></button>
+          <div @click="rules[1].active = !rules[1].active; $store.toast.show(rules[1].active ? 'Kural aktif edildi' : 'Kural pasif edildi', rules[1].active ? 'success' : 'warning')" :style="rules[1].active ? 'background:var(--accent)' : 'background:var(--surface-2);border:1px solid var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;flex-shrink:0;transition:all 0.2s">
+            <div :style="rules[1].active ? 'right:2px;background:white' : 'left:2px;background:var(--muted)'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;transition:all 0.2s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rule 3: Dusuk CTR Uyari -->
+    <div class="card" style="padding:20px 24px" :style="!rules[2].active && 'opacity:0.6'">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-envelope" style="color:#eab308;font-size:1.125rem"></i>
+            </div>
+            <div>
+              <div style="font-weight:500;color:var(--text)">Dusuk CTR Uyari</div>
+              <span class="badge" :style="rules[2].active ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:var(--surface-2);color:var(--muted)'" x-text="rules[2].active ? 'Aktif' : 'Pasif'"></span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:32px">IF</span>
+              <span style="color:var(--text-soft)">CTR &lt; 1%</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:32px">THEN</span>
+              <span style="color:var(--text-soft)">Email Bildirim</span>
+            </div>
+          </div>
+          <div style="font-size:0.6875rem;color:var(--muted)">
+            <i class="ph ph-lightning" style="margin-right:4px"></i>0 tetikleme
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <button @click="$store.confirm.ask('Bu kurali silmek istediginize emin misiniz?', () => { $store.toast.show('Kural silindi', 'success') })" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.8125rem"><i class="ph ph-trash"></i></button>
+          <div @click="rules[2].active = !rules[2].active; $store.toast.show(rules[2].active ? 'Kural aktif edildi' : 'Kural pasif edildi', rules[2].active ? 'success' : 'warning')" :style="rules[2].active ? 'background:var(--accent)' : 'background:var(--surface-2);border:1px solid var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;flex-shrink:0;transition:all 0.2s">
+            <div :style="rules[2].active ? 'right:2px;background:white' : 'left:2px;background:var(--muted)'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;transition:all 0.2s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

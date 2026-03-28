@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Konum Detay — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-map-pin" style="color:#3b82f6;font-size:1.25rem"></i>
+    </div>
+    <div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <h1 class="page-title">Konum: Istanbul Merkez</h1>
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
+      </div>
+      <p class="page-sub">Google Business Profile durumu</p>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Yorum</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">84</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Puan</div>
+      <div style="font-size:1.5rem;font-weight:500;color:#eab308">4.5<span style="font-size:0.875rem;color:var(--muted)">/5</span></div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Goruntulenme</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">12.4K<span style="font-size:0.75rem;color:var(--muted)">/ay</span></div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Yol Tarifi</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">890<span style="font-size:0.75rem;color:var(--muted)">/ay</span></div>
+    </div>
+  </div>
+
+  <!-- Location Info -->
+  <div class="fade-in-d2 card" style="margin-bottom:24px">
+    <span class="section-label">Konum Bilgileri</span>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+        <i class="ph ph-map-pin" style="color:var(--muted);font-size:1rem;min-width:20px"></i>
+        <span style="font-size:0.8125rem;color:var(--muted);min-width:80px">Adres</span>
+        <span style="font-size:0.8125rem;color:var(--text)">Levent Mah. Buyukdere Cad. No:185, Sisli, Istanbul 34394</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+        <i class="ph ph-phone" style="color:var(--muted);font-size:1rem;min-width:20px"></i>
+        <span style="font-size:0.8125rem;color:var(--muted);min-width:80px">Telefon</span>
+        <span style="font-size:0.8125rem;color:var(--text)">+90 212 345 67 89</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <i class="ph ph-clock" style="color:var(--muted);font-size:1rem;min-width:20px;margin-top:2px"></i>
+        <span style="font-size:0.8125rem;color:var(--muted);min-width:80px">Calisma</span>
+        <div style="font-size:0.8125rem;color:var(--text);line-height:1.8">
+          Pzt–Cum: 09:00–18:00<br>
+          Cmt: 10:00–14:00<br>
+          Paz: Kapali
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Reviews -->
+  <div class="fade-in-d3 card">
+    <span class="section-label">Son Yorumlar</span>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="padding-bottom:16px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:600;color:#3b82f6">AY</div>
+            <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Ayse Yilmaz</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:2px">
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+          </div>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--text-soft);line-height:1.5;margin:0">Cok profesyonel bir ekip. SEO danismanlik hizmeti mukemmeldi.</p>
+        <span style="font-size:0.6875rem;color:var(--muted);margin-top:6px;display:block">2 gun once</span>
+      </div>
+      <div style="padding-bottom:16px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:600;color:#a855f7">MK</div>
+            <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Murat Kaya</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:2px">
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph ph-star" style="color:var(--muted);font-size:0.75rem"></i>
+          </div>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--text-soft);line-height:1.5;margin:0">Reklam yonetimi hizli ve etkili. Sonuclar bekledigimden iyi geldi.</p>
+        <span style="font-size:0.6875rem;color:var(--muted);margin-top:6px;display:block">1 hafta once</span>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:600;color:#22c55e">ED</div>
+            <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Elif Demir</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:2px">
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
+          </div>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--text-soft);line-height:1.5;margin:0">Platform entegrasyonu sorunsuz kuruldu. Destek ekibi cok ilgili.</p>
+        <span style="font-size:0.6875rem;color:var(--muted);margin-top:6px;display:block">2 hafta once</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

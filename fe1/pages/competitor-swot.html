@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI SWOT Analizi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">AI SWOT Analizi</h1>
+    <p class="page-sub">rakip1.com</p>
+  </div>
+
+  <div x-data="{ expanded: null, toggle(q) { this.expanded = this.expanded === q ? null : q } }" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;max-width:960px">
+    <!-- Guclu Yanlar -->
+    <div class="fade-in-d1 card" @click="toggle('guclu')" style="border-left:3px solid #22c55e;padding:20px;cursor:pointer;transition:transform .2s" :style="expanded==='guclu' ? 'grid-column:1/-1;transform:scale(1)' : ''">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <i class="ph ph-shield-check" style="color:#22c55e;font-size:1.25rem"></i>
+        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Guclu Yanlar</span>
+        <i class="ph" :class="expanded==='guclu' ? 'ph-caret-up' : 'ph-caret-down'" style="margin-left:auto;color:var(--muted);font-size:0.875rem"></i>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
+          Yuksek DA 62
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
+          Genis icerik
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
+          Mobil optimizasyon
+        </li>
+        <li x-show="expanded==='guclu'" x-transition style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
+          E-ticaret entegrasyonu basarili
+        </li>
+      </ul>
+    </div>
+
+    <!-- Zayif Yanlar -->
+    <div class="fade-in-d1 card" @click="toggle('zayif')" style="border-left:3px solid #ef4444;padding:20px;cursor:pointer" :style="expanded==='zayif' ? 'grid-column:1/-1' : ''">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <i class="ph ph-warning" style="color:#ef4444;font-size:1.25rem"></i>
+        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Zayif Yanlar</span>
+        <i class="ph" :class="expanded==='zayif' ? 'ph-caret-up' : 'ph-caret-down'" style="margin-left:auto;color:var(--muted);font-size:0.875rem"></i>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0"></span>
+          Yavas sayfa hizi
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0"></span>
+          Az backlink cesitliligi
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0"></span>
+          Schema eksik
+        </li>
+        <li x-show="expanded==='zayif'" x-transition style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0"></span>
+          Mobil UX puani dusuk
+        </li>
+      </ul>
+    </div>
+
+    <!-- Firsatlar -->
+    <div class="fade-in-d2 card" @click="toggle('firsat')" style="border-left:3px solid #3b82f6;padding:20px;cursor:pointer" :style="expanded==='firsat' ? 'grid-column:1/-1' : ''">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <i class="ph ph-lightbulb" style="color:#3b82f6;font-size:1.25rem"></i>
+        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Firsatlar</span>
+        <i class="ph" :class="expanded==='firsat' ? 'ph-caret-up' : 'ph-caret-down'" style="margin-left:auto;color:var(--muted);font-size:0.875rem"></i>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#3b82f6;flex-shrink:0"></span>
+          GEO optimizasyonu yok
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#3b82f6;flex-shrink:0"></span>
+          Turkce icerik az
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#3b82f6;flex-shrink:0"></span>
+          Sosyal medya zayif
+        </li>
+      </ul>
+    </div>
+
+    <!-- Tehditler -->
+    <div class="fade-in-d2 card" @click="toggle('tehdit')" style="border-left:3px solid #eab308;padding:20px;cursor:pointer" :style="expanded==='tehdit' ? 'grid-column:1/-1' : ''">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <i class="ph ph-lightning" style="color:#eab308;font-size:1.25rem"></i>
+        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Tehditler</span>
+        <i class="ph" :class="expanded==='tehdit' ? 'ph-caret-up' : 'ph-caret-down'" style="margin-left:auto;color:var(--muted);font-size:0.875rem"></i>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#eab308;flex-shrink:0"></span>
+          Agresif SEO stratejisi
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#eab308;flex-shrink:0"></span>
+          Butce artisi
+        </li>
+        <li style="display:flex;align-items:center;gap:8px;font-size:0.8125rem;color:var(--muted)">
+          <span style="width:6px;height:6px;border-radius:50%;background:#eab308;flex-shrink:0"></span>
+          Yeni urun lansmanlar
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('competitors'));</script>
+</body>
+</html>

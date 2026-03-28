@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Knowledge Panel Optimizasyon — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ checklist:{ wikidata:true, schema:false, gsc:true, logo:false, sosyal:true }, get progress() { const vals = Object.values(this.checklist); return Math.round(vals.filter(v=>v).length / vals.length * 100); }, toggle(k) { this.checklist[k]=!this.checklist[k]; $store.toast.show(this.checklist[k]?'Tamamlandi':'Geri alindi', this.checklist[k]?'success':'info'); } }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Knowledge Panel Optimizasyon</h1>
+    <p class="page-sub">Google Knowledge Panel durumu ve iyilestirme adimlari</p>
+  </div>
+
+  <!-- Panel Status -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <div class="card" style="padding:24px">
+      <span class="section-label">Mevcut Panel Durumu</span>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;font-size:0.875rem;padding:6px 14px">Kismi Mevcut</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;font-size:0.8125rem">
+          <span style="color:var(--muted)">Logo</span>
+          <span style="color:#22c55e"><i class="ph ph-check-circle"></i> Evet</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.8125rem">
+          <span style="color:var(--muted)">Aciklama</span>
+          <span style="color:#22c55e"><i class="ph ph-check-circle"></i> Evet</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.8125rem">
+          <span style="color:var(--muted)">Web Sitesi</span>
+          <span style="color:#22c55e"><i class="ph ph-check-circle"></i> Evet</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.8125rem">
+          <span style="color:var(--muted)">Sosyal Profiller</span>
+          <span style="color:#ef4444"><i class="ph ph-x-circle"></i> Eksik</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.8125rem">
+          <span style="color:var(--muted)">SSS</span>
+          <span style="color:#ef4444"><i class="ph ph-x-circle"></i> Eksik</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Competitor Panel -->
+    <div class="card" style="padding:24px">
+      <span class="section-label">Rakip Panel Karsilastirma</span>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:0.875rem;color:var(--text);min-width:80px">atonota</span>
+          <div style="flex:1;height:8px;background:var(--border);border-radius:4px"><div style="width:60%;height:100%;background:var(--accent);border-radius:4px"></div></div>
+          <span style="font-size:0.75rem;color:var(--muted);min-width:30px">60%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:0.875rem;color:var(--text);min-width:80px">Rakip A</span>
+          <div style="flex:1;height:8px;background:var(--border);border-radius:4px"><div style="width:90%;height:100%;background:#22c55e;border-radius:4px"></div></div>
+          <span style="font-size:0.75rem;color:var(--muted);min-width:30px">90%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:0.875rem;color:var(--text);min-width:80px">Rakip B</span>
+          <div style="flex:1;height:8px;background:var(--border);border-radius:4px"><div style="width:45%;height:100%;background:#eab308;border-radius:4px"></div></div>
+          <span style="font-size:0.75rem;color:var(--muted);min-width:30px">45%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optimization Checklist -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Optimizasyon Kontrol Listesi</span>
+    </div>
+
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:22px;height:22px;border-radius:6px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check" style="font-size:0.75rem;color:white"></i>
+      </div>
+      <span style="font-size:0.875rem;color:var(--muted);text-decoration:line-through">Organization schema markup ekle</span>
+    </div>
+
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:22px;height:22px;border-radius:6px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check" style="font-size:0.75rem;color:white"></i>
+      </div>
+      <span style="font-size:0.875rem;color:var(--muted);text-decoration:line-through">Google Business Profile dogrula</span>
+    </div>
+
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:22px;height:22px;border-radius:6px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check" style="font-size:0.75rem;color:white"></i>
+      </div>
+      <span style="font-size:0.875rem;color:var(--muted);text-decoration:line-through">Wikipedia referansi olustur</span>
+    </div>
+
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:22px;height:22px;border-radius:6px;background:#22c55e;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check" style="font-size:0.75rem;color:white"></i>
+      </div>
+      <span style="font-size:0.875rem;color:var(--muted);text-decoration:line-through">Wikidata entity olustur</span>
+    </div>
+
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <div style="width:22px;height:22px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      </div>
+      <span style="font-size:0.875rem;color:var(--text)">Sosyal medya profillerini baglanti yap (Twitter, LinkedIn, GitHub)</span>
+    </div>
+
+    <div style="padding:14px 20px;display:flex;align-items:center;gap:12px">
+      <div style="width:22px;height:22px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      </div>
+      <span style="font-size:0.875rem;color:var(--text)">SSS schema markup ile zenginlestirilmis sonuc ekle</span>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Gorunum Ayarlari — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  theme: localStorage.getItem('atonota-theme') || 'dark',
+  accent: localStorage.getItem('atonota-accent') || '#C2410C',
+  fontSize: localStorage.getItem('atonota-fontsize') || 'normal',
+  accentColors: ['#C2410C','#3b82f6','#22c55e','#a855f7','#ef4444','#14b8a6'],
+  fontSizes: ['small','normal','large'],
+  fontSizeLabels: { small:'Kucuk', normal:'Normal', large:'Buyuk' },
+  fontSizeValues: { small:'14px', normal:'16px', large:'18px' },
+  darkTones: ['#161412','#1A1816','#141618','#181614','#121416','#1C1818','#161818','#181416'],
+  lightTones: ['#F8F5EC','#FAF8F2','#F5F5F5','#F0F4F8','#FFF8F0','#F8F0F8','#F0F8F4','#F8F8F0'],
+  bgTone: localStorage.getItem('atonota-bgtone') || '',
+  setTheme(t) {
+    this.theme = t;
+    if (t === 'dark') { document.documentElement.classList.add('dark'); }
+    else { document.documentElement.classList.remove('dark'); }
+    localStorage.setItem('atonota-theme', t);
+    $store.toast.show('Kaydedildi', 'success');
+  },
+  setAccent(c) {
+    this.accent = c;
+    document.documentElement.style.setProperty('--accent', c);
+    localStorage.setItem('atonota-accent', c);
+    $store.toast.show('Kaydedildi', 'success');
+  },
+  setFontSize(s) {
+    this.fontSize = s;
+    document.body.style.fontSize = this.fontSizeValues[s];
+    localStorage.setItem('atonota-fontsize', s);
+    $store.toast.show('Kaydedildi', 'success');
+  },
+  setBgTone(t) {
+    this.bgTone = t;
+    localStorage.setItem('atonota-bgtone', t);
+    $store.toast.show('Kaydedildi', 'success');
+  },
+  init() {
+    if (this.theme === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    if (this.accent !== '#C2410C') document.documentElement.style.setProperty('--accent', this.accent);
+    document.body.style.fontSize = this.fontSizeValues[this.fontSize];
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Gorunum Ayarlari</h1>
+    <p class="page-sub">Tema, renk ve yazi tercihleri</p>
+  </div>
+
+  <!-- Theme Toggle -->
+  <div class="fade-in-d1 card" style="max-width:640px;margin-bottom:24px">
+    <span class="section-label">Tema</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+      <!-- Dark Card -->
+      <div @click="setTheme('dark')" :style="'border:2px solid '+(theme==='dark'?'var(--accent)':'var(--border)')+';border-radius:12px;padding:16px;cursor:pointer;background:var(--surface)'">
+        <div style="width:100%;height:80px;border-radius:8px;background:#161412;margin-bottom:12px;display:flex;align-items:center;justify-content:center">
+          <div style="display:flex;gap:6px">
+            <div style="width:40px;height:6px;border-radius:3px;background:#3C342C"></div>
+            <div style="width:24px;height:6px;border-radius:3px;background:#7B7269"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div :style="'width:18px;height:18px;border-radius:50%;border:2px solid '+(theme==='dark'?'var(--accent)':'var(--border)')+';display:flex;align-items:center;justify-content:center'">
+            <div x-show="theme==='dark'" style="width:10px;height:10px;border-radius:50%;background:var(--accent)"></div>
+          </div>
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Koyu</span>
+        </div>
+      </div>
+      <!-- Light Card -->
+      <div @click="setTheme('light')" :style="'border:2px solid '+(theme==='light'?'var(--accent)':'var(--border)')+';border-radius:12px;padding:16px;cursor:pointer;background:var(--surface)'">
+        <div style="width:100%;height:80px;border-radius:8px;background:#F8F5EC;margin-bottom:12px;display:flex;align-items:center;justify-content:center">
+          <div style="display:flex;gap:6px">
+            <div style="width:40px;height:6px;border-radius:3px;background:#D6D1C2"></div>
+            <div style="width:24px;height:6px;border-radius:3px;background:#9B9485"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div :style="'width:18px;height:18px;border-radius:50%;border:2px solid '+(theme==='light'?'var(--accent)':'var(--border)')+';display:flex;align-items:center;justify-content:center'">
+            <div x-show="theme==='light'" style="width:10px;height:10px;border-radius:50%;background:var(--accent)"></div>
+          </div>
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Acik</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Tone -->
+  <div class="fade-in-d2 card" style="max-width:640px;margin-bottom:24px">
+    <span class="section-label">Arka Plan Tonu</span>
+    <!-- Dark tones -->
+    <div style="margin-top:12px;margin-bottom:16px">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px">Koyu Tema</div>
+      <div style="display:flex;gap:10px">
+        <template x-for="tone in darkTones" :key="tone">
+          <div @click="setBgTone(tone)" :style="'width:36px;height:36px;border-radius:50%;cursor:pointer;background:'+tone+';border:2px solid '+(bgTone===tone?'var(--accent)':'transparent')"></div>
+        </template>
+      </div>
+    </div>
+    <!-- Light tones -->
+    <div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px">Acik Tema</div>
+      <div style="display:flex;gap:10px">
+        <template x-for="tone in lightTones" :key="tone">
+          <div @click="setBgTone(tone)" :style="'width:36px;height:36px;border-radius:50%;cursor:pointer;background:'+tone+';border:2px solid '+(bgTone===tone?'var(--accent)':'transparent')"></div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accent Color -->
+  <div class="fade-in-d3 card" style="max-width:640px;margin-bottom:24px">
+    <span class="section-label">Vurgu Rengi</span>
+    <div style="display:flex;gap:12px;margin-top:12px">
+      <template x-for="c in accentColors" :key="c">
+        <div @click="setAccent(c)" :style="'width:40px;height:40px;border-radius:20px;cursor:pointer;background:'+c+';border:3px solid '+(accent===c?'var(--text)':'transparent')+';display:flex;align-items:center;justify-content:center'">
+          <i x-show="accent===c" class="ph ph-check" style="color:white;font-size:1rem"></i>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Font Size -->
+  <div class="fade-in-d4 card" style="max-width:640px">
+    <span class="section-label">Yazi Boyutu</span>
+    <div style="margin-top:12px">
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <template x-for="s in fontSizes" :key="s">
+          <button @click="setFontSize(s)"
+            :style="fontSize === s
+              ? 'padding:8px 20px;border-radius:8px;font-size:0.8125rem;font-weight:600;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
+              : 'padding:8px 20px;border-radius:8px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
+            x-text="fontSizeLabels[s]"></button>
+        </template>
+      </div>
+      <div style="padding:16px;background:var(--surface-2);border-radius:8px">
+        <div style="font-size:0.875rem;color:var(--text);font-weight:500;margin-bottom:4px">Onizleme</div>
+        <div style="color:var(--text-soft)" :style="'font-size:'+fontSizeValues[fontSize]">Bu metin sectiginiz yazi boyutunu gostermektedir. Tum arayuz bu boyuta gore olceklenir.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
+</body>
+</html>

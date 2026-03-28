@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Pozisyon Takibi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  device: 'tumu',
+  location: 'Turkiye',
+  dateRange: '30',
+  showAddModal: false,
+  newKeyword: '',
+
+  allKeywords: [],
+  sortCol: 'position',
+  sortDir: 'asc',
+  page: 1,
+  perPage: 20,
+  searchQuery: '',
+
+  kpiData: {top3:24, top10:87, top50:342, top100:891},
+  visibilityScore: 67,
+
+  serpFeatureIcons: {
+    'Featured Snippet':'ph-chat-text','PAA':'ph-question','AIO':'ph-robot',
+    'Video':'ph-video-camera','Image':'ph-image','Sitelink':'ph-link-simple'
+  },
+
+  init() {
+    this.loadKeywords();
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.initGauge();
+        this.initDistChart();
+        this.initSparklines();
+      }, 100);
+    });
+  },
+
+  loadKeywords() {
+    const raw = MOCK.keywords.generate('seo', 60);
+    this.allKeywords = raw.map((k, i) => ({
+      ...k,
+      position: Math.floor(Math.random() * 80) + 1,
+      prevPosition: Math.floor(Math.random() * 80) + 1,
+      url: '/blog/' + k.keyword.replace(/ /g, '-'),
+      lastUpdate: new Date(Date.now() - Math.random()*7*86400000).toISOString().slice(0,10),
+      cannibalization: i % 12 === 0,
+    })).map(k => ({...k, change: k.prevPosition - k.position}));
+  },
+
+  sort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = col === 'keyword' ? 'asc' : 'asc'; }
+    this.filtered.sort((a,b) => {
+      const va = a[col], vb = b[col];
+      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb), 'tr');
+      return this.sortDir === 'asc' ? cmp : -cmp;
+    });
+    this.page = 1;
+  },
+
+  get filtered() {
+    let data = this.allKeywords;
+    if (this.searchQuery) {
+      const q = this.searchQuery.toLowerCase();
+      data = data.filter(k => k.keyword.toLowerCase().includes(q) || k.url.toLowerCase().includes(q));
+    }
+    if (this.device === 'masaustu') data = data.filter((_,i) => i % 2 === 0);
+    else if (this.device === 'mobil') data = data.filter((_,i) => i % 2 === 1);
+    return data;
+  },
+  get paged() {
+    const start = (this.page - 1) * this.perPage;
+    return this.filtered.slice(start, start + this.perPage);
+  },
+  get totalPages() { return Math.ceil(this.filtered.length / this.perPage) },
+  get showing() {
+    const s = (this.page - 1) * this.perPage + 1;
+    const e = Math.min(this.page * this.perPage, this.filtered.length);
+    return s + '-' + e + ' / ' + this.filtered.length;
+  },
+  nextPage() { if (this.page < this.totalPages) { this.page++; this.$nextTick(() => this.initSparklines()); } },
+  prevPage() { if (this.page > 1) { this.page--; this.$nextTick(() => this.initSparklines()); } },
+
+  sortIcon(col) {
+    if (this.sortCol !== col) return 'ph-arrows-down-up';
+    return this.sortDir === 'asc' ? 'ph-sort-ascending' : 'ph-sort-descending';
+  },
+
+  addKeyword() {
+    if (!this.newKeyword.trim()) return;
+    const newK = MOCK.keywords.generate(this.newKeyword.trim(), 1)[0];
+    this.allKeywords.unshift({
+      ...newK,
+      position: Math.floor(Math.random()*50)+1,
+      prevPosition: Math.floor(Math.random()*50)+1,
+      url: '/blog/' + this.newKeyword.trim().replace(/ /g,'-'),
+      lastUpdate: new Date().toISOString().slice(0,10),
+      cannibalization: false,
+      change: Math.floor(Math.random()*10)-5,
+    });
+    this.newKeyword = '';
+    this.showAddModal = false;
+    Alpine.store('toast').show('Keyword eklendi!', 'success');
+  },
+
+  initGauge() {
+    const el = document.getElementById('gauge-chart');
+    if (!el) return;
+    const t = getChartTheme();
+    const c = echarts.init(el);
+    c.setOption({
+      series:[{
+        type:'gauge', radius:'90%', startAngle:200, endAngle:-20,
+        min:0, max:100,
+        progress:{ show:true, width:14, itemStyle:{color:t.accent} },
+        pointer:{ show:false },
+        axisLine:{ lineStyle:{width:14, color:[[1, t.border]]} },
+        axisTick:{ show:false },
+        splitLine:{ show:false },
+        axisLabel:{ show:false },
+        title:{ show:true, offsetCenter:[0,'30%'], fontSize:12, color:t.muted, fontFamily:'inherit' },
+        detail:{ valueAnimation:true, offsetCenter:[0,'-10%'], fontSize:36, fontWeight:700, color:t.text, formatter:'{value}',fontFamily:'inherit' },
+        data:[{value:this.visibilityScore, name:'Gorunurluk Skoru'}]
+      }]
+    });
+    window.addEventListener('resize', () => c.resize());
+  },
+
+  initDistChart() {
+    const el = document.getElementById('dist-chart');
+    if (!el) return;
+    const t = getChartTheme();
+    const days = Array.from({length:30}, (_,i) => (i+1)+' Mar');
+    const gen = (min,max) => Array.from({length:30}, () => Math.floor(Math.random()*(max-min)+min));
+    const c = echarts.init(el);
+    c.setOption({
+      tooltip:{trigger:'axis', backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11}},
+      legend:{data:['1-3','4-10','11-20','21-50','51-100'], textStyle:{color:t.muted,fontSize:10}, bottom:0},
+      grid:{left:40,right:16,top:10,bottom:40},
+      xAxis:{type:'category', data:days, axisLabel:{color:t.muted,fontSize:10,rotate:45}, axisLine:{lineStyle:{color:t.border}}},
+      yAxis:{type:'value', axisLabel:{color:t.muted,fontSize:10}, splitLine:{lineStyle:{color:t.border,opacity:0.3}}},
+      series:[
+        {name:'1-3', type:'bar', stack:'pos', data:gen(15,30), itemStyle:{color:t.green}, barWidth:'60%'},
+        {name:'4-10', type:'bar', stack:'pos', data:gen(40,70), itemStyle:{color:t.blue}},
+        {name:'11-20', type:'bar', stack:'pos', data:gen(60,100), itemStyle:{color:t.purple}},
+        {name:'21-50', type:'bar', stack:'pos', data:gen(80,150), itemStyle:{color:t.yellow}},
+        {name:'51-100', type:'bar', stack:'pos', data:gen(100,200), itemStyle:{color:t.red}},
+      ]
+    });
+    window.addEventListener('resize', () => c.resize());
+  },
+
+  initSparklines() {
+    document.querySelectorAll('[id^=\"pt-spark-\"]').forEach(el => {
+      if (el._ec) return;
+      const t = getChartTheme();
+      const data = Array.from({length:12}, () => Math.floor(Math.random()*50)+1);
+      const c = echarts.init(el, null, {width:64, height:24});
+      el._ec = c;
+      c.setOption({
+        grid:{left:0,right:0,top:0,bottom:0},
+        xAxis:{show:false,type:'category',data:data.map((_,i)=>i)},
+        yAxis:{show:false,type:'value',inverse:true},
+        series:[{type:'line',data,symbol:'none',smooth:true,lineStyle:{color:t.accent,width:1.5},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:t.accent+'33'},{offset:1,color:'transparent'}]}}}]
+      });
+    });
+  }
+}">
+
+  <!-- Page Header -->
+  <div class="fade-in" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">Pozisyon Takibi</h1>
+      <p class="page-sub">Anahtar kelime siralamalarinizi izleyin ve analiz edin</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button @click="(() => {
+        const headers = ['Keyword','Pozisyon','Onceki','Degisim','Hacim','URL','Son Guncelleme'];
+        const rows = filtered.map(k => [k.keyword, k.position, k.prevPosition, k.change, k.volume, k.url, k.lastUpdate]);
+        exportToCSV(headers, rows, 'pozisyon-takibi.csv');
+      })()" style="padding:10px 20px;border-radius:10px;font-size:0.8125rem;font-weight:600;background:var(--surface-2);color:var(--text);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit">
+        <i class="ph ph-download-simple" style="font-size:1rem"></i> CSV Indir
+      </button>
+      <button @click="showAddModal = true" style="padding:10px 20px;border-radius:10px;font-size:0.8125rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit">
+        <i class="ph ph-plus" style="font-size:1rem"></i> Keyword Ekle
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="fade-in-d1" style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+    <!-- Device Pills -->
+    <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border)">
+      <template x-for="d in [{id:'tumu',label:'Tumu',icon:'ph-devices'},{id:'masaustu',label:'Masaustu',icon:'ph-desktop'},{id:'mobil',label:'Mobil',icon:'ph-device-mobile'}]" :key="d.id">
+        <button @click="device = d.id; page=1"
+          :style="device === d.id
+            ? 'padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px'
+            : 'padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px'">
+          <i class="ph" :class="d.icon" style="font-size:0.875rem"></i>
+          <span x-text="d.label"></span>
+        </button>
+      </template>
+    </div>
+
+    <!-- Location -->
+    <select x-model="location" style="padding:7px 12px;border-radius:8px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;outline:none">
+      <option>Turkiye</option><option>Istanbul</option><option>Ankara</option><option>Izmir</option>
+    </select>
+
+    <!-- Date Range -->
+    <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border)">
+      <template x-for="dr in [{id:'7',label:'7 Gun'},{id:'30',label:'30 Gun'},{id:'90',label:'90 Gun'}]" :key="dr.id">
+        <button @click="dateRange = dr.id"
+          :style="dateRange === dr.id
+            ? 'padding:5px 12px;border-radius:7px;font-size:0.6875rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit'
+            : 'padding:5px 12px;border-radius:7px;font-size:0.6875rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit'"
+          x-text="dr.label"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Visibility Gauge + KPI Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:240px 1fr;gap:16px;margin-bottom:20px">
+    <!-- Gauge -->
+    <div class="card" style="padding:12px;display:flex;align-items:center;justify-content:center">
+      <div id="gauge-chart" style="width:200px;height:180px"></div>
+    </div>
+    <!-- KPI Cards -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <template x-for="kpi in [
+        {label:'Top 3',value:kpiData.top3,icon:'ph-trophy',color:'#22c55e'},
+        {label:'Top 10',value:kpiData.top10,icon:'ph-medal',color:'#3b82f6'},
+        {label:'Top 50',value:kpiData.top50,icon:'ph-chart-line-up',color:'#a855f7'},
+        {label:'Top 100',value:kpiData.top100,icon:'ph-chart-bar',color:'#eab308'}
+      ]" :key="kpi.label">
+        <div class="card" style="padding:20px;text-align:center">
+          <i class="ph" :class="kpi.icon" :style="'font-size:1.5rem;color:'+kpi.color+';margin-bottom:8px'"></i>
+          <div style="font-size:1.75rem;font-weight:700;color:var(--text)" x-text="kpi.value"></div>
+          <div style="font-size:0.75rem;color:var(--muted)" x-text="kpi.label + ' keyword'"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Position Distribution Chart -->
+  <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px">
+    <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">Pozisyon Dagilimi (30 Gun)</div>
+    <div id="dist-chart" style="width:100%;height:280px"></div>
+  </div>
+
+  <!-- Keyword Tracking Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span class="section-label" style="margin-bottom:0">Takip Edilen Keywordler</span>
+      <div style="position:relative;width:240px">
+        <i class="ph ph-magnifying-glass" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:0.875rem;color:var(--muted)"></i>
+        <input type="text" x-model="searchQuery" @input="page=1" placeholder="Keyword veya URL ara..."
+          style="width:100%;padding:7px 10px 7px 32px;font-size:0.75rem;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;outline:none">
+      </div>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="r-table" style="min-width:860px">
+        <thead>
+          <tr>
+            <th @click="sort('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="sortIcon('keyword')" style="font-size:0.75rem"></i></th>
+            <th @click="sort('position')" style="cursor:pointer;user-select:none;width:90px">Pozisyon <i class="ph" :class="sortIcon('position')" style="font-size:0.75rem"></i></th>
+            <th style="width:70px">Onceki</th>
+            <th @click="sort('volume')" style="cursor:pointer;user-select:none;width:70px">Hacim <i class="ph" :class="sortIcon('volume')" style="font-size:0.75rem"></i></th>
+            <th style="width:180px">URL</th>
+            <th style="width:100px">SERP</th>
+            <th style="width:70px">Trend</th>
+            <th style="width:100px">Son Guncelleme</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="(kw, idx) in paged" :key="kw.keyword+'-'+idx">
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span x-show="kw.cannibalization" title="Cannibalization uyarisi: Birden fazla URL ayni keyword icin siralaniyor" style="cursor:help">
+                    <i class="ph ph-warning-diamond" style="font-size:0.875rem;color:#eab308"></i>
+                  </span>
+                  <span style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="kw.keyword"></span>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="font-weight:700;font-size:0.9375rem;color:var(--text)" x-text="kw.position"></span>
+                  <template x-if="kw.change > 0">
+                    <span style="display:flex;align-items:center;gap:2px;color:#22c55e">
+                      <i class="ph ph-arrow-up" style="font-size:0.75rem"></i>
+                      <span style="font-size:0.6875rem;font-weight:600" x-text="'+'+kw.change"></span>
+                    </span>
+                  </template>
+                  <template x-if="kw.change < 0">
+                    <span style="display:flex;align-items:center;gap:2px;color:#ef4444">
+                      <i class="ph ph-arrow-down" style="font-size:0.75rem"></i>
+                      <span style="font-size:0.6875rem;font-weight:600" x-text="kw.change"></span>
+                    </span>
+                  </template>
+                  <template x-if="kw.change === 0">
+                    <span style="font-size:0.6875rem;color:var(--muted)">—</span>
+                  </template>
+                </div>
+              </td>
+              <td style="font-size:0.8125rem;color:var(--muted)" x-text="kw.prevPosition"></td>
+              <td style="font-size:0.8125rem;color:var(--text)" x-text="kw.volume.toLocaleString('tr-TR')"></td>
+              <td style="font-size:0.6875rem;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="kw.url"></td>
+              <td>
+                <div style="display:flex;gap:4px;flex-wrap:wrap">
+                  <template x-for="sf in kw.serpFeatures.slice(0,3)" :key="sf">
+                    <span :title="sf" style="width:20px;height:20px;border-radius:4px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+                      <i class="ph" :class="serpFeatureIcons[sf] || 'ph-globe'" style="font-size:0.625rem;color:var(--muted)"></i>
+                    </span>
+                  </template>
+                </div>
+              </td>
+              <td><div :id="'pt-spark-'+idx" style="width:64px;height:24px"></div></td>
+              <td style="font-size:0.6875rem;color:var(--muted)" x-text="kw.lastUpdate"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:10px">
+      <span style="font-size:0.75rem;color:var(--muted)" x-text="showing"></span>
+      <button @click="prevPage()" :disabled="page<=1"
+        :style="page<=1?'opacity:0.4;cursor:not-allowed;padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit':'padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit'">Onceki</button>
+      <button @click="nextPage()" :disabled="page>=totalPages"
+        :style="page>=totalPages?'opacity:0.4;cursor:not-allowed;padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit':'padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit'">Sonraki</button>
+    </div>
+  </div>
+
+  <!-- Add Keyword Modal -->
+  <div x-show="showAddModal" x-transition style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center" @click.self="showAddModal=false" x-cloak>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:440px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text)">Keyword Ekle</h3>
+        <button @click="showAddModal=false" style="background:none;border:none;cursor:pointer;color:var(--muted)"><i class="ph ph-x" style="font-size:1.25rem"></i></button>
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:6px">Anahtar Kelime</label>
+        <input type="text" x-model="newKeyword" @keydown.enter="addKeyword()" placeholder="ornek: dijital pazarlama"
+          style="width:100%;padding:10px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button @click="showAddModal=false" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit">Iptal</button>
+        <button @click="addKeyword()" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;font-weight:600">Ekle</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<style>
+@media(max-width:900px) {
+  #main > .fade-in-d1:nth-child(3) { grid-template-columns:1fr !important; }
+  #main > .fade-in-d1:nth-child(3) > div:nth-child(2) { grid-template-columns:repeat(2,1fr) !important; }
+}
+@media(max-width:500px) {
+  #main > .fade-in-d1:nth-child(3) > div:nth-child(2) { grid-template-columns:1fr !important; }
+}
+</style>
+</body>
+</html>

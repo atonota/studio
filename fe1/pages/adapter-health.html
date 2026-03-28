@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Adaptor Saglik Dashboard — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ adapterFilter:'tumu', statusToggle:true }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <h1 class="page-title">Adaptor Saglik Dashboard</h1>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;font-size:0.8125rem;padding:4px 12px">5/6 Bagli</span>
+    </div>
+    <p class="page-sub">Adaptor uptime, latency ve saglik durumu</p>
+  </div>
+
+  <!-- 24h Heatmap -->
+  <div class="fade-in-d1 card" style="margin-bottom:24px">
+    <span class="section-label">24 Saatlik Saglik Haritasi</span>
+    <div id="heatmapChart" style="width:100%;height:280px;margin-top:12px"></div>
+  </div>
+
+  <!-- Adapter Status List -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Adaptor Durum Listesi</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Adaptor</th>
+          <th>Durum</th>
+          <th>Uptime</th>
+          <th>Son Kontrol</th>
+          <th>Latency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Adaptor">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-wordpress-logo" style="color:#22c55e"></i>
+              <span style="font-weight:500;color:var(--text)">WordPress</span>
+            </div>
+          </td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span></td>
+          <td data-label="Uptime"><span style="color:var(--text)">99.8%</span></td>
+          <td data-label="Son Kontrol"><span style="color:var(--muted)">2 dk once</span></td>
+          <td data-label="Latency"><span style="color:#22c55e">89ms</span></td>
+        </tr>
+        <tr>
+          <td data-label="Adaptor">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-shopping-bag" style="color:#22c55e"></i>
+              <span style="font-weight:500;color:var(--text)">Shopify</span>
+            </div>
+          </td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span></td>
+          <td data-label="Uptime"><span style="color:var(--text)">99.5%</span></td>
+          <td data-label="Son Kontrol"><span style="color:var(--muted)">3 dk once</span></td>
+          <td data-label="Latency"><span style="color:#22c55e">124ms</span></td>
+        </tr>
+        <tr>
+          <td data-label="Adaptor">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-drop" style="color:#ef4444"></i>
+              <span style="font-weight:500;color:var(--text)">Drupal</span>
+            </div>
+          </td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Hata</span></td>
+          <td data-label="Uptime"><span style="color:var(--text)">94.2%</span></td>
+          <td data-label="Son Kontrol"><span style="color:var(--muted)">1 dk once</span></td>
+          <td data-label="Latency"><span style="color:#ef4444">timeout</span></td>
+        </tr>
+        <tr>
+          <td data-label="Adaptor">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-google-logo" style="color:#22c55e"></i>
+              <span style="font-weight:500;color:var(--text)">Google Ads</span>
+            </div>
+          </td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span></td>
+          <td data-label="Uptime"><span style="color:var(--text)">99.9%</span></td>
+          <td data-label="Son Kontrol"><span style="color:var(--muted)">1 dk once</span></td>
+          <td data-label="Latency"><span style="color:#22c55e">67ms</span></td>
+        </tr>
+        <tr>
+          <td data-label="Adaptor">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-meta-logo" style="color:#22c55e"></i>
+              <span style="font-weight:500;color:var(--text)">Meta Ads</span>
+            </div>
+          </td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span></td>
+          <td data-label="Uptime"><span style="color:var(--text)">99.7%</span></td>
+          <td data-label="Son Kontrol"><span style="color:var(--muted)">2 dk once</span></td>
+          <td data-label="Latency"><span style="color:#eab308">182ms</span></td>
+        </tr>
+        <tr>
+          <td data-label="Adaptor">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-tiktok-logo" style="color:#22c55e"></i>
+              <span style="font-weight:500;color:var(--text)">TikTok Ads</span>
+            </div>
+          </td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span></td>
+          <td data-label="Uptime"><span style="color:var(--text)">98.9%</span></td>
+          <td data-label="Son Kontrol"><span style="color:var(--muted)">4 dk once</span></td>
+          <td data-label="Latency"><span style="color:#eab308">210ms</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('adapters'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const border = '#3C342C';
+  const muted = '#7B7269';
+  const text = '#F2EDE5';
+
+  const adapters = ['WordPress', 'Shopify', 'Drupal', 'Google Ads', 'Meta Ads', 'TikTok Ads'];
+  const hours = [];
+  for (let h = 0; h < 24; h++) hours.push(h + ':00');
+
+  const data = [];
+  adapters.forEach((a, yi) => {
+    hours.forEach((h, xi) => {
+      let val;
+      if (yi === 2 && xi >= 18 && xi <= 22) val = 2; // Drupal errors
+      else if (yi === 2 && xi >= 16) val = 1; // Drupal warnings
+      else val = Math.random() > 0.92 ? 1 : 0; // occasional yellow
+      data.push([xi, yi, val]);
+    });
+  });
+
+  const chart = echarts.init(document.getElementById('heatmapChart'));
+  chart.setOption({
+    tooltip: {
+      backgroundColor: '#201C18', borderColor: border, textStyle: { color: text, fontSize: 12 },
+      formatter: p => `${adapters[p.data[1]]} — ${hours[p.data[0]]}<br/>${['Saglıklı','Uyarı','Hata'][p.data[2]]}`
+    },
+    grid: { left: 100, right: 16, top: 8, bottom: 32 },
+    xAxis: { type: 'category', data: hours, axisLine: { lineStyle: { color: border } }, axisLabel: { color: muted, fontSize: 10, interval: 3 }, axisTick: { show: false }, splitLine: { show: false } },
+    yAxis: { type: 'category', data: adapters, axisLine: { lineStyle: { color: border } }, axisLabel: { color: text, fontSize: 11 }, axisTick: { show: false } },
+    visualMap: { show: false, min: 0, max: 2, inRange: { color: ['#22c55e', '#eab308', '#ef4444'] } },
+    series: [{
+      type: 'heatmap', data: data, itemStyle: { borderColor: '#201C18', borderWidth: 2, borderRadius: 3 },
+      emphasis: { itemStyle: { borderColor: text } }
+    }]
+  });
+  window.addEventListener('resize', () => chart.resize());
+});
+</script>
+</body>
+</html>

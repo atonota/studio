@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Rakip Reklam Analizi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  domain: '',
+  analyzed: false,
+  loading: false,
+  currentAd: 0,
+  adCopies: [
+    {headline:'Dijital Pazarlama Cozumleri | %30 Indirim',desc:'Isletmenizi buyutun. Uzman dijital pazarlama ekibimizle organik trafigi 3x artirin. Ucretsiz danismanlik.',displayUrl:'rakip.com/dijital-pazarlama',platform:'Google',platformColor:'#3b82f6',platformIcon:'ph-google-logo'},
+    {headline:'SEO Hizmeti Turkiye | Ilk Sayfada Yerinizi Alin',desc:'10+ yillik tecrube. 500+ mutlu musteri. Garantili SEO calismalari ile web sitenizi zirveye tasiyin.',displayUrl:'rakip.com/seo-hizmeti',platform:'Google',platformColor:'#3b82f6',platformIcon:'ph-google-logo'},
+    {headline:'E-Ticaret Buyume Paketi',desc:'Online satisinizi katlayacak stratejiler. A dan Z ye dijital donusum danismanligi. Simdi basvurun!',displayUrl:'rakip.com/e-ticaret',platform:'Meta',platformColor:'#a855f7',platformIcon:'ph-meta-logo'},
+    {headline:'Ucretsiz Web Site Analizi',desc:'Web sitenizin SEO performansini olcun. 50+ metrik, detayli rapor, aksiyona donuk oneriler.',displayUrl:'rakip.com/analiz',platform:'Google',platformColor:'#3b82f6',platformIcon:'ph-google-logo'},
+    {headline:'Sosyal Medya Yonetimi | Aylik 2.990 TL',desc:'Instagram, TikTok, LinkedIn icerikleri. Profesyonel tasarim + strateji + raporlama dahil.',displayUrl:'rakip.com/sosyal-medya',platform:'Meta',platformColor:'#a855f7',platformIcon:'ph-meta-logo'}
+  ],
+  keywords: [
+    {keyword:'dijital pazarlama ajansi',pos:2,cpc:'₺4.20',volume:'8,100',traffic:'2,430'},
+    {keyword:'seo hizmeti',pos:1,cpc:'₺6.80',volume:'6,600',traffic:'3,960'},
+    {keyword:'google ads yonetimi',pos:3,cpc:'₺5.50',volume:'4,400',traffic:'880'},
+    {keyword:'web tasarim fiyatlari',pos:4,cpc:'₺3.20',volume:'9,900',traffic:'990'},
+    {keyword:'e-ticaret danismanligi',pos:2,cpc:'₺7.10',volume:'3,600',traffic:'1,080'},
+    {keyword:'sosyal medya ajansi',pos:5,cpc:'₺2.90',volume:'5,400',traffic:'540'},
+    {keyword:'dijital reklam ajansi',pos:1,cpc:'₺5.80',volume:'2,900',traffic:'1,740'},
+    {keyword:'seo analizi',pos:3,cpc:'₺4.50',volume:'7,200',traffic:'1,440'},
+    {keyword:'kurumsal web sitesi',pos:6,cpc:'₺3.70',volume:'4,800',traffic:'288'},
+    {keyword:'online pazarlama',pos:4,cpc:'₺3.10',volume:'5,100',traffic:'510'}
+  ],
+  landingPages: [
+    {url:'rakip.com/dijital-pazarlama',adCount:12,traffic:'4,200'},
+    {url:'rakip.com/seo-hizmeti',adCount:8,traffic:'3,100'},
+    {url:'rakip.com/e-ticaret-paketleri',adCount:6,traffic:'1,800'},
+    {url:'rakip.com/ucretsiz-analiz',adCount:15,traffic:'5,600'},
+    {url:'rakip.com/sosyal-medya-yonetimi',adCount:6,traffic:'1,200'}
+  ],
+  adSortCol: '',
+  adSortDir: 'desc',
+  doAdSort(col) {
+    if (this.adSortCol === col) this.adSortDir = this.adSortDir === 'asc' ? 'desc' : 'asc';
+    else { this.adSortCol = col; this.adSortDir = 'desc'; }
+  },
+  adSortIcon(col) { return this.adSortCol === col ? (this.adSortDir === 'asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'; },
+  parseNum(s) { return typeof s === 'number' ? s : parseFloat(String(s).replace(/[^\d.,]/g,'').replace(',','')) || 0; },
+  get sortedKeywords() {
+    if (!this.adSortCol) return this.keywords;
+    const col = this.adSortCol, dir = this.adSortDir;
+    return [...this.keywords].sort((a,b) => {
+      let va = a[col], vb = b[col];
+      if (typeof va === 'string' && typeof vb === 'string') {
+        const na = this.parseNum(va), nb = this.parseNum(vb);
+        if (na || nb) { const cmp = na - nb; return dir === 'asc' ? cmp : -cmp; }
+        const cmp = va.localeCompare(vb,'tr');
+        return dir === 'asc' ? cmp : -cmp;
+      }
+      const cmp = (va||0) - (vb||0);
+      return dir === 'asc' ? cmp : -cmp;
+    });
+  },
+  initSpendChart() {
+    const el = document.getElementById('spend-trend-chart');
+    if (!el) return;
+    const t = getChartTheme();
+    const months = ['Eki 25','Kas 25','Ara 25','Oca 26','Sub 26','Mar 26'];
+    const data = [98, 105, 112, 118, 122, 125];
+    const c = echarts.init(el);
+    c.setOption({
+      tooltip:{trigger:'axis', backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11},
+        formatter: params => params[0].name + '<br/>' + params[0].marker + ' Tahmini Harcama: <b>' + params[0].value + 'K &#8378;</b>/ay'},
+      grid:{left:50,right:20,top:16,bottom:30},
+      xAxis:{type:'category', data:months, axisLabel:{color:t.muted,fontSize:10}, axisLine:{lineStyle:{color:t.border}}},
+      yAxis:{type:'value', axisLabel:{color:t.muted,fontSize:10, formatter:v=>v+'K'}, splitLine:{lineStyle:{color:t.border,opacity:0.3}}},
+      series:[{
+        type:'line', data, smooth:true, symbol:'circle', symbolSize:6,
+        lineStyle:{color:'#eab308',width:2.5},
+        itemStyle:{color:'#eab308'},
+        areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(234,179,8,0.25)'},{offset:1,color:'transparent'}]}}
+      }]
+    });
+    window.addEventListener('resize', () => c.resize());
+  },
+  doAnalysis() {
+    if (!this.domain.trim()) return;
+    this.loading = true;
+    this.analyzed = false;
+    setTimeout(() => {
+      this.loading = false;
+      this.analyzed = true;
+      this.$nextTick(() => this.initSpendChart());
+    }, 2000);
+  },
+  nextAd() { this.currentAd = (this.currentAd + 1) % this.adCopies.length; },
+  prevAd() { this.currentAd = this.currentAd === 0 ? this.adCopies.length - 1 : this.currentAd - 1; }
+}">
+  <!-- Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Rakip Reklam Analizi</h1>
+    <p class="page-sub">Rakiplerinizin reklam stratejilerini analiz edin</p>
+  </div>
+
+  <!-- Domain Input -->
+  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="position:relative;flex:1;min-width:260px">
+        <i class="ph ph-globe" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
+        <input type="text" x-model="domain" @keydown.enter="doAnalysis()" placeholder="Rakip domain girin..." style="width:100%;padding:10px 12px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+      </div>
+      <button @click="doAnalysis()" class="btn-primary" :disabled="loading">
+        <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-magnifying-glass'" :style="loading && 'animation:spin 1s linear infinite'"></i>
+        <span x-text="loading ? 'Analiz ediliyor...' : 'Analiz Et'"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <template x-if="analyzed">
+    <div>
+      <!-- Stat Cards -->
+      <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+        <div class="stat-card" style="--stripe:#a855f7">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Aktif Reklam</span>
+          <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">47</div>
+        </div>
+        <div class="stat-card" style="--stripe:#eab308">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Tahmini Butce</span>
+          <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">&#8378;125K/ay</div>
+        </div>
+        <div class="stat-card" style="--stripe:#3b82f6">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Keyword</span>
+          <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">892</div>
+        </div>
+        <div class="stat-card" style="--stripe:#22c55e">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Landing Page</span>
+          <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">34</div>
+        </div>
+      </div>
+
+      <!-- Ad Copy Carousel -->
+      <div class="fade-in-d2 card" style="margin-bottom:24px;padding:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <span class="section-label" style="margin-bottom:0">Reklam Ornekleri</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button @click="prevAd()" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ph ph-caret-left"></i></button>
+            <span style="font-size:0.75rem;color:var(--muted)" x-text="(currentAd+1)+' / '+adCopies.length"></span>
+            <button @click="nextAd()" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ph ph-caret-right"></i></button>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:20px;background:var(--surface-2)">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+            <i class="ph" :class="adCopies[currentAd].platformIcon" :style="'color:'+adCopies[currentAd].platformColor"></i>
+            <span class="badge" :style="'background:'+adCopies[currentAd].platformColor+'1a;color:'+adCopies[currentAd].platformColor" x-text="adCopies[currentAd].platform"></span>
+            <span style="font-size:0.6875rem;color:var(--muted)">Sponsorlu</span>
+          </div>
+          <div style="font-size:1rem;font-weight:600;color:var(--accent);margin-bottom:8px;line-height:1.4" x-text="adCopies[currentAd].headline"></div>
+          <p style="font-size:0.8125rem;color:var(--text);line-height:1.6;margin-bottom:8px" x-text="adCopies[currentAd].desc"></p>
+          <span style="font-size:0.75rem;color:var(--muted)" x-text="adCopies[currentAd].displayUrl"></span>
+        </div>
+      </div>
+
+      <!-- Spend Trend Chart -->
+      <div class="fade-in-d3 card" style="padding:16px;margin-bottom:24px">
+        <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">Tahmini Reklam Harcamasi Trendi (6 Ay)</div>
+        <div id="spend-trend-chart" style="width:100%;height:260px"></div>
+      </div>
+
+      <!-- Top PPC Keywords -->
+      <div class="fade-in-d3 card" style="padding:0;overflow:hidden;margin-bottom:24px">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+          <span class="section-label" style="margin-bottom:0">Top PPC Keywordler</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th @click="doAdSort('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="adSortIcon('keyword')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doAdSort('pos')" style="cursor:pointer;user-select:none">Pozisyon <i class="ph" :class="adSortIcon('pos')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doAdSort('cpc')" style="cursor:pointer;user-select:none">CPC <i class="ph" :class="adSortIcon('cpc')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doAdSort('volume')" style="cursor:pointer;user-select:none">Hacim <i class="ph" :class="adSortIcon('volume')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doAdSort('traffic')" style="cursor:pointer;user-select:none">Trafik <i class="ph" :class="adSortIcon('traffic')" style="font-size:0.625rem;opacity:0.5"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="kw in sortedKeywords" :key="kw.keyword">
+                <tr>
+                  <td data-label="Keyword"><span style="font-weight:500;color:var(--text)" x-text="kw.keyword"></span></td>
+                  <td data-label="Pozisyon"><span class="badge" :style="kw.pos <= 2 ? 'background:rgba(34,197,94,0.1);color:#22c55e' : kw.pos <= 4 ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(123,114,105,0.15);color:#7B7269'" x-text="'#'+kw.pos"></span></td>
+                  <td data-label="CPC"><span style="color:var(--text)" x-text="kw.cpc"></span></td>
+                  <td data-label="Hacim"><span style="color:var(--muted)" x-text="kw.volume"></span></td>
+                  <td data-label="Trafik"><span style="color:var(--text);font-weight:500" x-text="kw.traffic"></span></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Landing Pages -->
+      <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+          <span class="section-label" style="margin-bottom:0">Landing Page Listesi</span>
+        </div>
+        <template x-for="(lp, idx) in landingPages" :key="lp.url">
+          <div :style="'padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;' + (idx < landingPages.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
+            <div style="flex:1;min-width:200px">
+              <span style="font-size:0.8125rem;color:var(--accent);font-weight:500" x-text="lp.url"></span>
+            </div>
+            <div style="display:flex;gap:20px;align-items:center">
+              <div style="text-align:center">
+                <span style="font-size:0.6875rem;color:var(--muted);display:block">Reklam</span>
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text)" x-text="lp.adCount"></span>
+              </div>
+              <div style="text-align:center">
+                <span style="font-size:0.6875rem;color:var(--muted);display:block">Trafik</span>
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text)" x-text="lp.traffic"></span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </template>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</body>
+</html>

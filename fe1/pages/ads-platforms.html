@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Reklam Platform Baglantilari — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+    <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-plugs-connected" style="color:#3b82f6;font-size:1.25rem"></i>
+    </div>
+    <div>
+      <h1 class="page-title">Reklam Platform Baglantilari</h1>
+      <p class="page-sub">Reklam platformlari entegrasyon durumu</p>
+    </div>
+  </div>
+
+  <!-- Platform Cards Grid -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+    <!-- Meta — Connected -->
+    <div class="card" style="padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:1.25rem"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Meta Ads</div>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+        </div>
+      </div>
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">
+        <div style="margin-bottom:4px">Baglanti: <span style="color:var(--text-soft)">System User</span></div>
+        <div>Token: <span style="font-family:'SF Mono',monospace;font-size:0.75rem;color:var(--text-soft)">EAAx...k4Zf</span></div>
+      </div>
+      <button class="btn-secondary" style="width:100%;padding:8px;font-size:0.8125rem">Yonet</button>
+    </div>
+
+    <!-- TikTok — Connected -->
+    <div class="card" style="padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-tiktok-logo" style="color:var(--text);font-size:1.25rem"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">TikTok Ads</div>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+        </div>
+      </div>
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">
+        <div style="margin-bottom:4px">Baglanti: <span style="color:var(--text-soft)">OAuth</span></div>
+        <div>Token: <span style="font-family:'SF Mono',monospace;font-size:0.75rem;color:var(--text-soft)">tt_o...9xQ2</span></div>
+      </div>
+      <button class="btn-secondary" style="width:100%;padding:8px;font-size:0.8125rem">Yonet</button>
+    </div>
+
+    <!-- LinkedIn — Connected -->
+    <div class="card" style="padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:1.25rem"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">LinkedIn Ads</div>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+        </div>
+      </div>
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">
+        <div style="margin-bottom:4px">Baglanti: <span style="color:var(--text-soft)">OAuth</span></div>
+        <div>Token: <span style="font-family:'SF Mono',monospace;font-size:0.75rem;color:var(--text-soft)">AQV...mR7p</span></div>
+      </div>
+      <button class="btn-secondary" style="width:100%;padding:8px;font-size:0.8125rem">Yonet</button>
+    </div>
+
+    <!-- Google Ads — Connected -->
+    <div class="card" style="padding:20px 24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-google-logo" style="color:#eab308;font-size:1.25rem"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Google Ads</div>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+        </div>
+      </div>
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">
+        <div style="margin-bottom:4px">Baglanti: <span style="color:var(--text-soft)">OAuth</span></div>
+        <div>Token: <span style="font-family:'SF Mono',monospace;font-size:0.75rem;color:var(--text-soft)">ya29...Hk3m</span></div>
+      </div>
+      <button class="btn-secondary" style="width:100%;padding:8px;font-size:0.8125rem">Yonet</button>
+    </div>
+
+    <!-- Pinterest — Not Connected -->
+    <div class="card" style="padding:20px 24px;opacity:0.7">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-pinterest-logo" style="color:#ef4444;font-size:1.25rem"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Pinterest Ads</div>
+          <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Bagli degil</span>
+        </div>
+      </div>
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">
+        <div style="margin-bottom:4px">Baglanti: <span style="color:var(--muted)">—</span></div>
+        <div>Token: <span style="color:var(--muted)">—</span></div>
+      </div>
+      <button class="btn-primary" style="width:100%;padding:8px;font-size:0.8125rem">Bagla</button>
+    </div>
+
+    <!-- Snapchat — Not Connected -->
+    <div class="card" style="padding:20px 24px;opacity:0.7">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-snapchat-logo" style="color:#eab308;font-size:1.25rem"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Snapchat Ads</div>
+          <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Bagli degil</span>
+        </div>
+      </div>
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">
+        <div style="margin-bottom:4px">Baglanti: <span style="color:var(--muted)">—</span></div>
+        <div>Token: <span style="color:var(--muted)">—</span></div>
+      </div>
+      <button class="btn-primary" style="width:100%;padding:8px;font-size:0.8125rem">Bagla</button>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

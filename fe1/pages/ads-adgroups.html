@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Reklam Gruplari — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ search: '', platformFilter: 'tumu', statusFilter: 'tumu', sortCol: '', sortDir: 'asc' }">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-folders" style="color:#22c55e;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Reklam Gruplari</h1>
+        <p class="page-sub">Kampanya alt gruplari ve hedefleme</p>
+      </div>
+    </div>
+    <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Grup</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="fade-in" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+    <input type="text" x-model="search" placeholder="Grup ara..." style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;font-family:inherit;min-width:200px">
+    <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'Meta',l:'Meta'},{v:'TikTok',l:'TikTok'},{v:'LinkedIn',l:'LinkedIn'}]">
+      <button @click="platformFilter = p.v" :style="platformFilter === p.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="p.l"></button>
+    </template>
+    <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'Aktif',l:'Aktif'},{v:'Duraklatildi',l:'Duraklatildi'}]">
+      <button @click="statusFilter = s.v" :style="statusFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+    </template>
+  </div>
+
+  <!-- Ad Groups Table -->
+  <div class="fade-in-d1 card">
+    <span class="section-label">Tum Reklam Gruplari</span>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Grup Adi</th>
+          <th>Kampanya</th>
+          <th>Platform</th>
+          <th>Durum</th>
+          <th>Gunluk Butce</th>
+          <th>Harcama</th>
+          <th>CPC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">18-34 Kadin — Istanbul</td>
+          <td data-label="Kampanya" style="font-size:0.8125rem">Bahar Kampanyasi</td>
+          <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span></td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Gunluk Butce">&#8378;250/gun</td>
+          <td data-label="Harcama">&#8378;4,820</td>
+          <td data-label="CPC" style="font-weight:500">&#8378;1.42</td>
+        </tr>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">25-44 Erkek — Ankara</td>
+          <td data-label="Kampanya" style="font-size:0.8125rem">Bahar Kampanyasi</td>
+          <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span></td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Gunluk Butce">&#8378;150/gun</td>
+          <td data-label="Harcama">&#8378;2,940</td>
+          <td data-label="CPC" style="font-weight:500">&#8378;1.78</td>
+        </tr>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">GenZ Ilgi Alani</td>
+          <td data-label="Kampanya" style="font-size:0.8125rem">TikTok Lansman</td>
+          <td data-label="Platform"><span class="badge" style="background:rgba(var(--text-rgb),0.1);color:var(--text)">TikTok</span></td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Gunluk Butce">&#8378;500/gun</td>
+          <td data-label="Harcama">&#8378;8,750</td>
+          <td data-label="CPC" style="font-weight:500">&#8378;0.84</td>
+        </tr>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">IT Manager — Turkiye</td>
+          <td data-label="Kampanya" style="font-size:0.8125rem">B2B Lead Gen Q1</td>
+          <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">LinkedIn</span></td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Duraklatildi</span></td>
+          <td data-label="Gunluk Butce">&#8378;400/gun</td>
+          <td data-label="Harcama">&#8378;7,900</td>
+          <td data-label="CPC" style="font-weight:500">&#8378;8.20</td>
+        </tr>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">Retargeting — Site Ziyaretci</td>
+          <td data-label="Kampanya" style="font-size:0.8125rem">Bahar Kampanyasi</td>
+          <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span></td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Gunluk Butce">&#8378;100/gun</td>
+          <td data-label="Harcama">&#8378;1,640</td>
+          <td data-label="CPC" style="font-weight:500">&#8378;0.92</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Toplu URL Analizi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  urlText: 'https://acme.com/blog/seo-rehberi\nhttps://acme.com/blog/dijital-pazarlama\nhttps://acme.com/urunler/analiz-araci\nhttps://acme.com/blog/backlink-stratejileri\nhttps://acme.com/hakkimizda',
+  analyzed: false,
+  loading: false,
+  progress: 0,
+  sortCol: 'traffic',
+  sortDir: 'desc',
+  results: [],
+  doAnalysis() {
+    const urls = this.urlText.trim().split('\n').filter(u => u.trim());
+    if (!urls.length || urls.length > 200) return;
+    this.loading = true;
+    this.analyzed = false;
+    this.progress = 0;
+    const interval = setInterval(() => {
+      this.progress += Math.floor(Math.random()*15)+5;
+      if (this.progress >= 100) this.progress = 100;
+    }, 200);
+    setTimeout(() => {
+      clearInterval(interval);
+      this.progress = 100;
+      const statuses = ['200 OK','200 OK','200 OK','301 Redirect','404 Not Found','200 OK','200 OK'];
+      const statusColors = {'200 OK':'#22c55e','301 Redirect':'#eab308','404 Not Found':'#ef4444'};
+      this.results = urls.map((url, i) => {
+        const status = statuses[i % statuses.length];
+        return {
+          url: url.trim(),
+          dr: Math.floor(Math.random()*50)+30,
+          ur: Math.floor(Math.random()*40)+20,
+          backlinks: Math.floor(Math.random()*500)+10,
+          refDomains: Math.floor(Math.random()*200)+5,
+          traffic: Math.floor(Math.random()*10000)+100,
+          status,
+          statusColor: statusColors[status],
+          statusBg: statusColors[status] === '#22c55e' ? 'rgba(34,197,94,0.1)' : statusColors[status] === '#eab308' ? 'rgba(234,179,8,0.1)' : 'rgba(239,68,68,0.1)',
+        };
+      });
+      this.loading = false;
+      this.analyzed = true;
+    }, 2000);
+  },
+  get sorted() {
+    if (!this.sortCol) return this.results;
+    return [...this.results].sort((a,b) => {
+      let va = a[this.sortCol], vb = b[this.sortCol];
+      let cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+      return this.sortDir === 'asc' ? cmp : -cmp;
+    });
+  },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'desc'; }
+  },
+  exportCSV() {
+    const headers = ['URL','DR','UR','Backlinks','Ref Domains','Traffic','Durum'];
+    const rows = this.sorted.map(r => [r.url, r.dr, r.ur, r.backlinks, r.refDomains, r.traffic, r.status]);
+    exportToCSV(headers, rows, 'toplu-url-analiz.csv');
+  },
+  get urlCount() { return this.urlText.trim().split('\n').filter(u => u.trim()).length; }
+}">
+  <!-- Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Toplu URL Analizi</h1>
+    <p class="page-sub">Birden fazla URL'yi tek seferde analiz edin</p>
+  </div>
+
+  <!-- URL Input -->
+  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <span class="section-label" style="margin-bottom:0">URL Listesi</span>
+      <span style="font-size:0.75rem;color:var(--muted)" x-text="urlCount + ' / 200 URL'"></span>
+    </div>
+    <textarea x-model="urlText" placeholder="URL'leri girin (satir basina bir URL, max 200)" style="width:100%;height:160px;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;font-family:'Courier New',monospace;outline:none;resize:vertical;line-height:1.7"></textarea>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+      <button @click="doAnalysis()" class="btn-primary" :disabled="loading || urlCount === 0">
+        <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-lightning'" :style="loading && 'animation:spin 1s linear infinite'"></i>
+        <span x-text="loading ? 'Analiz ediliyor...' : 'Analiz Et'"></span>
+      </button>
+      <div x-show="loading" style="flex:1;max-width:300px">
+        <div style="height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden">
+          <div :style="'height:100%;border-radius:3px;background:var(--accent);transition:width .3s;width:'+progress+'%'"></div>
+        </div>
+        <span style="font-size:0.6875rem;color:var(--muted)" x-text="progress + '%'"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <template x-if="analyzed">
+    <div>
+      <div class="fade-in-d2" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="results.length + ' URL analiz edildi'"></span>
+        <button @click="exportCSV()" style="font-size:0.75rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-download-simple"></i> CSV Indir</button>
+      </div>
+
+      <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th style="min-width:220px">URL</th>
+                <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('ur')" style="cursor:pointer">UR <i class="ph" :class="sortCol==='ur' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('backlinks')" style="cursor:pointer">Backlinks <i class="ph" :class="sortCol==='backlinks' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('refDomains')" style="cursor:pointer">Ref. Domain <i class="ph" :class="sortCol==='refDomains' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('traffic')" style="cursor:pointer">Trafik <i class="ph" :class="sortCol==='traffic' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th>Durum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="row in sorted" :key="row.url">
+                <tr>
+                  <td data-label="URL"><span style="font-size:0.75rem;color:var(--accent);word-break:break-all" x-text="row.url"></span></td>
+                  <td data-label="DR"><span style="font-weight:600;color:var(--text)" x-text="row.dr"></span></td>
+                  <td data-label="UR"><span style="color:var(--text)" x-text="row.ur"></span></td>
+                  <td data-label="Backlinks"><span style="color:var(--text)" x-text="row.backlinks.toLocaleString('tr-TR')"></span></td>
+                  <td data-label="Ref. Domain"><span style="color:var(--text)" x-text="row.refDomains"></span></td>
+                  <td data-label="Trafik"><span style="color:var(--text)" x-text="row.traffic.toLocaleString('tr-TR')"></span></td>
+                  <td data-label="Durum"><span class="badge" :style="'background:'+row.statusBg+';color:'+row.statusColor" x-text="row.status"></span></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</body>
+</html>

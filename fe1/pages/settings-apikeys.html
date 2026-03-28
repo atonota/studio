@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>API Anahtarlari — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">API Anahtarlari</h1>
+      <p class="page-sub">Platform API erisim anahtarlari</p>
+    </div>
+    <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Anahtar</button>
+  </div>
+
+  <div class="fade-in-d1 card">
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Anahtar Adi</th>
+          <th>Anahtar</th>
+          <th>Olusturma</th>
+          <th>Son Kullanim</th>
+          <th>Durum</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Anahtar Adi" style="font-weight:500;color:var(--text)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-key" style="color:var(--accent)"></i> Production Key
+            </div>
+          </td>
+          <td data-label="Anahtar" style="font-family:monospace;font-size:0.75rem;color:var(--text-soft)">sk-prod-xxx...xxx</td>
+          <td data-label="Olusturma" style="font-size:0.8125rem;color:var(--text-soft)">15 Oca 2026</td>
+          <td data-label="Son Kullanim" style="font-size:0.8125rem;color:var(--text-soft)">Bugun 14:32</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label=""><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-family:inherit;font-size:0.8125rem;font-weight:500;padding:4px 8px">Iptal Et</button></td>
+        </tr>
+        <tr>
+          <td data-label="Anahtar Adi" style="font-weight:500;color:var(--text)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-key" style="color:var(--muted)"></i> Test Key
+            </div>
+          </td>
+          <td data-label="Anahtar" style="font-family:monospace;font-size:0.75rem;color:var(--text-soft)">sk-test-xxx...xxx</td>
+          <td data-label="Olusturma" style="font-size:0.8125rem;color:var(--text-soft)">20 Sub 2026</td>
+          <td data-label="Son Kullanim" style="font-size:0.8125rem;color:var(--text-soft)">3 gun once</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label=""><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-family:inherit;font-size:0.8125rem;font-weight:500;padding:4px 8px">Iptal Et</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
+</body>
+</html>

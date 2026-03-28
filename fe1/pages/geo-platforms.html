@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Platform Bazli Analiz — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ expanded: null }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Platform Bazli Analiz</h1>
+    <p class="page-sub">Her AI platformu icin detayli gorunurluk metrikleri</p>
+  </div>
+
+  <!-- Platform Detail Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <!-- ChatGPT -->
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-openai-logo" style="font-size:1.25rem;color:#22c55e"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">ChatGPT</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Mention</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">8</span></div>
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Citation</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">3</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1rem"></i>
+        <span style="font-size:0.8125rem;color:#22c55e">+25% haftalik artis</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;color:var(--muted)">Optimizasyon Skoru</span>
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px"><div style="width:78%;height:100%;background:#22c55e;border-radius:2px"></div></div>
+        <span style="font-size:0.75rem;color:var(--text)">78</span>
+      </div>
+    </div>
+
+    <!-- Gemini -->
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-google-logo" style="font-size:1.25rem;color:#3b82f6"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Gemini</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Mention</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">6</span></div>
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Citation</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">2</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1rem"></i>
+        <span style="font-size:0.8125rem;color:#22c55e">+18% haftalik artis</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;color:var(--muted)">Optimizasyon Skoru</span>
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px"><div style="width:70%;height:100%;background:#3b82f6;border-radius:2px"></div></div>
+        <span style="font-size:0.75rem;color:var(--text)">70</span>
+      </div>
+    </div>
+
+    <!-- Perplexity -->
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-compass" style="font-size:1.25rem;color:#a855f7"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Perplexity</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Mention</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">5</span></div>
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Citation</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">2</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1rem"></i>
+        <span style="font-size:0.8125rem;color:#22c55e">+12% haftalik artis</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;color:var(--muted)">Optimizasyon Skoru</span>
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px"><div style="width:65%;height:100%;background:#a855f7;border-radius:2px"></div></div>
+        <span style="font-size:0.75rem;color:var(--text)">65</span>
+      </div>
+    </div>
+
+    <!-- Claude -->
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-robot" style="font-size:1.25rem;color:#C2410C"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Claude</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Mention</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">3</span></div>
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Citation</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">1</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1rem"></i>
+        <span style="font-size:0.8125rem;color:#22c55e">+8% haftalik artis</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;color:var(--muted)">Optimizasyon Skoru</span>
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px"><div style="width:55%;height:100%;background:#C2410C;border-radius:2px"></div></div>
+        <span style="font-size:0.75rem;color:var(--text)">55</span>
+      </div>
+    </div>
+
+    <!-- Copilot -->
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-microsoft-teams-logo" style="font-size:1.25rem;color:#7B7269"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Copilot</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Mention</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">1</span></div>
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Citation</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">0</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <i class="ph ph-minus" style="color:#7B7269;font-size:1rem"></i>
+        <span style="font-size:0.8125rem;color:var(--muted)">Degisim yok</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;color:var(--muted)">Optimizasyon Skoru</span>
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px"><div style="width:30%;height:100%;background:#eab308;border-radius:2px"></div></div>
+        <span style="font-size:0.75rem;color:var(--text)">30</span>
+      </div>
+    </div>
+
+    <!-- Grok -->
+    <div class="card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-x-logo" style="font-size:1.25rem;color:#7B7269"></i>
+        </div>
+        <div style="flex:1">
+          <div style="font-weight:500;color:var(--text)">Grok</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Mention</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">0</span></div>
+        <div><span style="font-size:0.75rem;color:var(--muted);display:block">Citation</span><span style="font-size:1.125rem;font-weight:300;color:var(--text)">0</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+        <i class="ph ph-minus" style="color:#7B7269;font-size:1rem"></i>
+        <span style="font-size:0.8125rem;color:var(--muted)">Veri yok</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.75rem;color:var(--muted)">Optimizasyon Skoru</span>
+        <div style="flex:1;height:4px;background:var(--border);border-radius:2px"><div style="width:10%;height:100%;background:#ef4444;border-radius:2px"></div></div>
+        <span style="font-size:0.75rem;color:var(--text)">10</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Audit Log — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  searchQuery: '',
+  catFilter: 'Tumu',
+  categories: ['Tumu','Auth','Tenant','Plugin','Reklam'],
+  allRows: [
+    { time:'28 Mar 2026, 14:32', initials:'IK', initialsColor:'var(--accent)', initialsBg:'var(--accent-soft)', user:'Ibrahim Karaca', action:'plugin.activate', actionColor:'#22c55e', actionBg:'rgba(34,197,94,0.1)', resource:'WordPress Adaptor v2.1.4', category:'Plugin' },
+    { time:'28 Mar 2026, 13:15', initials:'AY', initialsColor:'#3b82f6', initialsBg:'rgba(59,130,246,0.15)', user:'Ayse Yilmaz', action:'campaign.create', actionColor:'#a855f7', actionBg:'rgba(168,85,247,0.1)', resource:'Meta Ads — Bahar Kampanyasi', category:'Reklam' },
+    { time:'28 Mar 2026, 11:48', initials:'MO', initialsColor:'#eab308', initialsBg:'rgba(234,179,8,0.15)', user:'Mehmet Ozturk', action:'tenant.update', actionColor:'#3b82f6', actionBg:'rgba(59,130,246,0.1)', resource:'Delta A.S. — Plan degisikligi', category:'Tenant' },
+    { time:'28 Mar 2026, 09:22', initials:'IK', initialsColor:'var(--accent)', initialsBg:'var(--accent-soft)', user:'Ibrahim Karaca', action:'auth.login', actionColor:'#eab308', actionBg:'rgba(234,179,8,0.1)', resource:'IP: 85.107.xx.xx — Istanbul', category:'Auth' }
+  ],
+  get filtered() {
+    return this.allRows.filter(r => {
+      const matchCat = this.catFilter === 'Tumu' || r.category === this.catFilter;
+      const matchSearch = !this.searchQuery || r.user.toLowerCase().includes(this.searchQuery.toLowerCase()) || r.action.toLowerCase().includes(this.searchQuery.toLowerCase()) || r.resource.toLowerCase().includes(this.searchQuery.toLowerCase());
+      return matchCat && matchSearch;
+    });
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Audit Log</h1>
+    <p class="page-sub">Sistem olay gecmisi</p>
+  </div>
+
+  <!-- Search -->
+  <div class="fade-in-d1" style="margin-bottom:16px">
+    <div style="position:relative;max-width:400px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.125rem;color:var(--muted)"></i>
+      <input type="text" placeholder="Kullanici, islem veya kaynak ara..." x-model="searchQuery" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 42px;color:var(--text);width:100%;font-family:inherit;font-size:0.875rem;outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="fade-in-d1" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+    <template x-for="cat in categories" :key="cat">
+      <span class="badge" @click="catFilter = cat"
+        :style="catFilter === cat
+          ? 'background:var(--accent-soft);color:var(--accent);cursor:pointer;padding:6px 14px;font-size:0.75rem'
+          : 'background:var(--surface-2);color:var(--text-soft);cursor:pointer;padding:6px 14px;font-size:0.75rem;border:1px solid var(--border)'"
+        x-text="cat"></span>
+    </template>
+  </div>
+
+  <!-- Audit Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Zaman</th>
+          <th>Kullanici</th>
+          <th>Islem</th>
+          <th>Kaynak</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.time + row.action">
+          <tr>
+            <td data-label="Zaman"><span style="font-size:0.75rem;color:var(--muted)" x-text="row.time"></span></td>
+            <td data-label="Kullanici">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div :style="'width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;background:'+row.initialsBg+';color:'+row.initialsColor" x-text="row.initials"></div>
+                <span style="color:var(--text)" x-text="row.user"></span>
+              </div>
+            </td>
+            <td data-label="Islem"><span class="badge" :style="'background:'+row.actionBg+';color:'+row.actionColor" x-text="row.action"></span></td>
+            <td data-label="Kaynak"><span style="color:var(--text)" x-text="row.resource"></span></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <div x-show="filtered.length === 0" style="padding:24px;text-align:center;color:var(--muted);font-size:0.875rem">
+      Secili filtrelere uygun kayit bulunamadi.
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('audit'));</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Tech Stack — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ category: 'tumu' }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Tech Stack</h1>
+    <p class="page-sub">rakip1.com</p>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap">
+    <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'cms',l:'CMS'},{v:'eticaret',l:'E-ticaret'},{v:'cdn',l:'CDN'},{v:'analitik',l:'Analitik'},{v:'seo',l:'SEO'},{v:'reklam',l:'Reklam'},{v:'guvenlik',l:'Guvenlik'},{v:'hosting',l:'Hosting'}]">
+      <button @click="category=pill.v" :style="category===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+    </template>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px;max-width:720px">
+
+    <!-- CMS -->
+    <div class="fade-in-d1" x-show="category==='tumu' || category==='cms'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">CMS</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-code" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">WordPress 6.5</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 12 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E-ticaret -->
+    <div class="fade-in-d1" x-show="category==='tumu' || category==='eticaret'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">E-ticaret</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-shopping-cart" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">WooCommerce</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 12 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CDN -->
+    <div class="fade-in-d1" x-show="category==='tumu' || category==='cdn'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">CDN</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-cloud" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Cloudflare</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 12 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analitik -->
+    <div class="fade-in-d2" x-show="category==='tumu' || category==='analitik'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">Analitik</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-chart-bar" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Google Analytics 4</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 14 Mar 2026</div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-cursor-click" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Hotjar</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 14 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO -->
+    <div class="fade-in-d2" x-show="category==='tumu' || category==='seo'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">SEO</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-magnifying-glass" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Yoast SEO</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 12 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reklam -->
+    <div class="fade-in-d2" x-show="category==='tumu' || category==='reklam'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">Reklam</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-tag" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Google Tag Manager</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 13 Mar 2026</div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-meta-logo" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Meta Pixel</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 13 Mar 2026</div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-tiktok-logo" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">TikTok Pixel</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 15 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guvenlik -->
+    <div class="fade-in-d3" x-show="category==='tumu' || category==='guvenlik'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">Guvenlik</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-shield-check" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Sucuri</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 12 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hosting -->
+    <div class="fade-in-d3" x-show="category==='tumu' || category==='hosting'" x-transition>
+      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;display:block">Hosting</span>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <div class="card" style="display:flex;align-items:center;gap:10px;padding:12px 16px">
+          <i class="ph ph-hard-drives" style="font-size:1.25rem;color:var(--text)"></i>
+          <div>
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">AWS</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Tespit: 12 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('competitors'));</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Adaptorler — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Adaptorler</h1>
+    <p class="page-sub">Platform baglantilari ve durumlari</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Bagli</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">5</div>
+    </div>
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Hata</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">1</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Uptime</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">99.2%</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Latency</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">142ms</div>
+    </div>
+  </div>
+
+  <!-- Platform Cards -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center"><i class="ph ph-wordpress-logo" style="color:#22c55e"></i></div>
+        <div><div style="font-weight:500;color:var(--text)">WordPress</div><div style="font-size:0.6875rem;color:var(--muted)">v6.7 — REST API</div></div>
+      </div>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center"><i class="ph ph-shopping-bag" style="color:#22c55e"></i></div>
+        <div><div style="font-weight:500;color:var(--text)">Shopify</div><div style="font-size:0.6875rem;color:var(--muted)">Admin API v2024-01</div></div>
+      </div>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center"><i class="ph ph-drop" style="color:#ef4444"></i></div>
+        <div><div style="font-weight:500;color:var(--text)">Drupal</div><div style="font-size:0.6875rem;color:var(--muted)">JSON:API — Timeout</div></div>
+      </div>
+      <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Hata</span>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center"><i class="ph ph-google-logo" style="color:#22c55e"></i></div>
+        <div><div style="font-weight:500;color:var(--text)">Google Ads</div><div style="font-size:0.6875rem;color:var(--muted)">API v16 — OAuth2</div></div>
+      </div>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center"><i class="ph ph-meta-logo" style="color:#22c55e"></i></div>
+        <div><div style="font-weight:500;color:var(--text)">Meta Ads</div><div style="font-size:0.6875rem;color:var(--muted)">Marketing API v19</div></div>
+      </div>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
+    </div>
+    <div class="card" style="border:2px dashed var(--border);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100px;gap:8px;cursor:pointer">
+      <i class="ph ph-plus-circle" style="font-size:1.5rem;color:var(--muted)"></i>
+      <span style="font-size:0.8125rem;color:var(--muted);font-weight:500">Yeni Bagla</span>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('adapters'));</script>
+</body>
+</html>

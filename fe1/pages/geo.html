@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>GEO Intelligence — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ platform:'tumu', range:'7gun' }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">GEO Intelligence</h1>
+    <p class="page-sub">Generative Engine Optimization — AI platformlarinda gorunurluk analizi</p>
+  </div>
+  <!-- Filters -->
+  <div class="fade-in" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'chatgpt',l:'ChatGPT'},{v:'gemini',l:'Gemini'},{v:'claude',l:'Claude'},{v:'perplexity',l:'Perplexity'}]">
+      <button @click="platform=p.v" :style="platform===p.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="p.l"></button>
+    </template>
+    <div style="flex:1"></div>
+    <template x-for="r in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
+      <button @click="range=r.v" :style="range===r.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="r.l"></button>
+    </template>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#C2410C">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">AI Gorunurluk Skoru</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--accent);margin-top:8px">72<span style="font-size:1rem;color:var(--muted);font-weight:300">/100</span></div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Platform</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">6</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Mention</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">23</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Citation</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">8</div>
+    </div>
+  </div>
+
+  <!-- Platform Mention Trend Chart -->
+  <div class="fade-in-d2 card" style="margin-bottom:24px">
+    <span class="section-label">Platform Mention Trendi (12 Hafta)</span>
+    <div id="chart-trend" style="width:100%;height:360px"></div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const mutedColor = '#7B7269';
+  const borderColor = '#3C342C';
+  const weeks = ['H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12'];
+
+  const cTrend = echarts.init(document.getElementById('chart-trend'));
+  cTrend.setOption({
+    tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:12,itemHeight:3},
+    grid:{left:40,right:16,top:16,bottom:60},
+    xAxis:{type:'category',data:weeks,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
+    series:[
+      {name:'ChatGPT',type:'line',data:[2,3,3,4,3,5,4,5,6,5,7,8],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#22c55e',width:2},itemStyle:{color:'#22c55e'}},
+      {name:'Gemini',type:'line',data:[1,2,2,3,2,3,3,4,4,5,5,6],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#3b82f6',width:2},itemStyle:{color:'#3b82f6'}},
+      {name:'Perplexity',type:'line',data:[1,1,2,2,2,3,3,3,4,4,4,5],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#a855f7',width:2},itemStyle:{color:'#a855f7'}},
+      {name:'Claude',type:'line',data:[0,1,1,1,1,2,2,2,2,3,3,3],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#C2410C',width:2},itemStyle:{color:'#C2410C'}},
+      {name:'Copilot',type:'line',data:[0,0,0,1,1,1,1,1,1,1,1,1],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#eab308',width:2},itemStyle:{color:'#eab308'}},
+      {name:'Grok',type:'line',data:[0,0,0,0,0,0,0,0,0,0,0,0],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#7B7269',width:2},itemStyle:{color:'#7B7269'}}
+    ]
+  });
+  window.addEventListener('resize', () => cTrend.resize());
+});
+</script>
+</body>
+</html>

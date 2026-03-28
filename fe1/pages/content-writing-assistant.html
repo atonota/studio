@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>SEO Yazim Asistani — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  targetKeyword: 'dijital pazarlama',
+  seoScore: 78,
+  readabilityScore: 72,
+
+  content: '<h2>Dijital Pazarlama Nedir?</h2><p>Dijital pazarlama, markalarin urunlerini ve hizmetlerini internet ve dijital iletisim kanallari araciligiyla tanitma surecleridir. Buna arama motorlari, sosyal medya platformlari, e-posta kampanyalari, web siteleri ve mobil uygulamalar dahildir. Dijital pazarlama stratejileri, geleneksel pazarlama yontemlerine kiyasla daha olculebilir ve hedeflenebilir sonuclar sunar.</p><h3>Dijital Pazarlama Stratejileri</h3><p>Basarili bir dijital pazarlama stratejisi olusturmak icin oncelikle hedef kitlenizi tanimlamaniz gerekmektedir. Pazar arastirmasi yaparak musterilerinizin davranislarini, ihtiyaclarini ve beklentilerini anlamak kritik bir adimdir. SEO, icerik pazarlama, sosyal medya yonetimi ve e-posta pazarlama gibi kanallarin entegre bir sekilde kullanilmasi en etkili sonuclari verir.</p><h3>Olcumleme ve Analitik</h3><p>Dijital pazarlama kampanyalarinizin basarisini olcmek icin Google Analytics, Search Console ve sosyal medya analitik araclari kullanabilirsiniz. Donusum orani, tiklama orani (CTR), hemen cikma orani ve sayfa goruntulenme sayisi gibi metrikler, kampanya performansinizi degerlendirmek icin onemli gostergelerdir. Bu verilere dayanarak stratejinizi surekli optimize edebilirsiniz.</p>',
+
+  checks: [
+    {id:1, label:'Keyword baslikta', status:'pass', detail:'Hedef keyword H2 basliginda mevcut'},
+    {id:2, label:'Keyword ilk 100 kelimede', status:'pass', detail:'Keyword ilk paragrafta yer aliyor'},
+    {id:3, label:'Keyword yogunlugu %2.1', status:'pass', detail:'Ideal aralik: %1-3'},
+    {id:4, label:'Meta description eksik', status:'warn', detail:'150-160 karakter meta description yazin'},
+    {id:5, label:'Dahili link sayisi: 1', status:'warn', detail:'Minimum 3 dahili link onerilir'},
+    {id:6, label:'Gorsel alt text eksik', status:'fail', detail:'2/4 gorsel icin alt text tanimlanmamis'},
+  ],
+
+  suggestedKeywords: [
+    {kw:'online pazarlama', added:false},
+    {kw:'dijital strateji', added:false},
+    {kw:'internet reklamciligi', added:false},
+    {kw:'sosyal medya pazarlama', added:false},
+    {kw:'arama motoru optimizasyonu', added:false},
+  ],
+
+  toneOfVoice: 'Profesyonel',
+  avgSentenceLength: 14,
+
+  get wordCount() {
+    const text = this.content.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();
+    return text ? text.split(' ').length : 0;
+  },
+  get readingTime() {
+    return Math.max(1, Math.ceil(this.wordCount / 200));
+  },
+
+  statusIcon(s) { return s === 'pass' ? 'ph-check-circle' : s === 'warn' ? 'ph-warning' : 'ph-x-circle' },
+  statusColor(s) { return s === 'pass' ? '#22c55e' : s === 'warn' ? '#eab308' : '#ef4444' },
+
+  execCommand(cmd, val) {
+    const editor = document.getElementById('content-editor');
+    if (editor) editor.focus();
+    document.execCommand(cmd, false, val || null);
+    this.updateContent();
+  },
+  insertHeading(tag) {
+    const editor = document.getElementById('content-editor');
+    if (editor) editor.focus();
+    document.execCommand('formatBlock', false, tag);
+    this.updateContent();
+  },
+  updateContent() {
+    const editor = document.getElementById('content-editor');
+    if (editor) this.content = editor.innerHTML;
+    this.recalcScore();
+  },
+  recalcScore() {
+    const text = this.content.toLowerCase();
+    const kw = this.targetKeyword.toLowerCase();
+    let score = 50;
+    if (text.includes('<h2') && text.includes(kw)) score += 10;
+    const firstPart = text.replace(/<[^>]*>/g,' ').slice(0,500);
+    if (firstPart.includes(kw)) score += 10;
+    const kwCount = (text.match(new RegExp(kw.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&'),'g')) || []).length;
+    const wordC = text.replace(/<[^>]*>/g,' ').split(/\\s+/).filter(Boolean).length;
+    const density = wordC > 0 ? (kwCount / wordC) * 100 : 0;
+    if (density >= 1 && density <= 3) score += 10;
+    if (this.content.includes('<img') && this.content.includes('alt=')) score += 5;
+    const linkCount = (this.content.match(/<a /g) || []).length;
+    if (linkCount >= 3) score += 8;
+    else if (linkCount >= 1) score += 4;
+    if (wordC >= 300) score += 5;
+    this.seoScore = Math.min(100, Math.max(0, score));
+  },
+
+  addSuggested(idx) {
+    this.suggestedKeywords[idx].added = true;
+    Alpine.store('toast').show(this.suggestedKeywords[idx].kw + ' icerige eklenmek uzere isaretlendi', 'success');
+  },
+
+  init() {
+    this.$nextTick(() => {
+      this.initScoreGauge();
+      const editor = document.getElementById('content-editor');
+      if (editor) {
+        editor.innerHTML = this.content;
+        editor.addEventListener('input', () => this.updateContent());
+      }
+    });
+  },
+
+  initScoreGauge() {
+    const el = document.getElementById('seo-score-gauge');
+    if (!el) return;
+    const t = getChartTheme();
+    const color = this.seoScore >= 80 ? t.green : this.seoScore >= 50 ? t.yellow : t.red;
+    const c = echarts.init(el);
+    c.setOption({
+      series:[{
+        type:'gauge', radius:'88%', startAngle:220, endAngle:-40,
+        min:0, max:100,
+        progress:{ show:true, width:10, itemStyle:{color} },
+        pointer:{ show:false },
+        axisLine:{ lineStyle:{width:10, color:[[1, t.border]]} },
+        axisTick:{ show:false },
+        splitLine:{ show:false },
+        axisLabel:{ show:false },
+        title:{ show:true, offsetCenter:[0,'32%'], fontSize:11, color:t.muted, fontFamily:'inherit' },
+        detail:{ valueAnimation:true, offsetCenter:[0,'-8%'], fontSize:32, fontWeight:700, color:t.text, formatter:'{value}',fontFamily:'inherit' },
+        data:[{value:this.seoScore, name:'SEO Skoru'}]
+      }]
+    });
+    this._scoreChart = c;
+    window.addEventListener('resize', () => c.resize());
+  }
+}">
+
+  <!-- Page Header -->
+  <div class="fade-in" style="margin-bottom:20px">
+    <h1 class="page-title">SEO Yazim Asistani</h1>
+    <p class="page-sub">Iceriginizi gercek zamanli SEO analizi ile optimize edin</p>
+  </div>
+
+  <!-- Target Keyword -->
+  <div class="fade-in-d1 card" style="padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <i class="ph ph-crosshair" style="font-size:1.125rem;color:var(--accent)"></i>
+    <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Hedef Keyword:</span>
+    <input type="text" x-model="targetKeyword" @input="recalcScore()"
+      style="padding:6px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;flex:1;min-width:200px"
+      onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+  </div>
+
+  <!-- Split Pane: Editor + Score Sidebar -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:flex-start">
+
+    <!-- LEFT: Editor -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <!-- Toolbar -->
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+        <button @click="execCommand('bold')" onmousedown="event.preventDefault()" title="Kalin" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'"><i class="ph ph-text-b" style="font-size:1rem"></i></button>
+        <button @click="execCommand('italic')" onmousedown="event.preventDefault()" title="Italik" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'"><i class="ph ph-text-italic" style="font-size:1rem"></i></button>
+        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+        <button @click="insertHeading('h2')" onmousedown="event.preventDefault()" title="H2 Baslik" style="padding:4px 10px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;font-size:0.75rem;font-weight:700;font-family:inherit" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">H2</button>
+        <button @click="insertHeading('h3')" onmousedown="event.preventDefault()" title="H3 Baslik" style="padding:4px 10px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;font-size:0.75rem;font-weight:600;font-family:inherit" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">H3</button>
+        <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+        <button @click="execCommand('createLink', prompt('Link URL:'))" onmousedown="event.preventDefault()" title="Link Ekle" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'"><i class="ph ph-link" style="font-size:1rem"></i></button>
+        <button @click="execCommand('insertUnorderedList')" onmousedown="event.preventDefault()" title="Liste" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'"><i class="ph ph-list-bullets" style="font-size:1rem"></i></button>
+        <button @click="execCommand('insertImage', prompt('Gorsel URL:'))" onmousedown="event.preventDefault()" title="Gorsel" style="width:32px;height:32px;border-radius:6px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'"><i class="ph ph-image" style="font-size:1rem"></i></button>
+      </div>
+
+      <!-- Content Editable -->
+      <div id="content-editor" contenteditable="true"
+        style="min-height:480px;padding:24px;font-size:0.9375rem;line-height:1.7;color:var(--text);outline:none;overflow-y:auto"
+        @input="updateContent()">
+      </div>
+
+      <!-- Word Count Bar -->
+      <div style="padding:8px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:0.6875rem;color:var(--muted)">
+        <div style="display:flex;gap:16px">
+          <span x-text="wordCount + ' kelime'"></span>
+          <span x-text="content.replace(/<[^>]*>/g, '').length + ' karakter'"></span>
+        </div>
+        <span x-text="readingTime + ' dk okuma suresi'"></span>
+      </div>
+    </div>
+
+    <!-- RIGHT: Score Sidebar -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <!-- SEO Score Gauge -->
+      <div class="card" style="padding:12px;text-align:center">
+        <div id="seo-score-gauge" style="width:100%;height:160px"></div>
+      </div>
+
+      <!-- Check Items -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border)">
+          <span class="section-label" style="margin-bottom:0;font-size:0.75rem">SEO Kontrolleri</span>
+        </div>
+        <div style="padding:8px 0">
+          <template x-for="check in checks" :key="check.id">
+            <div style="padding:8px 16px;display:flex;align-items:flex-start;gap:10px;cursor:pointer"
+              @click="Alpine.store('toast').show(check.detail, 'info')"
+              onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
+              <i class="ph" :class="statusIcon(check.status)" :style="'font-size:1rem;flex-shrink:0;margin-top:1px;color:'+statusColor(check.status)"></i>
+              <div style="min-width:0">
+                <div style="font-size:0.8125rem;color:var(--text)" x-text="check.label"></div>
+                <div style="font-size:0.6875rem;color:var(--muted);margin-top:1px" x-text="check.detail"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Readability -->
+      <div class="card" style="padding:16px">
+        <div class="section-label" style="font-size:0.75rem;margin-bottom:10px">Okunabilirlik</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="padding:4px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;background:rgba(34,197,94,0.12);color:#22c55e">Kolay</span>
+          <span style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="'Skor: ' + readabilityScore"></span>
+        </div>
+        <div style="font-size:0.6875rem;color:var(--muted)">Ort. cumle uzunlugu: <span style="color:var(--text);font-weight:500" x-text="avgSentenceLength + ' kelime'"></span></div>
+      </div>
+
+      <!-- Suggested Keywords -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid var(--border)">
+          <span class="section-label" style="margin-bottom:0;font-size:0.75rem">Onerilen Keywordler</span>
+        </div>
+        <div style="padding:8px 0">
+          <template x-for="(sk, si) in suggestedKeywords" :key="si">
+            <div style="padding:6px 16px;display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:0.8125rem;color:var(--text)" x-text="sk.kw"></span>
+              <button @click="addSuggested(si)" :disabled="sk.added"
+                :style="sk.added
+                  ? 'padding:3px 10px;border-radius:6px;font-size:0.625rem;font-weight:600;border:1px solid var(--border);background:var(--surface-2);color:#22c55e;cursor:default;font-family:inherit'
+                  : 'padding:3px 10px;border-radius:6px;font-size:0.625rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit'"
+                x-text="sk.added ? 'Eklendi' : 'Ekle'"></button>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Tone of Voice -->
+      <div class="card" style="padding:16px">
+        <div class="section-label" style="font-size:0.75rem;margin-bottom:8px">Ton Analizi</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ph ph-user-circle-check" style="font-size:1.25rem;color:var(--accent)"></i>
+          <span style="font-size:0.875rem;color:var(--text);font-weight:600" x-text="toneOfVoice"></span>
+          <span style="font-size:0.6875rem;color:var(--muted)">(tespit edildi)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+<style>
+#content-editor h2 { font-size:1.375rem; font-weight:700; margin:20px 0 10px; color:var(--text); }
+#content-editor h3 { font-size:1.125rem; font-weight:600; margin:16px 0 8px; color:var(--text); }
+#content-editor p { margin:0 0 12px; }
+#content-editor ul { margin:0 0 12px 20px; }
+#content-editor li { margin-bottom:4px; }
+#content-editor a { color:var(--accent); text-decoration:underline; }
+@media(max-width:900px) {
+  #main > .fade-in-d2 { grid-template-columns:1fr !important; }
+}
+</style>
+</body>
+</html>

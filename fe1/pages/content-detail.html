@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>/blog/seo-rehberi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ tab: 'skor', suggestionsOpen: [true, true, true] }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">/blog/seo-rehberi</h1>
+      <p class="page-sub">Sayfa detay analizi</p>
+    </div>
+    <!-- Tabs -->
+    <div style="display:flex;gap:4px">
+      <template x-for="t in [{v:'skor',l:'Skor'},{v:'ai',l:'AI Oneri'},{v:'schema',l:'Schema'}]">
+        <button @click="tab = t.v" :style="tab === t.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="t.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Top Row: Score Gauge + Schema -->
+  <div x-show="tab === 'skor' || tab === 'schema'" x-transition class="fade-in-d1" style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:24px">
+    <!-- Overall Score -->
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px">
+      <div id="chart-gauge" style="width:180px;height:180px"></div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+        <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Article</span>
+        <span style="font-size:0.75rem;color:var(--muted)">Schema algilandi</span>
+      </div>
+    </div>
+
+    <!-- Radar: 6 dimensions -->
+    <div class="card">
+      <span class="section-label">Boyut Analizi</span>
+      <div id="chart-radar" style="width:100%;height:280px"></div>
+    </div>
+  </div>
+
+  <!-- Dimension Breakdown Bar -->
+  <div x-show="tab === 'skor'" x-transition class="fade-in-d2 card" style="margin-bottom:24px">
+    <span class="section-label">Skor Dagilimi</span>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <!-- Okunabilirlik 88 -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:0.8125rem;color:var(--text)">Okunabilirlik</span><span style="font-size:0.8125rem;color:var(--muted);font-weight:600">88</span></div>
+        <div style="height:6px;background:var(--border);border-radius:3px"><div style="width:88%;height:100%;background:#22c55e;border-radius:3px"></div></div>
+      </div>
+      <!-- SEO Uyumu 95 -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:0.8125rem;color:var(--text)">SEO Uyumu</span><span style="font-size:0.8125rem;color:var(--muted);font-weight:600">95</span></div>
+        <div style="height:6px;background:var(--border);border-radius:3px"><div style="width:95%;height:100%;background:#22c55e;border-radius:3px"></div></div>
+      </div>
+      <!-- Teknik 90 -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:0.8125rem;color:var(--text)">Teknik</span><span style="font-size:0.8125rem;color:var(--muted);font-weight:600">90</span></div>
+        <div style="height:6px;background:var(--border);border-radius:3px"><div style="width:90%;height:100%;background:#22c55e;border-radius:3px"></div></div>
+      </div>
+      <!-- Guncellik 85 -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:0.8125rem;color:var(--text)">Guncellik</span><span style="font-size:0.8125rem;color:var(--muted);font-weight:600">85</span></div>
+        <div style="height:6px;background:var(--border);border-radius:3px"><div style="width:85%;height:100%;background:#22c55e;border-radius:3px"></div></div>
+      </div>
+      <!-- Derinlik 94 -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:0.8125rem;color:var(--text)">Derinlik</span><span style="font-size:0.8125rem;color:var(--muted);font-weight:600">94</span></div>
+        <div style="height:6px;background:var(--border);border-radius:3px"><div style="width:94%;height:100%;background:#22c55e;border-radius:3px"></div></div>
+      </div>
+      <!-- UX 96 -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:0.8125rem;color:var(--text)">UX</span><span style="font-size:0.8125rem;color:var(--muted);font-weight:600">96</span></div>
+        <div style="height:6px;background:var(--border);border-radius:3px"><div style="width:96%;height:100%;background:#22c55e;border-radius:3px"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Suggestions -->
+  <div x-show="tab === 'ai' || tab === 'skor'" x-transition class="fade-in-d3 card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+      <i class="ph ph-robot" style="font-size:1.125rem;color:var(--accent)"></i>
+      <span class="section-label" style="margin-bottom:0">AI Onerileri</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <template x-for="(s, idx) in [{title:'Meta description guncelle',desc:'Mevcut meta description 120 karakter. 150-160 karakter araligina cikarilmasi CTR i artirabilir.'},{title:'FAQ schema ekle',desc:'Icerik icinde 4 soru-cevap formati tespit edildi. FAQ schema eklenerek zengin sonuc gorunumu saglanabilir.'},{title:'Dahili link yonetimi',desc:'Bu sayfaya yalnizca 2 dahili link yonleniyor. Ilgili blog yazilari ve kategori sayfalarindan ek baglanti ekleyin.'}]" :key="idx">
+        <div @click="suggestionsOpen[idx] = !suggestionsOpen[idx]" style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--surface-2);border-radius:10px;cursor:pointer">
+          <i class="ph" :class="suggestionsOpen[idx] ? 'ph-caret-down' : 'ph-caret-right'" style="color:#eab308;font-size:1.125rem;margin-top:2px;flex-shrink:0"></i>
+          <div>
+            <div style="font-size:0.875rem;font-weight:500;color:var(--text)" x-text="s.title"></div>
+            <div x-show="suggestionsOpen[idx]" x-transition style="font-size:0.8125rem;color:var(--text-soft);margin-top:4px;line-height:1.5" x-text="s.desc"></div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const mutedColor = '#7B7269';
+  const borderColor = '#3C342C';
+  const tooltipBg = '#201C18';
+
+  // Gauge
+  const cGauge = echarts.init(document.getElementById('chart-gauge'));
+  cGauge.setOption({
+    series:[{
+      type:'gauge',
+      startAngle:220,endAngle:-40,min:0,max:100,
+      pointer:{show:false},
+      progress:{show:true,width:14,roundCap:true,itemStyle:{color:'#22c55e'}},
+      axisLine:{lineStyle:{width:14,color:[[1,borderColor]]}},
+      axisTick:{show:false},
+      splitLine:{show:false},
+      axisLabel:{show:false},
+      detail:{valueAnimation:true,fontSize:32,fontWeight:300,color:txtColor,offsetCenter:[0,'0%'],formatter:'{value}'},
+      title:{show:true,offsetCenter:[0,'30%'],fontSize:12,color:mutedColor,fontWeight:600},
+      data:[{value:92,name:'GENEL SKOR'}]
+    }]
+  });
+
+  // Radar
+  const cRadar = echarts.init(document.getElementById('chart-radar'));
+  cRadar.setOption({
+    tooltip:{backgroundColor:tooltipBg,borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    radar:{
+      indicator:[
+        {name:'Okunabilirlik',max:100},{name:'SEO Uyumu',max:100},{name:'Teknik',max:100},
+        {name:'Guncellik',max:100},{name:'Derinlik',max:100},{name:'UX',max:100}
+      ],
+      axisName:{color:mutedColor,fontSize:11},
+      splitArea:{areaStyle:{color:['transparent']}},
+      splitLine:{lineStyle:{color:borderColor}},
+      axisLine:{lineStyle:{color:borderColor}}
+    },
+    series:[{
+      type:'radar',
+      data:[{value:[88,95,90,85,94,96],name:'Sayfa Skoru',
+        areaStyle:{color:'rgba(194,65,12,0.15)'},
+        lineStyle:{color:'#C2410C',width:2},
+        itemStyle:{color:'#C2410C'}
+      }]
+    }]
+  });
+
+  window.addEventListener('resize', () => { cGauge.resize(); cRadar.resize(); });
+});
+</script>
+</body>
+</html>

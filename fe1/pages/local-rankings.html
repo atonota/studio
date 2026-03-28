@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Yerel Siralama Takibi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ keywordSearch:'', locationFilter:'tumu' }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Yerel Siralama Takibi</h1>
+    <p class="page-sub">Google Maps ve Google Search yerel siralamalar</p>
+  </div>
+
+  <div class="fade-in-d1 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Yerel Keyword Siralamalari</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Konum</th>
+          <th>Google Maps</th>
+          <th>Google Search</th>
+          <th>Degisim</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Keyword"><span style="font-weight:500;color:var(--text)">dijital pazarlama ajansi istanbul</span></td>
+          <td data-label="Konum"><span style="font-size:0.8125rem;color:var(--muted)">Istanbul Merkez</span></td>
+          <td data-label="Google Maps"><span style="color:var(--text);font-weight:500">#2</span></td>
+          <td data-label="Google Search"><span style="color:var(--text);font-weight:500">#5</span></td>
+          <td data-label="Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
+              <span style="font-size:0.75rem;color:#22c55e">+3</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Keyword"><span style="font-weight:500;color:var(--text)">seo hizmeti ankara</span></td>
+          <td data-label="Konum"><span style="font-size:0.8125rem;color:var(--muted)">Ankara</span></td>
+          <td data-label="Google Maps"><span style="color:var(--text);font-weight:500">#4</span></td>
+          <td data-label="Google Search"><span style="color:var(--text);font-weight:500">#8</span></td>
+          <td data-label="Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
+              <span style="font-size:0.75rem;color:#22c55e">+1</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Keyword"><span style="font-weight:500;color:var(--text)">web tasarim izmir</span></td>
+          <td data-label="Konum"><span style="font-size:0.8125rem;color:var(--muted)">Izmir</span></td>
+          <td data-label="Google Maps"><span style="color:var(--text);font-weight:500">#7</span></td>
+          <td data-label="Google Search"><span style="color:var(--text);font-weight:500">#14</span></td>
+          <td data-label="Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+              <span style="font-size:0.75rem;color:#ef4444">-2</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Keyword"><span style="font-weight:500;color:var(--text)">reklam ajansi yakinimda</span></td>
+          <td data-label="Konum"><span style="font-size:0.8125rem;color:var(--muted)">Istanbul Merkez</span></td>
+          <td data-label="Google Maps"><span style="color:var(--text);font-weight:500">#1</span></td>
+          <td data-label="Google Search"><span style="color:var(--text);font-weight:500">#3</span></td>
+          <td data-label="Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="font-size:0.75rem;color:var(--muted)">—</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td data-label="Keyword"><span style="font-weight:500;color:var(--text)">sosyal medya yonetimi ankara</span></td>
+          <td data-label="Konum"><span style="font-size:0.8125rem;color:var(--muted)">Ankara</span></td>
+          <td data-label="Google Maps"><span style="color:var(--text);font-weight:500">#6</span></td>
+          <td data-label="Google Search"><span style="color:var(--text);font-weight:500">#11</span></td>
+          <td data-label="Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
+              <span style="font-size:0.75rem;color:#22c55e">+2</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

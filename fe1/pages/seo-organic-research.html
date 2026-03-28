@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Organik Arastirma — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  domain: '',
+  loading: false,
+  analyzed: false,
+  activeTab: 'keywords',
+
+  domainData: {dr:62, ur:45, ahrefsRank:12847},
+  kpis: {traffic:45200, keywords:2841, trafficValue:8420, backlinks:18200},
+
+  topKeywords: [],
+  topPages: [],
+  competitors: [],
+
+  kwSortCol: 'traffic',
+  kwSortDir: 'desc',
+  kwPage: 1,
+  kwPerPage: 10,
+
+  pgSortCol: 'traffic',
+  pgSortDir: 'desc',
+  pgPage: 1,
+  pgPerPage: 10,
+
+  sortKw(col) {
+    if (this.kwSortCol === col) this.kwSortDir = this.kwSortDir === 'asc' ? 'desc' : 'asc';
+    else { this.kwSortCol = col; this.kwSortDir = 'desc'; }
+    this.kwPage = 1;
+  },
+  get sortedKeywords() {
+    const col = this.kwSortCol, dir = this.kwSortDir;
+    return [...this.topKeywords].sort((a,b) => {
+      const va = a[col], vb = b[col];
+      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+      return dir === 'asc' ? cmp : -cmp;
+    });
+  },
+  get pagedKeywords() {
+    const s = (this.kwPage - 1) * this.kwPerPage;
+    return this.sortedKeywords.slice(s, s + this.kwPerPage);
+  },
+  get kwTotalPages() { return Math.ceil(this.topKeywords.length / this.kwPerPage) || 1; },
+  kwSortIcon(col) { return this.kwSortCol === col ? (this.kwSortDir === 'asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'; },
+
+  sortPg(col) {
+    if (this.pgSortCol === col) this.pgSortDir = this.pgSortDir === 'asc' ? 'desc' : 'asc';
+    else { this.pgSortCol = col; this.pgSortDir = 'desc'; }
+    this.pgPage = 1;
+  },
+  get sortedPages() {
+    const col = this.pgSortCol, dir = this.pgSortDir;
+    return [...this.topPages].sort((a,b) => {
+      const va = a[col], vb = b[col];
+      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+      return dir === 'asc' ? cmp : -cmp;
+    });
+  },
+  get pagedPages() {
+    const s = (this.pgPage - 1) * this.pgPerPage;
+    return this.sortedPages.slice(s, s + this.pgPerPage);
+  },
+  get pgTotalPages() { return Math.ceil(this.topPages.length / this.pgPerPage) || 1; },
+  pgSortIcon(col) { return this.pgSortCol === col ? (this.pgSortDir === 'asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'; },
+
+  doAnalysis() {
+    if (!this.domain.trim()) return;
+    this.loading = true;
+    this.analyzed = false;
+    setTimeout(() => {
+      this.topKeywords = MOCK.keywords.generate(this.domain.replace(/\./g,' '), 20).map((k,i) => ({
+        ...k,
+        position: Math.floor(Math.random()*30)+1,
+        traffic: Math.floor(Math.random()*3000)+100,
+        trafficPct: +(Math.random()*8+0.2).toFixed(1),
+        url: '/' + k.keyword.replace(/ /g,'-'),
+      }));
+      this.topPages = [
+        {url:'/blog/dijital-pazarlama-rehberi', traffic:4820, keywords:142, backlinks:87},
+        {url:'/hizmetler/seo-danismanligi', traffic:3210, keywords:89, backlinks:54},
+        {url:'/blog/e-ticaret-seo-stratejileri', traffic:2890, keywords:76, backlinks:42},
+        {url:'/araclar/site-analiz', traffic:2140, keywords:63, backlinks:38},
+        {url:'/blog/teknik-seo-rehberi', traffic:1870, keywords:58, backlinks:31},
+        {url:'/hizmetler/icerik-pazarlama', traffic:1540, keywords:47, backlinks:28},
+        {url:'/blog/backlink-stratejileri', traffic:1320, keywords:41, backlinks:24},
+        {url:'/araclar/keyword-arastirma', traffic:1180, keywords:38, backlinks:21},
+        {url:'/blog/yerel-seo-rehberi', traffic:980, keywords:34, backlinks:18},
+        {url:'/hizmetler/google-ads-yonetimi', traffic:870, keywords:29, backlinks:15},
+      ];
+      this.competitors = [
+        {domain:'dijitalajans.com', overlapKw:487, dr:58, traffic:38400, trend:'up'},
+        {domain:'seoturk.net', overlapKw:412, dr:54, traffic:31200, trend:'down'},
+        {domain:'pazarlamatr.com', overlapKw:356, dr:51, traffic:28700, trend:'up'},
+        {domain:'webmaster.com.tr', overlapKw:298, dr:47, traffic:22100, trend:'down'},
+        {domain:'dijitalpazarlama.co', overlapKw:243, dr:44, traffic:18900, trend:'up'},
+      ];
+      this.loading = false;
+      this.analyzed = true;
+      this.$nextTick(() => this.initTrafficChart());
+    }, 1200);
+  },
+
+  initTrafficChart() {
+    const el = document.getElementById('traffic-trend-chart');
+    if (!el) return;
+    const t = getChartTheme();
+    const months = ['Nis 25','May 25','Haz 25','Tem 25','Agu 25','Eyl 25','Eki 25','Kas 25','Ara 25','Oca 26','Sub 26','Mar 26'];
+    const data = [28400,31200,33800,35100,37400,38900,40200,41800,42500,43700,44300,45200];
+    const c = echarts.init(el);
+    c.setOption({
+      tooltip:{trigger:'axis', backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11},
+        formatter: params => params[0].name + '<br/>' + params[0].marker + ' Organik Trafik: <b>' + params[0].value.toLocaleString('tr-TR') + '</b>/ay'},
+      grid:{left:50,right:20,top:16,bottom:30},
+      xAxis:{type:'category', data:months, axisLabel:{color:t.muted,fontSize:10}, axisLine:{lineStyle:{color:t.border}}, splitLine:{show:false}},
+      yAxis:{type:'value', axisLabel:{color:t.muted,fontSize:10, formatter:v=>(v/1000).toFixed(0)+'K'}, splitLine:{lineStyle:{color:t.border,opacity:0.3}}},
+      series:[{
+        type:'line', data, smooth:true, symbol:'circle', symbolSize:6,
+        lineStyle:{color:t.accent,width:2.5},
+        itemStyle:{color:t.accent},
+        areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:t.accent+'44'},{offset:1,color:'transparent'}]}}
+      }]
+    });
+    window.addEventListener('resize', () => c.resize());
+  },
+
+  drColor(dr) { return dr >= 60 ? '#22c55e' : dr >= 40 ? '#eab308' : '#ef4444' }
+}">
+
+  <!-- Page Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Organik Arastirma</h1>
+    <p class="page-sub">Herhangi bir domainin SEO profilini analiz edin</p>
+  </div>
+
+  <!-- Domain Search -->
+  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:20px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px;position:relative">
+        <i class="ph ph-globe" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.25rem;color:var(--muted)"></i>
+        <input type="text" x-model="domain" @keydown.enter="doAnalysis()" placeholder="Domain girin (ornek: rakip.com)"
+          style="width:100%;padding:12px 14px 12px 44px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.9375rem;font-family:inherit;outline:none"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <button @click="doAnalysis()" style="padding:12px 28px;border-radius:10px;font-size:0.875rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;white-space:nowrap">
+        <span x-show="!loading"><i class="ph ph-chart-line-up" style="font-size:1rem"></i> Analiz Et</span>
+        <span x-show="loading" style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:1rem"></i> Analiz ediliyor...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div x-show="loading" style="text-align:center;padding:60px 20px">
+    <i class="ph ph-circle-notch" style="font-size:2.5rem;color:var(--accent);animation:spin 1s linear infinite"></i>
+    <p style="color:var(--muted);margin-top:12px;font-size:0.875rem">Domain analiz ediliyor...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div x-show="!analyzed && !loading" class="fade-in-d2 card" style="text-align:center;padding:80px 20px">
+    <i class="ph ph-globe-hemisphere-west" style="font-size:3rem;color:var(--muted);margin-bottom:12px"></i>
+    <p style="color:var(--text);font-weight:600;margin-bottom:4px">Rakip analizi baslat</p>
+    <p style="color:var(--muted);font-size:0.8125rem">Yukaridaki alana bir domain girerek organik trafik, keyword ve backlink verilerini goruntule</p>
+  </div>
+
+  <!-- Results -->
+  <div x-show="analyzed && !loading" x-cloak>
+
+    <!-- Domain Overview -->
+    <div class="fade-in-d1" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      <div class="card" style="padding:14px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-globe" style="font-size:1.25rem;color:var(--accent)"></i>
+        </div>
+        <div>
+          <div style="font-size:1rem;font-weight:700;color:var(--text)" x-text="domain"></div>
+          <div style="font-size:0.6875rem;color:var(--muted)">Ahrefs Rank: <span style="color:var(--text);font-weight:600" x-text="'#'+domainData.ahrefsRank.toLocaleString('tr-TR')"></span></div>
+        </div>
+      </div>
+      <!-- DR Badge -->
+      <div class="card" style="padding:14px 20px;text-align:center">
+        <div style="font-size:0.625rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">DR</div>
+        <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;margin:0 auto"
+          :style="'border:3px solid '+drColor(domainData.dr)+';color:'+drColor(domainData.dr)" x-text="domainData.dr"></div>
+      </div>
+      <!-- UR Badge -->
+      <div class="card" style="padding:14px 20px;text-align:center">
+        <div style="font-size:0.625rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">UR</div>
+        <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;margin:0 auto"
+          :style="'border:3px solid '+drColor(domainData.ur)+';color:'+drColor(domainData.ur)" x-text="domainData.ur"></div>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <template x-for="kpi in [
+        {label:'Organik Trafik',value:kpis.traffic,suffix:'/ay',icon:'ph-users',color:'#3b82f6',format:v=>v>=1000?(v/1000).toFixed(1)+'K':v},
+        {label:'Organik Keyword',value:kpis.keywords,suffix:'',icon:'ph-key',color:'#a855f7',format:v=>v.toLocaleString('tr-TR')},
+        {label:'Traffic Value',value:kpis.trafficValue,suffix:'',icon:'ph-currency-dollar',color:'#22c55e',format:v=>'$'+v.toLocaleString('tr-TR')},
+        {label:'Backlink',value:kpis.backlinks,suffix:'',icon:'ph-link',color:'#eab308',format:v=>v>=1000?(v/1000).toFixed(1)+'K':v}
+      ]" :key="kpi.label">
+        <div class="card" style="padding:20px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center"
+              :style="'background:'+kpi.color+'1a'">
+              <i class="ph" :class="kpi.icon" :style="'font-size:1rem;color:'+kpi.color"></i>
+            </div>
+          </div>
+          <div style="font-size:1.5rem;font-weight:700;color:var(--text)" x-text="kpi.format(kpi.value)"></div>
+          <div style="font-size:0.6875rem;color:var(--muted)" x-text="kpi.label + kpi.suffix"></div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Traffic Trend Chart -->
+    <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px">
+      <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">Organik Trafik Trendi (12 Ay)</div>
+      <div id="traffic-trend-chart" style="width:100%;height:260px"></div>
+    </div>
+
+    <!-- Tab Sections -->
+    <div class="fade-in-d2" style="margin-bottom:20px">
+      <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border);margin-bottom:16px;width:fit-content">
+        <template x-for="tab in [{id:'keywords',label:'Top Keywordler',icon:'ph-key'},{id:'pages',label:'Top Sayfalar',icon:'ph-file-text'},{id:'competitors',label:'Rakip Domainler',icon:'ph-binoculars'}]" :key="tab.id">
+          <button @click="activeTab = tab.id"
+            :style="activeTab === tab.id
+              ? 'padding:7px 16px;border-radius:8px;font-size:0.75rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px'
+              : 'padding:7px 16px;border-radius:8px;font-size:0.75rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px'">
+            <i class="ph" :class="tab.icon" style="font-size:0.875rem"></i>
+            <span x-text="tab.label"></span>
+          </button>
+        </template>
+      </div>
+
+      <!-- Top Keywords Table -->
+      <div x-show="activeTab === 'keywords'" class="card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th @click="sortKw('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="kwSortIcon('keyword')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortKw('position')" style="cursor:pointer;user-select:none">Pozisyon <i class="ph" :class="kwSortIcon('position')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortKw('volume')" style="cursor:pointer;user-select:none">Hacim <i class="ph" :class="kwSortIcon('volume')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortKw('traffic')" style="cursor:pointer;user-select:none">Trafik <i class="ph" :class="kwSortIcon('traffic')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortKw('trafficPct')" style="cursor:pointer;user-select:none">Trafik % <i class="ph" :class="kwSortIcon('trafficPct')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th>URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="(kw, i) in pagedKeywords" :key="i">
+                <tr>
+                  <td style="font-size:0.75rem;color:var(--muted)" x-text="(kwPage-1)*kwPerPage+i+1"></td>
+                  <td style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="kw.keyword"></td>
+                  <td>
+                    <span style="padding:3px 10px;border-radius:6px;font-size:0.75rem;font-weight:700"
+                      :style="kw.position <= 3 ? 'background:rgba(34,197,94,0.12);color:#22c55e' : kw.position <= 10 ? 'background:rgba(59,130,246,0.12);color:#3b82f6' : 'background:var(--surface-2);color:var(--muted)'"
+                      x-text="kw.position"></span>
+                  </td>
+                  <td style="font-size:0.8125rem;color:var(--text)" x-text="kw.volume.toLocaleString('tr-TR')"></td>
+                  <td style="font-size:0.8125rem;color:var(--text)" x-text="kw.traffic.toLocaleString('tr-TR')"></td>
+                  <td style="font-size:0.8125rem;color:var(--muted)" x-text="kw.trafficPct + '%'"></td>
+                  <td style="font-size:0.6875rem;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="kw.url"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:0.75rem;color:var(--muted)" x-text="'Sayfa ' + kwPage + ' / ' + kwTotalPages"></span>
+          <div style="display:flex;gap:6px">
+            <button @click="if(kwPage>1) kwPage--" :disabled="kwPage<=1" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit" :style="kwPage<=1 && 'opacity:0.4;cursor:default'">Onceki</button>
+            <button @click="if(kwPage<kwTotalPages) kwPage++" :disabled="kwPage>=kwTotalPages" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit" :style="kwPage>=kwTotalPages && 'opacity:0.4;cursor:default'">Sonraki</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Pages Table -->
+      <div x-show="activeTab === 'pages'" class="card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th @click="sortPg('url')" style="cursor:pointer;user-select:none">URL <i class="ph" :class="pgSortIcon('url')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortPg('traffic')" style="cursor:pointer;user-select:none">Trafik <i class="ph" :class="pgSortIcon('traffic')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortPg('keywords')" style="cursor:pointer;user-select:none">Keywordler <i class="ph" :class="pgSortIcon('keywords')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="sortPg('backlinks')" style="cursor:pointer;user-select:none">Backlinkler <i class="ph" :class="pgSortIcon('backlinks')" style="font-size:0.625rem;opacity:0.5"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="(pg, i) in pagedPages" :key="i">
+                <tr>
+                  <td style="font-size:0.75rem;color:var(--muted)" x-text="(pgPage-1)*pgPerPage+i+1"></td>
+                  <td style="font-size:0.8125rem;color:var(--accent);font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="pg.url"></td>
+                  <td style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="pg.traffic.toLocaleString('tr-TR')"></td>
+                  <td style="font-size:0.8125rem;color:var(--text)" x-text="pg.keywords"></td>
+                  <td style="font-size:0.8125rem;color:var(--text)" x-text="pg.backlinks"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:0.75rem;color:var(--muted)" x-text="'Sayfa ' + pgPage + ' / ' + pgTotalPages"></span>
+          <div style="display:flex;gap:6px">
+            <button @click="if(pgPage>1) pgPage--" :disabled="pgPage<=1" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit" :style="pgPage<=1 && 'opacity:0.4;cursor:default'">Onceki</button>
+            <button @click="if(pgPage<pgTotalPages) pgPage++" :disabled="pgPage>=pgTotalPages" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit" :style="pgPage>=pgTotalPages && 'opacity:0.4;cursor:default'">Sonraki</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Competing Domains -->
+      <div x-show="activeTab === 'competitors'" class="card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr><th>Domain</th><th>Ortak Keywordler</th><th>DR</th><th>Organik Trafik</th><th>Trend</th></tr>
+            </thead>
+            <tbody>
+              <template x-for="(comp, i) in competitors" :key="i">
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="width:28px;height:28px;border-radius:7px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+                        <i class="ph ph-globe" style="font-size:0.875rem;color:var(--muted)"></i>
+                      </div>
+                      <span style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="comp.domain"></span>
+                    </div>
+                  </td>
+                  <td style="font-size:0.8125rem;color:var(--accent);font-weight:600" x-text="comp.overlapKw"></td>
+                  <td>
+                    <span style="padding:3px 10px;border-radius:6px;font-size:0.75rem;font-weight:700"
+                      :style="'background:'+drColor(comp.dr)+'1a;color:'+drColor(comp.dr)"
+                      x-text="comp.dr"></span>
+                  </td>
+                  <td style="font-size:0.8125rem;color:var(--text)" x-text="comp.traffic.toLocaleString('tr-TR')"></td>
+                  <td>
+                    <span style="display:flex;align-items:center;gap:4px;font-size:0.75rem;font-weight:600"
+                      :style="comp.trend==='up' ? 'color:#22c55e' : 'color:#ef4444'">
+                      <i class="ph" :class="comp.trend==='up' ? 'ph-trend-up' : 'ph-trend-down'" style="font-size:0.875rem"></i>
+                      <span x-text="comp.trend==='up' ? 'Yukselis' : 'Dusus'"></span>
+                    </span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<style>
+@keyframes spin { to { transform: rotate(360deg) } }
+@media(max-width:768px) {
+  .fade-in-d1[style*="grid-template-columns:repeat(4"] { grid-template-columns:repeat(2,1fr) !important; }
+}
+@media(max-width:480px) {
+  .fade-in-d1[style*="grid-template-columns:repeat(4"] { grid-template-columns:1fr !important; }
+}
+</style>
+</body>
+</html>

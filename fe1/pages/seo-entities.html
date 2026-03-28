@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Entity SEO — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+<div id="main" x-data="{
+  typeFilter: 'tumu',
+  sentimentFilter: 'tumu',
+  sortCol: '',
+  sortDir: 'asc',
+  rows: [
+    {entity:'atonota',tur:'Kurum',turColor:'#3b82f6',bahsedilme:24,duygu:'Pozitif',duyguColor:'#22c55e'},
+    {entity:'SEO',tur:'Kavram',turColor:'#a855f7',bahsedilme:89,duygu:'Notr',duyguColor:'#7B7269'},
+    {entity:'Istanbul',tur:'Yer',turColor:'#eab308',bahsedilme:12,duygu:'Notr',duyguColor:'#7B7269'},
+    {entity:'Ismail Karaca',tur:'Kisi',turColor:'#ef4444',bahsedilme:8,duygu:'Pozitif',duyguColor:'#22c55e'},
+    {entity:'WordPress',tur:'Urun',turColor:'#22c55e',bahsedilme:34,duygu:'Pozitif',duyguColor:'#22c55e'}
+  ],
+  get filtered() {
+    let r = this.rows;
+    if (this.typeFilter !== 'tumu') r = r.filter(x => x.tur === this.typeFilter);
+    if (this.sentimentFilter !== 'tumu') r = r.filter(x => x.duygu === this.sentimentFilter);
+    if (this.sortCol) {
+      r = [...r].sort((a,b) => {
+        let va = a[this.sortCol], vb = b[this.sortCol];
+        let cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return r;
+  },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'asc'; }
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Entity SEO</h1>
+    <p class="page-sub">Varlik tabanlı arama optimizasyonu</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Entity</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">42</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Iliski</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">128</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Knowledge Panel</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">1</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="fade-in-d2" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+    <div style="display:flex;gap:4px">
+      <template x-for="t in ['tumu','Kurum','Kavram','Yer','Kisi','Urun']">
+        <button @click="typeFilter = t" :style="typeFilter === t ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="t === 'tumu' ? 'Tumu' : t"></button>
+      </template>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="s in ['tumu','Pozitif','Notr']">
+        <button @click="sentimentFilter = s" :style="sentimentFilter === s ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="s === 'tumu' ? 'Tum Duygu' : s"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Entity Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Tanimlanan Varliklar</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th @click="doSort('entity')" style="cursor:pointer">Entity</th>
+          <th>Tur</th>
+          <th @click="doSort('bahsedilme')" style="cursor:pointer">Bahsedilme <i class="ph" :class="sortCol==='bahsedilme' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th>Duygu</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.entity">
+          <tr>
+            <td data-label="Entity"><span style="font-weight:500;color:var(--text)" x-text="row.entity"></span></td>
+            <td data-label="Tur"><span class="badge" :style="'background:rgba(' + (row.tur==='Kurum'?'59,130,246':row.tur==='Kavram'?'168,85,247':row.tur==='Yer'?'234,179,8':row.tur==='Kisi'?'239,68,68':'34,197,94') + ',0.1);color:' + row.turColor" x-text="row.tur"></span></td>
+            <td data-label="Bahsedilme"><span style="color:var(--text)" x-text="row.bahsedilme"></span></td>
+            <td data-label="Duygu"><span class="badge" :style="row.duygu==='Pozitif' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(123,114,105,0.15);color:var(--muted)'" x-text="row.duygu"></span></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

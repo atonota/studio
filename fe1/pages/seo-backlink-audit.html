@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Backlink Denetimi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  selectAll: false,
+  toxicLinks: [
+    {domain:'spamsite.xyz',dr:5,toxicity:92,reason:'Spam',checked:false},
+    {domain:'linkfarm-tr.com',dr:8,toxicity:88,reason:'Link Farm',checked:false},
+    {domain:'casino-bonus.net',dr:12,toxicity:85,reason:'Uygunsuz Icerik',checked:false},
+    {domain:'ucuz-takipci.com',dr:3,toxicity:95,reason:'Spam',checked:false},
+    {domain:'free-backlink.info',dr:7,toxicity:78,reason:'Link Farm',checked:false},
+    {domain:'seo-hack.xyz',dr:4,toxicity:91,reason:'PBN',checked:false},
+    {domain:'buy-links-cheap.com',dr:6,toxicity:82,reason:'Link Satis',checked:false},
+    {domain:'forumspam.net',dr:9,toxicity:74,reason:'Forum Spam',checked:false},
+    {domain:'directory123.info',dr:11,toxicity:68,reason:'Dusuk Kalite',checked:false},
+    {domain:'article-spinner.xyz',dr:5,toxicity:87,reason:'Dusuk Kalite',checked:false},
+    {domain:'blog-comment-spam.com',dr:2,toxicity:96,reason:'Spam',checked:false},
+    {domain:'redirect-farm.net',dr:6,toxicity:79,reason:'Redirect',checked:false},
+    {domain:'expired-domain.info',dr:15,toxicity:63,reason:'Expired Domain',checked:false},
+    {domain:'fake-news-tr.com',dr:8,toxicity:71,reason:'Uygunsuz Icerik',checked:false},
+    {domain:'auto-backlink.xyz',dr:3,toxicity:93,reason:'Otomatik Link',checked:false},
+    {domain:'cheap-seo-tr.com',dr:7,toxicity:76,reason:'PBN',checked:false},
+    {domain:'gambling-tr.net',dr:10,toxicity:84,reason:'Uygunsuz Icerik',checked:false},
+    {domain:'pharma-link.info',dr:4,toxicity:90,reason:'Pharma Hack',checked:false},
+    {domain:'hidden-text.xyz',dr:6,toxicity:72,reason:'Gizli Metin',checked:false},
+    {domain:'scraper-bot.net',dr:5,toxicity:81,reason:'Scraper',checked:false}
+  ],
+  toxSortCol: '',
+  toxSortDir: 'desc',
+  doToxSort(col) {
+    if (this.toxSortCol === col) this.toxSortDir = this.toxSortDir === 'asc' ? 'desc' : 'asc';
+    else { this.toxSortCol = col; this.toxSortDir = 'desc'; }
+  },
+  get sortedToxicLinks() {
+    if (!this.toxSortCol) return this.toxicLinks;
+    const col = this.toxSortCol, dir = this.toxSortDir;
+    return [...this.toxicLinks].sort((a,b) => {
+      const va = a[col], vb = b[col];
+      const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+      return dir === 'asc' ? cmp : -cmp;
+    });
+  },
+  toxSortIcon(col) { return this.toxSortCol === col ? (this.toxSortDir === 'asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'; },
+  get selectedCount() { return this.toxicLinks.filter(l => l.checked).length; },
+  toggleAll() { this.selectAll = !this.selectAll; this.toxicLinks.forEach(l => l.checked = this.selectAll); },
+  downloadDisavow() {
+    const selected = this.toxicLinks.filter(l => l.checked);
+    if (!selected.length) return;
+    const content = selected.map(l => 'domain:' + l.domain).join('\\n');
+    const blob = new Blob([content], {type:'text/plain'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'disavow.txt';
+    link.click();
+  },
+  getToxColor(score) {
+    if (score >= 80) return '#ef4444';
+    if (score >= 60) return '#eab308';
+    return '#22c55e';
+  },
+  getToxBg(score) {
+    if (score >= 80) return 'rgba(239,68,68,0.1)';
+    if (score >= 60) return 'rgba(234,179,8,0.1)';
+    return 'rgba(34,197,94,0.1)';
+  }
+}">
+  <!-- Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Backlink Denetimi</h1>
+    <p class="page-sub">Toksik linkleri tespit edin ve disavow dosyanizi olusturun</p>
+  </div>
+
+  <!-- Toxicity Gauge + Stats -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+    <div class="card" style="display:flex;align-items:center;justify-content:center;padding:24px">
+      <div id="chart-toxicity-gauge" style="width:100%;height:220px"></div>
+    </div>
+    <div style="display:grid;grid-template-rows:repeat(3,1fr);gap:12px">
+      <div class="stat-card" style="--stripe:#3b82f6">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Link</span>
+        <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">12.4K</div>
+      </div>
+      <div class="stat-card" style="--stripe:#ef4444">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toksik</span>
+        <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">148</div>
+      </div>
+      <div class="stat-card" style="--stripe:#22c55e">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Guvenli</span>
+        <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">12.2K</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Action Bar -->
+  <div x-show="selectedCount > 0" x-transition class="fade-in-d2" style="background:var(--surface-2);border:1px solid var(--accent);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span style="font-size:0.8125rem;color:var(--text);font-weight:500"><span x-text="selectedCount" style="color:var(--accent);font-weight:700"></span> link secildi</span>
+    <div style="display:flex;gap:8px">
+      <button @click="toxicLinks.filter(l=>l.checked).forEach(l=>l.checked=true)" style="font-size:0.75rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-file-plus"></i> Secilenleri Disavow Dosyasina Ekle</button>
+      <button @click="downloadDisavow()" class="btn-primary" style="font-size:0.75rem;padding:6px 14px"><i class="ph ph-download-simple"></i> Disavow Dosyasi Indir</button>
+    </div>
+  </div>
+
+  <!-- Toxic Links Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden;margin-bottom:24px">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span class="section-label" style="margin-bottom:0">Toksik Linkler</span>
+      <span style="font-size:0.75rem;color:var(--muted)">148 toksik link bulundu</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th style="width:40px"><input type="checkbox" :checked="selectAll" @change="toggleAll()" style="accent-color:var(--accent);cursor:pointer"></th>
+            <th @click="doToxSort('domain')" style="cursor:pointer;user-select:none">Domain <i class="ph" :class="toxSortIcon('domain')" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doToxSort('dr')" style="cursor:pointer;user-select:none">DR <i class="ph" :class="toxSortIcon('dr')" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doToxSort('toxicity')" style="cursor:pointer;user-select:none">Toksisite Skoru <i class="ph" :class="toxSortIcon('toxicity')" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th>Sebep</th>
+            <th>Disavow</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="(link, idx) in sortedToxicLinks" :key="link.domain">
+            <tr>
+              <td data-label=""><input type="checkbox" x-model="link.checked" style="accent-color:var(--accent);cursor:pointer"></td>
+              <td data-label="Domain"><span style="font-weight:500;color:var(--text)" x-text="link.domain"></span></td>
+              <td data-label="DR"><span style="color:var(--muted)" x-text="link.dr"></span></td>
+              <td data-label="Toksisite">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="flex:1;max-width:120px;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden">
+                    <div :style="'height:100%;border-radius:3px;background:'+getToxColor(link.toxicity)+';width:'+link.toxicity+'%'"></div>
+                  </div>
+                  <span :style="'font-size:0.75rem;font-weight:600;color:'+getToxColor(link.toxicity)" x-text="link.toxicity"></span>
+                </div>
+              </td>
+              <td data-label="Sebep"><span class="badge" :style="'background:'+getToxBg(link.toxicity)+';color:'+getToxColor(link.toxicity)" x-text="link.reason"></span></td>
+              <td data-label="Disavow"><input type="checkbox" x-model="link.checked" style="accent-color:var(--accent);cursor:pointer"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Anchor Text Distribution -->
+  <div class="fade-in-d3 card" style="margin-bottom:24px">
+    <span class="section-label">Anchor Text Dagilimi</span>
+    <div id="chart-anchor" style="width:100%;height:300px"></div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const t = getChartTheme();
+
+  // Toxicity Gauge
+  const gauge = echarts.init(document.getElementById('chart-toxicity-gauge'));
+  gauge.setOption({
+    series: [{
+      type: 'gauge',
+      startAngle: 200,
+      endAngle: -20,
+      min: 0,
+      max: 100,
+      pointer: { show: true, length: '60%', width: 4, itemStyle: { color: '#22c55e' } },
+      axisLine: {
+        lineStyle: {
+          width: 20,
+          color: [[0.2,'#22c55e'],[0.5,'#eab308'],[1,'#ef4444']]
+        }
+      },
+      axisTick: { show: false },
+      splitLine: { show: false },
+      axisLabel: { color: t.muted, fontSize: 10, distance: 28 },
+      detail: { formatter: '{value}%\nToksik', fontSize: 18, color: '#22c55e', offsetCenter: [0, '40%'], lineHeight: 24 },
+      data: [{ value: 12 }],
+      title: { show: false }
+    }]
+  });
+
+  // Anchor Text Distribution
+  const anchor = echarts.init(document.getElementById('chart-anchor'));
+  const anchorData = [
+    { name: 'Brand', value: 42 },
+    { name: 'Exact Match', value: 8 },
+    { name: 'Partial Match', value: 22 },
+    { name: 'Generic', value: 18 },
+    { name: 'Naked URL', value: 10 }
+  ];
+  anchor.setOption({
+    tooltip: { ...t.tooltip, trigger: 'axis', axisPointer: { type: 'shadow' } },
+    grid: { left: 120, right: 40, top: 16, bottom: 16 },
+    xAxis: { type: 'value', max: 50, axisLabel: { color: t.muted, fontSize: 10, formatter: v => v + '%' }, splitLine: { lineStyle: { color: t.border, type: 'dashed' } } },
+    yAxis: { type: 'category', data: anchorData.map(d => d.name).reverse(), axisLabel: { color: t.text, fontSize: 11 }, axisLine: { lineStyle: { color: t.border } } },
+    series: [{
+      type: 'bar',
+      data: anchorData.map(d => d.value).reverse(),
+      barWidth: 20,
+      itemStyle: {
+        borderRadius: [0, 4, 4, 0],
+        color: function(params) {
+          const colors = ['#C2410C','#3b82f6','#a855f7','#eab308','#22c55e'];
+          return colors[anchorData.length - 1 - params.dataIndex];
+        }
+      },
+      label: { show: true, position: 'right', color: t.text, fontSize: 11, formatter: '{c}%' }
+    }]
+  });
+
+  window.addEventListener('resize', () => { gauge.resize(); anchor.resize(); });
+});
+</script>
+</body>
+</html>

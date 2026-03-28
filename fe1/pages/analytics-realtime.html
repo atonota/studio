@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Gercek Zamanli Izleme — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+<div id="main" x-data="{
+  liveCount: 47,
+  init() {
+    setInterval(() => {
+      this.liveCount = this.liveCount + Math.floor(Math.random() * 5) - 2;
+      if (this.liveCount < 30) this.liveCount = 30;
+      if (this.liveCount > 70) this.liveCount = 70;
+    }, 3000);
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Gercek Zamanli Izleme</h1>
+    <p class="page-sub">Canli ziyaretci aktivitesi</p>
+  </div>
+
+  <!-- Hero Number -->
+  <div class="fade-in-d1 card" style="text-align:center;padding:32px 20px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite"></span>
+      <span style="font-size:0.875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Canli Ziyaretci</span>
+    </div>
+    <div style="font-size:3.5rem;font-weight:200;color:var(--text);line-height:1;transition:all 0.3s" x-text="liveCount"></div>
+  </div>
+
+  <!-- Mini Cards -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Son 5 dk</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">23 yeni</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">En Cok Sayfa</span>
+      <div style="font-size:1rem;font-weight:400;color:var(--text);margin-top:8px">/blog/seo-rehberi</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ust Kaynak</span>
+      <div style="font-size:1rem;font-weight:400;color:var(--text);margin-top:8px">Google</div>
+    </div>
+  </div>
+
+  <!-- Live Event List -->
+  <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite"></span>
+      <span class="section-label" style="margin-bottom:0">Canli Etkinlikler</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column">
+      <!-- Event 1 -->
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
+        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:32:15</span>
+        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/urunler</span>
+        <span style="font-size:0.8125rem;color:var(--muted)">Google</span>
+        <span style="font-size:1rem">🇹🇷</span>
+      </div>
+      <!-- Event 2 -->
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
+        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:32:08</span>
+        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/blog/seo-rehberi</span>
+        <span style="font-size:0.8125rem;color:var(--muted)">Direct</span>
+        <span style="font-size:1rem">🇹🇷</span>
+      </div>
+      <!-- Event 3 -->
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
+        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:31:54</span>
+        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/blog/backlink-rehberi</span>
+        <span style="font-size:0.8125rem;color:var(--muted)">Google</span>
+        <span style="font-size:1rem">🇩🇪</span>
+      </div>
+      <!-- Event 4 -->
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
+        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:31:42</span>
+        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/fiyatlandirma</span>
+        <span style="font-size:0.8125rem;color:var(--muted)">LinkedIn</span>
+        <span style="font-size:1rem">🇹🇷</span>
+      </div>
+      <!-- Event 5 -->
+      <div style="padding:14px 20px;display:flex;align-items:center;gap:16px">
+        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:31:29</span>
+        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/blog/dijital-pazarlama</span>
+        <span style="font-size:0.8125rem;color:var(--muted)">Twitter</span>
+        <span style="font-size:1rem">🇬🇧</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('analytics'));</script>
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+</style>
+</body>
+</html>

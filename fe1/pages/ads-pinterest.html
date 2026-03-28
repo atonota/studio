@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Pinterest Ads — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-pinterest-logo" style="color:#ef4444;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Pinterest Ads</h1>
+        <p class="page-sub">Gorsel reklam yonetimi</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#ef4444">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Kampanya</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">0</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Harcama</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;0</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Durum</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--muted)">Bagli degil</div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="fade-in-d2 card" style="text-align:center;padding:48px 32px">
+    <div style="width:64px;height:64px;border-radius:16px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+      <i class="ph ph-pinterest-logo" style="color:#ef4444;font-size:2rem"></i>
+    </div>
+    <div style="font-size:1.125rem;font-weight:500;color:var(--text);margin-bottom:8px">Pinterest Ads hesabinizi baglayin</div>
+    <div style="font-size:0.8125rem;color:var(--muted);max-width:400px;margin:0 auto 24px;line-height:1.6">Pinterest Business hesabinizi baglayarak gorsel reklam kampanyalarinizi atonota uzerinden yonetin. Pin performansi, tiklanma oranlari ve donusumleri takip edin.</div>
+    <button @click="$store.toast.show('Pinterest hesap baglama islemi baslatildi...', 'info')" class="btn-primary" style="margin:0 auto"><i class="ph ph-link"></i> Hesap Bagla</button>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

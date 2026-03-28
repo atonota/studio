@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Insight Feed — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ module:'tumu', range:'7gun', expanded:null }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">AI Insight Feed</h1>
+    <p class="page-sub">Gunluk Digest — 28 Mart 2026</p>
+  </div>
+
+  <!-- Filter Pills -->
+  <div class="fade-in" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'seo',l:'SEO'},{v:'reklam',l:'Reklam'},{v:'guvenlik',l:'Guvenlik'}]">
+      <button @click="module=pill.v" :style="module===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+    </template>
+    <div style="flex:1"></div>
+    <template x-for="pill in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'}]">
+      <button @click="range=pill.v" :style="range===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+    </template>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;max-width:720px">
+    <!-- 1. Organik trafik dususu -->
+    <div class="fade-in-d1 card" @click="expanded = expanded===1 ? null : 1" style="display:flex;align-items:flex-start;gap:14px;cursor:pointer">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-warning-circle" style="color:#eab308;font-size:1.25rem"></i>
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Organik trafik dususu</span>
+          <span style="font-size:0.6875rem;color:var(--muted);white-space:nowrap">2 saat once</span>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:8px">/blog/seo-rehberi sayfasinda %18 organik trafik dususu tespit edildi. Icerik guncellemesi onerilir.</p>
+        <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">%18 dusus</span>
+        <div x-show="expanded===1" x-transition style="margin-top:8px;font-size:0.8125rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:8px">Detayli analiz: Sayfa son 120 gundur guncellenmedi. Rakipler ayni konuda yeni icerik uretti.</div>
+      </div>
+    </div>
+
+    <!-- 2. Keyword yukselisi -->
+    <div class="fade-in-d1 card" style="display:flex;align-items:flex-start;gap:14px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.25rem"></i>
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Keyword yukselisi</span>
+          <span style="font-size:0.6875rem;color:var(--muted);white-space:nowrap">4 saat once</span>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:8px">"dijital pazarlama" anahtar kelimesi 5. pozisyondan 3. pozisyona yukseldi.</p>
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">5 → 3 pozisyon</span>
+      </div>
+    </div>
+
+    <!-- 3. Yeni icerik firsati -->
+    <div class="fade-in-d2 card" style="display:flex;align-items:flex-start;gap:14px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-lightbulb" style="color:#a855f7;font-size:1.25rem"></i>
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Yeni icerik firsati</span>
+          <span style="font-size:0.6875rem;color:var(--muted);white-space:nowrap">6 saat once</span>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:8px">"e-ticaret seo" konusunda icerik boslusu tespit edildi. Rakipleriniz bu konuda icerik uretiyor ancak siz henuz uretmediniz.</p>
+        <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Icerik Gap</span>
+      </div>
+    </div>
+
+    <!-- 4. Reklam performansi -->
+    <div class="fade-in-d2 card" style="display:flex;align-items:flex-start;gap:14px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-chart-line-up" style="color:#3b82f6;font-size:1.25rem"></i>
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Reklam performansi</span>
+          <span style="font-size:0.6875rem;color:var(--muted);white-space:nowrap">8 saat once</span>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:8px">Meta Ads ROAS 3.2x seviyesine ulasti — haftalik en yuksek deger. Bahar Kampanyasi en iyi performansi gosteriyor.</p>
+        <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">ROAS 3.2x</span>
+      </div>
+    </div>
+
+    <!-- 5. Guvenlik -->
+    <div class="fade-in-d3 card" style="display:flex;align-items:flex-start;gap:14px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-shield-check" style="color:#22c55e;font-size:1.25rem"></i>
+      </div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">
+          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Guvenlik</span>
+          <span style="font-size:0.6875rem;color:var(--muted);white-space:nowrap">12 saat once</span>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:8px">SSL sertifikasi 80 gun daha gecerli. Yenileme islemine henuz gerek bulunmuyor.</p>
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">80 gun gecerli</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ai'));</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Icerik Tespiti — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  rangeFilter: 'tumu',
+  sortCol: '',
+  sortDir: 'asc',
+  rows: [
+    {url:'/blog/seo-rehberi',ai:5,insan:95,skor:0.12,siralama:3},
+    {url:'/blog/icerik-pazarlama',ai:22,insan:78,skor:0.58,siralama:12},
+    {url:'/urunler/analitik',ai:3,insan:97,skor:0.08,siralama:7},
+    {url:'/blog/dijital-donusum',ai:41,insan:59,skor:0.87,siralama:28},
+    {url:'/blog/yapay-zeka-trendi',ai:38,insan:62,skor:0.79,siralama:34}
+  ],
+  get filtered() {
+    let r = this.rows;
+    if (this.rangeFilter === 'dusuk') r = r.filter(x => x.ai <= 15);
+    else if (this.rangeFilter === 'orta') r = r.filter(x => x.ai > 15 && x.ai <= 30);
+    else if (this.rangeFilter === 'yuksek') r = r.filter(x => x.ai > 30);
+    if (this.sortCol) {
+      r = [...r].sort((a,b) => {
+        let cmp = a[this.sortCol] - b[this.sortCol];
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return r;
+  },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'asc'; }
+  }
+}">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">AI Icerik Tespiti</h1>
+      <p class="page-sub">Sayfalardaki AI uretimi icerik analizi</p>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'dusuk',l:'Dusuk (<15%)'},{v:'orta',l:'Orta (15-30%)'},{v:'yuksek',l:'Yuksek (>30%)'}]">
+        <button @click="rangeFilter = f.v" :style="rangeFilter === f.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort AI Orani</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">%8</div>
+    </div>
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yuksek AI</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">3</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Siralama Korelasyonu</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">-0.12</div>
+    </div>
+  </div>
+
+  <!-- AI Detection Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden;margin-bottom:24px">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Sayfa Bazli AI Analizi</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th @click="doSort('ai')" style="cursor:pointer">AI % <i class="ph" :class="sortCol==='ai' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th>Insan %</th>
+          <th @click="doSort('skor')" style="cursor:pointer">Tespit Skoru <i class="ph" :class="sortCol==='skor' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('siralama')" style="cursor:pointer">Siralama <i class="ph" :class="sortCol==='siralama' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.url">
+          <tr>
+            <td data-label="URL"><span style="font-weight:500;color:var(--text)" x-text="row.url"></span></td>
+            <td data-label="AI %"><span :style="'color:'+(row.ai<=15?'#22c55e':row.ai<=30?'#eab308':'#ef4444')" x-text="row.ai+'%'"></span></td>
+            <td data-label="Insan %"><span style="color:var(--text)" x-text="row.insan+'%'"></span></td>
+            <td data-label="Skor"><span :style="'font-weight:600;color:'+(row.skor<0.3?'#22c55e':row.skor<0.6?'#eab308':'#ef4444')" x-text="row.skor.toFixed(2)"></span></td>
+            <td data-label="Siralama"><span style="color:var(--text)" x-text="'#'+row.siralama"></span></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Info Card -->
+  <div class="fade-in-d3 card" style="display:flex;align-items:flex-start;gap:12px;border-left:3px solid #3b82f6">
+    <i class="ph ph-info" style="color:#3b82f6;font-size:1.25rem;flex-shrink:0;margin-top:2px"></i>
+    <div>
+      <div style="font-size:0.875rem;font-weight:500;color:var(--text);margin-bottom:4px">AI Icerik ve Siralama</div>
+      <div style="font-size:0.8125rem;color:var(--text-soft);line-height:1.6">Dusuk AI orani (&lt;%15) siralamaya negatif etki gostermemektedir. Yuksek AI oranli sayfalarda icerik cesitliligi ve benzersizlik arttirarak tespit skorunu dusurmeniz onerilir.</div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

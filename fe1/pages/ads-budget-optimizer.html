@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Butce Optimizer — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">AI Butce Optimizer</h1>
+    <p class="page-sub">Yapay zeka destekli cross-channel butce dagitimi</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Mevcut ROAS</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">2.7x</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Tahmini ROAS</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">3.4x</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Tasarruf</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#a855f7;margin-top:8px">&#8378;3,200<span style="font-size:0.875rem;color:var(--muted);font-weight:300">/ay</span></div>
+    </div>
+  </div>
+
+  <!-- AI Recommendations -->
+  <div class="fade-in-d2" style="margin-bottom:24px">
+    <span class="section-label">AI Onerileri</span>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <!-- Recommendation 1 -->
+      <div class="card" style="padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:500;color:var(--text);font-size:0.875rem">Meta butcesini %15 artir</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Meta kampanyalari son 7 gunde 3.2x ROAS uretiyor. Butce artisi tahmini +18 donusum saglayacak.</div>
+          </div>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Yuksek Guven</span>
+          <button @click="$store.confirm.ask('Meta butcesini %15 artirmak istediginize emin misiniz?', () => { $store.toast.show('Meta butcesi %15 artirildi', 'success') })" class="btn-primary" style="padding:6px 14px;font-size:0.75rem;flex-shrink:0">Uygula</button>
+        </div>
+      </div>
+
+      <!-- Recommendation 2 -->
+      <div class="card" style="padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-arrows-left-right" style="color:#3b82f6;font-size:1.125rem"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:500;color:var(--text);font-size:0.875rem">TikTok'a &#8378;2,000 kaydir</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">TikTok 18-34 yas segmentinde CPA %30 daha dusuk. LinkedIn'den butce transferi onerilir.</div>
+          </div>
+          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Orta Guven</span>
+          <button @click="$store.confirm.ask('TikTok\'a &#8378;2,000 kaydirmak istediginize emin misiniz?', () => { $store.toast.show('Butce transferi uygulandi', 'success') })" class="btn-primary" style="padding:6px 14px;font-size:0.75rem;flex-shrink:0">Uygula</button>
+        </div>
+      </div>
+
+      <!-- Recommendation 3 -->
+      <div class="card" style="padding:16px 20px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-funnel" style="color:#eab308;font-size:1.125rem"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:500;color:var(--text);font-size:0.875rem">LinkedIn B2B hedeflemeyi daralt</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">LinkedIn CTR %0.8 ile dusuk seyrediyor. Hedef kitle daraltilarakdonusum orani arttirilabilir.</div>
+          </div>
+          <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Dusuk Guven</span>
+          <button @click="$store.confirm.ask('LinkedIn hedeflemeyi daraltmak istediginize emin misiniz?', () => { $store.toast.show('Hedefleme daraltildi', 'success') })" class="btn-primary" style="padding:6px 14px;font-size:0.75rem;flex-shrink:0">Uygula</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

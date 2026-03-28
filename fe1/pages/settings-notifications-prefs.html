@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Bildirim Tercihleri — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  events: [
+    { name:'SEO Anomali', icon:'ph-chart-line-down', iconColor:'#ef4444', inApp:true, email:true, webhook:true },
+    { name:'Adaptor Hatasi', icon:'ph-plug', iconColor:'#eab308', inApp:true, email:true, webhook:false },
+    { name:'Kampanya Durumu', icon:'ph-megaphone', iconColor:'#3b82f6', inApp:true, email:false, webhook:false },
+    { name:'Guvenlik Alarmi', icon:'ph-shield-warning', iconColor:'#ef4444', inApp:true, email:true, webhook:true },
+    { name:'Haftalik Ozet', icon:'ph-calendar-check', iconColor:'#a855f7', inApp:false, email:true, webhook:false }
+  ],
+  toggleChannel(event, channel) {
+    event[channel] = !event[channel];
+    $store.toast.show('Tercih guncellendi', 'success');
+  },
+  enableAll() {
+    this.events.forEach(e => { e.inApp = true; e.email = true; e.webhook = true; });
+    $store.toast.show('Tum kanallar acildi', 'success');
+  },
+  disableAll() {
+    this.events.forEach(e => { e.inApp = false; e.email = false; e.webhook = false; });
+    $store.toast.show('Tum kanallar kapatildi', 'warning');
+  }
+}">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Bildirim Tercihleri</h1>
+      <p class="page-sub">Kanal ve olay bazli bildirim ayarlari</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary" style="padding:8px 16px;font-size:0.8125rem" @click="enableAll()"><i class="ph ph-bell-ringing"></i> Tum Kanallari Ac</button>
+      <button class="btn-secondary" style="padding:8px 16px;font-size:0.8125rem" @click="disableAll()"><i class="ph ph-bell-slash"></i> Tum Kanallari Kapat</button>
+    </div>
+  </div>
+
+  <!-- Channel x Event Matrix -->
+  <div class="fade-in-d1 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Kanal Matrisi</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Olay</th>
+          <th style="text-align:center">In-App</th>
+          <th style="text-align:center">E-posta</th>
+          <th style="text-align:center">Webhook</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="(event, idx) in events" :key="idx">
+          <tr>
+            <td data-label="Olay">
+              <div style="display:flex;align-items:center;gap:8px">
+                <i class="ph" :class="event.icon" :style="'color:'+event.iconColor"></i>
+                <span style="font-weight:500;color:var(--text)" x-text="event.name"></span>
+              </div>
+            </td>
+            <td data-label="In-App" style="text-align:center">
+              <div @click="toggleChannel(event, 'inApp')"
+                :style="'width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;margin:0 auto;transition:background 0.2s;background:'+(event.inApp ? 'var(--accent)' : 'var(--border)')">
+                <div :style="'width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;transition:left 0.2s;'+(event.inApp ? 'left:22px' : 'left:2px')"></div>
+              </div>
+            </td>
+            <td data-label="E-posta" style="text-align:center">
+              <div @click="toggleChannel(event, 'email')"
+                :style="'width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;margin:0 auto;transition:background 0.2s;background:'+(event.email ? 'var(--accent)' : 'var(--border)')">
+                <div :style="'width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;transition:left 0.2s;'+(event.email ? 'left:22px' : 'left:2px')"></div>
+              </div>
+            </td>
+            <td data-label="Webhook" style="text-align:center">
+              <div @click="toggleChannel(event, 'webhook')"
+                :style="'width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;margin:0 auto;transition:background 0.2s;background:'+(event.webhook ? 'var(--accent)' : 'var(--border)')">
+                <div :style="'width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;transition:left 0.2s;'+(event.webhook ? 'left:22px' : 'left:2px')"></div>
+              </div>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
+</body>
+</html>

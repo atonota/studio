@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Link Kesisim Analizi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  yourDomain: 'acme.com',
+  comp1: '',
+  comp2: '',
+  comp3: '',
+  analyzed: false,
+  loading: false,
+  onlyMissing: false,
+  sortCol: 'dr',
+  sortDir: 'desc',
+  results: [],
+  vennData: {r1:142, r2:98, r3:67, r1r2:34, r1r3:22, r2r3:18, all:12, you:45, yr1:28, yr2:15, yr3:9},
+  doAnalysis() {
+    if (!this.comp1 && !this.comp2 && !this.comp3) return;
+    this.loading = true;
+    this.analyzed = false;
+    setTimeout(() => {
+      const domains = ['webrazzi.com','dijitalajanslar.com','pazarlamasyon.com','teknoseyir.com','seorehberi.net','startupturk.com','girisimsepeti.com','egitimsepeti.com','kariyer.net','medium.com','forbes.com','chip.com.tr','log.com.tr','shiftdelete.net','donanimhaber.com','sosyalmedya.co','hubspot.com','moz.com','ahrefs.com','semrush.com'];
+      this.results = domains.map(d => ({
+        domain: d,
+        dr: Math.floor(Math.random()*60)+30,
+        r1: Math.random() > 0.4,
+        r2: Math.random() > 0.5,
+        r3: Math.random() > 0.6,
+        you: Math.random() > 0.65,
+      }));
+      this.loading = false;
+      this.analyzed = true;
+    }, 1500);
+  },
+  get filtered() {
+    let r = this.results;
+    if (this.onlyMissing) r = r.filter(x => !x.you);
+    if (this.sortCol) {
+      r = [...r].sort((a,b) => {
+        let va = a[this.sortCol], vb = b[this.sortCol];
+        if (typeof va === 'boolean') { va = va ? 1 : 0; vb = vb ? 1 : 0; }
+        let cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return r;
+  },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'desc'; }
+  }
+}">
+  <!-- Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Link Kesisim Analizi</h1>
+    <p class="page-sub">Rakiplerinize link veren ama size vermeyen domainleri bulun</p>
+  </div>
+
+  <!-- Domain Inputs -->
+  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px">
+      <div>
+        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Sizin Domain</label>
+        <input type="text" x-model="yourDomain" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--accent);background:var(--surface-2);color:var(--accent);font-size:0.8125rem;outline:none;font-family:inherit;font-weight:600">
+      </div>
+      <div>
+        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Rakip 1</label>
+        <input type="text" x-model="comp1" placeholder="rakip1.com" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+      </div>
+      <div>
+        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Rakip 2</label>
+        <input type="text" x-model="comp2" placeholder="rakip2.com" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+      </div>
+      <div>
+        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Rakip 3</label>
+        <input type="text" x-model="comp3" placeholder="rakip3.com" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+      </div>
+    </div>
+    <button @click="doAnalysis()" class="btn-primary" :disabled="loading">
+      <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-chart-scatter'" :style="loading && 'animation:spin 1s linear infinite'"></i>
+      <span x-text="loading ? 'Analiz ediliyor...' : 'Analiz Et'"></span>
+    </button>
+  </div>
+
+  <!-- Results (shown after analysis) -->
+  <template x-if="analyzed">
+    <div>
+      <!-- Venn Diagram Placeholder -->
+      <div class="fade-in-d1 card" style="margin-bottom:24px;text-align:center;padding:32px">
+        <span class="section-label">Link Kesisim Diyagrami</span>
+        <div id="chart-venn" style="width:100%;height:300px"></div>
+      </div>
+
+      <!-- Filter -->
+      <div class="fade-in-d2" style="display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" x-model="onlyMissing" style="accent-color:var(--accent)">
+          <span style="font-size:0.8125rem;color:var(--text);font-weight:500">Sadece size link vermeyenler</span>
+        </label>
+        <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' domain listeleniyor'"></span>
+      </div>
+
+      <!-- Results Table -->
+      <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th @click="doSort('domain')" style="cursor:pointer">Domain <i class="ph" :class="sortCol==='domain' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th>Rakip 1</th>
+                <th>Rakip 2</th>
+                <th>Rakip 3</th>
+                <th>Siz</th>
+                <th>Aksiyon</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="row in filtered" :key="row.domain">
+                <tr>
+                  <td data-label="Domain"><span style="font-weight:500;color:var(--text)" x-text="row.domain"></span></td>
+                  <td data-label="DR"><span style="font-weight:600;color:var(--text)" x-text="row.dr"></span></td>
+                  <td data-label="Rakip 1"><i class="ph" :class="row.r1 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r1 ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
+                  <td data-label="Rakip 2"><i class="ph" :class="row.r2 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r2 ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
+                  <td data-label="Rakip 3"><i class="ph" :class="row.r3 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r3 ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
+                  <td data-label="Siz"><i class="ph" :class="row.you ? 'ph-check-circle' : 'ph-x-circle'" :style="row.you ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
+                  <td data-label="Aksiyon">
+                    <button x-show="!row.you" style="font-size:0.6875rem;padding:4px 10px;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-family:inherit;font-weight:600;white-space:nowrap"><i class="ph ph-envelope-simple"></i> Iletisime Gec</button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Watch for venn chart container to appear
+  const observer = new MutationObserver(() => {
+    const el = document.getElementById('chart-venn');
+    if (el && !el._chart) {
+      el._chart = true;
+      const t = getChartTheme();
+      const c = echarts.init(el);
+      c.setOption({
+        tooltip: { ...t.tooltip, trigger: 'item' },
+        series: [{
+          type: 'graph',
+          layout: 'none',
+          symbolSize: 100,
+          label: { show: true, fontSize: 11, color: t.text },
+          edgeLabel: { show: true, fontSize: 10, color: t.muted, formatter: e => e.data.value },
+          data: [
+            { name: 'Rakip 1', x: 200, y: 150, itemStyle: { color: 'rgba(59,130,246,0.3)', borderColor: '#3b82f6', borderWidth: 2 }, symbolSize: 120, label: { formatter: 'Rakip 1\n142 link' } },
+            { name: 'Rakip 2', x: 350, y: 150, itemStyle: { color: 'rgba(168,85,247,0.3)', borderColor: '#a855f7', borderWidth: 2 }, symbolSize: 110, label: { formatter: 'Rakip 2\n98 link' } },
+            { name: 'Rakip 3', x: 275, y: 280, itemStyle: { color: 'rgba(234,179,8,0.3)', borderColor: '#eab308', borderWidth: 2 }, symbolSize: 95, label: { formatter: 'Rakip 3\n67 link' } },
+            { name: 'Siz', x: 275, y: 50, itemStyle: { color: 'rgba(194,65,12,0.3)', borderColor: '#C2410C', borderWidth: 2 }, symbolSize: 80, label: { formatter: 'Siz\n45 link' } },
+          ],
+          links: [
+            { source: 'Rakip 1', target: 'Rakip 2', value: 34, lineStyle: { color: t.border, width: 2 } },
+            { source: 'Rakip 1', target: 'Rakip 3', value: 22, lineStyle: { color: t.border, width: 2 } },
+            { source: 'Rakip 2', target: 'Rakip 3', value: 18, lineStyle: { color: t.border, width: 2 } },
+            { source: 'Siz', target: 'Rakip 1', value: 28, lineStyle: { color: t.border, width: 1, type: 'dashed' } },
+            { source: 'Siz', target: 'Rakip 2', value: 15, lineStyle: { color: t.border, width: 1, type: 'dashed' } },
+            { source: 'Siz', target: 'Rakip 3', value: 9, lineStyle: { color: t.border, width: 1, type: 'dashed' } },
+          ],
+          lineStyle: { curveness: 0.1 },
+        }]
+      });
+      window.addEventListener('resize', () => c.resize());
+    }
+  });
+  observer.observe(document.getElementById('main'), { childList: true, subtree: true });
+});
+</script>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</body>
+</html>

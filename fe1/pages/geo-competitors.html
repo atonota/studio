@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>GEO Rakip Karsilastirma — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ highlight:true, sortBy:'visibility' }">
+  <div class="fade-in" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">GEO Rakip Karsilastirma</h1>
+    <p class="page-sub">AI platformlarinda rakip gorunurluk analizi</p>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="fade-in-d1 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Karsilastirma Tablosu</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Metrik</th>
+          <th style="text-align:center">atonota</th>
+          <th style="text-align:center">Rakip A</th>
+          <th style="text-align:center">Rakip B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Metrik"><span style="font-weight:500;color:var(--text)">Mention</span></td>
+          <td data-label="atonota" style="text-align:center"><span style="color:var(--accent);font-weight:600">23</span></td>
+          <td data-label="Rakip A" style="text-align:center"><span style="color:var(--text)">41</span></td>
+          <td data-label="Rakip B" style="text-align:center"><span style="color:var(--text)">18</span></td>
+        </tr>
+        <tr>
+          <td data-label="Metrik"><span style="font-weight:500;color:var(--text)">Citation</span></td>
+          <td data-label="atonota" style="text-align:center"><span style="color:var(--accent);font-weight:600">8</span></td>
+          <td data-label="Rakip A" style="text-align:center"><span style="color:var(--text)">15</span></td>
+          <td data-label="Rakip B" style="text-align:center"><span style="color:var(--text)">6</span></td>
+        </tr>
+        <tr>
+          <td data-label="Metrik"><span style="font-weight:500;color:var(--text)">Citability Skoru</span></td>
+          <td data-label="atonota" style="text-align:center"><span style="color:var(--accent);font-weight:600">72</span></td>
+          <td data-label="Rakip A" style="text-align:center"><span style="color:var(--text)">84</span></td>
+          <td data-label="Rakip B" style="text-align:center"><span style="color:var(--text)">61</span></td>
+        </tr>
+        <tr>
+          <td data-label="Metrik"><span style="font-weight:500;color:var(--text)">Platform Kapsam</span></td>
+          <td data-label="atonota" style="text-align:center"><span style="color:var(--accent);font-weight:600">4/6</span></td>
+          <td data-label="Rakip A" style="text-align:center"><span style="color:var(--text)">6/6</span></td>
+          <td data-label="Rakip B" style="text-align:center"><span style="color:var(--text)">3/6</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

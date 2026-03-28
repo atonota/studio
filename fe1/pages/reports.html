@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Raporlar — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  reports: [
+    { id:1, name:'Haftalik SEO Raporu', type:'PDF — Otomatik', icon:'ph-file-pdf', iconColor:'#ef4444', iconBg:'rgba(239,68,68,0.1)', schedule:'Her Pzt 09:00', lastRun:'25 Mar 2026', active:true },
+    { id:2, name:'Aylik Performans', type:'PDF — Otomatik', icon:'ph-file-pdf', iconColor:'#ef4444', iconBg:'rgba(239,68,68,0.1)', schedule:'Her ayin 1\'i', lastRun:'1 Mar 2026', active:true },
+    { id:3, name:'Reklam ROAS Raporu', type:'HTML — Manuel, White-label', icon:'ph-file-html', iconColor:'#3b82f6', iconBg:'rgba(59,130,246,0.1)', schedule:'Manuel', lastRun:'—', active:false }
+  ]
+}">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Raporlar</h1>
+      <p class="page-sub">Otomatik ve manuel rapor yonetimi</p>
+    </div>
+    <a href="report-create.html" class="btn-primary" style="text-decoration:none"><i class="ph ph-plus"></i> Yeni Rapor</a>
+  </div>
+
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <template x-for="r in reports" :key="r.id">
+      <div class="card" style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div :style="'width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:'+r.iconBg">
+            <i class="ph" :class="r.icon" :style="'color:'+r.iconColor+';font-size:1.125rem'"></i>
+          </div>
+          <div>
+            <div style="font-weight:500;color:var(--text)" x-text="r.name"></div>
+            <div style="font-size:0.6875rem;color:var(--muted)" x-text="r.type"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:0.75rem;color:var(--muted)">Zamanlama</span>
+            <span style="font-size:0.75rem;color:var(--text)" x-text="r.schedule"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:0.75rem;color:var(--muted)">Son Calistirma</span>
+            <span style="font-size:0.75rem;color:var(--text)" x-text="r.lastRun"></span>
+          </div>
+        </div>
+        <!-- Status Toggle -->
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span class="badge" :style="r.active ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="r.active ? 'Aktif' : 'Pasif'"></span>
+          <div @click="r.active = !r.active; $store.toast.show(r.active ? 'Rapor aktif edildi' : 'Rapor durduruldu', r.active ? 'success' : 'warning')"
+            :style="'width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;background:'+(r.active ? 'var(--accent)' : 'var(--border)')">
+            <div :style="'width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;transition:left 0.2s;'+(r.active ? 'left:22px' : 'left:2px')"></div>
+          </div>
+        </div>
+        <!-- Actions -->
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn-secondary" style="flex:1;padding:8px;font-size:0.75rem" @click="$store.toast.show('Rapor indiriliyor...', 'info')"><i class="ph ph-download-simple"></i> PDF Indir</button>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('reports'));</script>
+</body>
+</html>

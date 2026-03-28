@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Dashboard — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub">Platform genel gorunumu</p>
+    </div>
+    <div class="date-range"><i class="ph ph-calendar-blank"></i><span>01 Mar — 28 Mar 2026</span><i class="ph ph-caret-down" style="font-size:0.75rem"></i></div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Organik Trafik</span>
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">24,891</div>
+      <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">+12.4% <span style="color:var(--muted)">onceki aya gore</span></div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Keyword Sayisi</span>
+        <i class="ph ph-trend-up" style="color:#3b82f6;font-size:1.125rem"></i>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">1,247</div>
+      <div style="font-size:0.75rem;color:#3b82f6;margin-top:4px">+8.2% <span style="color:var(--muted)">onceki aya gore</span></div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Reklam Harcamasi</span>
+        <i class="ph ph-currency-circle-dollar" style="color:#a855f7;font-size:1.125rem"></i>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">&#8378;48,720</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">3 platform aktif</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Icerik Skoru</span>
+        <i class="ph ph-article" style="color:#eab308;font-size:1.125rem"></i>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">78<span style="font-size:1rem;color:var(--muted)">/100</span></div>
+      <div style="font-size:0.75rem;color:#eab308;margin-top:4px">Orta <span style="color:var(--muted)">— iyilestirme onerisi var</span></div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px">
+    <!-- Traffic Line Chart -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <span class="section-label" style="margin-bottom:0">Trafik Trendi (30 Gun)</span>
+        <div style="display:flex;gap:12px;font-size:0.6875rem;color:var(--muted)">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:3px;background:#22c55e;border-radius:2px;display:inline-block"></span> Organik</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:3px;background:#a855f7;border-radius:2px;display:inline-block"></span> Paid</span>
+        </div>
+      </div>
+      <div id="chart-traffic" style="width:100%;height:260px"></div>
+    </div>
+    <!-- Sources Doughnut -->
+    <div class="card">
+      <span class="section-label">Trafik Kaynaklari</span>
+      <div id="chart-sources" style="width:100%;height:260px"></div>
+    </div>
+  </div>
+
+  <!-- Second Row -->
+  <div class="fade-in-d3" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <!-- Daily Bar Chart -->
+    <div class="card">
+      <span class="section-label">Gunluk Oturumlar (Son 7 Gun)</span>
+      <div id="chart-daily" style="width:100%;height:220px"></div>
+    </div>
+    <!-- AI Brief -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <i class="ph ph-robot" style="font-size:1.125rem;color:var(--accent)"></i>
+        <span class="section-label" style="margin-bottom:0">AI Gunluk Ozet</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <i class="ph ph-warning-circle" style="font-size:1.125rem;color:#eab308;flex-shrink:0;margin-top:2px"></i>
+          <div>
+            <div style="font-size:0.8125rem;color:var(--text);font-weight:500">Organik trafik dususu tespit edildi</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/blog/seo-rehberi sayfasi son 3 gunde %18 trafik kaybetti. Icerik guncellemesi onerilir.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <i class="ph ph-trend-up" style="font-size:1.125rem;color:#22c55e;flex-shrink:0;margin-top:2px"></i>
+          <div>
+            <div style="font-size:0.8125rem;color:var(--text);font-weight:500">Meta Ads ROAS yukseliste</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Gecen haftaya gore %14 artis. Butce artirimi degerlendirebilirsiniz.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <i class="ph ph-lightbulb" style="font-size:1.125rem;color:#a855f7;flex-shrink:0;margin-top:2px"></i>
+          <div>
+            <div style="font-size:0.8125rem;color:var(--text);font-weight:500">Yeni keyword firsati</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">"dijital pazarlama ajansi" kelimesinde rakip zayiflamasi goruldu. Icerik olusturma onerilir.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Feed -->
+  <div class="fade-in-d4">
+    <div class="card">
+      <span class="section-label">Son Aktiviteler</span>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-check-circle" style="color:#22c55e"></i></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.8125rem;color:var(--text)">WordPress adaptor baglantisi basarili</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">acme.com — Adaptor v2.1.4</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0">12 dk once</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-megaphone" style="color:#a855f7"></i></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.8125rem;color:var(--text)">Meta Ads kampanyasi basladi</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Bahar Kampanyasi — Gunluk butce: &#8378;1,200</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0">1 saat once</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-chart-line-up" style="color:#3b82f6"></i></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.8125rem;color:var(--text)">SEO raporu olusturuldu</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Haftalik SEO Raporu — 14 oneri iceriyor</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0">3 saat once</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-warning" style="color:#eab308"></i></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.8125rem;color:var(--text)">CLS degeri esik ustunde</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">shop.beta.com — CLS: 0.28 (hedef: 0.10)</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0">5 saat once</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+
+<script src="js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('dashboard'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const mutedColor = '#7B7269';
+  const borderColor = '#3C342C';
+
+  // Traffic Line Chart
+  const cTraffic = echarts.init(document.getElementById('chart-traffic'));
+  const days = Array.from({length:30}, (_,i) => (i+1) + ' Mar');
+  const organik = [680,720,710,750,780,690,640,810,830,850,870,820,790,860,890,920,880,910,940,900,870,950,980,960,930,1010,1040,1020,990,1060];
+  const paid = [220,240,230,260,250,210,200,280,290,300,310,280,270,300,320,340,310,330,350,320,300,360,380,370,340,390,410,400,380,420];
+  cTraffic.setOption({
+    tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    grid:{left:40,right:16,top:16,bottom:28},
+    xAxis:{type:'category',data:days,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
+    series:[
+      {name:'Organik',type:'line',data:organik,smooth:true,symbol:'none',lineStyle:{color:'#22c55e',width:2},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(34,197,94,0.15)'},{offset:1,color:'rgba(34,197,94,0)'}]}}},
+      {name:'Paid',type:'line',data:paid,smooth:true,symbol:'none',lineStyle:{color:'#a855f7',width:2},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(168,85,247,0.1)'},{offset:1,color:'rgba(168,85,247,0)'}]}}}
+    ]
+  });
+
+  // Sources Doughnut
+  const cSources = echarts.init(document.getElementById('chart-sources'));
+  cSources.setOption({
+    tooltip:{trigger:'item',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:10,itemHeight:10,itemGap:14},
+    series:[{
+      type:'pie',radius:['50%','72%'],center:['50%','45%'],
+      label:{show:true,color:txtColor,fontSize:12,formatter:'{d}%',position:'outside'},
+      labelLine:{lineStyle:{color:borderColor}},
+      data:[
+        {value:48,name:'Organik',itemStyle:{color:'#22c55e'}},
+        {value:22,name:'Paid',itemStyle:{color:'#a855f7'}},
+        {value:18,name:'Referral',itemStyle:{color:'#3b82f6'}},
+        {value:12,name:'Direct',itemStyle:{color:'#eab308'}}
+      ]
+    }]
+  });
+
+  // Daily Bar Chart
+  const cDaily = echarts.init(document.getElementById('chart-daily'));
+  cDaily.setOption({
+    tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    grid:{left:40,right:16,top:8,bottom:28},
+    xAxis:{type:'category',data:['Pzt','Sal','Car','Per','Cum','Cmt','Paz'],axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
+    series:[{type:'bar',data:[1240,1380,1190,1420,1510,980,860],barWidth:'40%',itemStyle:{color:'#C2410C',borderRadius:[4,4,0,0]}}]
+  });
+
+  // Resize
+  window.addEventListener('resize', () => { cTraffic.resize(); cSources.resize(); cDaily.resize(); });
+});
+</script>
+</body>
+</html>

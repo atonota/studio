@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Schema Aggregation Endpoint — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Schema Aggregation Endpoint</h1>
+    <p class="page-sub">Toplu schema verisi API endpoint yonetimi</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Sayfa</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">142</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Schema Var</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">87</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Endpoint Aktif</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#a855f7;margin-top:8px">1</div>
+    </div>
+  </div>
+
+  <!-- API Endpoint -->
+  <div class="fade-in-d2 card" style="margin-bottom:24px">
+    <span class="section-label">API Endpoint</span>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;font-weight:700;font-size:0.75rem">GET</span>
+      <code style="font-size:0.875rem;color:var(--text);font-family:'SF Mono',Consolas,monospace">/api/v1/schema/aggregate</code>
+      <button style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer;margin-left:auto"><i class="ph ph-copy" style="margin-right:4px"></i>Endpoint Kopyala</button>
+    </div>
+    <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:4px">
+      <i class="ph ph-info" style="margin-right:4px"></i>Bearer JWT ile kimlik dogrulama gerektirir. Tenant bazli RLS uygulanir.
+    </div>
+  </div>
+
+  <!-- Sample Response -->
+  <div class="fade-in-d3 card">
+    <span class="section-label">Ornek Yanit</span>
+    <pre style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:0.75rem;color:var(--text-soft);overflow-x:auto;line-height:1.6;font-family:'SF Mono',Consolas,monospace">{
+  "status": "ok",
+  "total_pages": 142,
+  "schema_count": 87,
+  "schemas": [
+    {
+      "url": "/blog/seo-rehberi-2026",
+      "type": "Article",
+      "valid": true,
+      "last_checked": "2026-03-27T14:30:00Z"
+    },
+    {
+      "url": "/urunler/analitik-paketi",
+      "type": "Product",
+      "valid": true,
+      "last_checked": "2026-03-27T14:30:00Z"
+    },
+    {
+      "url": "/sss",
+      "type": "FAQ",
+      "valid": false,
+      "last_checked": "2026-03-27T14:30:00Z"
+    }
+  ],
+  "cursor": "eyJjIjoiMjAyNi0wMy0yN1QxNDozMDowMFoiLCJpIjoiM2EyYiJ9"
+}</pre>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Okunabilirlik Analizi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+<div id="main" x-data="{
+  gradeFilter: 'tumu',
+  sortCol: '',
+  sortDir: 'asc',
+  rows: [
+    {url:'/blog/seo-rehberi',skor:82,seviye:'Kolay',cumle:124,ortKelime:14.2},
+    {url:'/blog/teknik-seo-kilavuzu',skor:58,seviye:'Zor',cumle:89,ortKelime:22.6},
+    {url:'/blog/icerik-pazarlama',skor:76,seviye:'Orta',cumle:98,ortKelime:16.8},
+    {url:'/rehber/google-ads',skor:71,seviye:'Orta',cumle:112,ortKelime:17.4},
+    {url:'/blog/e-ticaret-seo',skor:85,seviye:'Kolay',cumle:76,ortKelime:12.1}
+  ],
+  get filtered() {
+    let r = this.rows;
+    if (this.gradeFilter !== 'tumu') r = r.filter(x => x.seviye === this.gradeFilter);
+    if (this.sortCol) {
+      r = [...r].sort((a,b) => {
+        let va = a[this.sortCol], vb = b[this.sortCol];
+        let cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return r;
+  },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'asc'; }
+  }
+}">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">Okunabilirlik Analizi</h1>
+      <p class="page-sub">Icerik okunabilirlik skorlari ve seviye dagilimi</p>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="g in [{v:'tumu',l:'Tumu'},{v:'Kolay',l:'Kolay'},{v:'Orta',l:'Orta'},{v:'Zor',l:'Zor'}]">
+        <button @click="gradeFilter = g.v" :style="gradeFilter === g.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="g.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Skor</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">72</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kolay</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">48 sayfa</div>
+    </div>
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Zor</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">12 sayfa</div>
+    </div>
+  </div>
+
+  <!-- Readability Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Sayfa Okunabilirlik Detaylari</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th @click="doSort('skor')" style="cursor:pointer">Skor <i class="ph" :class="sortCol==='skor' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th>Seviye</th>
+          <th>Cumle</th>
+          <th>Ort Kelime/Cumle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.url">
+          <tr>
+            <td data-label="URL"><span style="font-weight:500;color:var(--text)" x-text="row.url"></span></td>
+            <td data-label="Skor"><span style="color:var(--text)" x-text="row.skor"></span></td>
+            <td data-label="Seviye"><span class="badge" :style="row.seviye==='Kolay' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : row.seviye==='Zor' ? 'background:rgba(239,68,68,0.1);color:#ef4444' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="row.seviye"></span></td>
+            <td data-label="Cumle"><span style="color:var(--muted)" x-text="row.cumle"></span></td>
+            <td data-label="Ort Kelime/Cumle"><span style="color:var(--muted)" x-text="row.ortKelime"></span></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

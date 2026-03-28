@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Kreatif Yonetimi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ viewMode: 'grid', platformFilter: 'tumu', sortBy: 'ctr' }">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(249,115,22,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-paint-brush" style="color:#f97316;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Kreatif Yonetimi</h1>
+        <p class="page-sub">Reklam gorselleri ve performans</p>
+      </div>
+    </div>
+    <button class="btn-primary"><i class="ph ph-upload-simple"></i> Kreatif Yukle</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="fade-in" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+    <div style="display:flex;gap:4px;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <button @click="viewMode = 'grid'" :style="viewMode === 'grid' ? 'background:var(--accent);color:#fff' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 10px;border:none;cursor:pointer;display:flex;align-items:center"><i class="ph ph-squares-four" style="font-size:1rem"></i></button>
+      <button @click="viewMode = 'list'" :style="viewMode === 'list' ? 'background:var(--accent);color:#fff' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 10px;border:none;cursor:pointer;display:flex;align-items:center"><i class="ph ph-list" style="font-size:1rem"></i></button>
+    </div>
+    <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'Meta',l:'Meta'},{v:'LinkedIn',l:'LinkedIn'},{v:'TikTok',l:'TikTok'}]">
+      <button @click="platformFilter = p.v" :style="platformFilter === p.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="p.l"></button>
+    </template>
+    <select x-model="sortBy" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-size:0.75rem;font-family:inherit;cursor:pointer">
+      <option value="ctr">CTR Sirala</option>
+      <option value="gosterim">Gosterim Sirala</option>
+    </select>
+  </div>
+
+  <!-- Creative Cards Grid -->
+  <div class="fade-in-d1" :style="viewMode === 'grid' ? 'display:grid;grid-template-columns:repeat(2,1fr);gap:16px' : 'display:flex;flex-direction:column;gap:12px'">
+    <!-- Creative 1 -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="height:180px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-image" style="font-size:3rem;color:var(--border)"></i>
+      </div>
+      <div style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Bahar Kampanyasi — Banner</div>
+          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span>
+        </div>
+        <div style="display:flex;gap:16px">
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Gosterim</div>
+            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">124,800</div>
+          </div>
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">CTR</div>
+            <div style="font-size:0.875rem;font-weight:500;color:#22c55e">2.4%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creative 2 -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="height:180px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-image" style="font-size:3rem;color:var(--border)"></i>
+      </div>
+      <div style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Urun Tanitimi — Carousel</div>
+          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span>
+        </div>
+        <div style="display:flex;gap:16px">
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Gosterim</div>
+            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">89,200</div>
+          </div>
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">CTR</div>
+            <div style="font-size:0.875rem;font-weight:500;color:#22c55e">3.1%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creative 3 -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="height:180px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-image" style="font-size:3rem;color:var(--border)"></i>
+      </div>
+      <div style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">B2B Lead Gen — Video</div>
+          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">LinkedIn</span>
+        </div>
+        <div style="display:flex;gap:16px">
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Gosterim</div>
+            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">31,400</div>
+          </div>
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">CTR</div>
+            <div style="font-size:0.875rem;font-weight:500;color:#eab308">1.2%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creative 4 -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="height:180px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-image" style="font-size:3rem;color:var(--border)"></i>
+      </div>
+      <div style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Trend Dans — Short Video</div>
+          <span class="badge" style="background:rgba(var(--text-rgb),0.1);color:var(--text)">TikTok</span>
+        </div>
+        <div style="display:flex;gap:16px">
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Gosterim</div>
+            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">215,600</div>
+          </div>
+          <div>
+            <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">CTR</div>
+            <div style="font-size:0.875rem;font-weight:500;color:#22c55e">4.7%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

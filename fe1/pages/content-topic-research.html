@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Konu Arastirma — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  topic: '',
+  loading: false,
+  searched: false,
+  activeTab: 'subtopics',
+
+  mindMapData: null,
+
+  subtopics: [
+    {name:'SEO Temelleri', volume:18200, kd:42, articles:1240, desc:'Arama motoru optimizasyonunun temel kavramlari'},
+    {name:'Sosyal Medya Stratejisi', volume:14800, kd:38, articles:980, desc:'Etkili sosyal medya yonetimi teknikleri'},
+    {name:'Icerik Pazarlama', volume:12400, kd:45, articles:1120, desc:'Deger ureten icerik olusturma ve dagitim'},
+    {name:'E-posta Pazarlama', volume:9200, kd:35, articles:760, desc:'E-posta kampanyalari ile donusum artirma'},
+    {name:'PPC Reklamcilik', volume:8100, kd:52, articles:640, desc:'Tiklanma basina odeme reklam yonetimi'},
+    {name:'Web Analitiği', volume:6800, kd:41, articles:520, desc:'Veri odakli karar alma ve olcumleme'},
+    {name:'Donusum Orani Optimizasyonu', volume:5400, kd:48, articles:380, desc:'Ziyaretciyi musteriye donusturme stratejileri'},
+    {name:'Mobil Pazarlama', volume:4200, kd:33, articles:310, desc:'Mobil cihaz odakli pazarlama yaklisimlari'},
+  ],
+
+  questions: [
+    {q:'Dijital pazarlama nedir?', volume:22400, source:'PAA'},
+    {q:'Dijital pazarlama nasil yapilir?', volume:14200, source:'PAA'},
+    {q:'Dijital pazarlama ile geleneksel pazarlama arasindaki fark nedir?', volume:8100, source:'PAA'},
+    {q:'Dijital pazarlama ajansi ne yapar?', volume:6400, source:'PAA'},
+    {q:'Dijital pazarlama butcesi nasil belirlenir?', volume:4800, source:'PAA'},
+    {q:'En etkili dijital pazarlama kanallari hangileridir?', volume:3900, source:'Quora'},
+    {q:'Dijital pazarlamada ROI nasil olculur?', volume:3200, source:'PAA'},
+    {q:'Kucuk isletmeler icin dijital pazarlama stratejileri nelerdir?', volume:2800, source:'Quora'},
+    {q:'Dijital pazarlama uzmanı nasil olunur?', volume:2400, source:'PAA'},
+    {q:'B2B dijital pazarlama stratejileri nelerdir?', volume:1900, source:'LinkedIn'},
+  ],
+
+  headlines: [
+    {title:'2026 Dijital Pazarlama Trendleri: Bilmeniz Gereken 15 Strateji', engagement:92},
+    {title:'Dijital Pazarlama Rehberi: Sifirdan Ileri Seviyeye', engagement:88},
+    {title:'E-ticaret Icin Dijital Pazarlama: Satislari 3x Artirmanin Yollari', engagement:85},
+    {title:'KOBIler Icin Dijital Pazarlama: Dusuk Butceyle Yuksek Etki', engagement:82},
+    {title:'Dijital Pazarlamada Yapay Zeka: Gelecegi Bugunden Kesfet', engagement:79},
+    {title:'Sosyal Medya Pazarlama Stratejisi Nasil Olusturulur?', engagement:76},
+    {title:'Google Ads vs Meta Ads: Hangisi Daha Etkili?', engagement:73},
+    {title:'Icerik Pazarlama ile Organik Trafik Nasil Arttirilir?', engagement:70},
+  ],
+
+  doSearch() {
+    if (!this.topic.trim()) return;
+    this.loading = true;
+    this.searched = false;
+    setTimeout(() => {
+      this.loading = false;
+      this.searched = true;
+      this.$nextTick(() => this.initMindMap());
+    }, 900);
+  },
+
+  kdColor(kd) { return kd >= 60 ? '#ef4444' : kd >= 40 ? '#eab308' : '#22c55e' },
+
+  engagementColor(e) { return e >= 80 ? '#22c55e' : e >= 60 ? '#eab308' : '#ef4444' },
+
+  createContent(title) {
+    Alpine.store('toast').show('\"' + title + '\" icin icerik olusturma baslatiliyor...', 'success');
+  },
+
+  initMindMap() {
+    const el = document.getElementById('mind-map');
+    if (!el) return;
+    const t = getChartTheme();
+    const topicName = this.topic || 'dijital pazarlama';
+    const c = echarts.init(el);
+
+    const data = {
+      name: topicName,
+      symbolSize: 48,
+      itemStyle: {color: t.accent},
+      label: {fontSize:13, fontWeight:700, color:t.text},
+      children: [
+        {name:'SEO', symbolSize:36, itemStyle:{color:t.blue}, label:{color:t.text},
+          children:[
+            {name:'Teknik SEO', symbolSize:24, itemStyle:{color:t.blue+'aa'}, label:{color:t.muted}},
+            {name:'Yerel SEO', symbolSize:24, itemStyle:{color:t.blue+'aa'}, label:{color:t.muted}},
+            {name:'Backlink', symbolSize:24, itemStyle:{color:t.blue+'aa'}, label:{color:t.muted}},
+          ]},
+        {name:'Sosyal Medya', symbolSize:36, itemStyle:{color:t.purple}, label:{color:t.text},
+          children:[
+            {name:'Instagram', symbolSize:22, itemStyle:{color:t.purple+'aa'}, label:{color:t.muted}},
+            {name:'TikTok', symbolSize:22, itemStyle:{color:t.purple+'aa'}, label:{color:t.muted}},
+            {name:'LinkedIn', symbolSize:22, itemStyle:{color:t.purple+'aa'}, label:{color:t.muted}},
+          ]},
+        {name:'Icerik Pazarlama', symbolSize:36, itemStyle:{color:t.green}, label:{color:t.text},
+          children:[
+            {name:'Blog Yazimi', symbolSize:22, itemStyle:{color:t.green+'aa'}, label:{color:t.muted}},
+            {name:'Video Icerik', symbolSize:22, itemStyle:{color:t.green+'aa'}, label:{color:t.muted}},
+          ]},
+        {name:'E-posta', symbolSize:34, itemStyle:{color:t.yellow}, label:{color:t.text},
+          children:[
+            {name:'Otomasyon', symbolSize:22, itemStyle:{color:t.yellow+'aa'}, label:{color:t.muted}},
+            {name:'Segmentasyon', symbolSize:22, itemStyle:{color:t.yellow+'aa'}, label:{color:t.muted}},
+          ]},
+        {name:'PPC', symbolSize:34, itemStyle:{color:t.red}, label:{color:t.text},
+          children:[
+            {name:'Google Ads', symbolSize:22, itemStyle:{color:t.red+'aa'}, label:{color:t.muted}},
+            {name:'Meta Ads', symbolSize:22, itemStyle:{color:t.red+'aa'}, label:{color:t.muted}},
+            {name:'TikTok Ads', symbolSize:22, itemStyle:{color:t.red+'aa'}, label:{color:t.muted}},
+          ]},
+      ]
+    };
+
+    c.setOption({
+      tooltip:{trigger:'item', backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11}},
+      series:[{
+        type:'tree', data:[data],
+        layout:'radial',
+        symbol:'circle',
+        roam:true,
+        initialTreeDepth:2,
+        animationDurationUpdate:750,
+        lineStyle:{color:t.border, width:1.5, curveness:0.5},
+        emphasis:{focus:'descendant', lineStyle:{width:2.5}},
+        label:{position:'right', distance:8, fontSize:11, fontFamily:'inherit'},
+        leaves:{label:{position:'right', distance:8, fontSize:10}},
+      }]
+    });
+    window.addEventListener('resize', () => c.resize());
+  }
+}">
+
+  <!-- Page Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Konu Arastirma</h1>
+    <p class="page-sub">Zihin haritasi gorunumunde konu kesfet ve icerik firsatlari bul</p>
+  </div>
+
+  <!-- Search Input -->
+  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:20px">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px;position:relative">
+        <i class="ph ph-brain" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.25rem;color:var(--muted)"></i>
+        <input type="text" x-model="topic" @keydown.enter="doSearch()" placeholder="Konu girin... (ornek: dijital pazarlama, seo, e-ticaret)"
+          style="width:100%;padding:12px 14px 12px 44px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.9375rem;font-family:inherit;outline:none"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <button @click="doSearch()" style="padding:12px 28px;border-radius:10px;font-size:0.875rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;white-space:nowrap">
+        <span x-show="!loading"><i class="ph ph-compass" style="font-size:1rem"></i> Kesfet</span>
+        <span x-show="loading" style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:1rem"></i> Arastiriliyor...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div x-show="loading" style="text-align:center;padding:60px 20px">
+    <i class="ph ph-circle-notch" style="font-size:2.5rem;color:var(--accent);animation:spin 1s linear infinite"></i>
+    <p style="color:var(--muted);margin-top:12px;font-size:0.875rem">Konu agaci olusturuluyor...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div x-show="!searched && !loading" class="fade-in-d2 card" style="text-align:center;padding:80px 20px">
+    <i class="ph ph-tree-structure" style="font-size:3rem;color:var(--muted);margin-bottom:12px"></i>
+    <p style="color:var(--text);font-weight:600;margin-bottom:4px">Konu arastirmasina baslayin</p>
+    <p style="color:var(--muted);font-size:0.8125rem">Bir konu girerek iliskili alt konular, sorular ve baslik fikirleri kesfet</p>
+  </div>
+
+  <!-- Results -->
+  <div x-show="searched && !loading" x-cloak>
+
+    <!-- Mind Map -->
+    <div class="fade-in-d1 card" style="padding:16px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:0.8125rem;font-weight:600;color:var(--text)">Konu Haritasi</div>
+        <span style="font-size:0.6875rem;color:var(--muted)">Fare ile zoom / surukle</span>
+      </div>
+      <div id="mind-map" style="width:100%;height:380px"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="fade-in-d2" style="margin-bottom:16px">
+      <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border);width:fit-content;margin-bottom:16px">
+        <template x-for="tab in [{id:'subtopics',label:'Alt Konular',icon:'ph-tree-structure',count:subtopics.length},{id:'questions',label:'Sorular',icon:'ph-question',count:questions.length},{id:'headlines',label:'Basliklar',icon:'ph-text-h-one',count:headlines.length}]" :key="tab.id">
+          <button @click="activeTab = tab.id"
+            :style="activeTab === tab.id
+              ? 'padding:7px 16px;border-radius:8px;font-size:0.75rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px'
+              : 'padding:7px 16px;border-radius:8px;font-size:0.75rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px'">
+            <i class="ph" :class="tab.icon" style="font-size:0.875rem"></i>
+            <span x-text="tab.label"></span>
+            <span style="padding:1px 6px;border-radius:8px;font-size:0.625rem;font-weight:600"
+              :style="activeTab === tab.id ? 'background:rgba(255,255,255,0.2);color:white' : 'background:var(--surface);color:var(--muted)'"
+              x-text="tab.count"></span>
+          </button>
+        </template>
+      </div>
+
+      <!-- Subtopics Grid -->
+      <div x-show="activeTab === 'subtopics'" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+        <template x-for="(st, si) in subtopics" :key="si">
+          <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between">
+              <div>
+                <div style="font-size:0.9375rem;font-weight:600;color:var(--text);margin-bottom:4px" x-text="st.name"></div>
+                <div style="font-size:0.6875rem;color:var(--muted);line-height:1.4" x-text="st.desc"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <div style="font-size:0.6875rem;color:var(--muted)">Hacim: <span style="color:var(--text);font-weight:600" x-text="st.volume.toLocaleString('tr-TR')"></span></div>
+              <div style="font-size:0.6875rem;color:var(--muted)">KD: <span :style="'font-weight:600;color:'+kdColor(st.kd)" x-text="st.kd"></span></div>
+              <div style="font-size:0.6875rem;color:var(--muted)">Makale: <span style="color:var(--text);font-weight:500" x-text="st.articles.toLocaleString('tr-TR')"></span></div>
+            </div>
+            <button @click="createContent(st.name)"
+              style="margin-top:auto;padding:7px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;justify-content:center">
+              <i class="ph ph-pencil-simple-line" style="font-size:0.875rem"></i> Icerik Olustur
+            </button>
+          </div>
+        </template>
+      </div>
+
+      <!-- Questions List -->
+      <div x-show="activeTab === 'questions'" class="card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr><th>#</th><th>Soru</th><th>Hacim</th><th>Kaynak</th><th>Aksiyon</th></tr>
+            </thead>
+            <tbody>
+              <template x-for="(q, qi) in questions" :key="qi">
+                <tr>
+                  <td style="font-size:0.75rem;color:var(--muted)" x-text="qi+1"></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <i class="ph ph-question" style="font-size:0.875rem;color:var(--accent);flex-shrink:0"></i>
+                      <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="q.q"></span>
+                    </div>
+                  </td>
+                  <td style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="q.volume.toLocaleString('tr-TR')"></td>
+                  <td>
+                    <span style="padding:3px 10px;border-radius:6px;font-size:0.625rem;font-weight:600;background:var(--surface-2);color:var(--muted)" x-text="q.source"></span>
+                  </td>
+                  <td>
+                    <button @click="createContent(q.q)"
+                      style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;white-space:nowrap">
+                      <i class="ph ph-pencil-simple-line" style="font-size:0.75rem"></i> Icerik Olustur
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Headlines -->
+      <div x-show="activeTab === 'headlines'" class="card" style="padding:0;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table class="r-table">
+            <thead>
+              <tr><th>#</th><th>Baslik Onerisi</th><th>Etkilesim Skoru</th><th>Aksiyon</th></tr>
+            </thead>
+            <tbody>
+              <template x-for="(h, hi) in headlines" :key="hi">
+                <tr>
+                  <td style="font-size:0.75rem;color:var(--muted)" x-text="hi+1"></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <i class="ph ph-text-h-one" style="font-size:0.875rem;color:var(--accent);flex-shrink:0"></i>
+                      <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="h.title"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <div style="width:60px;height:4px;background:var(--border);border-radius:2px">
+                        <div :style="'width:'+h.engagement+'%;height:100%;border-radius:2px;background:'+engagementColor(h.engagement)"></div>
+                      </div>
+                      <span style="font-size:0.75rem;font-weight:700;min-width:24px" :style="'color:'+engagementColor(h.engagement)" x-text="h.engagement"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <button @click="createContent(h.title)"
+                      style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;white-space:nowrap">
+                      <i class="ph ph-pencil-simple-line" style="font-size:0.75rem"></i> Icerik Olustur
+                    </button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+<style>
+@keyframes spin { to { transform: rotate(360deg) } }
+@media(max-width:640px) {
+  div[style*="grid-template-columns:repeat(auto-fill"] { grid-template-columns:1fr !important; }
+}
+</style>
+</body>
+</html>

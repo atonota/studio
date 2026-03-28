@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Icerik Sayfa Listesi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  searchQuery: '',
+  scoreFilter: 'Tumu',
+  scoreOptions: ['Tumu','Iyi 80+','Orta 50-79','Dusuk <50'],
+  sortCol: '',
+  sortDir: 'asc',
+  allRows: [
+    { url:'/blog/seo-rehberi-2026', score:92, scoreColor:'#22c55e', scoreBg:'rgba(34,197,94,0.1)', words:'3,420', updated:'2 gun once', schema:'Article', schemaBg:'rgba(34,197,94,0.1)', schemaColor:'#22c55e', ai:'%4' },
+    { url:'/urunler/analitik-paketi', score:78, scoreColor:'#3b82f6', scoreBg:'rgba(59,130,246,0.1)', words:'1,240', updated:'1 hafta once', schema:'Product', schemaBg:'rgba(168,85,247,0.1)', schemaColor:'#a855f7', ai:'%12' },
+    { url:'/blog/icerik-pazarlama', score:74, scoreColor:'#3b82f6', scoreBg:'rgba(59,130,246,0.1)', words:'2,180', updated:'2 hafta once', schema:'Article', schemaBg:'rgba(34,197,94,0.1)', schemaColor:'#22c55e', ai:'%8' },
+    { url:'/sss', score:61, scoreColor:'#eab308', scoreBg:'rgba(234,179,8,0.1)', words:'890', updated:'1 ay once', schema:'FAQ', schemaBg:'rgba(234,179,8,0.1)', schemaColor:'#eab308', ai:'%22' },
+    { url:'/hakkimizda', score:56, scoreColor:'#eab308', scoreBg:'rgba(234,179,8,0.1)', words:'420', updated:'3 ay once', schema:'Organization', schemaBg:'rgba(34,197,94,0.1)', schemaColor:'#22c55e', ai:'%2' },
+    { url:'/blog/teknik-seo-kontrol', score:43, scoreColor:'#ef4444', scoreBg:'rgba(239,68,68,0.1)', words:'680', updated:'6 ay once', schema:'Yok', schemaBg:'var(--surface-2)', schemaColor:'var(--muted)', ai:'%38' }
+  ],
+  doSort(col) {
+    if (this.sortCol === col) { this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc'; }
+    else { this.sortCol = col; this.sortDir = 'asc'; }
+  },
+  get filtered() {
+    let rows = this.allRows.filter(r => {
+      const matchSearch = !this.searchQuery || r.url.toLowerCase().includes(this.searchQuery.toLowerCase());
+      let matchScore = true;
+      if (this.scoreFilter === 'Iyi 80+') matchScore = r.score >= 80;
+      else if (this.scoreFilter === 'Orta 50-79') matchScore = r.score >= 50 && r.score < 80;
+      else if (this.scoreFilter === 'Dusuk <50') matchScore = r.score < 50;
+      return matchSearch && matchScore;
+    });
+    if (this.sortCol) {
+      rows = [...rows].sort((a, b) => {
+        const va = a[this.sortCol] ?? '', vb = b[this.sortCol] ?? '';
+        const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb), 'tr');
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return rows;
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Icerik Sayfa Listesi</h1>
+    <p class="page-sub">Tum sayfalarin icerik kalite analizi</p>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="fade-in-d1" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+    <div style="position:relative;flex:1;min-width:240px;max-width:400px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem"></i>
+      <input type="text" placeholder="URL veya baslik ara..." x-model="searchQuery" style="width:100%;padding:10px 14px 10px 40px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;outline:none">
+    </div>
+  </div>
+
+  <!-- Score Filter Pills -->
+  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <template x-for="opt in scoreOptions" :key="opt">
+      <button @click="scoreFilter = opt"
+        :style="scoreFilter === opt
+          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
+          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
+        x-text="opt"></button>
+    </template>
+  </div>
+
+  <!-- Pages Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th @click="doSort('url')" style="cursor:pointer">URL <i class="ph ph-caret-up-down" style="font-size:0.7rem;opacity:0.5"></i></th>
+          <th @click="doSort('score')" style="cursor:pointer">Skor <i class="ph ph-caret-up-down" style="font-size:0.7rem;opacity:0.5"></i></th>
+          <th>Kelime</th>
+          <th>Guncelleme</th>
+          <th>Schema</th>
+          <th>AI Algilama</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.url">
+          <tr style="cursor:pointer" @click="window.location.href='content-detail.html'">
+            <td data-label="URL"><span style="font-weight:500;color:var(--text)" x-text="row.url"></span></td>
+            <td data-label="Skor"><span class="badge" :style="'background:'+row.scoreBg+';color:'+row.scoreColor" x-text="row.score"></span></td>
+            <td data-label="Kelime" style="font-size:0.8125rem;color:var(--text-soft)" x-text="row.words"></td>
+            <td data-label="Guncelleme" style="font-size:0.8125rem;color:var(--muted)" x-text="row.updated"></td>
+            <td data-label="Schema"><span class="badge" :style="'background:'+row.schemaBg+';color:'+row.schemaColor" x-text="row.schema"></span></td>
+            <td data-label="AI Algilama" style="font-size:0.8125rem;color:var(--text-soft)" x-text="row.ai"></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <div x-show="filtered.length === 0" style="padding:24px;text-align:center;color:var(--muted);font-size:0.875rem">
+      Secili filtrelere uygun sayfa bulunamadi.
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>TikTok Ads — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-tiktok-logo" style="color:#a855f7;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <h1 class="page-title">TikTok Ads</h1>
+        <p class="page-sub">In-Feed + TopView reklam yonetimi</p>
+      </div>
+    </div>
+    <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Kampanya</button>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#a855f7">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Aktif Kampanya</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">2</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Toplam Harcama</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;18,480</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Ort. ROAS</div>
+      <div style="font-size:1.5rem;font-weight:500;color:#22c55e">2.8x</div>
+    </div>
+  </div>
+
+  <!-- Campaign Table -->
+  <div class="fade-in-d2 card" x-data="{ campaigns: [{name:'Smart+ Reach',active:true,smart:true},{name:'Spark Ads Video',active:true,smart:false}] }">
+    <span class="section-label">Kampanyalar</span>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Kampanya Adi</th>
+          <th>Hedef</th>
+          <th>Durum</th>
+          <th>Gunluk Butce</th>
+          <th>Harcama</th>
+          <th>ROAS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Kampanya Adi" style="font-weight:500;color:var(--text)">
+            Smart+ Reach
+            <span x-show="campaigns[0].smart" style="font-size:0.6875rem;padding:1px 6px;border-radius:4px;background:rgba(168,85,247,0.1);color:#a855f7;margin-left:4px">Smart+</span>
+          </td>
+          <td data-label="Hedef">Erisim</td>
+          <td data-label="Durum">
+            <span @click="campaigns[0].active = !campaigns[0].active; $store.toast.show(campaigns[0].active ? 'Kampanya aktif' : 'Kampanya duraklatildi', campaigns[0].active ? 'success' : 'warning')" :style="campaigns[0].active ? 'background:rgba(34,197,94,0.1);color:#22c55e;cursor:pointer' : 'background:rgba(234,179,8,0.1);color:#eab308;cursor:pointer'" class="badge" x-text="campaigns[0].active ? 'Aktif' : 'Duraklat'"></span>
+          </td>
+          <td data-label="Gunluk Butce">&#8378;1,500/gun</td>
+          <td data-label="Harcama">&#8378;11,000</td>
+          <td data-label="ROAS" style="font-weight:600;color:#eab308">2.5x</td>
+        </tr>
+        <tr>
+          <td data-label="Kampanya Adi" style="font-weight:500;color:var(--text)">Spark Ads Video</td>
+          <td data-label="Hedef">Video</td>
+          <td data-label="Durum">
+            <span @click="campaigns[1].active = !campaigns[1].active; $store.toast.show(campaigns[1].active ? 'Kampanya aktif' : 'Kampanya duraklatildi', campaigns[1].active ? 'success' : 'warning')" :style="campaigns[1].active ? 'background:rgba(34,197,94,0.1);color:#22c55e;cursor:pointer' : 'background:rgba(234,179,8,0.1);color:#eab308;cursor:pointer'" class="badge" x-text="campaigns[1].active ? 'Aktif' : 'Duraklat'"></span>
+          </td>
+          <td data-label="Gunluk Butce">&#8378;800/gun</td>
+          <td data-label="Harcama">&#8378;7,480</td>
+          <td data-label="ROAS" style="font-weight:600;color:#22c55e">3.2x</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

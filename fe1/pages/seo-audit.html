@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Teknik SEO Denetimi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ scanning: false, progress: 0, filter: 'tumu', issues: [
+  {severity:'Kritik',color:'#ef4444',title:'Eksik meta description',affected:'12 sayfa etkilendi',desc:'Meta description eksik olan sayfalar arama sonuclarinda dusuk CTR alir. Google snippet\'ta kendi ozetini olusturabilir ancak bu genellikle yetersizdir.'},
+  {severity:'Kritik',color:'#ef4444',title:'Yavas LCP > 2.5s',affected:'3 sayfa etkilendi',desc:'LCP (Largest Contentful Paint) 2.5 saniyeyi asan sayfalar Core Web Vitals degerlemesinde basarisiz sayilir. Hero gorsel optimizasyonu ve lazy loading onerisi incelenmelidir.'},
+  {severity:'Uyari',color:'#eab308',title:'Kirik dahili linkler',affected:'8 link etkilendi',desc:'404 donen dahili linkler hem kullanici deneyimini bozer hem de crawl butcesini israf eder. Redirect veya link guncelleme yapilmalidir.'},
+  {severity:'Uyari',color:'#eab308',title:'Duplicate title tag',affected:'4 sayfa etkilendi',desc:'Ayni title tag\'a sahip sayfalar arama motorlari tarafindan karisitirilabilir ve keyword cannibalization sorununa yol acar.'},
+  {severity:'Bilgi',color:'#3b82f6',title:'Eksik alt text',affected:'24 gorsel etkilendi',desc:'Alt text eksik gorseller hem erisilebilirlik (WCAG) hem de gorsel arama siralamasini olumsuz etkiler. Descriptive alt text eklemek tavsiye edilir.'}
+] }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">Teknik SEO Denetimi</h1>
+      <p class="page-sub">Site taramasi ve sorun tespiti</p>
+    </div>
+    <button class="btn-primary" @click="if(!scanning){scanning=true;progress=0;let iv=setInterval(()=>{progress+=Math.random()*15;if(progress>=100){progress=100;clearInterval(iv);setTimeout(()=>{scanning=false;$store.toast.show('Tarama tamamlandi!','success')},500)}},300)}">
+      <i class="ph" :class="scanning ? 'ph-spinner animate-spin' : 'ph-magnifying-glass-plus'" :style="scanning ? 'animation:spin 1s linear infinite' : ''"></i>
+      <span x-text="scanning ? 'Taraniyor... %'+Math.round(progress) : 'Yeni Tarama Baslat'"></span>
+    </button>
+  </div>
+  <!-- Progress bar -->
+  <div x-show="scanning" x-transition style="margin-bottom:16px;height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden">
+    <div style="height:100%;background:var(--accent);border-radius:2px;transition:width .3s" :style="'width:'+progress+'%'"></div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kritik</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">5</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sorun</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Uyari</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">18</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sorun</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Bilgi</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#3b82f6;margin-top:8px">24</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sorun</div>
+    </div>
+  </div>
+
+  <!-- Filter Pills -->
+  <div class="fade-in-d2" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+    <template x-for="f in ['tumu','Kritik','Uyari','Bilgi']">
+      <button @click="filter = f" :style="filter === f ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f === 'tumu' ? 'Tumu' : f"></button>
+    </template>
+  </div>
+
+  <!-- Issue List -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Tespit Edilen Sorunlar</span>
+    </div>
+
+    <template x-for="(issue, idx) in issues.filter(i => filter === 'tumu' || i.severity === filter)" :key="idx">
+      <div :style="'padding:16px 20px;' + (idx < issues.filter(i => filter === 'tumu' || i.severity === filter).length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <span class="badge" :style="'flex-shrink:0;margin-top:2px;background:rgba(' + (issue.severity==='Kritik' ? '239,68,68' : issue.severity==='Uyari' ? '234,179,8' : '59,130,246') + ',0.1);color:' + issue.color" x-text="issue.severity"></span>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+              <span style="font-weight:500;color:var(--text);font-size:0.875rem" x-text="issue.title"></span>
+              <span style="font-size:0.6875rem;color:var(--muted)" x-text="issue.affected"></span>
+            </div>
+            <p style="font-size:0.8125rem;color:var(--text-soft);margin-top:6px;line-height:1.5">
+              <i class="ph ph-robot" style="color:var(--accent);margin-right:4px"></i>
+              <span x-text="issue.desc"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Digest Arsivi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ typeFilter:'tumu', expanded:null }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">AI Digest Arsivi</h1>
+    <p class="page-sub">Gecmis AI ozetleri ve raporlari</p>
+  </div>
+
+  <!-- Type Filter -->
+  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:16px">
+    <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'gunluk',l:'Gunluk'},{v:'haftalik',l:'Haftalik'}]">
+      <button @click="typeFilter=pill.v" :style="typeFilter===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+    </template>
+  </div>
+
+  <!-- Digest List -->
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:12px">
+    <!-- 1 -->
+    <div class="card" style="padding:18px;display:flex;align-items:center;gap:16px">
+      <div style="text-align:center;min-width:48px">
+        <div style="font-size:1.25rem;font-weight:300;color:var(--text)">28</div>
+        <div style="font-size:0.6875rem;color:var(--muted)">Mar</div>
+      </div>
+      <div style="width:1px;height:36px;background:var(--border)"></div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-weight:500;color:var(--text);font-size:0.875rem">Gunluk Ozet — 28 Mart 2026</span>
+          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Gunluk</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--muted)">
+          <span>3 insight</span>
+          <span>Trafik: -2.1%</span>
+          <span>ROAS: +5.4%</span>
+        </div>
+      </div>
+      <a href="#" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:500">Gor</a>
+    </div>
+
+    <!-- 2 -->
+    <div class="card" style="padding:18px;display:flex;align-items:center;gap:16px">
+      <div style="text-align:center;min-width:48px">
+        <div style="font-size:1.25rem;font-weight:300;color:var(--text)">27</div>
+        <div style="font-size:0.6875rem;color:var(--muted)">Mar</div>
+      </div>
+      <div style="width:1px;height:36px;background:var(--border)"></div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-weight:500;color:var(--text);font-size:0.875rem">Gunluk Ozet — 27 Mart 2026</span>
+          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Gunluk</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--muted)">
+          <span>5 insight</span>
+          <span>Trafik: -8.3%</span>
+          <span>ROAS: +12%</span>
+        </div>
+      </div>
+      <a href="#" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:500">Gor</a>
+    </div>
+
+    <!-- 3 -->
+    <div class="card" style="padding:18px;display:flex;align-items:center;gap:16px">
+      <div style="text-align:center;min-width:48px">
+        <div style="font-size:1.25rem;font-weight:300;color:var(--text)">24</div>
+        <div style="font-size:0.6875rem;color:var(--muted)">Mar</div>
+      </div>
+      <div style="width:1px;height:36px;background:var(--border)"></div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-weight:500;color:var(--text);font-size:0.875rem">Haftalik Ozet — 18-24 Mart</span>
+          <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Haftalik</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--muted)">
+          <span>14 insight</span>
+          <span>Trafik: +3.2%</span>
+          <span>ROAS: +18%</span>
+        </div>
+      </div>
+      <a href="#" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:500">Gor</a>
+    </div>
+
+    <!-- 4 -->
+    <div class="card" style="padding:18px;display:flex;align-items:center;gap:16px">
+      <div style="text-align:center;min-width:48px">
+        <div style="font-size:1.25rem;font-weight:300;color:var(--text)">17</div>
+        <div style="font-size:0.6875rem;color:var(--muted)">Mar</div>
+      </div>
+      <div style="width:1px;height:36px;background:var(--border)"></div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-weight:500;color:var(--text);font-size:0.875rem">Haftalik Ozet — 11-17 Mart</span>
+          <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Haftalik</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--muted)">
+          <span>11 insight</span>
+          <span>Trafik: +7.1%</span>
+          <span>ROAS: +9%</span>
+        </div>
+      </div>
+      <a href="#" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:500">Gor</a>
+    </div>
+
+    <!-- 5 -->
+    <div class="card" style="padding:18px;display:flex;align-items:center;gap:16px">
+      <div style="text-align:center;min-width:48px">
+        <div style="font-size:1.25rem;font-weight:300;color:var(--text)">10</div>
+        <div style="font-size:0.6875rem;color:var(--muted)">Mar</div>
+      </div>
+      <div style="width:1px;height:36px;background:var(--border)"></div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-weight:500;color:var(--text);font-size:0.875rem">Haftalik Ozet — 4-10 Mart</span>
+          <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Haftalik</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--muted)">
+          <span>9 insight</span>
+          <span>Trafik: +1.5%</span>
+          <span>ROAS: +22%</span>
+        </div>
+      </div>
+      <a href="#" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:500">Gor</a>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ai'));</script>
+</body>
+</html>

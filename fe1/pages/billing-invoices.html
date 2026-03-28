@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Faturalar — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data>
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Faturalar</h1>
+    <p class="page-sub">Odeme gecmisi ve fatura arsivi</p>
+  </div>
+
+  <div class="fade-in-d1 card">
+    <span class="section-label">Fatura Gecmisi</span>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Donem</th>
+          <th>Tutar</th>
+          <th>Durum</th>
+          <th>Fatura</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Donem" style="font-weight:500;color:var(--text)">Mart 2026</td>
+          <td data-label="Tutar">&#8378;499</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Odendi</span></td>
+          <td data-label="Fatura"><a href="#" style="color:var(--accent);font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:4px"><i class="ph ph-file-pdf" style="font-size:0.875rem"></i> PDF</a></td>
+        </tr>
+        <tr>
+          <td data-label="Donem" style="font-weight:500;color:var(--text)">Subat 2026</td>
+          <td data-label="Tutar">&#8378;499</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Odendi</span></td>
+          <td data-label="Fatura"><a href="#" style="color:var(--accent);font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:4px"><i class="ph ph-file-pdf" style="font-size:0.875rem"></i> PDF</a></td>
+        </tr>
+        <tr>
+          <td data-label="Donem" style="font-weight:500;color:var(--text)">Ocak 2026</td>
+          <td data-label="Tutar">&#8378;499</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Odendi</span></td>
+          <td data-label="Fatura"><a href="#" style="color:var(--accent);font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:4px"><i class="ph ph-file-pdf" style="font-size:0.875rem"></i> PDF</a></td>
+        </tr>
+        <tr>
+          <td data-label="Donem" style="font-weight:500;color:var(--text)">Aralik 2025</td>
+          <td data-label="Tutar">&#8378;499</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Odendi</span></td>
+          <td data-label="Fatura"><a href="#" style="color:var(--accent);font-size:0.8125rem;text-decoration:none;display:flex;align-items:center;gap:4px"><i class="ph ph-file-pdf" style="font-size:0.875rem"></i> PDF</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
+</body>
+</html>

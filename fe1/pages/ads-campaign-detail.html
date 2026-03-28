@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Kampanya Detay — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ tab: 'genel', editingBudget: false, budgetVal: '1,200' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <h1 class="page-title">Bahar Kampanyasi</h1>
+      <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta Ads</span>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary"><i class="ph ph-pause"></i> Duraklat</button>
+      <button class="btn-secondary"><i class="ph ph-pencil-simple"></i> Duzenle</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:4px;margin-bottom:24px">
+    <template x-for="t in [{v:'genel',l:'Genel'},{v:'performans',l:'Performans'},{v:'kreatif',l:'Kreatif'}]">
+      <button @click="tab = t.v" :style="tab === t.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="t.l"></button>
+    </template>
+  </div>
+
+  <!-- Stat Cards -->
+  <div x-show="tab === 'genel' || tab === 'performans'" x-effect="if(tab==='genel'||tab==='performans') $el.style.display='grid'" class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Harcama</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;8,240</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Gosterim</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">124K</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Tiklanma</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">3,420</div>
+      <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">CTR 2.76%</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Donusum</div>
+      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">186</div>
+      <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">CPA &#8378;44.3</div>
+    </div>
+  </div>
+
+  <!-- Daily Performance Chart -->
+  <div class="fade-in-d2 card" style="margin-bottom:24px">
+    <span class="section-label">Gunluk Performans (Son 7 Gun)</span>
+    <div id="chart-daily" style="width:100%;height:320px"></div>
+  </div>
+
+  <!-- Ad Group Table -->
+  <div class="fade-in-d3 card">
+    <span class="section-label">Reklam Gruplari</span>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Grup Adi</th>
+          <th>Durum</th>
+          <th>Butce</th>
+          <th>Harcama</th>
+          <th>Tiklanma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">Genis Hedefleme 18-35</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Butce">&#8378;500/gun</td>
+          <td data-label="Harcama">&#8378;3,480</td>
+          <td data-label="Tiklanma">1,520</td>
+        </tr>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">Lookalike Istanbul</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Butce">&#8378;400/gun</td>
+          <td data-label="Harcama">&#8378;2,960</td>
+          <td data-label="Tiklanma">1,280</td>
+        </tr>
+        <tr>
+          <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">Retargeting Sepet</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Butce">&#8378;300/gun</td>
+          <td data-label="Harcama">&#8378;1,800</td>
+          <td data-label="Tiklanma">620</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const borderColor = '#3C342C';
+  const mutedColor = '#7B7269';
+
+  const days = ['22 Mar','23 Mar','24 Mar','25 Mar','26 Mar','27 Mar','28 Mar'];
+  const harcama = [1080,1240,1160,1320,1180,1260,1000];
+  const tiklanma = [420,510,480,560,490,520,440];
+
+  const cDaily = echarts.init(document.getElementById('chart-daily'));
+  cDaily.setOption({
+    tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    legend:{data:['Harcama','Tiklanma'],textStyle:{color:mutedColor,fontSize:11},top:0,right:0},
+    grid:{top:40,right:60,bottom:30,left:60,containLabel:false},
+    xAxis:{type:'category',data:days,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
+    yAxis:[
+      {type:'value',name:'Harcama (₺)',nameTextStyle:{color:mutedColor,fontSize:10},axisLine:{lineStyle:{color:borderColor}},splitLine:{lineStyle:{color:borderColor,opacity:0.3}},axisLabel:{color:mutedColor,fontSize:11,formatter:'₺{value}'}},
+      {type:'value',name:'Tiklanma',nameTextStyle:{color:mutedColor,fontSize:10},axisLine:{lineStyle:{color:borderColor}},splitLine:{show:false},axisLabel:{color:mutedColor,fontSize:11}}
+    ],
+    series:[
+      {name:'Harcama',type:'line',data:harcama,smooth:true,itemStyle:{color:'#3b82f6'},lineStyle:{width:2},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(59,130,246,0.15)'},{offset:1,color:'rgba(59,130,246,0)'}]}}},
+      {name:'Tiklanma',type:'line',data:tiklanma,smooth:true,yAxisIndex:1,itemStyle:{color:'#22c55e'},lineStyle:{width:2},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(34,197,94,0.15)'},{offset:1,color:'rgba(34,197,94,0)'}]}}}
+    ]
+  });
+
+  window.addEventListener('resize', () => cDaily.resize());
+});
+</script>
+</body>
+</html>

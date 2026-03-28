@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Icerik — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ tab: 'analiz', scoreFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">Icerik Analizi</h1>
+      <p class="page-sub">Sayfa skorlari, schema ve AI tespit</p>
+    </div>
+    <!-- Tabs -->
+    <div style="display:flex;gap:4px">
+      <template x-for="t in [{v:'analiz',l:'Analiz'},{v:'uretim',l:'Uretim'},{v:'harita',l:'Harita'}]">
+        <button @click="tab = t.v" :style="tab === t.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="t.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Score Filter Pills -->
+  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+    <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'iyi',l:'Iyi (80+)'},{v:'orta',l:'Orta (50-79)'},{v:'dusuk',l:'Dusuk (<50)'}]">
+      <button @click="scoreFilter = f.v" :style="scoreFilter === f.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f.l"></button>
+    </template>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Iyi (80+)</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">87</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Orta (50-79)</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">42</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+    </div>
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dusuk (&lt;50)</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">13</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+    </div>
+  </div>
+
+  <!-- Content Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden;margin-bottom:24px">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Sayfa Skorlari</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Sayfa</th>
+          <th>Skor</th>
+          <th>Schema</th>
+          <th>AI Tespit</th>
+          <th>Bozunma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Sayfa"><span style="font-weight:500;color:var(--text)">/blog/seo-rehberi</span></td>
+          <td data-label="Skor"><span style="color:#22c55e;font-weight:600">92</span></td>
+          <td data-label="Schema"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Article</span></td>
+          <td data-label="AI Tespit"><span style="color:var(--text)">8%</span></td>
+          <td data-label="Bozunma"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Stabil</span></td>
+        </tr>
+        <tr>
+          <td data-label="Sayfa"><span style="font-weight:500;color:var(--text)">/urunler/analitik</span></td>
+          <td data-label="Skor"><span style="color:#22c55e;font-weight:600">85</span></td>
+          <td data-label="Schema"><span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Product</span></td>
+          <td data-label="AI Tespit"><span style="color:var(--text)">3%</span></td>
+          <td data-label="Bozunma"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Stabil</span></td>
+        </tr>
+        <tr>
+          <td data-label="Sayfa"><span style="font-weight:500;color:var(--text)">/blog/icerik-pazarlama</span></td>
+          <td data-label="Skor"><span style="color:#eab308;font-weight:600">67</span></td>
+          <td data-label="Schema"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Article</span></td>
+          <td data-label="AI Tespit"><span style="color:#eab308">42%</span></td>
+          <td data-label="Bozunma"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Dususte</span></td>
+        </tr>
+        <tr>
+          <td data-label="Sayfa"><span style="font-weight:500;color:var(--text)">/hakkimizda</span></td>
+          <td data-label="Skor"><span style="color:#ef4444;font-weight:600">38</span></td>
+          <td data-label="Schema"><span class="badge" style="background:rgba(123,114,105,0.15);color:#7B7269">Yok</span></td>
+          <td data-label="AI Tespit"><span style="color:var(--text)">5%</span></td>
+          <td data-label="Bozunma"><span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bottom Cards -->
+  <div class="fade-in-d3" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <!-- Schema Markup -->
+    <div class="card">
+      <span class="section-label">Schema Markup</span>
+      <div style="display:flex;gap:24px;margin-bottom:16px">
+        <div>
+          <div style="font-size:1.5rem;font-weight:300;color:#22c55e">87</div>
+          <div style="font-size:0.6875rem;color:var(--muted)">Schema var</div>
+        </div>
+        <div>
+          <div style="font-size:1.5rem;font-weight:300;color:#ef4444">55</div>
+          <div style="font-size:0.6875rem;color:var(--muted)">Schema eksik</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--text)">Article</span>
+          <span style="font-size:0.75rem;color:var(--muted)">42</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--text)">Product</span>
+          <span style="font-size:0.75rem;color:var(--muted)">28</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--text)">FAQ</span>
+          <span style="font-size:0.75rem;color:var(--muted)">12</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--text)">Organization</span>
+          <span style="font-size:0.75rem;color:var(--muted)">5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- llms.txt -->
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <i class="ph ph-robot" style="font-size:1.125rem;color:var(--accent)"></i>
+        <span class="section-label" style="margin-bottom:0">llms.txt</span>
+      </div>
+      <p style="font-size:0.8125rem;color:var(--text-soft);margin-bottom:16px;line-height:1.6">
+        LLM'lerin sitenizi anlamasi icin optimize edilmis llms.txt dosyasi. Marka bilgileri, urunler ve SSS icerikleri otomatik olarak olusturulur.
+      </p>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Guncel</span>
+        <span style="font-size:0.6875rem;color:var(--muted)">Son guncelleme: 2 saat once</span>
+      </div>
+      <button class="btn-secondary"><i class="ph ph-download-simple"></i> llms.txt Indir</button>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

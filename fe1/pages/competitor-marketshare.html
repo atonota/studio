@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Pazar Payi Tahmini — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Pazar Payi Tahmini</h1>
+    <p class="page-sub">Organik arama payi</p>
+  </div>
+
+  <!-- Date Range Pills -->
+  <div class="fade-in" x-data="{ range: '3ay' }" style="display:flex;gap:6px;margin-bottom:20px">
+    <template x-for="pill in [{v:'1ay',l:'1 Ay'},{v:'3ay',l:'3 Ay'},{v:'6ay',l:'6 Ay'},{v:'1yil',l:'1 Yil'}]">
+      <button @click="range=pill.v" :style="range===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+    </template>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px;max-width:800px">
+
+    <!-- Pie Chart -->
+    <div class="fade-in-d1 card" style="padding:20px">
+      <div id="pie-chart" style="width:100%;height:360px"></div>
+    </div>
+
+    <!-- Trend Card -->
+    <div class="fade-in-d1 card" style="display:flex;align-items:center;gap:14px;padding:16px 20px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Son 6 ayda payimiz %9 → %12 artti (+3 puan)</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Ekim 2025 — Mart 2026 karsilastirmasi</div>
+      </div>
+    </div>
+
+    <!-- AI Insights -->
+    <div class="fade-in-d2 card" style="padding:20px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <i class="ph ph-brain" style="color:#a855f7;font-size:1.125rem"></i>
+        <span style="font-size:0.875rem;font-weight:600;color:var(--text)">AI Degerlendirmesi</span>
+      </div>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:0.8125rem;color:var(--muted);line-height:1.5">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></span>
+          Rakip1 en buyuk pay sahibi ancak son 3 ayda %2 dusus yasadi. Icerik guncelleme sikligi azalmis.
+        </li>
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:0.8125rem;color:var(--muted);line-height:1.5">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></span>
+          "Diger" segmentindeki paylarin %60'i son 12 ayda pazara giren yeni oyunculardan olusuyor.
+        </li>
+        <li style="display:flex;align-items:flex-start;gap:8px;font-size:0.8125rem;color:var(--muted);line-height:1.5">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></span>
+          Mevcut buyume hizinizla 6 ay icinde Rakip3'u gecmeniz ve %15 paya ulasmaniz bekleniyor.
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('competitors'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var el = document.getElementById('pie-chart');
+  if(!el) return;
+  var chart = echarts.init(el, null, {renderer:'canvas'});
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { trigger:'item', formatter:'{b}: {d}%', backgroundColor:'#2A241E', borderColor:'#3C342C', textStyle:{color:'#F2EDE5'} },
+    legend: { bottom:10, textStyle:{color:'#7B7269',fontSize:12}, itemWidth:10, itemHeight:10 },
+    series:[{
+      type:'pie',
+      radius:['40%','70%'],
+      center:['50%','45%'],
+      avoidLabelOverlap:true,
+      itemStyle:{ borderRadius:6, borderColor:'#1E1A16', borderWidth:2 },
+      label:{ show:true, color:'#F2EDE5', fontSize:12, formatter:'{b}\n{d}%' },
+      labelLine:{ lineStyle:{color:'#3C342C'} },
+      data:[
+        { value:12, name:'Biz', itemStyle:{color:'#22c55e'} },
+        { value:28, name:'Rakip1', itemStyle:{color:'#ef4444'} },
+        { value:18, name:'Rakip2', itemStyle:{color:'#3b82f6'} },
+        { value:8,  name:'Rakip3', itemStyle:{color:'#eab308'} },
+        { value:34, name:'Diger',  itemStyle:{color:'#7B7269'} }
+      ]
+    }]
+  });
+  window.addEventListener('resize', function(){ chart.resize(); });
+});
+</script>
+</body>
+</html>

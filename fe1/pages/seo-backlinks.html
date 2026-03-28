@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Backlink Analizi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  search: '',
+  filter: 'tumu',
+  sortCol: '',
+  sortDir: 'asc',
+  rows: [
+    {domain:'webrazzi.com',da:78,backlink:24,durum:'Follow',tarih:'12 Oca 2025'},
+    {domain:'dijitalajanslar.com',da:62,backlink:18,durum:'Follow',tarih:'3 Mar 2025'},
+    {domain:'pazarlamasyon.com',da:55,backlink:12,durum:'Nofollow',tarih:'18 Tem 2025'},
+    {domain:'teknoseyir.com',da:71,backlink:8,durum:'Follow',tarih:'5 Kas 2025'},
+    {domain:'seorehberi.net',da:44,backlink:31,durum:'Follow',tarih:'22 Agu 2024'}
+  ],
+  get filtered() {
+    let r = this.rows;
+    if (this.filter !== 'tumu') r = r.filter(x => x.durum === this.filter);
+    if (this.search) r = r.filter(x => x.domain.toLowerCase().includes(this.search.toLowerCase()));
+    if (this.sortCol) {
+      r = [...r].sort((a,b) => {
+        let va = a[this.sortCol], vb = b[this.sortCol];
+        let cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return r;
+  },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'asc'; }
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Backlink Analizi</h1>
+    <p class="page-sub">Geri baglanti profili ve izleme</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Backlink</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">12.4K</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yeni (30 Gun)</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">+47</div>
+    </div>
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kayip (30 Gun)</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">-3</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Referring Domain</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">892</div>
+    </div>
+  </div>
+
+  <!-- Growth Chart -->
+  <div class="fade-in-d2 card" style="margin-bottom:24px">
+    <span class="section-label">Backlink Buyumesi (12 Ay)</span>
+    <div id="chart-backlink-growth" style="width:100%;height:300px"></div>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="fade-in-d3" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <div style="position:relative;flex:1;max-width:320px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
+      <input type="text" x-model="search" placeholder="Domain ara..." style="width:100%;padding:8px 12px 8px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="f in ['tumu','Follow','Nofollow']">
+        <button @click="filter = f" :style="filter === f ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f === 'tumu' ? 'Tumu' : f"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Referring Domains Table -->
+  <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Referring Domain'ler</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th @click="doSort('domain')" style="cursor:pointer">Domain <i class="ph" :class="sortCol==='domain' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('da')" style="cursor:pointer">DA <i class="ph" :class="sortCol==='da' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('backlink')" style="cursor:pointer">Backlink <i class="ph" :class="sortCol==='backlink' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th>Durum</th>
+          <th>Ilk Gorulme</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.domain">
+          <tr>
+            <td data-label="Domain"><span style="font-weight:500;color:var(--text)" x-text="row.domain"></span></td>
+            <td data-label="DA"><span style="color:var(--text);font-weight:600" x-text="row.da"></span></td>
+            <td data-label="Backlink"><span style="color:var(--text)" x-text="row.backlink"></span></td>
+            <td data-label="Durum"><span class="badge" :style="row.durum==='Follow' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(123,114,105,0.15);color:#7B7269'" x-text="row.durum"></span></td>
+            <td data-label="Ilk Gorulme"><span style="color:var(--muted);font-size:0.8125rem" x-text="row.tarih"></span></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const mutedColor = '#7B7269';
+  const borderColor = '#3C342C';
+  const tooltipBg = '#201C18';
+
+  const months = ['Nis','May','Haz','Tem','Agu','Eyl','Eki','Kas','Ara','Oca','Sub','Mar'];
+  const data = [8200,8600,9100,9500,9900,10200,10600,11000,11300,11700,12100,12400];
+
+  const c = echarts.init(document.getElementById('chart-backlink-growth'));
+  c.setOption({
+    tooltip:{trigger:'axis',backgroundColor:tooltipBg,borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    grid:{left:56,right:16,top:16,bottom:32},
+    xAxis:{type:'category',data:months,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10,formatter:function(v){return v>=1000?(v/1000)+'K':v;}}},
+    series:[{
+      type:'line',data:data,smooth:true,symbol:'circle',symbolSize:5,
+      lineStyle:{color:'#C2410C',width:2},itemStyle:{color:'#C2410C'},
+      areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(194,65,12,0.15)'},{offset:1,color:'transparent'}]}}
+    }]
+  });
+
+  window.addEventListener('resize', () => c.resize());
+});
+</script>
+</body>
+</html>

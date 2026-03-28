@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Iki Faktorlu Dogrulama — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body class="dark" style="display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:auto">
+
+  <div class="fade-in" x-data="{
+    code: '',
+    verifying: false,
+    countdown: 120,
+    timer: null,
+    init() {
+      this.timer = setInterval(() => {
+        if (this.countdown > 0) this.countdown--;
+        else clearInterval(this.timer);
+      }, 1000);
+      this.$nextTick(() => { this.$refs.codeInput && this.$refs.codeInput.focus(); });
+    },
+    get countdownDisplay() {
+      const m = Math.floor(this.countdown / 60);
+      const s = this.countdown % 60;
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    },
+    verify() {
+      if (this.code.length !== 6) return;
+      this.verifying = true;
+      setTimeout(() => { this.verifying = false; $store.toast.show('Dogrulama basarili!', 'success'); }, 1500);
+    },
+    resend() {
+      this.countdown = 120;
+      this.timer = setInterval(() => { if (this.countdown > 0) this.countdown--; else clearInterval(this.timer); }, 1000);
+      $store.toast.show('Kod tekrar gonderildi', 'info');
+    }
+  }" style="width:100%;max-width:420px;margin:24px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:40px 32px">
+
+    <!-- Logo -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px">
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center">
+        <span style="font-weight:800;font-size:1.125rem;color:white">a</span>
+      </div>
+      <span style="font-size:1.25rem;font-weight:600;color:var(--text);letter-spacing:-0.02em">atonota</span>
+    </div>
+    <h2 style="text-align:center;font-size:1.25rem;font-weight:500;color:var(--text);margin-bottom:8px">Iki Faktorlu Dogrulama</h2>
+    <p style="text-align:center;font-size:0.8125rem;color:var(--muted);margin-bottom:28px">Uygulamanizdan alinan 6 haneli kodu girin.</p>
+
+    <!-- Code Input -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px">
+      <input x-ref="codeInput" type="text" x-model="code" maxlength="6" placeholder="000000" @input="code = code.replace(/[^0-9]/g,'')" @keydown.enter="verify()" style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;color:var(--text);font-family:'SF Mono',monospace;outline:none;width:200px;font-size:2rem;text-align:center;letter-spacing:0.3em;font-weight:600">
+
+      <button @click="verify()" :disabled="verifying || code.length!==6" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:0.9375rem;display:flex;align-items:center;gap:8px">
+        <i x-show="verifying" class="ph ph-circle-notch" style="animation:spin 1s linear infinite"></i>
+        <span x-text="verifying ? 'Dogrulaniyor...' : 'Dogrula'"></span>
+      </button>
+
+      <div style="text-align:center;font-size:0.8125rem;color:var(--muted)">Kodu tekrar gonder: <span style="font-weight:600;color:var(--text)" x-text="countdownDisplay"></span></div>
+
+      <a href="#" @click.prevent="resend()" x-show="countdown===0" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:500">Kodu tekrar gonder</a>
+
+      <div style="text-align:center;margin-top:4px">
+        <a href="auth-login.html" style="font-size:0.8125rem;color:var(--muted);text-decoration:none;font-weight:500"><i class="ph ph-arrow-left" style="font-size:0.75rem;margin-right:4px"></i>Giris sayfasina don</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

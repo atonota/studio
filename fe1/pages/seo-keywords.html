@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Keyword Arastirma — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  searchQuery: '',
+  intentFilter: 'Tumu',
+  intents: ['Tumu','Ticari','Bilgi','Nav','Islem'],
+  allRows: [
+    { keyword:'dijital pazarlama', intent:'Ticari', intentColor:'#a855f7', intentBg:'rgba(168,85,247,0.1)', volume:'14,800', pos:3, posChange:2, posUp:true, diff:72, diffColor:'#ef4444', sparkId:0 },
+    { keyword:'seo nedir', intent:'Bilgi', intentColor:'#3b82f6', intentBg:'rgba(59,130,246,0.1)', volume:'22,400', pos:7, posChange:5, posUp:true, diff:58, diffColor:'#eab308', sparkId:1 },
+    { keyword:'web sitesi analizi', intent:'Ticari', intentColor:'#a855f7', intentBg:'rgba(168,85,247,0.1)', volume:'6,200', pos:12, posChange:-3, posUp:false, diff:45, diffColor:'#22c55e', sparkId:2 },
+    { keyword:'icerik pazarlama', intent:'Ticari', intentColor:'#a855f7', intentBg:'rgba(168,85,247,0.1)', volume:'8,100', pos:5, posChange:1, posUp:true, diff:62, diffColor:'#eab308', sparkId:3 },
+    { keyword:'backlink nedir', intent:'Bilgi', intentColor:'#3b82f6', intentBg:'rgba(59,130,246,0.1)', volume:'4,800', pos:9, posChange:0, posUp:null, diff:38, diffColor:'#22c55e', sparkId:4 },
+    { keyword:'google seo araci', intent:'Nav', intentColor:'#22c55e', intentBg:'rgba(34,197,94,0.1)', volume:'3,200', pos:4, posChange:3, posUp:true, diff:55, diffColor:'#eab308', sparkId:5 },
+    { keyword:'anahtar kelime bulma', intent:'Islem', intentColor:'#eab308', intentBg:'rgba(234,179,8,0.1)', volume:'2,900', pos:11, posChange:-2, posUp:false, diff:41, diffColor:'#22c55e', sparkId:6 },
+    { keyword:'sayfa hizi testi', intent:'Islem', intentColor:'#eab308', intentBg:'rgba(234,179,8,0.1)', volume:'5,600', pos:8, posChange:1, posUp:true, diff:35, diffColor:'#22c55e', sparkId:7 }
+  ],
+  get filtered() {
+    return this.allRows.filter(r => {
+      const matchSearch = !this.searchQuery || r.keyword.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchIntent = this.intentFilter === 'Tumu' || r.intent === this.intentFilter;
+      return matchSearch && matchIntent;
+    });
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Keyword Arastirma</h1>
+    <p class="page-sub">Anahtar kelime analizi ve takibi</p>
+  </div>
+
+  <!-- Search -->
+  <div class="fade-in-d1" style="margin-bottom:16px">
+    <div style="position:relative;max-width:560px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.125rem;color:var(--muted)"></i>
+      <input type="text" placeholder="Anahtar kelime ara..." x-model="searchQuery" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 42px;color:var(--text);width:100%;font-family:inherit;font-size:0.875rem;outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+  </div>
+
+  <!-- Intent Filter Pills -->
+  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <template x-for="intent in intents" :key="intent">
+      <button @click="intentFilter = intent"
+        :style="intentFilter === intent
+          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
+          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
+        x-text="intent"></button>
+    </template>
+  </div>
+
+  <!-- Keyword Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span class="section-label" style="margin-bottom:0">Anahtar Kelimeler</span>
+      <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' sonuc'"></span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Intent</th>
+          <th>Hacim</th>
+          <th>Pozisyon</th>
+          <th>Zorluk</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="row in filtered" :key="row.keyword">
+          <tr>
+            <td data-label="Keyword"><span style="font-weight:500;color:var(--text)" x-text="row.keyword"></span></td>
+            <td data-label="Intent"><span class="badge" :style="'background:'+row.intentBg+';color:'+row.intentColor" x-text="row.intent"></span></td>
+            <td data-label="Hacim"><span style="color:var(--text)" x-text="row.volume"></span></td>
+            <td data-label="Pozisyon">
+              <div style="display:flex;align-items:center;gap:4px">
+                <span style="color:var(--text)" x-text="row.pos"></span>
+                <template x-if="row.posUp === true">
+                  <span style="display:flex;align-items:center;gap:2px">
+                    <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
+                    <span style="font-size:0.6875rem;color:#22c55e" x-text="'+'+row.posChange"></span>
+                  </span>
+                </template>
+                <template x-if="row.posUp === false">
+                  <span style="display:flex;align-items:center;gap:2px">
+                    <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+                    <span style="font-size:0.6875rem;color:#ef4444" x-text="row.posChange"></span>
+                  </span>
+                </template>
+                <template x-if="row.posUp === null">
+                  <span style="font-size:0.6875rem;color:var(--muted)">—</span>
+                </template>
+              </div>
+            </td>
+            <td data-label="Zorluk">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:80px"><div :style="'width:'+row.diff+'%;height:100%;background:'+row.diffColor+';border-radius:2px'"></div></div>
+                <span style="font-size:0.6875rem;color:var(--muted)" x-text="row.diff"></span>
+              </div>
+            </td>
+            <td data-label="Trend"><div class="sparkline" :id="'spark-'+row.sparkId" style="width:60px;height:24px"></div></td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sparkData = [
+    [12,14,13,15,14,16,15,14],
+    [18,20,22,21,23,22,24,22],
+    [8,7,6,7,6,5,6,6],
+    [10,9,10,11,10,9,8,8],
+    [5,5,4,5,5,4,5,4],
+    [4,3,4,3,3,3,3,3],
+    [3,3,3,3,2,3,3,3],
+    [6,5,6,5,6,5,6,5]
+  ];
+  const colors = ['#C2410C','#3b82f6','#a855f7','#C2410C','#3b82f6','#22c55e','#eab308','#eab308'];
+  function initSparks() {
+    sparkData.forEach((data, i) => {
+      const el = document.getElementById('spark-' + i);
+      if (!el) return;
+      if (el._echart) return;
+      const c = echarts.init(el);
+      el._echart = c;
+      c.setOption({
+        grid:{left:0,right:0,top:0,bottom:0},
+        xAxis:{show:false,type:'category',data:data.map((_,j)=>j)},
+        yAxis:{show:false,type:'value',min:Math.min(...data)-2,max:Math.max(...data)+2},
+        series:[{type:'line',data:data,smooth:true,symbol:'none',lineStyle:{color:colors[i],width:1.5},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:colors[i].replace(')',',0.2)').replace('rgb','rgba')},{offset:1,color:'transparent'}]}}}]
+      });
+      window.addEventListener('resize', () => c.resize());
+    });
+  }
+  // Init sparks after Alpine renders
+  setTimeout(initSparks, 200);
+  // Re-init when filter changes
+  const observer = new MutationObserver(() => setTimeout(initSparks, 50));
+  const tbody = document.querySelector('.r-table tbody');
+  if (tbody) observer.observe(tbody, { childList: true, subtree: true });
+});
+</script>
+</body>
+</html>

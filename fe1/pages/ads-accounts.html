@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Reklam Hesaplari — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-plugs-connected" style="color:#3b82f6;font-size:1.25rem"></i>
+      </div>
+      <div>
+        <h1 class="page-title">Reklam Hesaplari</h1>
+        <p class="page-sub">Bagli reklam platformlari</p>
+      </div>
+    </div>
+    <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Hesap Bagla</button>
+  </div>
+
+  <!-- Accounts Table -->
+  <div class="fade-in-d1 card">
+    <span class="section-label">Bagli Hesaplar</span>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Baglanti Tipi</th>
+          <th>Hesap ID</th>
+          <th>Durum</th>
+          <th>Son Senkronizasyon</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Platform">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:1.125rem"></i>
+              <span style="font-weight:500;color:var(--text)">Meta Ads</span>
+            </div>
+          </td>
+          <td data-label="Baglanti Tipi">System User</td>
+          <td data-label="Hesap ID" style="font-family:'SF Mono',monospace;font-size:0.8125rem">act_847291035</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Son Senkronizasyon" style="font-size:0.8125rem;color:var(--muted)">2 dk once</td>
+          <td><button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem"><i class="ph ph-dots-three"></i></button></td>
+        </tr>
+        <tr>
+          <td data-label="Platform">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-tiktok-logo" style="color:var(--text);font-size:1.125rem"></i>
+              <span style="font-weight:500;color:var(--text)">TikTok Ads</span>
+            </div>
+          </td>
+          <td data-label="Baglanti Tipi">OAuth</td>
+          <td data-label="Hesap ID" style="font-family:'SF Mono',monospace;font-size:0.8125rem">adv_7192048371</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Son Senkronizasyon" style="font-size:0.8125rem;color:var(--muted)">15 dk once</td>
+          <td><button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem"><i class="ph ph-dots-three"></i></button></td>
+        </tr>
+        <tr>
+          <td data-label="Platform">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:1.125rem"></i>
+              <span style="font-weight:500;color:var(--text)">LinkedIn Ads</span>
+            </div>
+          </td>
+          <td data-label="Baglanti Tipi">OAuth</td>
+          <td data-label="Hesap ID" style="font-family:'SF Mono',monospace;font-size:0.8125rem">acc_501948273</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
+          <td data-label="Son Senkronizasyon" style="font-size:0.8125rem;color:var(--muted)">1 saat once</td>
+          <td><button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem"><i class="ph ph-dots-three"></i></button></td>
+        </tr>
+        <tr>
+          <td data-label="Platform">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-pinterest-logo" style="color:#ef4444;font-size:1.125rem"></i>
+              <span style="font-weight:500;color:var(--text)">Pinterest Ads</span>
+            </div>
+          </td>
+          <td data-label="Baglanti Tipi">—</td>
+          <td data-label="Hesap ID" style="font-size:0.8125rem;color:var(--muted)">—</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Bagli degil</span></td>
+          <td data-label="Son Senkronizasyon" style="font-size:0.8125rem;color:var(--muted)">—</td>
+          <td><button @click="$store.toast.show('Pinterest hesap baglama baslatildi...', 'info')" style="font-size:0.8125rem;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:500">Bagla</button></td>
+        </tr>
+        <tr>
+          <td data-label="Platform">
+            <div style="display:flex;align-items:center;gap:8px">
+              <i class="ph ph-snapchat-logo" style="color:#eab308;font-size:1.125rem"></i>
+              <span style="font-weight:500;color:var(--text)">Snapchat Ads</span>
+            </div>
+          </td>
+          <td data-label="Baglanti Tipi">—</td>
+          <td data-label="Hesap ID" style="font-size:0.8125rem;color:var(--muted)">—</td>
+          <td data-label="Durum"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Bagli degil</span></td>
+          <td data-label="Son Senkronizasyon" style="font-size:0.8125rem;color:var(--muted)">—</td>
+          <td><button @click="$store.toast.show('Snapchat hesap baglama baslatildi...', 'info')" style="font-size:0.8125rem;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:500">Bagla</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Digest'ler — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">AI Digest'ler</h1>
+    <p class="page-sub">Otomatik olusturulan performans ozetleri</p>
+  </div>
+
+  <div style="max-width:720px">
+
+    <!-- Tabs -->
+    <div class="fade-in" style="display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--border)">
+      <button class="tab-btn active" style="padding:10px 20px;font-size:0.8125rem;font-weight:500;color:var(--text);border-bottom:2px solid var(--text);background:none;border-top:none;border-left:none;border-right:none;cursor:pointer">Gunluk</button>
+      <button class="tab-btn" style="padding:10px 20px;font-size:0.8125rem;font-weight:500;color:var(--muted);border:none;background:none;cursor:pointer">Haftalik</button>
+    </div>
+
+    <!-- Gunluk Digest -->
+    <div id="tab-gunluk">
+      <div class="fade-in-d1 card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <i class="ph ph-calendar-blank" style="color:var(--muted);font-size:1rem"></i>
+          <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">28 Mart 2026 Ozeti</span>
+        </div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-top:6px"></div>
+            <span style="font-size:0.8125rem;color:var(--muted);line-height:1.5">Organik trafik dun %4.2 artti, toplam 3,847 oturum kaydedildi.</span>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#3b82f6;flex-shrink:0;margin-top:6px"></div>
+            <span style="font-size:0.8125rem;color:var(--muted);line-height:1.5">"e-ticaret seo" anahtar kelimesi 8. pozisyondan 5. pozisyona yukseldi.</span>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#eab308;flex-shrink:0;margin-top:6px"></div>
+            <span style="font-size:0.8125rem;color:var(--muted);line-height:1.5">Core Web Vitals LCP degeri 2.8s'den 2.3s'ye dustu — iyi yonde.</span>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0;margin-top:6px"></div>
+            <span style="font-size:0.8125rem;color:var(--muted);line-height:1.5">3 yeni 404 hatasi tespit edildi, yonlendirme onerisi olusturuldu.</span>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></div>
+            <span style="font-size:0.8125rem;color:var(--muted);line-height:1.5">Meta Ads ROAS %340'a ulasti, haftalik ortalamanin %15 uzerinde.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Haftalik Digest -->
+    <div id="tab-haftalik" style="display:none">
+      <div class="fade-in-d1 card" style="padding:20px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <i class="ph ph-calendar-blank" style="color:var(--muted);font-size:1rem"></i>
+          <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">22-28 Mart Haftasi</span>
+        </div>
+
+        <!-- Key Metrics -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+          <div style="text-align:center;padding:12px;border-radius:8px;background:var(--surface-raised)">
+            <div style="font-size:1.25rem;font-weight:600;color:var(--text)">24,120</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Toplam Oturum</div>
+            <div style="font-size:0.6875rem;color:#22c55e;margin-top:2px">+8.3%</div>
+          </div>
+          <div style="text-align:center;padding:12px;border-radius:8px;background:var(--surface-raised)">
+            <div style="font-size:1.25rem;font-weight:600;color:var(--text)">142</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Top 10 Keyword</div>
+            <div style="font-size:0.6875rem;color:#22c55e;margin-top:2px">+6</div>
+          </div>
+          <div style="text-align:center;padding:12px;border-radius:8px;background:var(--surface-raised)">
+            <div style="font-size:1.25rem;font-weight:600;color:var(--text)">%280</div>
+            <div style="font-size:0.6875rem;color:var(--muted)">Ort. ROAS</div>
+            <div style="font-size:0.6875rem;color:#22c55e;margin-top:2px">+12%</div>
+          </div>
+        </div>
+
+        <!-- AI Commentary -->
+        <div style="padding:14px;border-radius:8px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15)">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <i class="ph ph-brain" style="color:#a855f7;font-size:0.875rem"></i>
+            <span style="font-size:0.75rem;font-weight:600;color:#a855f7">AI Yorum</span>
+          </div>
+          <p style="font-size:0.8125rem;color:var(--muted);line-height:1.6;margin:0">Bu hafta organik trafik ve reklam performansi paralel yukselis gosterdi. Ozellikle "dijital pazarlama" ve "e-ticaret seo" kume kelimelerinde belirgin ilerleme var. Teknik SEO tarafinda LCP iyilesmesi olumlu ancak 3 yeni 404 hatasi hizla cozulmelidir. Onumuzdeki hafta icerik takvimindeki 2 yeni blog yazisinin yayinlanmasiyla organik trafik ivmesinin surdurulmesi bekleniyor.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('ai'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var tabs = document.querySelectorAll('.tab-btn');
+  var panels = { 0: document.getElementById('tab-gunluk'), 1: document.getElementById('tab-haftalik') };
+  tabs.forEach(function(tab, i){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.style.color='var(--muted)'; t.style.borderBottom='2px solid transparent'; t.classList.remove('active'); });
+      tab.style.color='var(--text)'; tab.style.borderBottom='2px solid var(--text)'; tab.classList.add('active');
+      Object.values(panels).forEach(function(p){ if(p) p.style.display='none'; });
+      if(panels[i]) panels[i].style.display='block';
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Dogal Dil Sorgu — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ query: '', submitting: false, showResult: true }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">AI Dogal Dil Sorgu</h1>
+    <p class="page-sub">Turkce soru sorun, AI analiz etsin</p>
+  </div>
+
+  <!-- Query Input -->
+  <div class="fade-in-d1 card" style="padding:24px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <i class="ph ph-robot" style="font-size:1.5rem;color:var(--accent)"></i>
+      <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Sorunuzu yazin</span>
+    </div>
+    <textarea x-model="query" style="width:100%;min-height:100px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:14px;color:var(--text);font-size:0.875rem;resize:vertical;font-family:inherit" placeholder="Turkce soru sorun... Ornegin: Gecen ay en cok trafik alan sayfalar hangileri?"></textarea>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px">
+      <button @click="if(query.trim()){submitting=true; setTimeout(()=>{submitting=false; showResult=true; $store.toast.show('Sorgu tamamlandi', 'success')}, 1500)}" :disabled="submitting || !query.trim()" style="background:var(--accent);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit" :style="(!query.trim()) && 'opacity:0.5;cursor:not-allowed'">
+        <i class="ph" :class="submitting ? 'ph-spinner' : 'ph-paper-plane-tilt'" :style="submitting && 'animation:spin 1s linear infinite'" style="font-size:1rem"></i>
+        <span x-text="submitting ? 'Sorguluyor...' : 'Sorgula'"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Example Queries -->
+  <div class="fade-in-d2" style="margin-bottom:24px">
+    <span class="section-label">Ornek Sorgular</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
+      <div @click="query = 'Gecen ay en cok trafik alan 5 sayfa?'" class="card" style="cursor:pointer;padding:16px;transition:border-color 0.2s">
+        <i class="ph ph-chart-bar" style="font-size:1.25rem;color:#3b82f6;margin-bottom:8px;display:block"></i>
+        <div style="font-size:0.8125rem;color:var(--text);font-weight:500">Gecen ay en cok trafik alan 5 sayfa?</div>
+      </div>
+      <div @click="query = 'Mobil vs desktop donusum orani?'" class="card" style="cursor:pointer;padding:16px;transition:border-color 0.2s">
+        <i class="ph ph-devices" style="font-size:1.25rem;color:#a855f7;margin-bottom:8px;display:block"></i>
+        <div style="font-size:0.8125rem;color:var(--text);font-weight:500">Mobil vs desktop donusum orani?</div>
+      </div>
+      <div @click="query = 'Organik trafik hangi gunlerde en yuksek?'" class="card" style="cursor:pointer;padding:16px;transition:border-color 0.2s">
+        <i class="ph ph-calendar-dots" style="font-size:1.25rem;color:#22c55e;margin-bottom:8px;display:block"></i>
+        <div style="font-size:0.8125rem;color:var(--text);font-weight:500">Organik trafik hangi gunlerde en yuksek?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock AI Response -->
+  <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+      <i class="ph ph-robot" style="font-size:1.125rem;color:var(--accent)"></i>
+      <span class="section-label" style="margin-bottom:0">AI Yaniti</span>
+      <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600;margin-left:auto">0.8 sn</span>
+    </div>
+    <div style="padding:20px">
+      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">Sorgu: "Gecen ay en cok trafik alan 5 sayfa?"</div>
+
+      <!-- Result Table -->
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:0.8125rem">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="text-align:left;padding:10px 12px;color:var(--muted);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em">#</th>
+              <th style="text-align:left;padding:10px 12px;color:var(--muted);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em">Sayfa</th>
+              <th style="text-align:right;padding:10px 12px;color:var(--muted);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em">Oturum</th>
+              <th style="text-align:right;padding:10px 12px;color:var(--muted);font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em">Degisim</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:10px 12px;color:var(--muted)">1</td>
+              <td style="padding:10px 12px;color:var(--text);font-weight:500">/blog/seo-rehberi</td>
+              <td style="padding:10px 12px;text-align:right;color:var(--text)">8.420</td>
+              <td style="padding:10px 12px;text-align:right;color:#22c55e">+14.2%</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:10px 12px;color:var(--muted)">2</td>
+              <td style="padding:10px 12px;color:var(--text);font-weight:500">/urunler</td>
+              <td style="padding:10px 12px;text-align:right;color:var(--text)">6.180</td>
+              <td style="padding:10px 12px;text-align:right;color:#22c55e">+8.7%</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:10px 12px;color:var(--muted)">3</td>
+              <td style="padding:10px 12px;color:var(--text);font-weight:500">/fiyatlandirma</td>
+              <td style="padding:10px 12px;text-align:right;color:var(--text)">4.950</td>
+              <td style="padding:10px 12px;text-align:right;color:#22c55e">+3.1%</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:10px 12px;color:var(--muted)">4</td>
+              <td style="padding:10px 12px;color:var(--text);font-weight:500">/blog/backlink-rehberi</td>
+              <td style="padding:10px 12px;text-align:right;color:var(--text)">3.720</td>
+              <td style="padding:10px 12px;text-align:right;color:#ef4444">-2.4%</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 12px;color:var(--muted)">5</td>
+              <td style="padding:10px 12px;color:var(--text);font-weight:500">/iletisim</td>
+              <td style="padding:10px 12px;text-align:right;color:var(--text)">2.840</td>
+              <td style="padding:10px 12px;text-align:right;color:#22c55e">+11.5%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mini Chart Placeholder -->
+      <div style="margin-top:20px;height:160px;background:var(--surface-2);border-radius:8px;display:flex;align-items:center;justify-content:center">
+        <span style="font-size:0.8125rem;color:var(--muted)"><i class="ph ph-chart-line" style="margin-right:6px"></i>Trafik trendi grafigi</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('analytics'));</script>
+<style>@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }</style>
+</body>
+</html>

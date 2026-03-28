@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Rakip Karsilastirma — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ highlight: true }">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Rakip Karsilastirma</h1>
+    <p class="page-sub">Siz ve rakipleriniz yan yana</p>
+  </div>
+
+  <!-- Toggle -->
+  <div class="fade-in" style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <label style="font-size:0.8125rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px">
+      <div @click="highlight=!highlight" :style="highlight ? 'background:var(--accent)' : 'background:var(--border)'" style="width:36px;height:20px;border-radius:10px;position:relative;cursor:pointer;transition:background .2s">
+        <div :style="highlight ? 'transform:translateX(16px)' : 'transform:translateX(2px)'" style="width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:transform .2s"></div>
+      </div>
+      Kazanani vurgula
+    </label>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="fade-in-d1 card">
+    <span class="section-label">Metrik Karsilastirma</span>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>Metrik</th>
+          <th>Siz</th>
+          <th>rakip1.com</th>
+          <th>rakip2.com.tr</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Metrik" style="font-weight:500;color:var(--text)">Domain Authority</td>
+          <td data-label="Siz" :style="highlight ? 'background:rgba(34,197,94,0.08);font-weight:600;color:#22c55e' : ''">71 <span x-show="highlight" style="font-size:0.6875rem">&#127942;</span></td>
+          <td data-label="rakip1.com">62</td>
+          <td data-label="rakip2.com.tr">48</td>
+        </tr>
+        <tr>
+          <td data-label="Metrik" style="font-weight:500;color:var(--text)">Top 10 Keywords</td>
+          <td data-label="Siz" :style="highlight ? 'background:rgba(34,197,94,0.08);font-weight:600;color:#22c55e' : ''">342 <span x-show="highlight" style="font-size:0.6875rem">&#127942;</span></td>
+          <td data-label="rakip1.com">285</td>
+          <td data-label="rakip2.com.tr">156</td>
+        </tr>
+        <tr>
+          <td data-label="Metrik" style="font-weight:500;color:var(--text)">Backlinks</td>
+          <td data-label="Siz">12.4K</td>
+          <td data-label="rakip1.com" :style="highlight ? 'background:rgba(34,197,94,0.08);font-weight:600;color:#22c55e' : ''">18.2K <span x-show="highlight" style="font-size:0.6875rem">&#127942;</span></td>
+          <td data-label="rakip2.com.tr">6.8K</td>
+        </tr>
+        <tr>
+          <td data-label="Metrik" style="font-weight:500;color:var(--text)">Aylik Trafik</td>
+          <td data-label="Siz" :style="highlight ? 'background:rgba(34,197,94,0.08);font-weight:600;color:#22c55e' : ''">62K <span x-show="highlight" style="font-size:0.6875rem">&#127942;</span></td>
+          <td data-label="rakip1.com">45K</td>
+          <td data-label="rakip2.com.tr">18K</td>
+        </tr>
+        <tr>
+          <td data-label="Metrik" style="font-weight:500;color:var(--text)">Icerik Skoru</td>
+          <td data-label="Siz" :style="highlight ? 'background:rgba(34,197,94,0.08);font-weight:600;color:#22c55e' : ''">82/100 <span x-show="highlight" style="font-size:0.6875rem">&#127942;</span></td>
+          <td data-label="rakip1.com">74/100</td>
+          <td data-label="rakip2.com.tr">68/100</td>
+        </tr>
+        <tr>
+          <td data-label="Metrik" style="font-weight:500;color:var(--text)">Core Web Vitals</td>
+          <td data-label="Siz" :style="highlight ? 'background:rgba(34,197,94,0.08);font-weight:600;color:#22c55e' : ''">
+            <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span> <span x-show="highlight" style="font-size:0.6875rem">&#127942;</span>
+          </td>
+          <td data-label="rakip1.com">
+            <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Kismen</span>
+          </td>
+          <td data-label="rakip2.com.tr">
+            <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Basarisiz</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('competitors'));</script>
+</body>
+</html>

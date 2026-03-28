@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Content Explorer — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  search: '',
+  drMin: '',
+  drMax: '',
+  trafficMin: '',
+  trafficMax: '',
+  wordMin: '',
+  wordMax: '',
+  dateFilter: 'Tumu',
+  sortCol: 'traffic',
+  sortDir: 'desc',
+  currentPage: 1,
+  perPage: 15,
+  expandedRow: null,
+  allRows: [
+    {title:'E-Ticaret SEO Rehberi 2026',url:'blog.acme.com/e-ticaret-seo',dr:72,traffic:8400,backlinks:124,words:3200,published:'2026-01-15',shares:342},
+    {title:'Instagram Reklam Maliyetleri',url:'blog.acme.com/instagram-reklam',dr:68,traffic:12300,backlinks:89,words:2800,published:'2025-11-22',shares:567},
+    {title:'Google Ads Butce Hesaplama',url:'blog.acme.com/google-ads-butce',dr:55,traffic:6200,backlinks:45,words:1900,published:'2025-09-10',shares:189},
+    {title:'WordPress Hiz Optimizasyonu',url:'blog.acme.com/wordpress-hiz',dr:61,traffic:9800,backlinks:78,words:4100,published:'2026-02-03',shares:423},
+    {title:'Dijital Pazarlama Trendleri',url:'blog.acme.com/dijital-trendler',dr:48,traffic:5400,backlinks:34,words:2200,published:'2026-03-01',shares:156},
+    {title:'SEO Anahtar Kelime Arastirmasi',url:'blog.acme.com/anahtar-kelime',dr:74,traffic:11200,backlinks:156,words:3800,published:'2025-08-14',shares:612},
+    {title:'Meta Reklam Stratejileri',url:'blog.acme.com/meta-reklam',dr:59,traffic:7600,backlinks:67,words:2500,published:'2025-12-05',shares:278},
+    {title:'Teknik SEO Kontrol Listesi',url:'blog.acme.com/teknik-seo',dr:66,traffic:8900,backlinks:92,words:3400,published:'2026-01-28',shares:389},
+    {title:'Icerik Pazarlama Rehberi',url:'blog.acme.com/icerik-pazarlama',dr:52,traffic:4800,backlinks:41,words:2100,published:'2025-10-17',shares:134},
+    {title:'TikTok Reklamlari Nasil Verilir',url:'blog.acme.com/tiktok-reklam',dr:45,traffic:15200,backlinks:28,words:1800,published:'2026-02-20',shares:891},
+    {title:'Backlink Kazanma Stratejileri',url:'blog.acme.com/backlink-strateji',dr:71,traffic:7200,backlinks:112,words:3600,published:'2025-07-22',shares:345},
+    {title:'Schema Markup Rehberi',url:'blog.acme.com/schema-markup',dr:58,traffic:3400,backlinks:56,words:2900,published:'2025-06-30',shares:167},
+    {title:'Yerel SEO Optimizasyonu',url:'blog.acme.com/yerel-seo',dr:63,traffic:6800,backlinks:73,words:2700,published:'2026-03-12',shares:234},
+    {title:'CRO ve Donusum Orani Artirma',url:'blog.acme.com/cro-donusum',dr:50,traffic:4200,backlinks:38,words:2400,published:'2025-11-08',shares:198},
+    {title:'E-posta Pazarlama Otomasyonu',url:'blog.acme.com/eposta-otomasyon',dr:47,traffic:3600,backlinks:22,words:1600,published:'2025-05-19',shares:112}
+  ],
+  get filtered() {
+    let r = this.allRows;
+    if (this.search) r = r.filter(x => x.title.toLowerCase().includes(this.search.toLowerCase()) || x.url.toLowerCase().includes(this.search.toLowerCase()));
+    if (this.drMin) r = r.filter(x => x.dr >= parseInt(this.drMin));
+    if (this.drMax) r = r.filter(x => x.dr <= parseInt(this.drMax));
+    if (this.trafficMin) r = r.filter(x => x.traffic >= parseInt(this.trafficMin));
+    if (this.trafficMax) r = r.filter(x => x.traffic <= parseInt(this.trafficMax));
+    if (this.wordMin) r = r.filter(x => x.words >= parseInt(this.wordMin));
+    if (this.wordMax) r = r.filter(x => x.words <= parseInt(this.wordMax));
+    if (this.dateFilter === 'Son 30 Gun') { const d = new Date(); d.setDate(d.getDate()-30); r = r.filter(x => new Date(x.published) >= d); }
+    else if (this.dateFilter === 'Son 90 Gun') { const d = new Date(); d.setDate(d.getDate()-90); r = r.filter(x => new Date(x.published) >= d); }
+    else if (this.dateFilter === 'Son 1 Yil') { const d = new Date(); d.setFullYear(d.getFullYear()-1); r = r.filter(x => new Date(x.published) >= d); }
+    if (this.sortCol) {
+      r = [...r].sort((a,b) => {
+        let va = a[this.sortCol], vb = b[this.sortCol];
+        let cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb),'tr');
+        return this.sortDir === 'asc' ? cmp : -cmp;
+      });
+    }
+    return r;
+  },
+  get paginated() {
+    const start = (this.currentPage - 1) * this.perPage;
+    return this.filtered.slice(start, start + this.perPage);
+  },
+  get totalPages() { return Math.ceil(this.filtered.length / this.perPage) || 1; },
+  doSort(col) {
+    if (this.sortCol === col) this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+    else { this.sortCol = col; this.sortDir = 'desc'; }
+    this.currentPage = 1;
+  },
+  formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1) + 'K' : n; },
+
+  initTopicsChart() {
+    const el = document.getElementById('topics-chart');
+    if (!el) return;
+    const t = getChartTheme();
+    const topicCounts = {};
+    this.allRows.forEach(r => {
+      const topic = r.title.split(' ').slice(0,2).join(' ');
+      topicCounts[topic] = (topicCounts[topic] || 0) + 1;
+    });
+    const sorted = Object.entries(topicCounts).sort((a,b) => b[1]-a[1]).slice(0,5);
+    const names = sorted.map(s => s[0]).reverse();
+    const values = sorted.map(s => s[1]).reverse();
+    const colors = ['#C2410C','#3b82f6','#a855f7','#eab308','#22c55e'];
+    const c = echarts.init(el);
+    c.setOption({
+      tooltip:{ trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11} },
+      grid:{ left:140, right:40, top:8, bottom:8 },
+      xAxis:{ type:'value', axisLabel:{color:t.muted,fontSize:10}, splitLine:{lineStyle:{color:t.border,type:'dashed'}} },
+      yAxis:{ type:'category', data:names, axisLabel:{color:t.text,fontSize:11}, axisLine:{lineStyle:{color:t.border}} },
+      series:[{
+        type:'bar', data:values, barWidth:22,
+        itemStyle:{ borderRadius:[0,4,4,0], color:function(p){ return colors[p.dataIndex % colors.length]; } },
+        label:{ show:true, position:'right', color:t.text, fontSize:11, formatter:'{c} makale' }
+      }]
+    });
+    window.addEventListener('resize', () => c.resize());
+  }
+}">
+  <!-- Header -->
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Content Explorer</h1>
+    <p class="page-sub">Yuksek performansli icerikleri arastin ve analiz et</p>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="fade-in-d1" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <div style="position:relative;flex:1;min-width:260px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
+      <input type="text" x-model="search" placeholder="Konu veya keyword girin..." style="width:100%;padding:10px 12px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+    </div>
+    <button @click="currentPage=1" class="btn-primary"><i class="ph ph-magnifying-glass"></i> Ara</button>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="fade-in-d1 card" style="padding:12px 16px;margin-bottom:20px">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">DR</span>
+        <input type="number" x-model="drMin" placeholder="Min" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+        <span style="color:var(--muted);font-size:0.75rem">-</span>
+        <input type="number" x-model="drMax" placeholder="Max" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">Trafik</span>
+        <input type="number" x-model="trafficMin" placeholder="Min" style="width:70px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+        <span style="color:var(--muted);font-size:0.75rem">-</span>
+        <input type="number" x-model="trafficMax" placeholder="Max" style="width:70px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">Kelime</span>
+        <input type="number" x-model="wordMin" placeholder="Min" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+        <span style="color:var(--muted);font-size:0.75rem">-</span>
+        <input type="number" x-model="wordMax" placeholder="Max" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">Tarih</span>
+        <select x-model="dateFilter" style="padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit;cursor:pointer">
+          <option>Tumu</option>
+          <option>Son 30 Gun</option>
+          <option>Son 90 Gun</option>
+          <option>Son 1 Yil</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Topics Chart -->
+  <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px" x-init="$nextTick(() => initTopicsChart())">
+    <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">En Populer Konular</div>
+    <div id="topics-chart" style="width:100%;height:220px"></div>
+  </div>
+
+  <!-- Results Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span class="section-label" style="margin-bottom:0">Sonuclar</span>
+      <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' icerik bulundu'"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th @click="doSort('title')" style="cursor:pointer;min-width:200px">Baslik <i class="ph" :class="sortCol==='title' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('traffic')" style="cursor:pointer">Trafik <i class="ph" :class="sortCol==='traffic' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('backlinks')" style="cursor:pointer">Backlink <i class="ph" :class="sortCol==='backlinks' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('words')" style="cursor:pointer">Kelime <i class="ph" :class="sortCol==='words' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('published')" style="cursor:pointer">Yayin <i class="ph" :class="sortCol==='published' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('shares')" style="cursor:pointer">Paylasim <i class="ph" :class="sortCol==='shares' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="(row, idx) in paginated" :key="row.url">
+            <tr style="cursor:pointer" @click="expandedRow = expandedRow === row.url ? null : row.url">
+              <td data-label="Baslik">
+                <div>
+                  <span style="font-weight:500;color:var(--accent);font-size:0.8125rem" x-text="row.title"></span>
+                  <div style="font-size:0.6875rem;color:var(--muted);margin-top:2px" x-text="row.url"></div>
+                </div>
+              </td>
+              <td data-label="DR"><span style="font-weight:600;color:var(--text)" x-text="row.dr"></span></td>
+              <td data-label="Trafik"><span style="color:var(--text)" x-text="formatNum(row.traffic)"></span></td>
+              <td data-label="Backlink"><span style="color:var(--text)" x-text="row.backlinks"></span></td>
+              <td data-label="Kelime"><span style="color:var(--muted)" x-text="formatNum(row.words)"></span></td>
+              <td data-label="Yayin"><span style="color:var(--muted);font-size:0.8125rem" x-text="row.published"></span></td>
+              <td data-label="Paylasim"><span style="color:var(--muted)" x-text="row.shares"></span></td>
+            </tr>
+          </template>
+          <!-- Expanded Detail Row -->
+          <template x-for="row in paginated.filter(r => r.url === expandedRow)" :key="'exp-'+row.url">
+            <tr>
+              <td colspan="7" style="background:var(--surface-2);padding:16px 20px">
+                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+                  <span style="font-size:0.8125rem;color:var(--text);flex:1;min-width:200px">Bu icerik yuksek DR ve trafik potansiyeline sahip. Backlink firsati olarak degerlendirebilirsiniz.</span>
+                  <button class="btn-primary" style="font-size:0.75rem;padding:6px 14px"><i class="ph ph-chart-line-up"></i> Analiz Et</button>
+                  <button style="font-size:0.75rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--accent);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-link"></i> Backlink Firsati</button>
+                </div>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:0.75rem;color:var(--muted)" x-text="'Sayfa ' + currentPage + ' / ' + totalPages"></span>
+      <div style="display:flex;gap:6px">
+        <button @click="if(currentPage>1) currentPage--" :disabled="currentPage<=1" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit;opacity:1" :style="currentPage<=1 && 'opacity:0.4;cursor:default'"><i class="ph ph-caret-left"></i> Onceki</button>
+        <button @click="if(currentPage<totalPages) currentPage++" :disabled="currentPage>=totalPages" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit;opacity:1" :style="currentPage>=totalPages && 'opacity:0.4;cursor:default'">Sonraki <i class="ph ph-caret-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

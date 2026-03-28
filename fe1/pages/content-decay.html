@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Icerik Bozunma Takibi — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+<div id="main" x-data="{ statusFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1 class="page-title">Icerik Bozunma Takibi</h1>
+      <p class="page-sub">Trafik ve skor kaybeden sayfalarin izlenmesi</p>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'bozunan',l:'Bozunan'},{v:'risk',l:'Risk'},{v:'stabil',l:'Stabil'}]">
+        <button @click="statusFilter = f.v" :style="statusFilter === f.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Bozunan</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">8</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Risk</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">15</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Stabil</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">119</div>
+    </div>
+  </div>
+
+  <!-- Decay Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Bozunan Sayfalar</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Son Guncelleme</th>
+          <th>Trafik Degisim</th>
+          <th>Skor</th>
+          <th>Aksiyon</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/seo-ipuclari-2025</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">14 Oca 2025</span></td>
+          <td data-label="Trafik Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-42%</span>
+            </div>
+          </td>
+          <td data-label="Skor"><span style="color:var(--text)">54</span></td>
+          <td data-label="Aksiyon"><button @click.stop="$store.toast.show('Icerik yenileme baslatildi!','success')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit">Yenile</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/rehber/google-analytics</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">08 Mar 2025</span></td>
+          <td data-label="Trafik Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-38%</span>
+            </div>
+          </td>
+          <td data-label="Skor"><span style="color:var(--text)">61</span></td>
+          <td data-label="Aksiyon"><button @click.stop="$store.toast.show('Icerik yenileme baslatildi!','success')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit">Yenile</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/backlink-rehberi</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">22 Kas 2024</span></td>
+          <td data-label="Trafik Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-55%</span>
+            </div>
+          </td>
+          <td data-label="Skor"><span style="color:var(--text)">43</span></td>
+          <td data-label="Aksiyon"><button @click.stop="$store.toast.show('Icerik yenileme baslatildi!','success')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit">Yenile</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/wordpress-eklentileri</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">05 Haz 2025</span></td>
+          <td data-label="Trafik Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-27%</span>
+            </div>
+          </td>
+          <td data-label="Skor"><span style="color:var(--text)">68</span></td>
+          <td data-label="Aksiyon"><button @click.stop="$store.toast.show('Icerik yenileme baslatildi!','success')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit">Yenile</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/meta-ads-kilavuzu</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">19 Agu 2025</span></td>
+          <td data-label="Trafik Degisim">
+            <div style="display:flex;align-items:center;gap:4px">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
+              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-31%</span>
+            </div>
+          </td>
+          <td data-label="Skor"><span style="color:var(--text)">59</span></td>
+          <td data-label="Aksiyon"><button @click.stop="$store.toast.show('Icerik yenileme baslatildi!','success')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:inherit">Yenile</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

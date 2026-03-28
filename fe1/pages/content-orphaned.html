@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Orphaned Icerik Tespiti — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data>
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Orphaned Icerik Tespiti</h1>
+    <p class="page-sub">Dahili link almayan sayfalar</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#ef4444">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Orphan</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">7</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">142</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Oran</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">%5</div>
+    </div>
+  </div>
+
+  <!-- Orphaned Pages Table -->
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <span class="section-label" style="margin-bottom:0">Orphan Sayfalar</span>
+    </div>
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Son Tarama</th>
+          <th>Dahili Link</th>
+          <th>Onerilen Aksiyon</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/eski-seo-rehberi</span></td>
+          <td data-label="Son Tarama"><span style="color:var(--muted)">24 Mar 2026</span></td>
+          <td data-label="Dahili Link"><span style="color:#ef4444;font-weight:600">0</span></td>
+          <td data-label="Aksiyon"><button @click="$store.toast.show('Dahili link onerisi olusturuluyor...','info')" class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;cursor:pointer;border:none;font-family:inherit">Dahili Link Ekle</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/urunler/deneme-surumu</span></td>
+          <td data-label="Son Tarama"><span style="color:var(--muted)">23 Mar 2026</span></td>
+          <td data-label="Dahili Link"><span style="color:#ef4444;font-weight:600">0</span></td>
+          <td data-label="Aksiyon"><button @click="$store.toast.show('Dahili link onerisi olusturuluyor...','info')" class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;cursor:pointer;border:none;font-family:inherit">Dahili Link Ekle</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/hakkimizda/eski-takim</span></td>
+          <td data-label="Son Tarama"><span style="color:var(--muted)">22 Mar 2026</span></td>
+          <td data-label="Dahili Link"><span style="color:#ef4444;font-weight:600">0</span></td>
+          <td data-label="Aksiyon"><button @click="$store.toast.show('Dahili link onerisi olusturuluyor...','info')" class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;cursor:pointer;border:none;font-family:inherit">Dahili Link Ekle</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/2024-dijital-trendler</span></td>
+          <td data-label="Son Tarama"><span style="color:var(--muted)">22 Mar 2026</span></td>
+          <td data-label="Dahili Link"><span style="color:#ef4444;font-weight:600">0</span></td>
+          <td data-label="Aksiyon"><button @click="$store.toast.show('Dahili link onerisi olusturuluyor...','info')" class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;cursor:pointer;border:none;font-family:inherit">Dahili Link Ekle</button></td>
+        </tr>
+        <tr>
+          <td data-label="URL"><span style="font-weight:500;color:var(--text)">/landing/kampanya-kis</span></td>
+          <td data-label="Son Tarama"><span style="color:var(--muted)">21 Mar 2026</span></td>
+          <td data-label="Dahili Link"><span style="color:#ef4444;font-weight:600">0</span></td>
+          <td data-label="Aksiyon"><button @click="$store.toast.show('Dahili link onerisi olusturuluyor...','info')" class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;cursor:pointer;border:none;font-family:inherit">Dahili Link Ekle</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('content'));</script>
+</body>
+</html>

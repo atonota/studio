@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Rakipler — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{
+  search: '',
+  threat: 'tumu',
+  competitors: [
+    { name:'rakip1.com', desc:'Dijital pazarlama ajansi', da:62, threat:'yuksek', trend:'Yukseliyor', color:'#ef4444', shared:128, won:42, lost:86 },
+    { name:'rakip2.com.tr', desc:'SEO danismanlik', da:48, threat:'orta', trend:'Stabil', color:'#eab308', shared:84, won:51, lost:33 },
+    { name:'rakip3.io', desc:'SaaS analitik araci', da:35, threat:'dusuk', trend:'Dususte', color:'#22c55e', shared:56, won:48, lost:8 }
+  ],
+  get filtered() {
+    return this.competitors.filter(c => {
+      const matchSearch = !this.search || c.name.toLowerCase().includes(this.search.toLowerCase()) || c.desc.toLowerCase().includes(this.search.toLowerCase());
+      const matchThreat = this.threat === 'tumu' || c.threat === this.threat;
+      return matchSearch && matchThreat;
+    });
+  },
+  threatBadge(t) {
+    const m = { yuksek:['Tehdit','#ef4444'], orta:['Orta','#eab308'], dusuk:['Dusuk','#22c55e'] };
+    return m[t] || ['?','#7B7269'];
+  }
+}">
+  <div class="fade-in" style="margin-bottom:24px">
+    <h1 class="page-title">Rakip Analizi</h1>
+    <p class="page-sub">Rakip takibi ve karsilastirma</p>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="fade-in" style="display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+    <div style="position:relative;flex:1;min-width:200px;max-width:360px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem"></i>
+      <input type="text" x-model="search" placeholder="Rakip ara..." style="width:100%;padding:8px 12px 8px 36px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.8125rem;outline:none">
+    </div>
+    <div style="display:flex;gap:6px">
+      <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'yuksek',l:'Yuksek Tehdit'},{v:'orta',l:'Orta'},{v:'dusuk',l:'Dusuk'}]">
+        <button @click="threat=pill.v" :style="threat===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <template x-for="c in filtered" :key="c.name">
+      <div class="card" style="cursor:pointer;transition:border-color .2s" @mouseenter="$el.style.borderColor=c.color" @mouseleave="$el.style.borderColor=''">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+          <div :style="'width:40px;height:40px;border-radius:10px;background:'+c.color+'18;display:flex;align-items:center;justify-content:center'">
+            <i class="ph ph-globe" :style="'font-size:1.25rem;color:'+c.color"></i>
+          </div>
+          <div>
+            <div style="font-weight:500;color:var(--text)" x-text="c.name"></div>
+            <div style="font-size:0.6875rem;color:var(--muted)" x-text="c.desc"></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span style="font-size:0.75rem;color:var(--muted)">Domain Authority</span>
+          <span style="font-size:1.25rem;font-weight:300;color:var(--text)" x-text="c.da"></span>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:12px">
+          <span class="badge" :style="'background:'+threatBadge(c.threat)[1]+'18;color:'+threatBadge(c.threat)[1]" x-text="threatBadge(c.threat)[0]"></span>
+          <span class="badge" :style="'background:'+c.color+'18;color:'+c.color" x-text="c.trend"></span>
+        </div>
+        <div style="font-size:0.75rem;color:var(--muted)" x-text="c.shared+' ortak keyword — '+c.won+' kazanilan, '+c.lost+' kaybedilen'"></div>
+      </div>
+    </template>
+    <div x-show="filtered.length===0" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:0.875rem">
+      <i class="ph ph-magnifying-glass" style="font-size:2rem;display:block;margin-bottom:8px;opacity:0.5"></i>
+      Sonuc bulunamadi
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('competitors'));</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Guvenlik — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" class="open"></div>
+
+<div id="main" x-data="{ scanning: false, severityFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Guvenlik</h1>
+      <p class="page-sub">SSL, header analizi ve uyumluluk</p>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'iyi',l:'Iyi'},{v:'uyari',l:'Uyari'},{v:'eksik',l:'Eksik'}]">
+        <button @click="severityFilter = s.v" :style="severityFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Guvenlik Skoru</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">A+</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">SSL</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">Valid</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Eksik Header</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">2</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Zafiyet</span>
+      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">0</div>
+    </div>
+  </div>
+
+  <!-- SSL + Headers -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+    <!-- SSL -->
+    <div class="card">
+      <span class="section-label">SSL Sertifika</span>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--muted)">Saglayici</span>
+          <span style="font-size:0.8125rem;color:var(--text)">Let's Encrypt</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--muted)">Protokol</span>
+          <span style="font-size:0.8125rem;color:var(--text)">TLS 1.3</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--muted)">HSTS</span>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:0.8125rem;color:var(--muted)">Bitis</span>
+          <span style="font-size:0.8125rem;color:var(--text)">15 Haziran 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Headers -->
+    <div class="card">
+      <span class="section-label">Header Analizi</span>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ph ph-check-circle" style="color:#22c55e"></i>
+          <span style="font-size:0.8125rem;color:var(--text)">X-Content-Type-Options</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ph ph-check-circle" style="color:#22c55e"></i>
+          <span style="font-size:0.8125rem;color:var(--text)">X-Frame-Options</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ph ph-check-circle" style="color:#22c55e"></i>
+          <span style="font-size:0.8125rem;color:var(--text)">Strict-Transport-Security</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ph ph-warning" style="color:#eab308"></i>
+          <span style="font-size:0.8125rem;color:var(--text)">Content-Security-Policy <span style="color:#eab308;font-size:0.6875rem">Eksik</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <i class="ph ph-warning" style="color:#eab308"></i>
+          <span style="font-size:0.8125rem;color:var(--text)">Permissions-Policy <span style="color:#eab308;font-size:0.6875rem">Eksik</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KVKK/GDPR -->
+  <div class="fade-in-d3 card">
+    <span class="section-label">KVKK / GDPR Uyumluluk</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.125rem"></i>
+        <span style="font-size:0.8125rem;color:var(--text)">Cerez Bildirimi</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.125rem"></i>
+        <span style="font-size:0.8125rem;color:var(--text)">Gizlilik Politikasi</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.125rem"></i>
+        <span style="font-size:0.8125rem;color:var(--text)">Veri Isleme Sozlesmesi</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.125rem"></i>
+        <span style="font-size:0.8125rem;color:var(--text)">Acik Riza Formu</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ph ph-warning" style="color:#eab308;font-size:1.125rem"></i>
+        <span style="font-size:0.8125rem;color:var(--text)">Veri Saklama Suresi</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ph ph-warning" style="color:#eab308;font-size:1.125rem"></i>
+        <span style="font-size:0.8125rem;color:var(--text)">Kisi Haklari Basvurusu</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('security'));</script>
+</body>
+</html>
