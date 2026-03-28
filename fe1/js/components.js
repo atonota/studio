@@ -4,6 +4,32 @@
    Her sayfa bu dosyayi yukler
 ═══════════════════════════════════════════ */
 
+/* ── RESPONSIVE GRID FIX ──────────────────────────
+   Inline style grid-template-columns can't be overridden by CSS.
+   This JS fix forces 1-column on small screens and restores on resize.
+───────────────────────────────────────────────── */
+(function(){
+  function fixGrids() {
+    const w = window.innerWidth;
+    document.querySelectorAll('#main [style*="grid-template-columns"]').forEach(el => {
+      const orig = el.dataset.origGrid || el.style.gridTemplateColumns;
+      if (!el.dataset.origGrid) el.dataset.origGrid = orig;
+
+      if (w < 600) {
+        el.style.gridTemplateColumns = '1fr';
+      } else if (w < 900) {
+        // 2 columns for medium
+        const cols = (orig.match(/repeat\((\d+)/)||[])[1];
+        el.style.gridTemplateColumns = cols > 2 ? 'repeat(2,1fr)' : orig;
+      } else {
+        el.style.gridTemplateColumns = orig;
+      }
+    });
+  }
+  window.addEventListener('DOMContentLoaded', () => setTimeout(fixGrids, 100));
+  window.addEventListener('resize', fixGrids);
+})();
+
 /* Fix: Alpine.js x-show kills display:grid/flex.
    MutationObserver restores original display when x-show makes element visible. */
 (function(){
