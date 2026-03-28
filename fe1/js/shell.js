@@ -435,6 +435,15 @@ function initShell(pageKey) {
     document.head.appendChild(manifestLink);
   }
 
+  // Favicon injection (prevents 404)
+  if (!document.querySelector('link[rel="icon"]')) {
+    const favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/svg+xml';
+    favicon.href = base + 'favicon.svg';
+    document.head.appendChild(favicon);
+  }
+
   // --- Notification Badge Polling (every 30s) ---
   function updateNotifBadge() {
     const badge = document.getElementById('notif-badge');
