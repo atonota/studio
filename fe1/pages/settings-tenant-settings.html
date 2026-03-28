@@ -9,6 +9,8 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -18,7 +20,19 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main">
+<div id="main" x-data="{
+  fields: { ad: 'Acme Corp.', slug: 'acme', domain: 'acme.com' },
+  errors: {},
+  validate() {
+    this.errors = {};
+    if (!this.fields.ad.trim()) this.errors.ad = 'Tenant adi zorunlu';
+    if (!this.fields.domain.trim()) this.errors.domain = 'Domain zorunlu';
+    return Object.keys(this.errors).length === 0;
+  },
+  save() {
+    if (this.validate()) { $store.toast.show('Ayarlar kaydedildi!', 'success'); }
+  }
+}">
   <div class="fade-in" style="margin-bottom:24px">
     <h1 class="page-title">Tenant Ayarlari</h1>
     <p class="page-sub">Organizasyon bilgileri ve plan yonetimi</p>
@@ -30,18 +44,20 @@
     <div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">
       <div>
         <label style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Ad</label>
-        <input type="text" value="Acme Corp." style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.875rem;outline:none" />
+        <input type="text" x-model="fields.ad" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.875rem;outline:none" :style="errors.ad ? 'border-color:#ef4444' : ''" />
+        <span x-show="errors.ad" x-text="errors.ad" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
       </div>
       <div>
         <label style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Slug</label>
-        <input type="text" value="acme" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);font-size:0.875rem;outline:none" readonly />
+        <input type="text" x-model="fields.slug" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);font-size:0.875rem;outline:none" readonly />
       </div>
       <div>
         <label style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Domain</label>
-        <input type="text" value="acme.com" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.875rem;outline:none" />
+        <input type="text" x-model="fields.domain" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.875rem;outline:none" :style="errors.domain ? 'border-color:#ef4444' : ''" />
+        <span x-show="errors.domain" x-text="errors.domain" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
       </div>
       <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px">
-        <button class="btn-primary">Kaydet</button>
+        <button class="btn-primary" @click="save()">Kaydet</button>
       </div>
     </div>
   </div>

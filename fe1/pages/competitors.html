@@ -78,7 +78,10 @@
           <span class="badge" :style="'background:'+threatBadge(c.threat)[1]+'18;color:'+threatBadge(c.threat)[1]" x-text="threatBadge(c.threat)[0]"></span>
           <span class="badge" :style="'background:'+c.color+'18;color:'+c.color" x-text="c.trend"></span>
         </div>
-        <div style="font-size:0.75rem;color:var(--muted)" x-text="c.shared+' ortak keyword — '+c.won+' kazanilan, '+c.lost+' kaybedilen'"></div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px" x-text="c.shared+' ortak keyword — '+c.won+' kazanilan, '+c.lost+' kaybedilen'"></div>
+        <a href="competitor-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+          Detay <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+        </a>
       </div>
     </template>
     <div x-show="filtered.length===0" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:0.875rem">

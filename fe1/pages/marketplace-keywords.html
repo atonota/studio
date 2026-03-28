@@ -25,8 +25,8 @@
   <!-- Search -->
   <div class="fade-in-d1 card" style="margin-bottom:24px">
     <div style="display:flex;gap:12px">
-      <input type="text" placeholder="Anahtar kelime ara..." style="flex:1;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;outline:none" />
-      <button class="btn-primary" style="padding:10px 20px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer">
+      <input type="text" x-model="search" @keydown.enter="if(!search.trim()) $event.preventDefault()" placeholder="Anahtar kelime ara..." style="flex:1;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;outline:none" />
+      <button class="btn-primary" style="padding:10px 20px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer" @click="if(!search.trim()) $store.toast.show('Anahtar kelime girin','warning')">
         <i class="ph ph-magnifying-glass" style="margin-right:4px"></i>Ara
       </button>
     </div>

@@ -38,11 +38,11 @@
     </template>
   </div>
 
-  <!-- Search -->
+  <!-- Search (uses x-model="search" from filter bar above) -->
   <div class="fade-in-d1" style="margin-bottom:24px">
     <div class="card" style="display:flex;align-items:center;gap:12px">
       <i class="ph ph-magnifying-glass" style="font-size:1.25rem;color:var(--muted)"></i>
-      <input type="text" placeholder="Sorgu ara..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:0.875rem">
+      <input type="text" x-model="search" placeholder="Sorgu ara..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:0.875rem">
       <button class="btn-primary" style="padding:8px 16px;font-size:0.8125rem">Filtrele</button>
     </div>
   </div>

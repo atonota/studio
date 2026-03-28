@@ -58,30 +58,36 @@
 
   <!-- CWV Cards -->
   <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
-    <div class="stat-card" style="--stripe:#22c55e">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">LCP</span>
-        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
+    <a href="performance-vitals.html" style="text-decoration:none">
+      <div class="stat-card" style="--stripe:#22c55e;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">LCP</span>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
+        </div>
+        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">1.8s</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 2.5s</div>
       </div>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">1.8s</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 2.5s</div>
-    </div>
-    <div class="stat-card" style="--stripe:#eab308">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">INP</span>
-        <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Iyilestir</span>
+    </a>
+    <a href="performance-vitals.html" style="text-decoration:none">
+      <div class="stat-card" style="--stripe:#eab308;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">INP</span>
+          <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Iyilestir</span>
+        </div>
+        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">180ms</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 200ms</div>
       </div>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">180ms</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 200ms</div>
-    </div>
-    <div class="stat-card" style="--stripe:#22c55e">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">CLS</span>
-        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
+    </a>
+    <a href="performance-vitals.html" style="text-decoration:none">
+      <div class="stat-card" style="--stripe:#22c55e;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">CLS</span>
+          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
+        </div>
+        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">0.04</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 0.10</div>
       </div>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">0.04</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 0.10</div>
-    </div>
+    </a>
   </div>
 
   <!-- CWV Trend -->

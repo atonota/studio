@@ -18,7 +18,15 @@
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{ ...wizard(3), ...selectCard(), credForm: { api_url:'', api_key:'' }, testing: false, testDone: false }">
+<div id="main" x-data="{ ...wizard(3), ...selectCard(), credForm: { api_url:'', api_key:'' }, credErrors: {}, testing: false, testDone: false,
+  validateCred() {
+    this.credErrors = {};
+    if (!this.credForm.api_url.trim()) this.credErrors.api_url = 'API URL zorunlu';
+    else if (!this.credForm.api_url.startsWith('http')) this.credErrors.api_url = 'Gecerli bir URL girin (https://...)';
+    if (!this.credForm.api_key.trim()) this.credErrors.api_key = 'API Key zorunlu';
+    return Object.keys(this.credErrors).length === 0;
+  }
+}">
 
   <div class="fade-in" style="margin-bottom:24px">
     <h1 class="page-title">Platform Bagla</h1>
@@ -123,15 +131,17 @@
     <div style="display:flex;flex-direction:column;gap:16px">
       <div>
         <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">API URL</label>
-        <input type="url" x-model="credForm.api_url" placeholder="https://site.com/wp-json" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box">
+        <input type="url" x-model="credForm.api_url" placeholder="https://site.com/wp-json" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box" :style="credErrors.api_url ? 'border-color:#ef4444' : ''">
+        <span x-show="credErrors.api_url" x-text="credErrors.api_url" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
       </div>
       <div>
         <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">API Key</label>
-        <input type="password" x-model="credForm.api_key" placeholder="sk-xxxx-xxxx" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box">
+        <input type="password" x-model="credForm.api_key" placeholder="sk-xxxx-xxxx" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box" :style="credErrors.api_key ? 'border-color:#ef4444' : ''">
+        <span x-show="credErrors.api_key" x-text="credErrors.api_key" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
         <button class="btn-secondary" @click="prev()"><i class="ph ph-arrow-left"></i> Geri</button>
-        <button class="btn-primary" :disabled="!credForm.api_url || !credForm.api_key" :style="(!credForm.api_url || !credForm.api_key) ? 'opacity:0.5;cursor:not-allowed' : ''" @click="if(credForm.api_url && credForm.api_key) next()"><i class="ph ph-arrow-right"></i> Ileri</button>
+        <button class="btn-primary" @click="if(validateCred()) next()"><i class="ph ph-arrow-right"></i> Ileri</button>
       </div>
     </div>
   </div>

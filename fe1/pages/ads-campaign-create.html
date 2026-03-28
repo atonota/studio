@@ -19,7 +19,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ ...wizard(3), ...selectCard('meta'), objective:'Donusum', campaignName:'', dailyBudget:'', startDate:'', endDate:'', budgetError:'', dateError:'' }">
+<div id="main" x-data="{ ...wizard(3), ...selectCard('meta'), objective:'Donusum', campaignName:'', dailyBudget:'', startDate:'', endDate:'', budgetError:'', dateError:'', nameError:'' }">
   <div class="fade-in" style="margin-bottom:24px">
     <h1 class="page-title">Yeni Kampanya Olustur</h1>
     <p class="page-sub">Adim adim kampanya olusturma sihirbazi</p>
@@ -87,13 +87,19 @@
     <!-- Campaign Name -->
     <div style="margin-bottom:24px">
       <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Kampanya Adi</label>
-      <input type="text" x-model="campaignName" placeholder="ornek: Bahar Kampanyasi 2026" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box">
+      <input type="text" x-model="campaignName" placeholder="ornek: Bahar Kampanyasi 2026" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box" :style="nameError ? 'border-color:#ef4444' : ''">
+      <span x-show="nameError" x-text="nameError" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
     </div>
 
     <!-- Actions -->
     <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end">
       <button class="btn-secondary" style="padding:8px 20px;font-size:0.8125rem" onclick="history.back()">Iptal</button>
-      <button class="btn-primary" style="padding:8px 20px;font-size:0.8125rem" :disabled="!campaignName || !selected" :style="(!campaignName || !selected) ? 'opacity:0.5;cursor:not-allowed' : ''" @click="if(campaignName && selected) next()">Ileri <i class="ph ph-arrow-right" style="margin-left:4px"></i></button>
+      <button class="btn-primary" style="padding:8px 20px;font-size:0.8125rem" @click="
+        nameError='';
+        if(!campaignName.trim()) { nameError='Kampanya adi zorunlu'; return; }
+        if(!selected) { $store.toast.show('Platform secin','warning'); return; }
+        next();
+      ">Ileri <i class="ph ph-arrow-right" style="margin-left:4px"></i></button>
     </div>
   </div>
 

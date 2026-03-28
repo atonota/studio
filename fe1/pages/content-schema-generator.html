@@ -9,6 +9,8 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <link rel="stylesheet" href="../css/tokens.css">
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -18,7 +20,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main">
+<div id="main" x-data="{ scanUrl: '' }">
   <div class="fade-in" style="margin-bottom:24px">
     <h1 class="page-title">Schema JSON-LD Editoru</h1>
     <p class="page-sub">Yapilandirilmis veri olusturma ve duzenleme</p>
@@ -29,8 +31,8 @@
     <div class="card" style="padding:20px">
       <span class="section-label">Sayfa Tara</span>
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <input type="text" placeholder="https://atonota.com/blog/seo-rehberi" style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;outline:none">
-        <button class="btn-primary" style="white-space:nowrap"><i class="ph ph-scan" style="margin-right:4px"></i>Tara</button>
+        <input type="text" x-model="scanUrl" @keydown.enter="if(!scanUrl.trim()) $event.preventDefault()" placeholder="https://atonota.com/blog/seo-rehberi" style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;outline:none">
+        <button class="btn-primary" style="white-space:nowrap" @click="if(!scanUrl.trim()) { $store.toast.show('URL girin','warning'); return; }"><i class="ph ph-scan" style="margin-right:4px"></i>Tara</button>
       </div>
 
       <span class="section-label">Algilanan Schema</span>

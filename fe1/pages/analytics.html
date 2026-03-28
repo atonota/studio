@@ -45,14 +45,16 @@
 
   <!-- KPI Cards -->
   <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
-    <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Oturumlar</span>
-        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+    <a href="analytics-traffic.html" style="text-decoration:none">
+      <div class="stat-card" style="--stripe:#3b82f6;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Oturumlar</span>
+          <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+        </div>
+        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">34,218</div>
+        <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">+8.7%</div>
       </div>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">34,218</div>
-      <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">+8.7%</div>
-    </div>
+    </a>
     <div class="stat-card" style="--stripe:#a855f7">
       <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sayfa/Oturum</span>
       <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">3.4</div>

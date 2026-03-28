@@ -47,7 +47,12 @@
       <h1 class="page-title">Bildirimler</h1>
       <p class="page-sub">Platform uyarilari ve bilgilendirmeler</p>
     </div>
-    <button class="btn-secondary" @click="$store.confirm.ask('Tum bildirimleri okundu olarak isaretlemek istediginizden emin misiniz?', () => markAllRead())"><i class="ph ph-checks"></i> Tumunu Okundu</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="notification-rules.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft)">
+        <i class="ph ph-gear" style="font-size:0.875rem"></i> Kural Yonet <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      </a>
+      <button class="btn-secondary" @click="$store.confirm.ask('Tum bildirimleri okundu olarak isaretlemek istediginizden emin misiniz?', () => markAllRead())"><i class="ph ph-checks"></i> Tumunu Okundu</button>
+    </div>
   </div>
 
   <!-- Filter Pills -->

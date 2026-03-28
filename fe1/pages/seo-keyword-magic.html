@@ -340,7 +340,7 @@
             <span style="font-size:0.75rem;color:var(--accent);font-weight:600" x-text="selectedRows.length + ' secili:'"></span>
             <button @click="addToList()" style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:500;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit">Listeye Ekle</button>
             <button @click="exportCSV()" style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit">Export CSV</button>
-            <button @click="trackKeywords()" style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit">Takibe Al</button>
+            <a href="seo-position-tracker.html" style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:500;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px">Pozisyon Takibi <i class="ph ph-arrow-right" style="font-size:0.625rem"></i></a>
           </div>
           <div x-show="selectedRows.length === 0" style="font-size:0.75rem;color:var(--muted)"></div>
 

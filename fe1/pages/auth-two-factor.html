@@ -17,6 +17,7 @@
 
   <div class="fade-in" x-data="{
     code: '',
+    codeError: '',
     verifying: false,
     countdown: 120,
     timer: null,
@@ -33,7 +34,8 @@
       return m + ':' + (s < 10 ? '0' : '') + s;
     },
     verify() {
-      if (this.code.length !== 6) return;
+      this.codeError = '';
+      if (this.code.length !== 6) { this.codeError = '6 haneli kod girin'; return; }
       this.verifying = true;
       setTimeout(() => { this.verifying = false; $store.toast.show('Dogrulama basarili!', 'success'); }, 1500);
     },
@@ -56,7 +58,8 @@
 
     <!-- Code Input -->
     <div style="display:flex;flex-direction:column;align-items:center;gap:20px">
-      <input x-ref="codeInput" type="text" x-model="code" maxlength="6" placeholder="000000" @input="code = code.replace(/[^0-9]/g,'')" @keydown.enter="verify()" style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;color:var(--text);font-family:'SF Mono',monospace;outline:none;width:200px;font-size:2rem;text-align:center;letter-spacing:0.3em;font-weight:600">
+      <input x-ref="codeInput" type="text" x-model="code" maxlength="6" placeholder="000000" @input="code = code.replace(/[^0-9]/g,''); codeError=''" @keydown.enter="verify()" style="background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px 20px;color:var(--text);font-family:'SF Mono',monospace;outline:none;width:200px;font-size:2rem;text-align:center;letter-spacing:0.3em;font-weight:600" :style="codeError ? 'border-color:#ef4444' : ''">
+      <span x-show="codeError" x-text="codeError" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
 
       <button @click="verify()" :disabled="verifying || code.length!==6" class="btn-primary" style="width:100%;justify-content:center;padding:12px 18px;font-size:0.9375rem;display:flex;align-items:center;gap:8px">
         <i x-show="verifying" class="ph ph-circle-notch" style="animation:spin 1s linear infinite"></i>
