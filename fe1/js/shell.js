@@ -6,44 +6,73 @@
 
 const MENU = [
   {group:'GENEL', items:[
-    {key:'dashboard',   icon:'ph-squares-four',       title:'Dashboard',   href:'index.html'},
-    {key:'tenants',     icon:'ph-buildings',          title:'Tenant',      href:'pages/tenants.html'},
-    {key:'workspaces',  icon:'ph-globe',              title:'Workspace',   href:'pages/workspaces.html'},
-    {key:'adapters',    icon:'ph-plugs-connected',    title:'Adaptorler',  href:'pages/adapters.html'},
+    {key:'dashboard',  icon:'ph-squares-four',    title:'Dashboard',    href:'index.html'},
+    {key:'yonetim',    icon:'ph-buildings',        title:'Yonetim',      href:'pages/tenants.html'},
   ]},
   {group:'ANALIZ', items:[
-    {key:'seo',         icon:'ph-chart-line-up',       title:'SEO',         href:'pages/seo.html'},
-    {key:'content',     icon:'ph-article',            title:'Icerik',      href:'pages/content.html'},
-    {key:'ads',         icon:'ph-megaphone',          title:'Reklamlar',   href:'pages/ads.html'},
-    {key:'analytics',   icon:'ph-chart-bar',          title:'Analitik',    href:'pages/analytics.html'},
-    {key:'security',    icon:'ph-shield-check',       title:'Guvenlik',    href:'pages/security.html'},
-    {key:'competitors', icon:'ph-binoculars',         title:'Rekabet',     href:'pages/competitors.html'},
+    {key:'seo',        icon:'ph-chart-line-up',    title:'SEO',          href:'pages/seo.html'},
+    {key:'content',    icon:'ph-article',          title:'Icerik',       href:'pages/content.html'},
+    {key:'ads',        icon:'ph-megaphone',         title:'Reklamlar',    href:'pages/ads.html'},
+    {key:'analytics',  icon:'ph-chart-bar',         title:'Analitik',     href:'pages/analytics.html'},
   ]},
   {group:'SISTEM', items:[
-    {key:'reports',      icon:'ph-file-text',          title:'Raporlar',     href:'pages/reports.html'},
-    {key:'ai',           icon:'ph-robot',              title:'AI',           href:'pages/ai.html'},
-    {key:'settings',     icon:'ph-gear',               title:'Ayarlar',      href:'pages/settings.html'},
+    {key:'ai',         icon:'ph-robot',             title:'AI & Rapor',   href:'pages/ai.html'},
+    {key:'settings',   icon:'ph-gear',              title:'Ayarlar',      href:'pages/settings.html'},
   ]},
 ];
 
-/* Sidebar data: each child = "Label|badge|href" (href optional, defaults to section page) */
+/* Sidebar data: 8 keys matching MENU. Format: "Label|badge|href" */
 const SIDEBAR_DATA = {
-  dashboard:    [{l:'Overview',ch:['Platform Ozeti||index.html','KPI Takibi||dashboard-workspace.html','Hedefler & OKR||dashboard-workspace.html']},{l:'Raporlar',ch:['Haftalik Ozet||report-detail.html','Aylik Rapor|3|report-detail.html','Ozel Rapor||report-create.html']},{l:'Aktivite',ch:['Son Degisiklikler||audit.html','Uyari Gecmisi||notifications.html']}],
-  tenants:      [{l:'Yonetim',ch:['Tum Tenantlar|12|tenants.html','Yeni Olustur||tenant-create.html','Detay||tenant-detail.html']},{l:'Izleme',ch:['Saglik Skoru||tenant-detail.html','Onboarding||tenant-detail.html','Churn Riski||tenant-detail.html']}],
-  workspaces:   [{l:'Siteler',ch:['Tum Workspaceler||workspaces.html','Yeni Ekle||workspace-create.html','Detay||workspace-detail.html']},{l:'Adaptorler',ch:['Bagli Platformlar||adapters.html','Saglik Durumu|2|adapter-health.html']}],
-  adapters:     [{l:'Katalog',ch:['Tum Platformlar|83+|adapters.html','Bagli|5|adapters.html','Hata|1|adapters.html']},{l:'Saglik',ch:['Health Dashboard||adapter-health.html','Uptime Gecmisi||adapter-health.html']},{l:'Baglanti',ch:['Yeni Bagla||adapter-connect.html','Credential Yonetimi||adapter-detail.html']}],
-  seo:          [{l:'Anahtar Kelime',ch:['Arastirma||seo-keywords.html','Keyword Magic||seo-keyword-magic.html','Cluster||seo-cluster.html','Intent Analizi||seo-keywords.html']},{l:'Siralama',ch:['Pozisyon Takibi||seo-position-tracker.html','SERP Ozellikleri||seo-serp.html']},{l:'Rakip Arastirma',ch:['Organik Arastirma||seo-organic-research.html']},{l:'GEO (AI Gorunurluk)',ch:['GEO Dashboard||seo-geo.html','AI Mention||seo-geo-mentions.html','Prompt Arastirma||seo-geo-prompts.html','Citability||seo-geo-citability.html','GEO Detay||geo.html','Sorgu Analizi||geo-queries.html','Mention Detay||geo-mentions.html','Platform Analizi||geo-platforms.html','Sentiment||geo-sentiment.html','Citation Widget||geo-citation-widget.html','Rakip GEO||geo-competitors.html','Oneriler||geo-recommendations.html']},{l:'Teknik',ch:['Site Denetimi||seo-audit.html','Denetim Detay||seo-audit-detail.html','On-Page Checker||seo-onpage-checker.html','Backlink|47|seo-backlinks.html','Backlink Denetimi||seo-backlink-audit.html','Backlink Gap||seo-backlink-gap.html','Link Kesisim||seo-link-intersect.html','Toplu Analiz||seo-batch-analysis.html']},{l:'Entity SEO',ch:['Entity Hub||entities.html','Entity Detay||entities-detail.html','Entity Cikarma||entities-extract.html','Entity Gap||entities-gaps.html','Knowledge Panel||entities-knowledge-panel.html','Knowledge Graph||seo-entities.html','Entity Graph||seo-entities-graph.html','Entity Graph (Detay)||entities-graph.html']}],
-  content:      [{l:'Analiz',ch:['Sayfa Listesi||content-pages.html','Sayfa Skorlari||content.html','Sayfa Detay||content-detail.html','Content Explorer||content-explorer.html','Gap Analizi||content-gaps.html','Bozunma||content-decay.html']},{l:'Schema Markup',ch:['Schema Hub||schema.html','Schema Markup||content-schema.html','Schema Editoru||content-schema-generator.html','Schema Uretici||schema-generator.html','Schema Duzenle||schema-detail.html','Schema Sablonlari||schema-templates.html','Schema Import||schema-import.html','Schema Dogrulama||schema-validate.html','Schema API||content-schema-aggregation.html','Aggregation||schema-aggregation.html']},{l:'Uretim',ch:['SEO Yazim Asistani||content-writing-assistant.html','Konu Arastirma||content-topic-research.html','Icerik Sablonu||content-template.html','llms.txt||content-llmstxt.html','AI Tespit||content-ai-detection.html']},{l:'Harita',ch:['Semantik Harita||content-semantic.html','Orphaned Icerik||content-orphaned.html','Readability||content-readability.html']}],
-  ads:          [{l:'Kampanyalar',ch:['Tum Kampanyalar|8|ads-campaigns.html','Kampanya Detay||ads-campaign-detail.html','Yeni Olustur||ads-campaign-create.html','Reklam Gruplari||ads-adgroups.html','Kreatifler||ads-creatives.html','Hedef Kitle||ads-audiences.html']},{l:'Platformlar',ch:['Genel Bakis||ads-platforms.html','Meta (FB+IG)|3|ads-meta.html','TikTok|2|ads-tiktok.html','LinkedIn||ads-linkedin.html','Pinterest||ads-pinterest.html','Snapchat||ads-snapchat.html','WhatsApp||ads-whatsapp.html']},{l:'Otomasyon',ch:['Kural Motoru||ads-rules.html','Kural Olustur||ads-rules-create.html','Kural Detay||ads-rule-detail.html','Butce Yonetimi||ads-budgets.html','AI Optimizer||ads-budget-optimizer.html','Uyarilar|1|ads-alerts.html']},{l:'Raporlar',ch:['Performans||ads-reports.html','Rapor Olustur||ads-report-create.html','Rapor Detay||ads-report-detail.html','Zamanlama||ads-report-schedule.html','Sablonlar||ads-report-templates.html','Attribution||ads-attribution.html']},{l:'Rakip',ch:['Rakip Reklam Analizi||ads-competitor-research.html']},{l:'Hesap',ch:['Bagli Hesaplar||ads-accounts.html','Token Durumu||ads-tokens.html']}],
-  analytics:    [{l:'Trafik',ch:['Genel Bakis||analytics.html','Trafik Detay||analytics-traffic.html','Huni Analizi||analytics-funnels.html','Segmentler||analytics-segments.html']},{l:'AI',ch:['Dogal Dil Sorgu||analytics-query.html','Gercek Zamanli||analytics-realtime.html']},{l:'Performans',ch:['CWV Dashboard||performance.html','LCP / INP / CLS||performance-vitals.html','Uptime||performance-uptime.html','Hiz Testi||performance-speed.html','Oneriler|5|performance-recommendations.html']}],
-  security:     [{l:'Tarama',ch:['Zafiyet Raporu||security-vulnerabilities.html','SSL Sertifika||security-ssl.html','Header Analizi||security-headers.html']},{l:'Uyumluluk',ch:['KVKK / GDPR||security-compliance.html','Politika Uretici||security-compliance.html']}],
-  competitors:  [{l:'Rakip Analizi',ch:['Rakip Listesi||competitors.html','Rakip Detay||competitor-detail.html','Karsilastirma||competitor-compare.html','SWOT (AI)||competitor-swot.html','Strateji||competitor-strategy.html']},{l:'Izleme',ch:['Uyarilar||competitor-alerts.html','Tech Stack||competitor-techstack.html','Pazar Payi||competitor-marketshare.html']},{l:'Marketplace SEO',ch:['Marketplace||marketplace.html','Urunler||marketplace-products.html','Urun Detay||marketplace-detail.html','Keyword||marketplace-keywords.html','Rakipler||marketplace-competitors.html','Optimizasyon||marketplace-optimization.html']},{l:'Local SEO',ch:['Local Dashboard||local.html','Konumlar||local-locations.html','Konum Detay||local-detail.html','Siralama||local-rankings.html','Google Business||local-gbp.html','Rehberler||local-directories.html','Yorumlar||local-reviews.html']}],
-  reports:      [{l:'Raporlar',ch:['Tum Raporlar||reports.html','Yeni Olustur||report-create.html','Rapor Detay||report-detail.html','Sablonlar||report-templates.html']},{l:'Zamanlama',ch:['Zamanlama||report-schedule.html']}],
-  notifications:[{l:'Bildirimler',ch:['Tumu|7|notifications.html','Okunmamis|3|notifications.html','Onemli||notifications.html']},{l:'Kurallar',ch:['Kural Listesi||notification-rules.html','Yeni Kural||notification-rule-create.html']}],
-  audit:        [{l:'Olaylar',ch:['Tum Olaylar||audit.html','Olay Detay||audit-detail.html']},{l:'AI',ch:['Dogal Dil Sorgu||analytics-query.html','Anomali Tespiti||audit-detail.html']}],
-  insights:     [{l:'Feed',ch:['Tum Insightlar||insights.html','Insight Detay||insights-detail.html']},{l:'Digest',ch:['Digest Arsivi||insights-digests.html','Tercihler||insights-preferences.html']}],
-  ai:           [{l:'Chat',ch:['Yeni Sohbet||ai.html','Gecmis||ai.html']},{l:'Brand Radar',ch:['AI Brand Radar||ai-brand-radar.html']},{l:'Insight Feed',ch:['Tum Insightlar||insights.html','Insight Detay||insights-detail.html','Gunluk Digest||ai-digests.html','Haftalik Ozet||ai-digests.html','Digest Arsivi||insights-digests.html','Tercihler||insights-preferences.html','Anomaliler||insights-feed.html']}],
-  settings:     [{l:'Hesap',ch:['Profil||settings-profile.html','Guvenlik||settings-security.html','Bildirim Tercihleri||settings-notifications-prefs.html']},{l:'Sistem',ch:['API Anahtarlari||settings-apikeys.html','Webhook||settings-webhooks.html','Gorunum||settings-appearance.html']},{l:'Bildirimler',ch:['Tum Bildirimler|7|notifications.html','Bildirim Kurallari||notification-rules.html','Yeni Kural||notification-rule-create.html']},{l:'Audit Log',ch:['Tum Olaylar||audit.html','Olay Detay||audit-detail.html']},{l:'Faturalandirma',ch:['Genel Bakis||billing.html','Planlar||billing-plans.html','Faturalar||billing-invoices.html','Kullanim||billing-usage.html','Odeme||billing-payment-methods.html']},{l:'Tenant',ch:['Tenant Ayarlari||settings-tenant-settings.html']}],
+  dashboard: [
+    {l:'Genel Bakis',ch:['Platform Ozeti||index.html','KPI Takibi||dashboard-workspace.html']},
+    {l:'Aktivite',ch:['Son Degisiklikler||audit.html','Bildirimler|7|notifications.html']},
+  ],
+  yonetim: [
+    {l:'Tenant',ch:['Tum Tenantlar|12|tenants.html','Yeni Olustur||tenant-create.html']},
+    {l:'Workspace',ch:['Tum Workspaceler||workspaces.html','Yeni Ekle||workspace-create.html']},
+    {l:'Adaptorler',ch:['Tum Platformlar|83+|adapters.html','Health Dashboard||adapter-health.html']},
+  ],
+  seo: [
+    {l:'Anahtar Kelime',ch:['Keyword Magic||seo-keyword-magic.html','Arastirma||seo-keywords.html','Cluster||seo-cluster.html']},
+    {l:'Siralama',ch:['Pozisyon Takibi||seo-position-tracker.html','SERP Ozellikleri||seo-serp.html','Organik Arastirma||seo-organic-research.html']},
+    {l:'GEO (AI Gorunurluk)',ch:['GEO Dashboard||seo-geo.html','AI Mention||seo-geo-mentions.html','Prompt Arastirma||seo-geo-prompts.html','Citability||seo-geo-citability.html']},
+    {l:'Teknik SEO',ch:['Site Denetimi||seo-audit.html','On-Page Checker||seo-onpage-checker.html','Backlink|47|seo-backlinks.html','Toplu Analiz||seo-batch-analysis.html']},
+    {l:'Entity SEO',ch:['Entity Hub||entities.html','Knowledge Graph||seo-entities.html']},
+    {l:'Marketplace SEO',ch:['Marketplace Hub||marketplace.html']},
+    {l:'Local SEO',ch:['Local Dashboard||local.html']},
+  ],
+  content: [
+    {l:'Analiz',ch:['Sayfa Listesi||content-pages.html','Content Explorer||content-explorer.html','Gap Analizi||content-gaps.html','Bozunma||content-decay.html']},
+    {l:'Schema Markup',ch:['Schema Hub||schema.html','Schema Yonetimi||content-schema.html']},
+    {l:'Uretim',ch:['SEO Yazim Asistani||content-writing-assistant.html','Konu Arastirma||content-topic-research.html','llms.txt||content-llmstxt.html']},
+    {l:'Harita',ch:['Semantik Harita||content-semantic.html','Orphaned Icerik||content-orphaned.html','Readability||content-readability.html']},
+  ],
+  ads: [
+    {l:'Kampanyalar',ch:['Tum Kampanyalar|8|ads.html','Reklam Gruplari||ads-adgroups.html','Kreatifler||ads-creatives.html']},
+    {l:'Platformlar',ch:['Meta (FB+IG)|3|ads-meta.html','TikTok|2|ads-tiktok.html','LinkedIn||ads-linkedin.html']},
+    {l:'Otomasyon',ch:['Kural Motoru||ads-rules.html','Butce Yonetimi||ads-budgets.html','AI Optimizer||ads-budget-optimizer.html','Uyarilar|1|ads-alerts.html']},
+    {l:'Raporlar',ch:['Performans||ads-reports.html','Attribution||ads-attribution.html']},
+    {l:'Hesap',ch:['Bagli Hesaplar||ads-accounts.html','Token Durumu||ads-tokens.html']},
+  ],
+  analytics: [
+    {l:'Trafik',ch:['Genel Bakis||analytics.html','Trafik Detay||analytics-traffic.html','Huni Analizi||analytics-funnels.html','Segmentler||analytics-segments.html']},
+    {l:'Performans',ch:['CWV Dashboard||performance.html','LCP / INP / CLS||performance-vitals.html','Uptime||performance-uptime.html','Hiz Testi||performance-speed.html']},
+    {l:'Guvenlik',ch:['Guvenlik Dashboard||security.html','Zafiyet Raporu||security-vulnerabilities.html','SSL Sertifika||security-ssl.html']},
+    {l:'Rakip Analizi',ch:['Rakip Listesi||competitors.html','Karsilastirma||competitor-compare.html','SWOT (AI)||competitor-swot.html','Pazar Payi||competitor-marketshare.html']},
+    {l:'AI Sorgu',ch:['Dogal Dil Sorgu||analytics-query.html','Gercek Zamanli||analytics-realtime.html']},
+  ],
+  ai: [
+    {l:'AI Chat',ch:['Yeni Sohbet||ai.html','Brand Radar||ai-brand-radar.html']},
+    {l:'Insight Feed',ch:['Tum Insightlar||insights.html','Anomaliler||insights-feed.html','Digest Arsivi||insights-digests.html']},
+    {l:'Raporlar',ch:['Tum Raporlar||reports.html','Sablonlar||report-templates.html','Zamanlama||report-schedule.html']},
+  ],
+  settings: [
+    {l:'Hesap',ch:['Profil||settings-profile.html','Guvenlik||settings-security.html','Bildirim Tercihleri||settings-notifications-prefs.html','Gorunum||settings-appearance.html']},
+    {l:'Sistem',ch:['API Anahtarlari||settings-apikeys.html','Webhook||settings-webhooks.html']},
+    {l:'Faturalandirma',ch:['Planlar||billing-plans.html']},
+    {l:'Bildirimler',ch:['Tum Bildirimler|7|notifications.html','Bildirim Kurallari||notification-rules.html']},
+    {l:'Audit Log',ch:['Tum Olaylar||audit.html']},
+  ],
 };
 
 function getBasePath() {
