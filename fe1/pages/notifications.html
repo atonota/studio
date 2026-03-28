@@ -9,8 +9,8 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <link rel="stylesheet" href="../css/tokens.css">
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -20,30 +20,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{
-  filter: 'Tumu',
-  filters: ['Tumu','Okunmamis','Onemli'],
-  notifications: [
-    { id:1, title:'SEO Anomalisi Tespit Edildi', badge:'Uyari', badgeColor:'#eab308', badgeBg:'rgba(234,179,8,0.1)', icon:'ph-warning', iconColor:'#eab308', iconBg:'rgba(234,179,8,0.1)', borderColor:'#eab308', desc:'/blog/seo-rehberi sayfasinda organik trafik son 3 gunde %18 dusus gosteriyor. Icerik guncellemesi veya teknik kontrol onerilir.', time:'5 dakika once', read:false, important:true },
-    { id:2, title:'Drupal Adaptor Baglantisi Koptu', badge:'Sistem', badgeColor:'#3b82f6', badgeBg:'rgba(59,130,246,0.1)', icon:'ph-plugs-connected', iconColor:'#3b82f6', iconBg:'rgba(59,130,246,0.1)', borderColor:'#3b82f6', desc:'Drupal JSON:API adaptoru 3 ardisik health check\'te basarisiz oldu. Baglanti durumu \"Hata\" olarak guncellendi.', time:'2 saat once', read:false, important:false },
-    { id:3, title:'Meta Ads Kampanyasi Basladi', badge:'Basari', badgeColor:'#22c55e', badgeBg:'rgba(34,197,94,0.1)', icon:'ph-megaphone', iconColor:'#22c55e', iconBg:'rgba(34,197,94,0.1)', borderColor:'#22c55e', desc:'\"Bahar Kampanyasi\" basariyla aktive edildi. Gunluk butce: ₺1,200 — Hedef kitle: 18-35 yas, Istanbul.', time:'3 saat once', read:true, important:false }
-  ],
-  get filtered() {
-    return this.notifications.filter(n => {
-      if (this.filter === 'Okunmamis') return !n.read;
-      if (this.filter === 'Onemli') return n.important;
-      return true;
-    });
-  },
-  markAllRead() {
-    this.notifications.forEach(n => n.read = true);
-    $store.toast.show('Tum bildirimler okundu olarak isaretlendi', 'success');
-  },
-  dismiss(id) {
-    this.notifications = this.notifications.filter(n => n.id !== id);
-    $store.toast.show('Bildirim kaldirildi', 'info');
-  }
-}">
+<div id="main" x-data="notificationsPage()">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Bildirimler</h1>
@@ -53,7 +30,7 @@
       <a href="notification-rules.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft)">
         <i class="ph ph-gear" style="font-size:0.875rem"></i> Kural Yonet <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
       </a>
-      <button class="btn-secondary" @click="$store.confirm.ask('Tum bildirimleri okundu olarak isaretlemek istediginizden emin misiniz?', () => markAllRead())"><i class="ph ph-checks"></i> Tumunu Okundu</button>
+      <button class="btn-secondary" @click="markAllRead()"><i class="ph ph-checks"></i> Tumunu Okundu</button>
     </div>
   </div>
 
@@ -62,43 +39,69 @@
     <template x-for="f in filters" :key="f">
       <button @click="filter = f"
         :style="filter === f
-          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
+          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:600;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
           : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
         x-text="f"></button>
     </template>
   </div>
 
   <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:12px">
-    <template x-for="n in filtered" :key="n.id">
+    <template x-for="n in getFiltered()" :key="n.id">
       <div class="card" :style="'border-left:3px solid '+n.borderColor+';padding:16px 20px;'+(n.read ? 'opacity:0.6' : '')">
         <div style="display:flex;align-items:flex-start;gap:12px">
           <div :style="'width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:'+n.iconBg">
             <i class="ph" :class="n.icon" :style="'color:'+n.iconColor+';font-size:1.125rem'"></i>
           </div>
           <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
               <span style="font-weight:500;color:var(--text)" x-text="n.title"></span>
               <span class="badge" :style="'background:'+n.badgeBg+';color:'+n.badgeColor" x-text="n.badge"></span>
             </div>
-            <p style="font-size:0.8125rem;color:var(--text-soft);margin-bottom:8px" x-text="n.desc"></p>
+            <p style="font-size:0.8125rem;color:var(--text-soft);margin-bottom:8px;line-height:1.6" x-text="n.desc"></p>
             <div style="display:flex;align-items:center;gap:12px">
               <span style="font-size:0.6875rem;color:var(--muted)" x-text="n.time + (n.read ? ' — Okundu' : '')"></span>
-              <button x-show="!n.read" @click="n.read = true; $store.toast.show('Okundu olarak isaretlendi', 'success')" style="font-size:0.6875rem;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Okundu Isaretle</button>
+              <button x-show="!n.read" @click="n.read = true; showToast && showToast('Okundu olarak isaretlendi')" style="font-size:0.6875rem;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Okundu Isaretle</button>
               <button @click="dismiss(n.id)" style="font-size:0.6875rem;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Kaldir</button>
             </div>
           </div>
         </div>
       </div>
     </template>
-    <div x-show="filtered.length === 0" style="text-align:center;padding:32px;color:var(--muted);font-size:0.875rem">
+    <div x-show="getFiltered().length === 0" style="text-align:center;padding:32px;color:var(--muted);font-size:0.875rem">
       Bildirim bulunamadi.
     </div>
   </div>
 </div>
 
 <div id="footbar"></div>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-<script src="../js/components.js"></script>
+<script>
+function notificationsPage() {
+  return {
+    filter: 'Tumu',
+    filters: ['Tumu', 'Okunmamis', 'Onemli'],
+    notifications: [
+      { id:1, title:'SEO Anomalisi Tespit Edildi', badge:'Uyari', badgeColor:'#eab308', badgeBg:'rgba(234,179,8,0.1)', icon:'ph-warning', iconColor:'#eab308', iconBg:'rgba(234,179,8,0.1)', borderColor:'#eab308', desc:'organik trafik son 3 gunde %18 dusus gosteriyor. Icerik guncellemesi veya teknik kontrol onerilir.', time:'5 dakika once', read:false, important:true },
+      { id:2, title:'Drupal Adaptor Baglantisi Koptu', badge:'Sistem', badgeColor:'#3b82f6', badgeBg:'rgba(59,130,246,0.1)', icon:'ph-plugs-connected', iconColor:'#3b82f6', iconBg:'rgba(59,130,246,0.1)', borderColor:'#3b82f6', desc:'Drupal JSON:API adaptoru 3 ardisik health check basarisiz oldu. Baglanti durumu Hata olarak guncellendi.', time:'2 saat once', read:false, important:false },
+      { id:3, title:'Meta Ads Kampanyasi Basladi', badge:'Basari', badgeColor:'#22c55e', badgeBg:'rgba(34,197,94,0.1)', icon:'ph-megaphone', iconColor:'#22c55e', iconBg:'rgba(34,197,94,0.1)', borderColor:'#22c55e', desc:'Bahar Kampanyasi basariyla aktive edildi. Gunluk butce: 1,200 TL. Hedef kitle: 18-35 yas, Istanbul.', time:'3 saat once', read:true, important:false }
+    ],
+    getFiltered() {
+      return this.notifications.filter(n => {
+        if (this.filter === 'Okunmamis') return !n.read;
+        if (this.filter === 'Onemli') return n.important;
+        return true;
+      });
+    },
+    markAllRead() {
+      this.notifications.forEach(n => n.read = true);
+      if (window.showToast) showToast('Tum bildirimler okundu olarak isaretlendi');
+    },
+    dismiss(id) {
+      this.notifications = this.notifications.filter(n => n.id !== id);
+      if (window.showToast) showToast('Bildirim kaldirildi');
+    }
+  };
+}
+</script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
 </body>

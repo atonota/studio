@@ -67,54 +67,102 @@
   </div>
 
   <!-- Step 1: Platform Grid -->
-  <div x-show="isActive(1)" class="fade-in-d2" x-effect="if(isActive(1)) $nextTick(()=>{$el.style.display='grid'})" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:720px;margin-bottom:28px">
+  <style>
+    .platform-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      min-height: 140px;
+    }
+    .platform-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .platform-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      box-shadow: 0 0 0 3px var(--accent-muted);
+    }
+    .platform-card .pc-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .platform-card:hover .pc-icon { transform: scale(1.1); }
+    .platform-card .pc-icon i { font-size: 2rem; }
+    .platform-card .pc-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+    .platform-card .pc-desc {
+      font-size: 0.6875rem;
+      color: var(--muted);
+      margin-top: -8px;
+    }
+    .platform-card.selected .pc-name { color: var(--accent); }
+    .platform-card.selected::after {
+      content: '';
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .platform-card { position: relative; }
+  </style>
+  <div x-show="isActive(1)" class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin-bottom:28px">
 
-    <div @click="select('wordpress')" style="background:var(--surface-2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s,background 0.15s"
-         :style="isSelected('wordpress') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border)'">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-wordpress-logo" style="font-size:1.5rem;color:#3b82f6"></i>
-      </div>
-      <span style="font-size:0.875rem;font-weight:600;color:var(--text)">WordPress</span>
+    <div @click="select('wordpress')" class="platform-card" :class="isSelected('wordpress') ? 'selected' : ''">
+      <div class="pc-icon" style="background:rgba(59,130,246,0.12)"><i class="ph ph-wordpress-logo" style="color:#3b82f6"></i></div>
+      <span class="pc-name">WordPress</span>
+      <span class="pc-desc">REST API / WP-CLI</span>
     </div>
 
-    <div @click="select('shopify')" style="background:var(--surface-2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s,background 0.15s"
-         :style="isSelected('shopify') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border)'">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-shopping-bag" style="font-size:1.5rem;color:#22c55e"></i>
-      </div>
-      <span style="font-size:0.875rem;font-weight:600;color:var(--text)">Shopify</span>
+    <div @click="select('shopify')" class="platform-card" :class="isSelected('shopify') ? 'selected' : ''">
+      <div class="pc-icon" style="background:rgba(34,197,94,0.12)"><i class="ph ph-shopping-bag" style="color:#22c55e"></i></div>
+      <span class="pc-name">Shopify</span>
+      <span class="pc-desc">Admin API / GraphQL</span>
     </div>
 
-    <div @click="select('drupal')" style="background:var(--surface-2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s,background 0.15s"
-         :style="isSelected('drupal') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border)'">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-drop" style="font-size:1.5rem;color:#a855f7"></i>
-      </div>
-      <span style="font-size:0.875rem;font-weight:600;color:var(--text)">Drupal</span>
+    <div @click="select('drupal')" class="platform-card" :class="isSelected('drupal') ? 'selected' : ''">
+      <div class="pc-icon" style="background:rgba(168,85,247,0.12)"><i class="ph ph-drop" style="color:#a855f7"></i></div>
+      <span class="pc-name">Drupal</span>
+      <span class="pc-desc">JSON:API</span>
     </div>
 
-    <div @click="select('magento')" style="background:var(--surface-2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s,background 0.15s"
-         :style="isSelected('magento') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border)'">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-storefront" style="font-size:1.5rem;color:#ef4444"></i>
-      </div>
-      <span style="font-size:0.875rem;font-weight:600;color:var(--text)">Magento</span>
+    <div @click="select('magento')" class="platform-card" :class="isSelected('magento') ? 'selected' : ''">
+      <div class="pc-icon" style="background:rgba(239,68,68,0.12)"><i class="ph ph-storefront" style="color:#ef4444"></i></div>
+      <span class="pc-name">Magento</span>
+      <span class="pc-desc">REST API v1</span>
     </div>
 
-    <div @click="select('webflow')" style="background:var(--surface-2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s,background 0.15s"
-         :style="isSelected('webflow') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border)'">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-pen-nib" style="font-size:1.5rem;color:#eab308"></i>
-      </div>
-      <span style="font-size:0.875rem;font-weight:600;color:var(--text)">Webflow</span>
+    <div @click="select('webflow')" class="platform-card" :class="isSelected('webflow') ? 'selected' : ''">
+      <div class="pc-icon" style="background:rgba(234,179,8,0.12)"><i class="ph ph-pen-nib" style="color:#eab308"></i></div>
+      <span class="pc-name">Webflow</span>
+      <span class="pc-desc">CMS API</span>
     </div>
 
-    <div @click="select('custom')" style="background:var(--surface-2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s,background 0.15s"
-         :style="isSelected('custom') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border)'">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(123,114,105,0.15);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-code" style="font-size:1.5rem;color:var(--muted)"></i>
-      </div>
-      <span style="font-size:0.875rem;font-weight:600;color:var(--text)">Custom API</span>
+    <div @click="select('custom')" class="platform-card" :class="isSelected('custom') ? 'selected' : ''">
+      <div class="pc-icon" style="background:rgba(123,114,105,0.12)"><i class="ph ph-code" style="color:var(--muted)"></i></div>
+      <span class="pc-name">Custom API</span>
+      <span class="pc-desc">REST / GraphQL / SOAP</span>
     </div>
 
   </div>
