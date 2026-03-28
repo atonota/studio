@@ -106,9 +106,10 @@
   </div>
 
   <!-- Referring Domains Table -->
-  <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+  <div class="fade-in-d3 card" data-paginate="10" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Referring Domain'ler</span>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Domain','DA','Backlink','Durum','Ilk Gorulme'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>

@@ -90,8 +90,11 @@
 
   <!-- Tab: Kullanicilar -->
   <div x-show="isActive('kullanicilar')" x-transition>
-    <div class="card">
-      <h3 class="section-label">Kullanicilar</h3>
+    <div class="card" data-paginate="10">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h3 class="section-label">Kullanicilar</h3>
+        <button onclick="if(window.exportToCSV)exportToCSV(['Ad Soyad','E-posta','Rol','Son Giris'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      </div>
       <table class="r-table" style="margin-top:8px">
         <thead>
           <tr>
@@ -196,6 +199,7 @@
 </div>
 <div id="footbar"></div>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('yonetim'));</script>
 </body>

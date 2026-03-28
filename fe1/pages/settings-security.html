@@ -88,8 +88,11 @@
   </div>
 
   <!-- Active Sessions -->
-  <div class="fade-in-d3 card" style="max-width:720px">
-    <span class="section-label">Aktif Oturumlar</span>
+  <div class="fade-in-d3 card" data-paginate="10" style="max-width:720px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span class="section-label" style="margin-bottom:0">Aktif Oturumlar</span>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Tarayici','IP Adresi','Konum','Son Aktivite'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    </div>
     <table class="r-table" style="margin-top:8px">
       <thead>
         <tr>
@@ -126,6 +129,7 @@
 
 <div id="footbar"></div>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
 </body>

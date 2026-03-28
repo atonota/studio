@@ -77,7 +77,10 @@
   </div>
 
   <!-- Campaigns Table -->
-  <div class="fade-in-d2 card">
+  <div class="fade-in-d2 card" data-paginate="10">
+    <div style="display:flex;align-items:center;justify-content:end;margin-bottom:8px">
+      <button onclick="if(window.exportToCSV)exportToCSV(['Kampanya','Platform','Hedef','Durum','Gunluk Butce','Harcama','ROAS'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    </div>
     <table class="r-table">
       <thead>
         <tr>
@@ -118,6 +121,7 @@
 <div id="footbar"></div>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
 </body>

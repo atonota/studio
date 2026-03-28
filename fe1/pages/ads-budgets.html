@@ -22,7 +22,22 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ platformFilter: 'tumu', pacingFilter: 'tumu', dateRange: '7gun' }" x-effect="if(window.__updateSpendChart) window.__updateSpendChart(dateRange)">
+<div id="main" x-data="{
+  platformFilter: 'tumu',
+  pacingFilter: 'tumu',
+  dateRange: '7gun',
+  seriesConfigs: [
+    {key:'meta',base:400,variance:200},
+    {key:'tiktok',base:200,variance:100},
+    {key:'linkedin',base:100,variance:50}
+  ],
+  updateCharts() {
+    const days = this.dateRange === '7gun' ? 7 : this.dateRange === '90gun' ? 90 : 30;
+    if (window._chartInstances && window.updateChartsForRange) {
+      updateChartsForRange(days, window._chartInstances, this.seriesConfigs);
+    }
+  }
+}">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Butce Yonetimi</h1>
@@ -30,7 +45,7 @@
     </div>
     <div style="display:flex;gap:4px">
       <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-        <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
       </template>
     </div>
   </div>
@@ -165,12 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
       { name: 'LinkedIn', type: 'bar', stack: 'spend', data: initData.series.linkedin, itemStyle: { color: '#14b8a6', borderRadius: [4,4,0,0] } }
     ]
   });
-  window.addEventListener('resize', () => chart.resize());
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.spendChart = chart;
 
-  window.__updateSpendChart = function(range) {
-    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
-    updateChartsForRange(days, { spendChart: chart }, spendConfigs);
-  };
+  window.addEventListener('resize', () => chart.resize());
 });
 </script>
 </body>

@@ -38,8 +38,11 @@
   </div>
 
   <!-- Comparison Table -->
-  <div class="fade-in-d1 card">
-    <span class="section-label">Metrik Karsilastirma</span>
+  <div class="fade-in-d1 card" data-paginate="10">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span class="section-label" style="margin-bottom:0">Metrik Karsilastirma</span>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Metrik','Siz','rakip1.com','rakip2.com.tr'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    </div>
     <table class="r-table">
       <thead>
         <tr>
@@ -98,6 +101,7 @@
 </div>
 
 <div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('analytics'));</script>
 </body>

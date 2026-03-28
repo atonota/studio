@@ -22,7 +22,29 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ metricTab: 'tumu', dateRange: '30gun' }" x-effect="if(window.__updateVitalsChart) window.__updateVitalsChart(dateRange)">
+<div id="main" x-data="{
+  metricTab: 'tumu',
+  dateRange: '30gun',
+  seriesConfigs: [
+    {key:'lcp',base:1800,variance:400},
+    {key:'inp',base:180,variance:50},
+    {key:'cls',base:4,variance:2}
+  ],
+  updateCharts() {
+    const days = this.dateRange === '7gun' ? 7 : this.dateRange === '90gun' ? 90 : 30;
+    const data = generateTimeSeriesForRange(days, this.seriesConfigs);
+    const chart = (window._chartInstances || {}).vitals;
+    if (!chart) return;
+    chart.setOption({
+      xAxis: { data: data.labels },
+      series: [
+        { data: data.series.lcp.map(v => +(v/1000).toFixed(1)) },
+        { data: data.series.inp.map(v => +(v/10).toFixed(1)) },
+        { data: data.series.cls }
+      ]
+    });
+  }
+}">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Core Web Vitals Detay</h1>
@@ -30,7 +52,7 @@
     </div>
     <div style="display:flex;gap:4px">
       <template x-for="d in [{v:'7gun',l:'7G'},{v:'30gun',l:'30G'},{v:'90gun',l:'90G'}]">
-        <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
       </template>
     </div>
   </div>
@@ -153,20 +175,10 @@ document.addEventListener('DOMContentLoaded', function() {
       { name: 'CLS (x100)', type: 'line', smooth: true, data: init.cls, lineStyle: { color: '#3b82f6' }, itemStyle: { color: '#3b82f6' } }
     ]
   });
-  window.addEventListener('resize', () => chart.resize());
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.vitals = chart;
 
-  window.__updateVitalsChart = function(range) {
-    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
-    const d = buildVitalsData(days);
-    chart.setOption({
-      xAxis: { data: d.labels },
-      series: [
-        { data: d.lcp },
-        { data: d.inp },
-        { data: d.cls }
-      ]
-    });
-  };
+  window.addEventListener('resize', () => chart.resize());
 });
 </script>
 </body>

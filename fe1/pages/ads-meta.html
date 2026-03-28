@@ -52,8 +52,11 @@
   </div>
 
   <!-- Campaign Table -->
-  <div class="fade-in-d2 card" x-data="{ campaigns: [{name:'Bahar Kampanyasi',active:true,budget:'1,200'},{name:'Brand Awareness Q1',active:true,budget:'800'},{name:'WhatsApp Lead Gen',active:true,budget:'600'}], editIdx: -1, editVal: '' }">
-    <span class="section-label">Kampanyalar</span>
+  <div class="fade-in-d2 card" data-paginate="10" x-data="{ campaigns: [{name:'Bahar Kampanyasi',active:true,budget:'1,200'},{name:'Brand Awareness Q1',active:true,budget:'800'},{name:'WhatsApp Lead Gen',active:true,budget:'600'}], editIdx: -1, editVal: '' }">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span class="section-label" style="margin-bottom:0">Kampanyalar</span>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Kampanya Adi','Hedef','Durum','Gunluk Butce','Harcama','ROAS'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    </div>
     <table class="r-table">
       <thead>
         <tr>
@@ -101,6 +104,7 @@
 </div>
 
 <div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
 </body>

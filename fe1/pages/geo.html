@@ -22,7 +22,24 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ platform:'tumu', range:'7gun' }" x-effect="if(window.__updateTrendChart) window.__updateTrendChart(range)">
+<div id="main" x-data="{
+  platform:'tumu',
+  range:'7gun',
+  seriesConfigs: [
+    {key:'chatgpt',base:4,variance:3},
+    {key:'gemini',base:3,variance:2},
+    {key:'perplexity',base:2,variance:2},
+    {key:'claude',base:1,variance:1},
+    {key:'copilot',base:1,variance:1},
+    {key:'grok',base:0,variance:1}
+  ],
+  updateCharts() {
+    const days = this.range === '7gun' ? 7 : this.range === '90gun' ? 90 : 30;
+    if (window._chartInstances && window.updateChartsForRange) {
+      updateChartsForRange(days, window._chartInstances, this.seriesConfigs);
+    }
+  }
+}">
   <div class="fade-in" style="margin-bottom:24px">
     <h1 class="page-title">GEO Intelligence</h1>
     <p class="page-sub">Generative Engine Optimization — AI platformlarinda gorunurluk analizi</p>
@@ -34,7 +51,7 @@
     </template>
     <div style="flex:1"></div>
     <template x-for="r in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-      <button @click="range=r.v" :style="range===r.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="r.l"></button>
+      <button @click="range=r.v; updateCharts()" :style="range===r.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="r.l"></button>
     </template>
   </div>
 
@@ -104,12 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
       itemStyle:{color:seriesColors[i]}
     }))
   });
-  window.addEventListener('resize', () => cTrend.resize());
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.trend = cTrend;
 
-  window.__updateTrendChart = function(range) {
-    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
-    updateChartsForRange(days, { trend: cTrend }, trendConfigs);
-  };
+  window.addEventListener('resize', () => cTrend.resize());
 });
 </script>
 </body>

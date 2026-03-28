@@ -22,7 +22,28 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ dateRange: '30gun' }" x-effect="if(window.__updateCwvChart) window.__updateCwvChart(dateRange)">
+<div id="main" x-data="{
+  dateRange: '30gun',
+  seriesConfigs: [
+    {key:'lcp',base:1800,variance:400},
+    {key:'inp',base:180,variance:50},
+    {key:'cls',base:4,variance:2}
+  ],
+  updateCharts() {
+    const days = this.dateRange === '7gun' ? 7 : this.dateRange === '90gun' ? 90 : 30;
+    const data = generateTimeSeriesForRange(days, this.seriesConfigs);
+    const chart = (window._chartInstances || {}).cwv;
+    if (!chart) return;
+    chart.setOption({
+      xAxis: { data: data.labels },
+      series: [
+        { data: data.series.lcp.map(v => +(v/1000).toFixed(2)) },
+        { data: data.series.inp },
+        { data: data.series.cls.map(v => +(v/100).toFixed(3)) }
+      ]
+    });
+  }
+}">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Performans</h1>
@@ -30,7 +51,7 @@
     </div>
     <div style="display:flex;gap:4px">
       <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-        <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
       </template>
     </div>
   </div>
@@ -106,20 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   });
 
-  window.addEventListener('resize', () => cCwv.resize());
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.cwv = cCwv;
 
-  window.__updateCwvChart = function(range) {
-    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
-    const data = generateTimeSeriesForRange(days, cwvConfigs);
-    cCwv.setOption({
-      xAxis: { data: data.labels },
-      series: [
-        { data: data.series.lcp.map(v => +(v/1000).toFixed(2)) },
-        { data: data.series.inp },
-        { data: data.series.cls.map(v => +(v/100).toFixed(3)) }
-      ]
-    });
-  };
+  window.addEventListener('resize', () => cCwv.resize());
 });
 </script>
 </body>

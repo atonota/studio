@@ -176,10 +176,13 @@
   </div>
 
   <!-- Results Table -->
-  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+  <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
       <span class="section-label" style="margin-bottom:0">Sonuclar</span>
-      <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' icerik bulundu'"></span>
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="if(window.exportToCSV)exportToCSV(['Baslik','DR','Trafik','Backlink','Kelime','Yayin','Paylasim'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' icerik bulundu'"></span>
+      </div>
     </div>
     <div style="overflow-x:auto">
       <table class="r-table">

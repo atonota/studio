@@ -229,7 +229,10 @@
       </div>
 
       <!-- Questions List -->
-      <div x-show="activeTab === 'questions'" class="card" style="padding:0;overflow:hidden">
+      <div x-show="activeTab === 'questions'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['#','Soru','Hacim','Kaynak'], document.querySelectorAll('#main [x-show*=questions] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>
@@ -263,7 +266,10 @@
       </div>
 
       <!-- Headlines -->
-      <div x-show="activeTab === 'headlines'" class="card" style="padding:0;overflow:hidden">
+      <div x-show="activeTab === 'headlines'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['#','Baslik Onerisi','Etkilesim Skoru'], document.querySelectorAll('#main [x-show*=headlines] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>

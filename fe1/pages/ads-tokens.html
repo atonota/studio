@@ -33,8 +33,11 @@
   </div>
 
   <!-- Token Table -->
-  <div class="fade-in-d1 card">
-    <span class="section-label">Platform Tokenlari</span>
+  <div class="fade-in-d1 card" data-paginate="10">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span class="section-label" style="margin-bottom:0">Platform Tokenlari</span>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Platform','Token Tipi','Kalan Sure','Durum','Islem'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    </div>
     <table class="r-table">
       <thead>
         <tr>
@@ -127,6 +130,7 @@
 </div>
 
 <div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
 <style>@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }</style>

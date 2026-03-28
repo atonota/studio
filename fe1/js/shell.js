@@ -75,6 +75,162 @@ const SIDEBAR_DATA = {
   ],
 };
 
+const TOP_MENU = [
+  { key: 'dashboard', label: 'Dashboard', hasDropdown: false },
+  { key: 'seo', label: 'SEO', hasDropdown: true, columns: [
+    { head: 'Arastirma', items: [
+      { icon: 'ph-magic-wand', label: 'Keyword Magic', href: 'seo-keyword-magic.html' },
+      { icon: 'ph-chart-line-up', label: 'Pozisyon Takibi', href: 'seo-position-tracker.html' },
+      { icon: 'ph-bug', label: 'Site Denetimi', href: 'seo-audit.html' },
+    ]},
+    { head: 'Otorite', items: [
+      { icon: 'ph-link-simple', label: 'Backlink Analizi', href: 'seo-backlinks.html' },
+      { icon: 'ph-globe-hemisphere-west', label: 'GEO & Local', href: 'seo-geo.html' },
+      { icon: 'ph-graph', label: 'Entity Graph', href: 'seo-entities.html' },
+    ]},
+    { head: 'Ticaret', items: [
+      { icon: 'ph-storefront', label: 'Marketplace SEO', href: 'marketplace.html' },
+      { icon: 'ph-map-pin', label: 'Local SEO', href: 'local.html' },
+    ]},
+  ]},
+  { key: 'content', label: 'Icerik', hasDropdown: true, columns: [
+    { head: 'Analiz', items: [
+      { icon: 'ph-file-text', label: 'Sayfa Analizi', href: 'content-pages.html' },
+      { icon: 'ph-compass', label: 'Content Explorer', href: 'content-explorer.html' },
+    ]},
+    { head: 'Uretim', items: [
+      { icon: 'ph-pencil-simple', label: 'Yazim Asistani', href: 'content-writing-assistant.html' },
+      { icon: 'ph-code', label: 'Schema Generator', href: 'schema-generator.html' },
+      { icon: 'ph-tree-structure', label: 'Konu Arastirma', href: 'content-topic-research.html' },
+    ]},
+  ]},
+  { key: 'ads', label: 'Reklamlar', hasDropdown: true, columns: [
+    { head: 'Yonetim', items: [
+      { icon: 'ph-tag-chevron', label: 'Kampanyalar', href: 'ads.html' },
+      { icon: 'ph-robot', label: 'Otomasyon', href: 'ads-rules.html' },
+      { icon: 'ph-arrows-merge', label: 'Attribution', href: 'ads-attribution.html' },
+    ]},
+    { head: 'Platformlar', items: [
+      { icon: 'ph-facebook-logo', label: 'Meta Ads', href: 'ads-meta.html' },
+      { icon: 'ph-tiktok-logo', label: 'TikTok Ads', href: 'ads-tiktok.html' },
+      { icon: 'ph-linkedin-logo', label: 'LinkedIn Ads', href: 'ads-linkedin.html' },
+    ]},
+  ]},
+  { key: 'analytics', label: 'Analitik', hasDropdown: true, columns: [
+    { head: 'Performans', items: [
+      { icon: 'ph-users-three', label: 'Trafik', href: 'analytics-traffic.html' },
+      { icon: 'ph-trend-up', label: 'Performans', href: 'performance.html' },
+      { icon: 'ph-shield-check', label: 'Guvenlik', href: 'security.html' },
+    ]},
+    { head: 'Zeka', items: [
+      { icon: 'ph-flag', label: 'Rakipler', href: 'competitors.html' },
+      { icon: 'ph-brain', label: 'AI Sorgu', href: 'analytics-query.html' },
+    ]},
+  ]},
+  { key: 'ai', label: 'AI', hasDropdown: true, columns: [
+    { head: 'Araclar', items: [
+      { icon: 'ph-chat-teardrop-dots', label: 'AI Chat', href: 'ai.html' },
+      { icon: 'ph-broadcast', label: 'Brand Radar', href: 'ai-brand-radar.html', badge: 'Yeni' },
+      { icon: 'ph-lightning', label: 'Insight Feed', href: 'insights.html' },
+    ]},
+    { head: 'Raporlar', items: [
+      { icon: 'ph-newspaper', label: 'Raporlar', href: 'reports.html' },
+      { icon: 'ph-chart-pie', label: 'Ozetler', href: 'insights-digests.html' },
+    ]},
+  ]},
+];
+
+function tmResolveHref(href, prefix) {
+  if (!href) return '#';
+  const inPages = window.location.pathname.includes('/pages/');
+  if (href === 'index.html') {
+    return inPages ? '../index.html' : 'index.html';
+  }
+  return inPages ? href : 'pages/' + href;
+}
+
+function tmCloseAll() {
+  document.querySelectorAll('.tm-item.open').forEach(el => el.classList.remove('open'));
+  const bd = document.getElementById('tm-backdrop');
+  if (bd) bd.classList.remove('show');
+}
+
+function tmToggle(itemEl) {
+  const wasOpen = itemEl.classList.contains('open');
+  tmCloseAll();
+  if (!wasOpen) {
+    itemEl.classList.add('open');
+    document.getElementById('tm-backdrop').classList.add('show');
+  }
+}
+
+function tmSelect(btn, key) {
+  document.querySelectorAll('.tm-btn.active').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function tmLink(href) {
+  tmCloseAll();
+  window.location.href = href;
+}
+
+function buildTopMenu(activeKey) {
+  let nav = document.getElementById('topmenu');
+  if (!nav) {
+    // Auto-create topmenu + backdrop if not in HTML
+    const topbar = document.getElementById('topbar');
+    if (topbar) {
+      nav = document.createElement('nav');
+      nav.id = 'topmenu';
+      topbar.insertAdjacentElement('afterend', nav);
+      if (!document.getElementById('tm-backdrop')) {
+        const bd = document.createElement('div');
+        bd.id = 'tm-backdrop';
+        nav.insertAdjacentElement('afterend', bd);
+      }
+    } else return;
+  }
+  let html = '';
+
+  TOP_MENU.forEach(item => {
+    const isActive = item.key === activeKey ? ' active' : '';
+    if (!item.hasDropdown) {
+      const href = tmResolveHref(item.key === 'dashboard' ? 'index.html' : 'pages/' + item.key + '.html');
+      html += `<div class="tm-item"><button class="tm-btn${isActive}" onclick="tmLink('${href}')">${item.label}</button></div>`;
+    } else {
+      html += `<div class="tm-item" id="tm-${item.key}"><button class="tm-btn${isActive}" onclick="tmToggle(this.parentElement)">${item.label} <i class="ph ph-caret-down tm-caret"></i></button>`;
+      html += `<div class="tm-dropdown">`;
+      // Desktop columns
+      item.columns.forEach(col => {
+        html += `<div class="tm-col"><div class="tm-col-head">${col.head}</div>`;
+        col.items.forEach(link => {
+          const resolved = tmResolveHref(link.href);
+          const badgeHTML = link.badge ? `<span class="tm-link-badge">${link.badge}</span>` : '';
+          html += `<a class="tm-link" href="${resolved}" onclick="tmCloseAll()"><i class="ph ${link.icon}"></i>${link.label}${badgeHTML}</a>`;
+        });
+        html += `</div>`;
+      });
+      // Mobile flat list
+      item.columns.forEach((col, ci) => {
+        if (ci > 0) html += `<div class="tm-divider"></div>`;
+        html += `<div class="tm-section-label">${col.head}</div>`;
+        col.items.forEach(link => {
+          const resolved = tmResolveHref(link.href);
+          const badgeHTML = link.badge ? `<span class="tm-link-badge">${link.badge}</span>` : '';
+          html += `<a class="tm-link" href="${resolved}" onclick="tmCloseAll()"><i class="ph ${link.icon}"></i>${link.label}${badgeHTML}</a>`;
+        });
+      });
+      html += `</div></div>`;
+    }
+  });
+
+  nav.innerHTML = html;
+
+  // Backdrop click closes
+  const bd = document.getElementById('tm-backdrop');
+  if (bd) bd.onclick = () => tmCloseAll();
+}
+
 function getBasePath() {
   const p = window.location.pathname;
   return p.includes('/pages/') ? '../' : '';
@@ -103,6 +259,9 @@ function initShell(pageKey) {
     <div class="tb-brand"><span style="font-size:1.125rem;font-weight:700;color:var(--text)">atonota</span><span style="font-size:0.625rem;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.06em">Studio</span><button id="wide-toggle-tb" title="Sidebar toggle"><span class="toggle-arrow"><i class="ph ph-caret-left" style="font-size:0.75rem"></i></span></button></div>
     <div class="tb-mid"><div class="tb-search" id="tb-search-btn" title="Ctrl+K / Cmd+K"><i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:var(--muted);flex-shrink:0"></i><span style="flex:1;font-size:0.8125rem;color:var(--muted)">Ara...</span><span style="font-size:0.625rem;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-family:monospace;flex-shrink:0">⌘K</span></div></div>
     <div class="tb-right"><button class="tb-btn notif-dot" title="Bildirimler" onclick="location.href='${base}pages/notifications.html'"><i class="ph ph-bell" style="font-size:1.25rem"></i></button><button class="tb-btn" id="theme-toggle-btn" title="Tema"><i class="ph ${theme==='dark'?'ph-sun':'ph-moon'}" style="font-size:1.25rem"></i></button><div class="avatar" id="avatar-btn">IK</div></div>`;
+
+  // Top Menu
+  buildTopMenu(key);
 
   // Rail
   let railHTML = '';
@@ -206,6 +365,6 @@ function initShell(pageKey) {
 
   window.addEventListener('keydown', (e) => {
     if((e.metaKey||e.ctrlKey) && e.key==='k') { e.preventDefault(); spotBd.classList.add('open'); document.getElementById('sp-input').focus(); }
-    if(e.key==='Escape') { spotBd.classList.remove('open'); udBd.classList.remove('show'); }
+    if(e.key==='Escape') { spotBd.classList.remove('open'); udBd.classList.remove('show'); tmCloseAll(); }
   });
 }

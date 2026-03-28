@@ -247,7 +247,10 @@
       </div>
 
       <!-- Top Keywords Table -->
-      <div x-show="activeTab === 'keywords'" class="card" style="padding:0;overflow:hidden">
+      <div x-show="activeTab === 'keywords'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['#','Keyword','Pozisyon','Hacim','Trafik','Trafik %','URL'], document.querySelectorAll('#main [x-show*=keywords] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>
@@ -290,7 +293,10 @@
       </div>
 
       <!-- Top Pages Table -->
-      <div x-show="activeTab === 'pages'" class="card" style="padding:0;overflow:hidden">
+      <div x-show="activeTab === 'pages'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['#','URL','Trafik','Keywordler','Backlinkler'], document.querySelectorAll('#main [x-show*=pages] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>
@@ -325,7 +331,10 @@
       </div>
 
       <!-- Competing Domains -->
-      <div x-show="activeTab === 'competitors'" class="card" style="padding:0;overflow:hidden">
+      <div x-show="activeTab === 'competitors'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
+        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['Domain','Ortak Keywordler','DR','Organik Trafik','Trend'], document.querySelectorAll('#main [x-show*=competitors] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>
