@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -21,10 +22,17 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ platformFilter: 'tumu', pacingFilter: 'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
-    <h1 class="page-title">Butce Yonetimi</h1>
-    <p class="page-sub">Cross-channel reklam butce takibi ve dagilimi</p>
+<div id="main" x-data="{ platformFilter: 'tumu', pacingFilter: 'tumu', dateRange: '7gun' }" x-effect="if(window.__updateSpendChart) window.__updateSpendChart(dateRange)">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Butce Yonetimi</h1>
+      <p class="page-sub">Cross-channel reklam butce takibi ve dagilimi</p>
+    </div>
+    <div style="display:flex;gap:4px">
+      <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
+        <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+      </template>
+    </div>
   </div>
 
   <!-- Stat Cards -->
@@ -51,9 +59,10 @@
   </div>
 
   <!-- Budget Allocation Table -->
-  <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
+  <div class="fade-in-d3 card" data-paginate="10" style="padding:0;overflow:hidden">
     <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
       <span class="section-label" style="margin-bottom:0">Platform Butce Dagilimi</span>
+      <button onclick="exportToCSV(['Platform','Gunluk Butce','Harcanan','Kalan','Pacing'], Array.from(document.querySelectorAll('[data-paginate=&quot;10&quot;] .r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'butce-dagilimi.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
       <div style="display:flex;gap:4px">
         <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'On Track',l:'On Track'},{v:'Over',l:'Over'},{v:'Under',l:'Under'}]">
           <button @click="pacingFilter = p.v" :style="pacingFilter === p.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:4px 10px;border-radius:6px;font-size:0.6875rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="p.l"></button>
@@ -121,16 +130,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const muted = '#7B7269';
   const text = '#F2EDE5';
 
-  const days = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    days.push(d.getDate() + ' ' + ['Oca','Sub','Mar','Nis','May','Haz','Tem','Agu','Eyl','Eki','Kas','Ara'][d.getMonth()]);
+  const spendConfigs = [
+    {key:'meta',base:400,variance:200},
+    {key:'tiktok',base:200,variance:100},
+    {key:'linkedin',base:100,variance:50}
+  ];
+
+  function buildSpendData(rangeDays) {
+    const days = parseInt(rangeDays) || 7;
+    return generateTimeSeriesForRange(days, spendConfigs);
   }
 
-  const meta    = [3100, 3250, 2980, 3200, 3150, 3300, 2940];
-  const tiktok  = [2050, 2200, 2400, 2100, 2300, 2150, 2380];
-  const linkedin= [1500, 1400, 1600, 1550, 1200, 1300, 1120];
+  const initData = buildSpendData(7);
 
   const chart = echarts.init(document.getElementById('spendChart'));
   chart.setOption({
@@ -146,15 +157,20 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     legend: { data: ['Meta', 'TikTok', 'LinkedIn'], textStyle: { color: muted, fontSize: 11 }, top: 0, right: 0 },
     grid: { left: 56, right: 16, top: 32, bottom: 32 },
-    xAxis: { type: 'category', data: days, axisLine: { lineStyle: { color: border } }, axisLabel: { color: muted, fontSize: 11 }, axisTick: { show: false } },
+    xAxis: { type: 'category', data: initData.labels, axisLine: { lineStyle: { color: border } }, axisLabel: { color: muted, fontSize: 11 }, axisTick: { show: false } },
     yAxis: { type: 'value', splitLine: { lineStyle: { color: border, type: 'dashed' } }, axisLabel: { color: muted, fontSize: 11, formatter: v => '₺' + (v/1000).toFixed(0) + 'K' } },
     series: [
-      { name: 'Meta', type: 'bar', stack: 'spend', data: meta, itemStyle: { color: '#3b82f6', borderRadius: [0,0,0,0] } },
-      { name: 'TikTok', type: 'bar', stack: 'spend', data: tiktok, itemStyle: { color: '#ef4444' } },
-      { name: 'LinkedIn', type: 'bar', stack: 'spend', data: linkedin, itemStyle: { color: '#14b8a6', borderRadius: [4,4,0,0] } }
+      { name: 'Meta', type: 'bar', stack: 'spend', data: initData.series.meta, itemStyle: { color: '#3b82f6', borderRadius: [0,0,0,0] } },
+      { name: 'TikTok', type: 'bar', stack: 'spend', data: initData.series.tiktok, itemStyle: { color: '#ef4444' } },
+      { name: 'LinkedIn', type: 'bar', stack: 'spend', data: initData.series.linkedin, itemStyle: { color: '#14b8a6', borderRadius: [4,4,0,0] } }
     ]
   });
   window.addEventListener('resize', () => chart.resize());
+
+  window.__updateSpendChart = function(range) {
+    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
+    updateChartsForRange(days, { spendChart: chart }, spendConfigs);
+  };
 });
 </script>
 </body>

@@ -60,6 +60,7 @@ function getCurrentKey() {
 
 function initShell(pageKey) {
   const key = pageKey || getCurrentKey();
+  window.__SHELL_KEY = key; // For empty state auto-detection
   const base = getBasePath();
   let theme = localStorage.getItem('atonota-theme') || 'dark';
   if (theme === 'dark') document.documentElement.classList.add('dark');

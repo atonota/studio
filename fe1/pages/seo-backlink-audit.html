@@ -121,10 +121,13 @@
   </div>
 
   <!-- Toxic Links Table -->
-  <div class="fade-in-d2 card" style="padding:0;overflow:hidden;margin-bottom:24px">
+  <div class="fade-in-d2 card" data-paginate="20" style="padding:0;overflow:hidden;margin-bottom:24px">
     <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Toksik Linkler</span>
-      <span style="font-size:0.75rem;color:var(--muted)">148 toksik link bulundu</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('toksik-linkler',['Domain','DR','Toksisite','Sebep'])">CSV Indir</button>
+        <span style="font-size:0.75rem;color:var(--muted)">148 toksik link bulundu</span>
+      </div>
     </div>
     <div style="overflow-x:auto">
       <table class="r-table">

@@ -344,4 +344,93 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
   `);
+
+  /* ── AUTO-PAGINATION ──────────────────────────────
+     Automatically adds pagination to any table inside an element
+     with [data-paginate] attribute.
+     Usage: <div data-paginate="20"> ... <table class="r-table"> ... </div>
+     No Alpine.js needed — pure vanilla JS.
+  ───────────────────────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-paginate]').forEach(container => {
+      const perPage = parseInt(container.dataset.paginate) || 20;
+      const table = container.querySelector('table');
+      if (!table) return;
+      const tbody = table.querySelector('tbody');
+      if (!tbody) return;
+      const allRows = Array.from(tbody.querySelectorAll('tr'));
+      if (allRows.length <= perPage) return; // no need
+
+      let page = 1;
+      const totalPages = Math.ceil(allRows.length / perPage);
+
+      // Create pagination bar
+      const pBar = document.createElement('div');
+      pBar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--border);font-size:0.8125rem;color:var(--muted)';
+      container.appendChild(pBar);
+
+      function render() {
+        const start = (page-1)*perPage;
+        const end = Math.min(start+perPage, allRows.length);
+        allRows.forEach((r,i) => r.style.display = (i>=start && i<end) ? '' : 'none');
+        pBar.innerHTML = `
+          <span>${start+1}-${end} / ${allRows.length} sonuc</span>
+          <div style="display:flex;gap:6px">
+            <button onclick="this.closest('[data-paginate]').__pgPrev()" ${page<=1?'disabled':''} style="padding:6px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-family:inherit;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);${page<=1?'opacity:0.4;cursor:not-allowed':''}">Onceki</button>
+            <span style="padding:6px 8px;font-size:0.75rem;color:var(--text)">${page}/${totalPages}</span>
+            <button onclick="this.closest('[data-paginate]').__pgNext()" ${page>=totalPages?'disabled':''} style="padding:6px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-family:inherit;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);${page>=totalPages?'opacity:0.4;cursor:not-allowed':''}">Sonraki</button>
+          </div>`;
+      }
+      container.__pgPrev = () => { if(page>1){page--;render()} };
+      container.__pgNext = () => { if(page<totalPages){page++;render()} };
+      render();
+    });
+  });
+
+  /* ── EMPTY STATE ──────────────────────────────────
+     Auto-inject empty state when Alpine.js filtered lists are empty.
+     Also provides a global helper for pages to use.
+     Usage in HTML:
+       <div x-show="filtered.length === 0" class="empty-state">
+         ... already handled by CSS class .empty-state in tokens.css
+       </div>
+
+     This auto-handler injects empty states into tables with 0 <tr> in <tbody>
+     (static pages without Alpine.js) and into [data-empty] containers.
+  ───────────────────────────────────────────────── */
+
+  // Empty state messages per page section
+  const EMPTY_MESSAGES = {
+    seo:         {icon:'ph-chart-line-up', title:'Henuz SEO verisi yok', desc:'Bir workspace ekleyin ve ilk site denetimini baslatin.', action:'Workspace Ekle', href:'workspace-create.html'},
+    content:     {icon:'ph-article', title:'Henuz icerik analiz edilmedi', desc:'Bir workspace ekleyerek icerik analizi baslatin.', action:'Workspace Ekle', href:'workspace-create.html'},
+    ads:         {icon:'ph-megaphone', title:'Henuz reklam hesabi bagli degil', desc:'Bir reklam platformu baglayarak kampanya yonetimine baslayin.', action:'Hesap Bagla', href:'ads-accounts.html'},
+    analytics:   {icon:'ph-chart-bar', title:'Henuz analitik verisi yok', desc:'Google Analytics veya atonota pixel entegrasyonunu yapin.', action:'Entegrasyon', href:'adapters.html'},
+    competitors: {icon:'ph-binoculars', title:'Henuz rakip eklenmedi', desc:'Rakip domain ekleyerek rekabet analizine baslayin.', action:'Rakip Ekle', href:'competitors.html'},
+    security:    {icon:'ph-shield-check', title:'Henuz guvenlik taramasi yapilmadi', desc:'Ilk guvenlik taramasini baslatin.', action:'Tarama Baslat', href:'security-vulnerabilities.html'},
+    adapters:    {icon:'ph-plugs-connected', title:'Henuz platform bagli degil', desc:'83+ platformdan birini baglayarak baslayin.', action:'Platform Bagla', href:'adapter-connect.html'},
+    reports:     {icon:'ph-file-text', title:'Henuz rapor olusturulmadi', desc:'Ilk raporunuzu AI ile olusturun.', action:'Rapor Olustur', href:'report-create.html'},
+    audit:       {icon:'ph-clock-counter-clockwise', title:'Henuz audit kaydi yok', desc:'Sistem kullanildikca olaylar burada listelenir.'},
+    default:     {icon:'ph-database', title:'Veri bulunamadi', desc:'Filtreleri degistirin veya yeni veri ekleyin.'},
+  };
+
+  // Auto-inject into empty static tables
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('table.r-table, table').forEach(table => {
+      const tbody = table.querySelector('tbody');
+      if (tbody && tbody.querySelectorAll('tr').length === 0) {
+        const cols = table.querySelectorAll('thead th').length || 3;
+        const key = window.__SHELL_KEY || 'default';
+        const msg = EMPTY_MESSAGES[key] || EMPTY_MESSAGES.default;
+        const inPages = window.location.pathname.includes('/pages/');
+        const actionHref = msg.href ? (inPages ? msg.href : 'pages/' + msg.href) : '';
+        tbody.innerHTML = `<tr><td colspan="${cols}" style="padding:0"><div class="empty-state"><i class="ph ${msg.icon}"></i><h3>${msg.title}</h3><p>${msg.desc}</p>${msg.action ? `<a href="${actionHref}" class="btn-primary" style="font-size:0.8125rem;padding:8px 16px">${msg.action}</a>` : ''}</div></td></tr>`;
+      }
+    });
+  });
+
+  // Global helper function for Alpine.js pages
+  window.emptyStateHTML = function(key) {
+    const msg = EMPTY_MESSAGES[key] || EMPTY_MESSAGES.default;
+    return `<div class="empty-state"><i class="ph ${msg.icon}"></i><h3>${msg.title}</h3><p>${msg.desc}</p></div>`;
+  };
 });

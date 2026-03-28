@@ -30,6 +30,8 @@
   perPage: 20,
   searchQuery: '',
 
+  seriesConfigs: [{key:'pos1_3',base:20,variance:10},{key:'pos4_10',base:55,variance:15},{key:'pos11_20',base:80,variance:20},{key:'pos21_50',base:110,variance:40},{key:'pos51_100',base:150,variance:50}],
+  updateCharts() { updateChartsForRange(this.dateRange, window._chartInstances || {}, this.seriesConfigs); },
   kpiData: {top3:24, top10:87, top50:342, top100:891},
   visibilityScore: 67,
 
@@ -161,6 +163,8 @@
         {name:'51-100', type:'bar', stack:'pos', data:gen(100,200), itemStyle:{color:t.red}},
       ]
     });
+    window._chartInstances = window._chartInstances || {};
+    window._chartInstances.dist = c;
     window.addEventListener('resize', () => c.resize());
   },
 
@@ -224,7 +228,7 @@
     <!-- Date Range -->
     <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border)">
       <template x-for="dr in [{id:'7',label:'7 Gun'},{id:'30',label:'30 Gun'},{id:'90',label:'90 Gun'}]" :key="dr.id">
-        <button @click="dateRange = dr.id"
+        <button @click="dateRange = dr.id; updateCharts()"
           :style="dateRange === dr.id
             ? 'padding:5px 12px;border-radius:7px;font-size:0.6875rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit'
             : 'padding:5px 12px;border-radius:7px;font-size:0.6875rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit'"

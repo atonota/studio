@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -52,8 +53,11 @@
   </div>
 
   <!-- Campaign Table -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
-    <span class="section-label">Kampanyalar</span>
+  <div class="fade-in-d2 card" data-paginate="10" style="margin-bottom:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
+      <span class="section-label">Kampanyalar</span>
+      <button onclick="exportToCSV(['Kampanya Adi','Hedef','Durum','Gunluk Butce','Harcama','ROAS'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'linkedin-kampanyalar.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
+    </div>
     <table class="r-table">
       <thead>
         <tr>

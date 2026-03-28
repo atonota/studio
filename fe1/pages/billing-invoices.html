@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -27,8 +28,11 @@
     <p class="page-sub">Odeme gecmisi ve fatura arsivi</p>
   </div>
 
-  <div class="fade-in-d1 card">
-    <span class="section-label">Fatura Gecmisi</span>
+  <div class="fade-in-d1 card" data-paginate="10">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
+      <span class="section-label">Fatura Gecmisi</span>
+      <button onclick="exportToCSV(['Donem','Tutar','Durum','Fatura'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'faturalar.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
+    </div>
     <table class="r-table">
       <thead>
         <tr>

@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -21,7 +22,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ platform:'tumu', range:'7gun' }">
+<div id="main" x-data="{ platform:'tumu', range:'7gun' }" x-effect="if(window.__updateTrendChart) window.__updateTrendChart(range)">
   <div class="fade-in" style="margin-bottom:24px">
     <h1 class="page-title">GEO Intelligence</h1>
     <p class="page-sub">Generative Engine Optimization — AI platformlarinda gorunurluk analizi</p>
@@ -72,25 +73,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const txtColor = '#F2EDE5';
   const mutedColor = '#7B7269';
   const borderColor = '#3C342C';
-  const weeks = ['H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12'];
+
+  const trendConfigs = [
+    {key:'chatgpt',base:4,variance:3},
+    {key:'gemini',base:3,variance:2},
+    {key:'perplexity',base:2,variance:2},
+    {key:'claude',base:1,variance:1},
+    {key:'copilot',base:1,variance:1},
+    {key:'grok',base:0,variance:1}
+  ];
+  const seriesColors = ['#22c55e','#3b82f6','#a855f7','#C2410C','#eab308','#7B7269'];
+  const seriesNames = ['ChatGPT','Gemini','Perplexity','Claude','Copilot','Grok'];
+  const initData = generateTimeSeriesForRange(7, trendConfigs);
 
   const cTrend = echarts.init(document.getElementById('chart-trend'));
   cTrend.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
     legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:12,itemHeight:3},
     grid:{left:40,right:16,top:16,bottom:60},
-    xAxis:{type:'category',data:weeks,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10}},
+    xAxis:{type:'category',data:initData.labels,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
-    series:[
-      {name:'ChatGPT',type:'line',data:[2,3,3,4,3,5,4,5,6,5,7,8],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#22c55e',width:2},itemStyle:{color:'#22c55e'}},
-      {name:'Gemini',type:'line',data:[1,2,2,3,2,3,3,4,4,5,5,6],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#3b82f6',width:2},itemStyle:{color:'#3b82f6'}},
-      {name:'Perplexity',type:'line',data:[1,1,2,2,2,3,3,3,4,4,4,5],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#a855f7',width:2},itemStyle:{color:'#a855f7'}},
-      {name:'Claude',type:'line',data:[0,1,1,1,1,2,2,2,2,3,3,3],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#C2410C',width:2},itemStyle:{color:'#C2410C'}},
-      {name:'Copilot',type:'line',data:[0,0,0,1,1,1,1,1,1,1,1,1],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#eab308',width:2},itemStyle:{color:'#eab308'}},
-      {name:'Grok',type:'line',data:[0,0,0,0,0,0,0,0,0,0,0,0],smooth:true,symbol:'circle',symbolSize:4,lineStyle:{color:'#7B7269',width:2},itemStyle:{color:'#7B7269'}}
-    ]
+    series: trendConfigs.map((cfg, i) => ({
+      name: seriesNames[i],
+      type:'line',
+      data: initData.series[cfg.key],
+      smooth:true,
+      symbol:'circle',
+      symbolSize:4,
+      lineStyle:{color:seriesColors[i],width:2},
+      itemStyle:{color:seriesColors[i]}
+    }))
   });
   window.addEventListener('resize', () => cTrend.resize());
+
+  window.__updateTrendChart = function(range) {
+    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
+    updateChartsForRange(days, { trend: cTrend }, trendConfigs);
+  };
 });
 </script>
 </body>

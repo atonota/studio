@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -37,9 +38,10 @@
   </div>
 
   <!-- Adapter Status List -->
-  <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+  <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Adaptor Durum Listesi</span>
+      <button onclick="exportToCSV(['Adaptor','Durum','Uptime','Son Kontrol','Latency'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'adaptor-durum.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>

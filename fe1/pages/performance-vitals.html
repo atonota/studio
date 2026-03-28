@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -21,7 +22,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ metricTab: 'tumu', dateRange: '30gun' }">
+<div id="main" x-data="{ metricTab: 'tumu', dateRange: '30gun' }" x-effect="if(window.__updateVitalsChart) window.__updateVitalsChart(dateRange)">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Core Web Vitals Detay</h1>
@@ -122,20 +123,50 @@ document.addEventListener('DOMContentLoaded', function() {
   const el = document.getElementById('vitals-chart');
   if (!el || typeof echarts === 'undefined') return;
   const chart = echarts.init(el);
-  const days = Array.from({length:30}, (_,i) => (i+1) + ' Mar');
+
+  const vitalsConfigs = [
+    {key:'lcp',base:1800,variance:400},
+    {key:'inp',base:180,variance:50},
+    {key:'cls',base:4,variance:2}
+  ];
+
+  function buildVitalsData(days) {
+    const data = generateTimeSeriesForRange(days, vitalsConfigs);
+    return {
+      labels: data.labels,
+      lcp: data.series.lcp.map(v => +(v/1000).toFixed(1)),
+      inp: data.series.inp.map(v => +(v/10).toFixed(1)),
+      cls: data.series.cls
+    };
+  }
+
+  const init = buildVitalsData(30);
   chart.setOption({
     tooltip: { trigger: 'axis' },
     legend: { data: ['LCP (s)', 'INP (ms/10)', 'CLS (x100)'], bottom: 0, textStyle: { fontSize: 11 } },
     grid: { top: 20, right: 20, bottom: 40, left: 50 },
-    xAxis: { type: 'category', data: days, axisLabel: { fontSize: 10, interval: 4 } },
+    xAxis: { type: 'category', data: init.labels, axisLabel: { fontSize: 10, interval: 4 } },
     yAxis: { type: 'value', axisLabel: { fontSize: 10 } },
     series: [
-      { name: 'LCP (s)', type: 'line', smooth: true, data: [2.1,2.0,2.0,1.9,2.0,1.9,1.8,1.9,1.8,1.8,1.9,1.8,1.7,1.8,1.8,1.9,1.8,1.7,1.8,1.8,1.7,1.8,1.8,1.7,1.8,1.8,1.7,1.8,1.8,1.8], lineStyle: { color: '#22c55e' }, itemStyle: { color: '#22c55e' } },
-      { name: 'INP (ms/10)', type: 'line', smooth: true, data: [22,21,20,20,19,19,19,18,19,18,18,19,18,18,18,19,18,18,18,18,17,18,18,17,18,18,17,18,18,18], lineStyle: { color: '#eab308' }, itemStyle: { color: '#eab308' } },
-      { name: 'CLS (x100)', type: 'line', smooth: true, data: [8,7,7,6,6,5,5,5,5,5,4,4,5,4,4,4,5,4,4,4,4,4,4,4,4,4,4,4,4,4], lineStyle: { color: '#3b82f6' }, itemStyle: { color: '#3b82f6' } }
+      { name: 'LCP (s)', type: 'line', smooth: true, data: init.lcp, lineStyle: { color: '#22c55e' }, itemStyle: { color: '#22c55e' } },
+      { name: 'INP (ms/10)', type: 'line', smooth: true, data: init.inp, lineStyle: { color: '#eab308' }, itemStyle: { color: '#eab308' } },
+      { name: 'CLS (x100)', type: 'line', smooth: true, data: init.cls, lineStyle: { color: '#3b82f6' }, itemStyle: { color: '#3b82f6' } }
     ]
   });
   window.addEventListener('resize', () => chart.resize());
+
+  window.__updateVitalsChart = function(range) {
+    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
+    const d = buildVitalsData(days);
+    chart.setOption({
+      xAxis: { data: d.labels },
+      series: [
+        { data: d.lcp },
+        { data: d.inp },
+        { data: d.cls }
+      ]
+    });
+  };
 });
 </script>
 </body>

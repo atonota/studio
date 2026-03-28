@@ -180,6 +180,65 @@ function paginate(data, page, perPage=20) {
   };
 }
 
+/* Chart reactivity: date range pills → chart data update.
+   Usage in Alpine.js x-data:
+     range: '30',
+     chartInstances: {},
+     updateCharts() { updateChartsForRange(this.range, this.chartInstances); }
+   Then on pill click: @click="range='7'; updateCharts()"
+*/
+function generateTimeSeriesForRange(rangeDays, seriesConfigs) {
+  const days = parseInt(rangeDays) || 30;
+  const now = new Date();
+  const labels = [];
+  const series = {};
+  seriesConfigs.forEach(s => { series[s.key] = []; });
+
+  for (let i = days; i >= 0; i--) {
+    const d = new Date(now - i * 86400000);
+    const dow = d.getDay();
+    const weekendFactor = (dow === 0 || dow === 6) ? 0.6 : 1;
+    const trendFactor = 1 + (days - i) * 0.003;
+
+    if (days <= 7) {
+      labels.push(d.toLocaleDateString('tr-TR', {weekday:'short', day:'numeric'}));
+    } else if (days <= 30) {
+      labels.push(d.toLocaleDateString('tr-TR', {day:'numeric', month:'short'}));
+    } else {
+      labels.push(d.toLocaleDateString('tr-TR', {day:'numeric', month:'short'}));
+    }
+
+    seriesConfigs.forEach(s => {
+      const base = s.base || 500;
+      const variance = s.variance || 200;
+      const val = Math.floor((base + Math.random() * variance) * weekendFactor * trendFactor);
+      series[s.key].push(val);
+    });
+  }
+  return { labels, series };
+}
+
+function updateChartsForRange(rangeDays, chartInstances, seriesConfigs) {
+  const data = generateTimeSeriesForRange(rangeDays, seriesConfigs);
+  Object.keys(chartInstances).forEach(chartId => {
+    const chart = chartInstances[chartId];
+    if (!chart) return;
+    const opt = chart.getOption();
+    if (opt.xAxis && opt.xAxis[0]) {
+      opt.xAxis[0].data = data.labels;
+    }
+    if (opt.series) {
+      opt.series.forEach((s, i) => {
+        const configKey = seriesConfigs[i] ? seriesConfigs[i].key : null;
+        if (configKey && data.series[configKey]) {
+          s.data = data.series[configKey];
+        }
+      });
+    }
+    chart.setOption(opt);
+  });
+}
+
 function sparkline(containerId, data, color='#C2410C', w=80, h=28) {
   const c = echarts.init(document.getElementById(containerId), null, {width:w, height:h});
   c.setOption({

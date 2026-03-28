@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -21,7 +22,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ dateRange: '30gun' }">
+<div id="main" x-data="{ dateRange: '30gun' }" x-effect="if(window.__updateCwvChart) window.__updateCwvChart(dateRange)">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Performans</h1>
@@ -77,30 +78,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const txtColor = '#F2EDE5';
   const mutedColor = '#7B7269';
   const borderColor = '#3C342C';
-  const days = Array.from({length:30}, (_,i) => (i+1) + ' Mar');
+
+  const cwvConfigs = [
+    {key:'lcp',base:1800,variance:400},
+    {key:'inp',base:180,variance:50},
+    {key:'cls',base:4,variance:2}
+  ];
+  const initData = generateTimeSeriesForRange(30, cwvConfigs);
+  // Scale: LCP in ms->s, CLS raw is *100 display
+  const lcpScaled = initData.series.lcp.map(v => +(v/1000).toFixed(2));
+  const clsScaled = initData.series.cls.map(v => +(v/100).toFixed(3));
 
   const cCwv = echarts.init(document.getElementById('chart-cwv'));
-  const lcpData = [2.1,2.0,1.9,2.0,1.9,1.8,1.9,1.8,1.7,1.8,1.9,1.8,1.7,1.8,1.8,1.7,1.8,1.7,1.8,1.8,1.7,1.8,1.9,1.8,1.7,1.8,1.8,1.7,1.8,1.8];
-  const inpData = [210,205,200,195,198,192,188,190,185,188,182,185,180,182,178,180,182,178,180,182,178,180,182,178,180,182,180,178,180,180];
-  const clsData = [0.08,0.07,0.07,0.06,0.06,0.05,0.06,0.05,0.05,0.04,0.05,0.04,0.04,0.05,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.05,0.04,0.04,0.04,0.04,0.04,0.04,0.04];
-
   cCwv.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
     legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:12,itemHeight:3},
     grid:{left:50,right:50,top:16,bottom:40},
-    xAxis:{type:'category',data:days,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
+    xAxis:{type:'category',data:initData.labels,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
     yAxis:[
       {type:'value',name:'LCP (s) / CLS',nameTextStyle:{color:mutedColor,fontSize:10},splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
       {type:'value',name:'INP (ms)',nameTextStyle:{color:mutedColor,fontSize:10},splitLine:{show:false},axisLabel:{color:mutedColor,fontSize:10}}
     ],
     series:[
-      {name:'LCP (s)',type:'line',data:lcpData,smooth:true,symbol:'none',lineStyle:{color:'#22c55e',width:2},yAxisIndex:0},
-      {name:'INP (ms)',type:'line',data:inpData,smooth:true,symbol:'none',lineStyle:{color:'#eab308',width:2},yAxisIndex:1},
-      {name:'CLS',type:'line',data:clsData,smooth:true,symbol:'none',lineStyle:{color:'#3b82f6',width:2},yAxisIndex:0}
+      {name:'LCP (s)',type:'line',data:lcpScaled,smooth:true,symbol:'none',lineStyle:{color:'#22c55e',width:2},yAxisIndex:0},
+      {name:'INP (ms)',type:'line',data:initData.series.inp,smooth:true,symbol:'none',lineStyle:{color:'#eab308',width:2},yAxisIndex:1},
+      {name:'CLS',type:'line',data:clsScaled,smooth:true,symbol:'none',lineStyle:{color:'#3b82f6',width:2},yAxisIndex:0}
     ]
   });
 
   window.addEventListener('resize', () => cCwv.resize());
+
+  window.__updateCwvChart = function(range) {
+    const days = range === '7gun' ? 7 : range === '90gun' ? 90 : 30;
+    const data = generateTimeSeriesForRange(days, cwvConfigs);
+    cCwv.setOption({
+      xAxis: { data: data.labels },
+      series: [
+        { data: data.series.lcp.map(v => +(v/1000).toFixed(2)) },
+        { data: data.series.inp },
+        { data: data.series.cls.map(v => +(v/100).toFixed(3)) }
+      ]
+    });
+  };
 });
 </script>
 </body>

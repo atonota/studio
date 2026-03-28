@@ -85,12 +85,22 @@
   },
   formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1) + 'K' : n; },
 
+  _topicsChart: null,
+
   initTopicsChart() {
     const el = document.getElementById('topics-chart');
     if (!el) return;
     const t = getChartTheme();
+    this._topicsChart = echarts.init(el);
+    this.refreshTopicsChart(t);
+    window.addEventListener('resize', () => { if(this._topicsChart) this._topicsChart.resize(); });
+  },
+
+  refreshTopicsChart(t) {
+    if (!this._topicsChart) return;
+    if (!t) t = getChartTheme();
     const topicCounts = {};
-    this.allRows.forEach(r => {
+    this.filtered.forEach(r => {
       const topic = r.title.split(' ').slice(0,2).join(' ');
       topicCounts[topic] = (topicCounts[topic] || 0) + 1;
     });
@@ -98,8 +108,7 @@
     const names = sorted.map(s => s[0]).reverse();
     const values = sorted.map(s => s[1]).reverse();
     const colors = ['#C2410C','#3b82f6','#a855f7','#eab308','#22c55e'];
-    const c = echarts.init(el);
-    c.setOption({
+    this._topicsChart.setOption({
       tooltip:{ trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11} },
       grid:{ left:140, right:40, top:8, bottom:8 },
       xAxis:{ type:'value', axisLabel:{color:t.muted,fontSize:10}, splitLine:{lineStyle:{color:t.border,type:'dashed'}} },
@@ -109,8 +118,7 @@
         itemStyle:{ borderRadius:[0,4,4,0], color:function(p){ return colors[p.dataIndex % colors.length]; } },
         label:{ show:true, position:'right', color:t.text, fontSize:11, formatter:'{c} makale' }
       }]
-    });
-    window.addEventListener('resize', () => c.resize());
+    }, true);
   }
 }">
   <!-- Header -->
@@ -162,7 +170,7 @@
   </div>
 
   <!-- Top Topics Chart -->
-  <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px" x-init="$nextTick(() => initTopicsChart())">
+  <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px" x-init="$nextTick(() => initTopicsChart())" x-effect="refreshTopicsChart()">
     <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">En Populer Konular</div>
     <div id="topics-chart" style="width:100%;height:220px"></div>
   </div>

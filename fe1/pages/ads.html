@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -21,7 +22,7 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ platform: 'tumu', dateRange: '7gun' }">
+<div id="main" x-data="{ platform: 'tumu', dateRange: '7gun' }" x-effect="if(window.__updateTreemap) window.__updateTreemap(dateRange)">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Reklamlar</h1>
@@ -138,6 +139,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const txtColor = '#F2EDE5';
   const borderColor = '#3C342C';
 
+  const treemapBase = [
+    {name:'Meta Ads',itemStyle:{color:'#3b82f6'},children:[
+      {name:'Bahar Kampanyasi',base:9800},{name:'Retargeting',base:7200},{name:'Brand Awareness',base:5340}
+    ]},
+    {name:'TikTok Ads',itemStyle:{color:'#a855f7'},children:[
+      {name:'Gen-Z Kampanya',base:11200},{name:'Urun Tanitim',base:7280}
+    ]},
+    {name:'LinkedIn Ads',itemStyle:{color:'#22c55e'},children:[
+      {name:'B2B Lead Gen',base:5400},{name:'Webinar Promo',base:2500}
+    ]}
+  ];
+
+  function buildTreemapData(rangeDays) {
+    const mult = rangeDays === '7gun' ? 0.25 : rangeDays === '90gun' ? 3 : 1;
+    return treemapBase.map(g => ({
+      ...g,
+      children: g.children.map(c => ({
+        name: c.name,
+        value: Math.floor(c.base * mult * (0.85 + Math.random() * 0.3))
+      }))
+    }));
+  }
+
   const cTree = echarts.init(document.getElementById('chart-treemap'));
   cTree.setOption({
     tooltip:{backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12},formatter:function(p){return p.name+': ₺'+p.value.toLocaleString('tr-TR')}},
@@ -147,21 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
       breadcrumb:{show:false},
       levels:[{itemStyle:{borderColor:borderColor,borderWidth:2,gapWidth:2}},{itemStyle:{borderColor:borderColor,borderWidth:1,gapWidth:1},colorSaturation:[0.4,0.7]}],
       label:{show:true,color:txtColor,fontSize:11,formatter:'{b}\n₺{c}'},
-      data:[
-        {name:'Meta Ads',itemStyle:{color:'#3b82f6'},children:[
-          {name:'Bahar Kampanyasi',value:9800},{name:'Retargeting',value:7200},{name:'Brand Awareness',value:5340}
-        ]},
-        {name:'TikTok Ads',itemStyle:{color:'#a855f7'},children:[
-          {name:'Gen-Z Kampanya',value:11200},{name:'Urun Tanitim',value:7280}
-        ]},
-        {name:'LinkedIn Ads',itemStyle:{color:'#22c55e'},children:[
-          {name:'B2B Lead Gen',value:5400},{name:'Webinar Promo',value:2500}
-        ]}
-      ]
+      data: buildTreemapData('7gun')
     }]
   });
 
   window.addEventListener('resize', () => cTree.resize());
+
+  window.__updateTreemap = function(range) {
+    cTree.setOption({ series: [{ data: buildTreemapData(range) }] });
+  };
 });
 </script>
 </body>

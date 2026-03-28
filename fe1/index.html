@@ -9,6 +9,7 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <link rel="stylesheet" href="css/tokens.css">
 </head>
 <body>
@@ -19,14 +20,22 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main">
+<div id="main" x-data="{
+  range: '30',
+  seriesConfigs: [{key:'organic',base:800,variance:400},{key:'paid',base:200,variance:150},{key:'referral',base:150,variance:100},{key:'direct',base:100,variance:80}],
+  updateCharts() { updateChartsForRange(this.range, window._chartInstances || {}, this.seriesConfigs); }
+}">
   <!-- Header -->
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Dashboard</h1>
       <p class="page-sub">Platform genel gorunumu</p>
     </div>
-    <div class="date-range"><i class="ph ph-calendar-blank"></i><span>01 Mar — 28 Mar 2026</span><i class="ph ph-caret-down" style="font-size:0.75rem"></i></div>
+    <div style="display:flex;gap:4px">
+      <template x-for="r in [{v:'7',l:'7 Gun'},{v:'30',l:'30 Gun'},{v:'90',l:'90 Gun'}]">
+        <button @click="range = r.v; updateCharts()" :style="range === r.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="r.l"></button>
+      </template>
+    </div>
   </div>
 
   <!-- Stat Cards -->
@@ -168,6 +177,7 @@
 
 <div id="footbar"></div>
 
+<script src="js/mock-data.js"></script>
 <script src="js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('dashboard'));</script>
 <script>
@@ -219,6 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     series:[{type:'bar',data:[1240,1380,1190,1420,1510,980,860],barWidth:'40%',itemStyle:{color:'#C2410C',borderRadius:[4,4,0,0]}}]
   });
+
+  // Store chart instance for Alpine reactivity
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.traffic = cTraffic;
 
   // Resize
   window.addEventListener('resize', () => { cTraffic.resize(); cSources.resize(); cDaily.resize(); });

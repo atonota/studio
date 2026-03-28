@@ -33,7 +33,10 @@
         <p class="page-sub">28 Mart 2026 — atonota.com</p>
       </div>
     </div>
-    <button class="btn-primary" @click="$store.toast.show('Rapor indiriliyor...','info')"><i class="ph ph-file-pdf"></i> Rapor Indir</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('seo-denetim',['Kategori','Ciddiyet','Sorun','Sayfa','Oneri'])">CSV Indir</button>
+      <button class="btn-primary" @click="$store.toast.show('Rapor indiriliyor...','info')"><i class="ph ph-file-pdf"></i> Rapor Indir</button>
+    </div>
   </div>
 
   <!-- Severity Filter -->
@@ -78,7 +81,7 @@
   </div>
 
   <!-- Teknik SEO Issues -->
-  <div class="fade-in-d3 card" style="margin-bottom:24px">
+  <div class="fade-in-d3 card" data-paginate="10" style="margin-bottom:24px">
     <div @click="sections.teknik = !sections.teknik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:12px">
       <span class="section-label" style="margin-bottom:0">Teknik SEO Sorunlari</span>
       <i class="ph" :class="sections.teknik ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>

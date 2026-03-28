@@ -21,7 +21,12 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ dateRange: '30gun', sourceFilter: 'tumu' }">
+<div id="main" x-data="{
+  dateRange: '30gun',
+  sourceFilter: 'tumu',
+  seriesConfigs: [{key:'organic',base:500,variance:200},{key:'paid',base:220,variance:100},{key:'referral',base:140,variance:60},{key:'direct',base:90,variance:40}],
+  updateCharts() { const days = this.dateRange.replace('gun',''); updateChartsForRange(days, window._chartInstances || {}, this.seriesConfigs); }
+}">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Analitik</h1>
@@ -33,7 +38,7 @@
       </template>
       <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
       <template x-for="d in [{v:'7gun',l:'7G'},{v:'30gun',l:'30G'},{v:'90gun',l:'90G'}]">
-        <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
       </template>
     </div>
   </div>
@@ -128,6 +133,7 @@
 </div>
 
 <div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('analytics'));</script>
 <script>
@@ -151,6 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
       mkArea('Direct','rgba(234,179,8,0.5)',[80,85,82,90,88,75,70,100,105,110,115,100,95,110,115,120,110,118,125,115,105,130,135,130,120,140,145,140,130,150])
     ]
   });
+
+  // Store chart instance for Alpine reactivity
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.stacked = cStacked;
 
   window.addEventListener('resize', () => cStacked.resize());
 });

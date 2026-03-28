@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -62,11 +63,12 @@
   </div>
 
   <!-- Mock AI Response -->
-  <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
+  <div class="fade-in-d3 card" data-paginate="10" style="padding:0;overflow:hidden">
     <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
       <i class="ph ph-robot" style="font-size:1.125rem;color:var(--accent)"></i>
       <span class="section-label" style="margin-bottom:0">AI Yaniti</span>
-      <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600;margin-left:auto">0.8 sn</span>
+      <button onclick="exportToCSV(['#','Sayfa','Oturum','Degisim'], Array.from(this.closest('[data-paginate]').querySelectorAll('table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'ai-sorgu-sonuclari.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;margin-left:auto"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
+      <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600;margin-left:8px">0.8 sn</span>
     </div>
     <div style="padding:20px">
       <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">Sorgu: "Gecen ay en cok trafik alan 5 sayfa?"</div>

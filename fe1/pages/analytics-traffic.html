@@ -20,7 +20,12 @@
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{ source: 'tumu', dateRange: '30gun' }">
+<div id="main" x-data="{
+  source: 'tumu',
+  dateRange: '30gun',
+  seriesConfigs: [{key:'organic',base:600,variance:200},{key:'paid',base:250,variance:80},{key:'referral',base:200,variance:50},{key:'direct',base:140,variance:30}],
+  updateCharts() { const days = this.dateRange.replace('gun',''); updateChartsForRange(days, window._chartInstances || {}, this.seriesConfigs); }
+}">
   <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
     <div>
       <h1 class="page-title">Trafik Detay</h1>
@@ -29,6 +34,10 @@
     <div style="display:flex;gap:4px">
       <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'organik',l:'Organik'},{v:'paid',l:'Paid'},{v:'referral',l:'Referral'},{v:'direct',l:'Direct'}]">
         <button @click="source = s.v" :style="source === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+      </template>
+      <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+      <template x-for="d in [{v:'7gun',l:'7G'},{v:'30gun',l:'30G'},{v:'90gun',l:'90G'}]">
+        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
       </template>
     </div>
   </div>
@@ -64,6 +73,7 @@
   </div>
 </div>
 <div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('analytics'));</script>
 <script>
@@ -95,6 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
       {name:'Direct',type:'line',stack:'total',areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(234,179,8,0.3)'},{offset:1,color:'transparent'}]}},lineStyle:{color:'#eab308',width:1.5},itemStyle:{color:'#eab308'},symbol:'none',smooth:true,data:direct}
     ]
   });
+  // Store chart instance for Alpine reactivity
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.traffic = c;
+
   window.addEventListener('resize', () => c.resize());
 });
 </script>

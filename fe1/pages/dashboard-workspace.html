@@ -21,7 +21,12 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide" class="open"></div>
 
-<div id="main" x-data="{ range:'7gun', expanded:null }">
+<div id="main" x-data="{
+  range: '30',
+  expanded: null,
+  seriesConfigs: [{key:'traffic',base:300,variance:150}],
+  updateCharts() { updateChartsForRange(this.range, window._chartInstances || {}, this.seriesConfigs); }
+}">
   <!-- Breadcrumb + Title -->
   <div class="fade-in" style="margin-bottom:24px">
     <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--muted);margin-bottom:8px">
@@ -31,6 +36,11 @@
     </div>
     <h1 class="page-title">acme.com — Workspace Dashboard</h1>
     <p class="page-sub">Workspace bazli performans ozeti</p>
+    <div style="display:flex;gap:4px;margin-top:12px">
+      <template x-for="r in [{v:'7',l:'7 Gun'},{v:'30',l:'30 Gun'},{v:'90',l:'90 Gun'}]">
+        <button @click="range = r.v; updateCharts()" :style="range === r.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="r.l"></button>
+      </template>
+    </div>
   </div>
 
   <!-- Stat Cards -->
@@ -97,6 +107,7 @@
 </div>
 
 <div id="footbar"></div>
+<script src="../js/mock-data.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('dashboard'));</script>
 <script>
@@ -127,6 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
       areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(194,65,12,0.25)' }, { offset: 1, color: 'rgba(194,65,12,0)' }] } }
     }]
   });
+  // Store chart instance for Alpine reactivity
+  window._chartInstances = window._chartInstances || {};
+  window._chartInstances.wsTraffic = chart;
+
   window.addEventListener('resize', () => chart.resize());
 });
 </script>
