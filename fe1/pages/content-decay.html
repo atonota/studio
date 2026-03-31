@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,41 +21,41 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{ statusFilter: 'tumu' }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="table" x-data="{ statusFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">Icerik Bozunma Takibi</h1>
       <p class="page-sub">Trafik ve skor kaybeden sayfalarin izlenmesi</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'bozunan',l:'Bozunan'},{v:'risk',l:'Risk'},{v:'stabil',l:'Stabil'}]">
-        <button @click="statusFilter = f.v" :style="statusFilter === f.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f.l"></button>
+        <button @click="statusFilter = f.v" class="tab-btn" :class="statusFilter === f.v ? 'active' : ''" x-text="f.l"></button>
       </template>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Bozunan</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">8</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Bozunan</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444;margin-top:var(--sp-2)">8</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Risk</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">15</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Risk</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#eab308;margin-top:var(--sp-2)">15</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Stabil</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">119</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Stabil</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)">119</div>
     </div>
   </div>
 
   <!-- Decay Table -->
   <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Bozunan Sayfalar</span>
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('icerik-bozunma',['URL','Son Guncelleme','Trafik Degisim','Skor'])">CSV Indir</button>
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('icerik-bozunma',['URL','Son Guncelleme','Trafik Degisim','Skor'])">CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>
@@ -67,63 +70,63 @@
       <tbody>
         <tr>
           <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/seo-ipuclari-2025</span></td>
-          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">14 Oca 2025</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:var(--fs-sm)">14 Oca 2025</span></td>
           <td data-label="Trafik Degisim">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-42%</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+              <span style="color:#ef4444;font-size:var(--fs-md);font-weight:500">-42%</span>
             </div>
           </td>
           <td data-label="Skor"><span style="color:var(--text)">54</span></td>
-          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:0.75rem"></i></a></td>
+          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i></a></td>
         </tr>
         <tr>
           <td data-label="URL"><span style="font-weight:500;color:var(--text)">/rehber/google-analytics</span></td>
-          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">08 Mar 2025</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:var(--fs-sm)">08 Mar 2025</span></td>
           <td data-label="Trafik Degisim">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-38%</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+              <span style="color:#ef4444;font-size:var(--fs-md);font-weight:500">-38%</span>
             </div>
           </td>
           <td data-label="Skor"><span style="color:var(--text)">61</span></td>
-          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:0.75rem"></i></a></td>
+          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i></a></td>
         </tr>
         <tr>
           <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/backlink-rehberi</span></td>
-          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">22 Kas 2024</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:var(--fs-sm)">22 Kas 2024</span></td>
           <td data-label="Trafik Degisim">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-55%</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+              <span style="color:#ef4444;font-size:var(--fs-md);font-weight:500">-55%</span>
             </div>
           </td>
           <td data-label="Skor"><span style="color:var(--text)">43</span></td>
-          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:0.75rem"></i></a></td>
+          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i></a></td>
         </tr>
         <tr>
           <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/wordpress-eklentileri</span></td>
-          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">05 Haz 2025</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:var(--fs-sm)">05 Haz 2025</span></td>
           <td data-label="Trafik Degisim">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-27%</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+              <span style="color:#ef4444;font-size:var(--fs-md);font-weight:500">-27%</span>
             </div>
           </td>
           <td data-label="Skor"><span style="color:var(--text)">68</span></td>
-          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:0.75rem"></i></a></td>
+          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i></a></td>
         </tr>
         <tr>
           <td data-label="URL"><span style="font-weight:500;color:var(--text)">/blog/meta-ads-kilavuzu</span></td>
-          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:0.8125rem">19 Agu 2025</span></td>
+          <td data-label="Son Guncelleme"><span style="color:var(--muted);font-size:var(--fs-sm)">19 Agu 2025</span></td>
           <td data-label="Trafik Degisim">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-              <span style="color:#ef4444;font-size:0.875rem;font-weight:500">-31%</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+              <span style="color:#ef4444;font-size:var(--fs-md);font-weight:500">-31%</span>
             </div>
           </td>
           <td data-label="Skor"><span style="color:var(--text)">59</span></td>
-          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:0.75rem"></i></a></td>
+          <td data-label="Aksiyon"><a href="content-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">Yenile <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i></a></td>
         </tr>
       </tbody>
     </table>

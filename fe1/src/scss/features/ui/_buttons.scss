@@ -1,0 +1,116 @@
+// ── Primary & Secondary Buttons ──
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  font-family: inherit;
+
+  &:hover {
+    background: var(--accent-h);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0, calc(0.15 * var(--shadow-scale)));
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8125rem;
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+}
+
+// ── Button Style Variants (data-button-style on <html>) ──
+[data-button-style="pill"] .btn-primary,
+[data-button-style="pill"] .btn-secondary {
+  border-radius: var(--r-full);
+}
+
+[data-button-style="sharp"] .btn-primary,
+[data-button-style="sharp"] .btn-secondary {
+  border-radius: var(--r-xs);
+}
+
+// ── Pill & Tab Buttons ──
+
+.pill,
+.tab-btn {
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--muted);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.4;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--text-soft);
+  }
+
+  &.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+}
+
+.pill { border-radius: 20px; }
+.tab-btn { border-radius: 6px; }
+
+// Small variant
+.pill--sm,
+.tab-btn--sm {
+  padding: 4px 10px;
+  font-size: 0.6875rem;
+}
+
+// Group wrapper
+.pill-group,
+.tab-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+// Mobile touch target
+@media (max-width: 767px) {
+  .pill,
+  .tab-btn {
+    padding: 8px 16px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

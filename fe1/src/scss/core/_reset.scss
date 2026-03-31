@@ -1,0 +1,225 @@
+// ============================================
+// atonota Studio — Base Reset
+// Extracted from tokens.css reset block
+// ============================================
+
+// -- Universal box-sizing --
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// -- Root element --
+html {
+  font-size: 1rem;
+  min-width: 320px;
+  overflow: hidden;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+// -- Body defaults (custom properties applied) --
+body {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-base);
+  line-height: var(--line-height-base);
+  background: var(--base);
+  color: var(--text);
+  overflow-y: hidden;
+}
+
+// -- Scrollbar --
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// -- Selection --
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+// -- Alpine.js FOUC prevention --
+[x-cloak] {
+  display: none !important;
+}
+
+// -- Focus / A11y --
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--accent-soft);
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  background: var(--accent);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+
+  &:focus {
+    top: 0;
+  }
+}
+
+// -- Reduced motion --
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ════════════════════════════════════════════
+// ACCESSIBILITY LAYER
+// Tüm a11y override'ları burada — WCAG 2.2 AAA+
+// Öncelik sırası (düşükten yükseğe):
+//   1. :root defaults
+//   2. @media (prefers-*) — OS/browser tercihleri
+//   3. [data-*] attribute overrides — kullanıcı tercihleri (her zaman kazanır)
+// ════════════════════════════════════════════
+
+// ── OS-level high contrast ──
+@media (prefers-contrast: more) {
+  :root {
+    --color-border-default: currentColor;
+    --color-border-subtle: currentColor;
+    --color-text-secondary: var(--color-text-primary);
+    --color-text-tertiary: var(--color-text-primary);
+    --color-text-disabled: var(--color-text-secondary);
+  }
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-text-primary), 0 0 0 5px var(--color-bg-base) !important;
+  }
+}
+
+// ── Windows Forced Colors (High Contrast Mode) ──
+@media (forced-colors: active) {
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  button, [role="button"], a {
+    forced-color-adjust: none;
+    border: 1px solid ButtonText;
+  }
+  *:focus-visible {
+    outline: 3px solid Highlight !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
+}
+
+// ── User: Soft high contrast ──
+[data-high-contrast="soft"] {
+  --color-text-secondary: color-mix(in srgb, var(--color-text-primary) 85%, var(--color-bg-base));
+  --color-text-tertiary:  color-mix(in srgb, var(--color-text-primary) 65%, var(--color-bg-base));
+  --color-border-default: color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  --color-border-subtle:  color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 5px var(--accent-soft) !important;
+  }
+}
+
+// ── User: Hard high contrast ──
+[data-high-contrast="hard"] {
+  --color-text-secondary: var(--color-text-primary);
+  --color-text-tertiary:  var(--color-text-primary);
+  --color-text-disabled:  color-mix(in srgb, var(--color-text-primary) 70%, var(--color-bg-base));
+  --color-border-default: var(--color-text-primary);
+  --color-border-subtle:  color-mix(in srgb, var(--color-text-primary) 60%, transparent);
+
+  .card, [class*="card"] {
+    border-color: var(--color-border-default) !important;
+  }
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-bg-base), 0 0 0 6px var(--color-text-primary) !important;
+  }
+}
+
+// ── User: Reduced transparency ──
+[data-reduced-transparency] {
+  --color-bg-overlay:    var(--color-bg-elevated);
+  --color-glass-panel:   var(--color-bg-elevated);
+
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+// ── User: Dyslexia-friendly ──
+[data-dyslexia] {
+  --font-family-body: 'Atkinson Hyperlegible', 'OpenDyslexic', system-ui, sans-serif !important;
+  --letter-spacing-base: 0.05em !important;
+  --line-height-base: 1.8 !important;
+  --font-weight-body: 400 !important;
+
+  p, li { text-align: left !important; }
+
+  input, textarea, select {
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+}
+
+// ── User: Large focus indicator ──
+[data-focus-size="large"] {
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 6px var(--accent-soft) !important;
+  }
+}
+
+[data-focus-size="xl"] {
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 4px var(--color-bg-base), 0 0 0 8px var(--accent) !important;
+  }
+}
+
+// ── A11y font scale multiplier ──
+:root {
+  --a11y-font-scale: 1;
+}

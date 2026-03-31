@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -20,18 +23,18 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ platform: 'tumu', dateRange: '7gun' }" x-effect="if(window.__updateTreemap) window.__updateTreemap(dateRange)">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="dashboard" x-data="{ platform: 'tumu', dateRange: '7gun' }" x-effect="if(window.__updateTreemap) window.__updateTreemap(dateRange)">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Reklamlar</h1>
       <p class="page-sub">Cross-channel reklam orkestrasyon</p>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div style="display:flex;gap:4px">
+    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+      <div style="display:flex;gap:var(--sp-1)">
         <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-          <button @click="dateRange = d.v" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+          <button @click="dateRange = d.v" class="tab-btn" :class="dateRange === d.v ? 'active' : ''" x-text="d.l"></button>
         </template>
       </div>
       <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Kampanya</button>
@@ -39,96 +42,96 @@
   </div>
 
   <!-- Platform Filter Pills -->
-  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:16px">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'meta',l:'Meta'},{v:'tiktok',l:'TikTok'},{v:'linkedin',l:'LinkedIn'}]">
-      <button @click="platform = p.v" :style="platform === p.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:6px;font-size:0.8125rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="p.l"></button>
+      <button @click="platform = p.v" class="tab-btn" :class="platform === p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
   </div>
 
   <!-- Platform Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <!-- Meta -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:1.125rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">Meta Ads</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Facebook + Instagram</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Facebook + Instagram</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;margin-left:auto">Aktif</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted)">Harcama</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">&#8378;22,340</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Harcama</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">&#8378;22,340</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted)">ROAS</span>
-        <span style="font-size:0.875rem;font-weight:500;color:#22c55e">3.2x</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">ROAS</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:#22c55e">3.2x</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted)">Kampanya</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">3 aktif</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Kampanya</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">3 aktif</span>
       </div>
-      <a href="ads-campaign-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-        Kampanya Detay <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      <a href="ads-campaign-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);">
+        Kampanya Detay <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
     </div>
     <!-- TikTok -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-tiktok-logo" style="color:#a855f7;font-size:1.125rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-tiktok-logo" style="color:#a855f7;font-size:var(--fs-lg)"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">TikTok Ads</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">In-Feed + TopView</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">In-Feed + TopView</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;margin-left:auto">Aktif</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted)">Harcama</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">&#8378;18,480</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Harcama</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">&#8378;18,480</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted)">ROAS</span>
-        <span style="font-size:0.875rem;font-weight:500;color:#22c55e">2.8x</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">ROAS</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:#22c55e">2.8x</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted)">Kampanya</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">2 aktif</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Kampanya</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">2 aktif</span>
       </div>
-      <a href="ads-campaign-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-        Kampanya Detay <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      <a href="ads-campaign-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);">
+        Kampanya Detay <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
     </div>
     <!-- LinkedIn -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:1.125rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">LinkedIn Ads</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Sponsored Content</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Sponsored Content</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;margin-left:auto">Aktif</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted)">Harcama</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">&#8378;7,900</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Harcama</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">&#8378;7,900</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted)">ROAS</span>
-        <span style="font-size:0.875rem;font-weight:500;color:#eab308">1.9x</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">ROAS</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:#eab308">1.9x</span>
       </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-        <span style="font-size:0.75rem;color:var(--muted)">Kampanya</span>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">1 aktif</span>
+      <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Kampanya</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">1 aktif</span>
       </div>
-      <a href="ads-campaign-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-        Kampanya Detay <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      <a href="ads-campaign-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);">
+        Kampanya Detay <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
     </div>
   </div>

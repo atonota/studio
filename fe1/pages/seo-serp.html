@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,8 +21,8 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="tool" x-data="{
   featureFilter: 'tumu',
   sortCol: '',
   sortDir: 'asc',
@@ -47,50 +50,50 @@
     else { this.sortCol = col; this.sortDir = 'asc'; }
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">SERP Feature Takibi</h1>
     <p class="page-sub">Arama sonucu zengin ozelliklerinin izlenmesi</p>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Featured Snippet</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">7</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Featured Snippet</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">7</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">PAA</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">12</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">PAA</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">12</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Knowledge Panel</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">1</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Knowledge Panel</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">1</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Video Carousel</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">3</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Video Carousel</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">3</div>
     </div>
   </div>
 
   <!-- Feature Filter -->
-  <div class="fade-in-d2" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
-    <button @click="featureFilter = 'tumu'" :style="featureFilter === 'tumu' ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s">Tumu</button>
+  <div class="fade-in-d2" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
+    <button @click="featureFilter = 'tumu'" class="tab-btn" :class="featureFilter === 'tumu' ? 'active' : ''">Tumu</button>
     <template x-for="feat in allFeatures">
-      <button @click="featureFilter = feat" :style="featureFilter === feat ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="feat"></button>
+      <button @click="featureFilter = feat" class="tab-btn" :class="featureFilter === feat ? 'active' : ''" x-text="feat"></button>
     </template>
   </div>
 
   <!-- SERP Features Table -->
   <div class="fade-in-d2 card" data-paginate="20" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Keyword SERP Ozellikleri</span>
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('serp-features',['Keyword','Pozisyon','Kazanilan','Kaybedilen'])">CSV Indir</button>
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('serp-features',['Keyword','Pozisyon','Kazanilan','Kaybedilen'])">CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>
         <tr>
-          <th @click="doSort('kw')" style="cursor:pointer">Keyword <i class="ph" :class="sortCol==='kw' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-          <th @click="doSort('poz')" style="cursor:pointer">Pozisyon <i class="ph" :class="sortCol==='poz' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('kw')" style="cursor:pointer">Keyword <i class="ph" :class="sortCol==='kw' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+          <th @click="doSort('poz')" style="cursor:pointer">Pozisyon <i class="ph" :class="sortCol==='poz' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
           <th>Kazanilan</th>
           <th>Kaybedilen</th>
         </tr>
@@ -101,16 +104,16 @@
             <td data-label="Keyword"><span style="font-weight:500;color:var(--text)" x-text="row.kw"></span></td>
             <td data-label="Pozisyon"><span style="color:var(--text)" x-text="row.poz"></span></td>
             <td data-label="Kazanilan">
-              <div style="display:flex;gap:4px;flex-wrap:wrap">
-                <template x-if="row.won.length === 0"><span style="color:var(--muted);font-size:0.8125rem">—</span></template>
+              <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap">
+                <template x-if="row.won.length === 0"><span style="color:var(--muted);font-size:var(--fs-sm)">—</span></template>
                 <template x-for="w in row.won" :key="w">
                   <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e" x-text="w"></span>
                 </template>
               </div>
             </td>
             <td data-label="Kaybedilen">
-              <div style="display:flex;gap:4px;flex-wrap:wrap">
-                <template x-if="row.lost.length === 0"><span style="color:var(--muted);font-size:0.8125rem">—</span></template>
+              <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap">
+                <template x-if="row.lost.length === 0"><span style="color:var(--muted);font-size:var(--fs-sm)">—</span></template>
                 <template x-for="l in row.lost" :key="l">
                   <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444" x-text="l"></span>
                 </template>

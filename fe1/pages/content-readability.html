@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,8 +21,8 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="table" x-data="{
   gradeFilter: 'tumu',
   sortCol: '',
   sortDir: 'asc',
@@ -47,45 +50,45 @@
     else { this.sortCol = col; this.sortDir = 'asc'; }
   }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">Okunabilirlik Analizi</h1>
       <p class="page-sub">Icerik okunabilirlik skorlari ve seviye dagilimi</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="g in [{v:'tumu',l:'Tumu'},{v:'Kolay',l:'Kolay'},{v:'Orta',l:'Orta'},{v:'Zor',l:'Zor'}]">
-        <button @click="gradeFilter = g.v" :style="gradeFilter === g.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="g.l"></button>
+        <button @click="gradeFilter = g.v" class="tab-btn" :class="gradeFilter === g.v ? 'active' : ''" x-text="g.l"></button>
       </template>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Skor</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">72</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Skor</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">72</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kolay</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">48 sayfa</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kolay</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)">48 sayfa</div>
     </div>
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Zor</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">12 sayfa</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Zor</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444;margin-top:var(--sp-2)">12 sayfa</div>
     </div>
   </div>
 
   <!-- Readability Table -->
   <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Sayfa Okunabilirlik Detaylari</span>
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('okunabilirlik',['URL','Skor','Seviye','Cumle','Ort Kelime/Cumle'])">CSV Indir</button>
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('okunabilirlik',['URL','Skor','Seviye','Cumle','Ort Kelime/Cumle'])">CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>
         <tr>
           <th>URL</th>
-          <th @click="doSort('skor')" style="cursor:pointer">Skor <i class="ph" :class="sortCol==='skor' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('skor')" style="cursor:pointer">Skor <i class="ph" :class="sortCol==='skor' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
           <th>Seviye</th>
           <th>Cumle</th>
           <th>Ort Kelime/Cumle</th>

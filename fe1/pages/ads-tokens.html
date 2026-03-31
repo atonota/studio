@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,12 +21,12 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ refreshing: {} }">
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-key" style="color:#eab308;font-size:1.25rem"></i>
+<div id="main" data-skeleton="table" x-data="{ refreshing: {} }">
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-key" style="color:#eab308;font-size:var(--fs-xl)"></i>
     </div>
     <div>
       <h1 class="page-title">Token Durum Izleme</h1>
@@ -33,9 +36,9 @@
 
   <!-- Token Table -->
   <div class="fade-in-d1 card" data-paginate="10">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Platform Tokenlari</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Platform','Token Tipi','Kalan Sure','Durum','Islem'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Platform','Token Tipi','Kalan Sure','Durum','Islem'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -50,8 +53,8 @@
       <tbody>
         <tr>
           <td data-label="Platform" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:1rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
               Meta
             </div>
           </td>
@@ -62,8 +65,8 @@
         </tr>
         <tr>
           <td data-label="Platform" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-tiktok-logo" style="color:#a855f7;font-size:1rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-tiktok-logo" style="color:#a855f7;font-size:var(--fs-lg)"></i>
               TikTok
             </div>
           </td>
@@ -74,8 +77,8 @@
         </tr>
         <tr>
           <td data-label="Platform" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:1rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
               LinkedIn
             </div>
           </td>
@@ -83,16 +86,16 @@
           <td data-label="Kalan Sure" style="color:#eab308">48 gun kaldi</td>
           <td data-label="Durum"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Uyari</span></td>
           <td data-label="Islem">
-            <button @click="refreshing['linkedin'] = true; setTimeout(() => { refreshing['linkedin'] = false; $store.toast.show('LinkedIn token yenilendi', 'success') }, 1500)" class="btn-secondary" style="padding:4px 12px;font-size:0.6875rem;display:flex;align-items:center;gap:4px" :disabled="refreshing['linkedin']">
-              <i x-show="refreshing['linkedin']" class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:0.75rem"></i>
+            <button @click="refreshing['linkedin'] = true; setTimeout(() => { refreshing['linkedin'] = false; $store.toast.show('LinkedIn token yenilendi', 'success') }, 1500)" class="btn-secondary" style="padding:var(--sp-1) var(--sp-3);font-size:var(--fs-xs);display:flex;align-items:center;gap:var(--sp-1)" :disabled="refreshing['linkedin']">
+              <i x-show="refreshing['linkedin']" class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:var(--fs-sm)"></i>
               <span x-text="refreshing['linkedin'] ? 'Yenileniyor...' : 'Yenile'"></span>
             </button>
           </td>
         </tr>
         <tr>
           <td data-label="Platform" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-google-logo" style="color:#ef4444;font-size:1rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-google-logo" style="color:#ef4444;font-size:var(--fs-lg)"></i>
               Google Ads
             </div>
           </td>
@@ -100,16 +103,16 @@
           <td data-label="Kalan Sure" style="color:#ef4444">55 dk kaldi</td>
           <td data-label="Durum"><span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span></td>
           <td data-label="Islem">
-            <button @click="refreshing['google'] = true; setTimeout(() => { refreshing['google'] = false; $store.toast.show('Google token yenilendi', 'success') }, 1500)" class="btn-secondary" style="padding:4px 12px;font-size:0.6875rem;display:flex;align-items:center;gap:4px" :disabled="refreshing['google']">
-              <i x-show="refreshing['google']" class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:0.75rem"></i>
+            <button @click="refreshing['google'] = true; setTimeout(() => { refreshing['google'] = false; $store.toast.show('Google token yenilendi', 'success') }, 1500)" class="btn-secondary" style="padding:var(--sp-1) var(--sp-3);font-size:var(--fs-xs);display:flex;align-items:center;gap:var(--sp-1)" :disabled="refreshing['google']">
+              <i x-show="refreshing['google']" class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:var(--fs-sm)"></i>
               <span x-text="refreshing['google'] ? 'Yenileniyor...' : 'Yenile'"></span>
             </button>
           </td>
         </tr>
         <tr>
           <td data-label="Platform" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-pinterest-logo" style="color:#ef4444;font-size:1rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-pinterest-logo" style="color:#ef4444;font-size:var(--fs-lg)"></i>
               Pinterest
             </div>
           </td>
@@ -117,8 +120,8 @@
           <td data-label="Kalan Sure">22 gun kaldi</td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
           <td data-label="Islem">
-            <button @click="refreshing['pinterest'] = true; setTimeout(() => { refreshing['pinterest'] = false; $store.toast.show('Pinterest token yenilendi', 'success') }, 1500)" class="btn-secondary" style="padding:4px 12px;font-size:0.6875rem;display:flex;align-items:center;gap:4px" :disabled="refreshing['pinterest']">
-              <i x-show="refreshing['pinterest']" class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:0.75rem"></i>
+            <button @click="refreshing['pinterest'] = true; setTimeout(() => { refreshing['pinterest'] = false; $store.toast.show('Pinterest token yenilendi', 'success') }, 1500)" class="btn-secondary" style="padding:var(--sp-1) var(--sp-3);font-size:var(--fs-xs);display:flex;align-items:center;gap:var(--sp-1)" :disabled="refreshing['pinterest']">
+              <i x-show="refreshing['pinterest']" class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:var(--fs-sm)"></i>
               <span x-text="refreshing['pinterest'] ? 'Yenileniyor...' : 'Yenile'"></span>
             </button>
           </td>

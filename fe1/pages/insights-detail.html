@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,12 +21,12 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:500">#ins-2847</span>
+<div id="main" data-skeleton="dashboard">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">#ins-2847</span>
       <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
       <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">SEO</span>
     </div>
@@ -32,75 +35,75 @@
   </div>
 
   <!-- Insight Detail Card -->
-  <div class="fade-in-d1 card" style="padding:24px;margin-bottom:24px">
+  <div class="fade-in-d1 card" style="padding:var(--sp-6);margin-bottom:var(--sp-6)">
     <span class="section-label">Detay</span>
-    <p style="font-size:0.875rem;color:var(--text);line-height:1.7;margin-bottom:16px">Son 7 gunde organik trafik %12 oraninda azalma gosteriyor. Ozellikle "dijital pazarlama" anahtar kelimesinde 3 pozisyon kaybi tespit edildi. Bu dusus buyuk olasilikla Google'in son algoritma guncellemesiyle iliskilidir.</p>
+    <p style="font-size:var(--fs-md);color:var(--text);line-height:1.7;margin-bottom:var(--sp-4)">Son 7 gunde organik trafik %12 oraninda azalma gosteriyor. Ozellikle "dijital pazarlama" anahtar kelimesinde 3 pozisyon kaybi tespit edildi. Bu dusus buyuk olasilikla Google'in son algoritma guncellemesiyle iliskilidir.</p>
 
     <!-- Affected Metrics -->
     <span class="section-label">Etkilenen Metrikler</span>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
-        <span style="font-size:0.75rem;color:var(--muted);display:block">Organik Trafik</span>
-        <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-          <span style="font-size:1.125rem;font-weight:300;color:var(--text)">4,230</span>
-          <span style="font-size:0.75rem;color:#ef4444">-12%</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-bottom:var(--sp-5)">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);display:block">Organik Trafik</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-1)">
+          <span style="font-size:var(--fs-lg);font-weight:300;color:var(--text)">4,230</span>
+          <span style="font-size:var(--fs-sm);color:#ef4444">-12%</span>
         </div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
-        <span style="font-size:0.75rem;color:var(--muted);display:block">Ortalama Pozisyon</span>
-        <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-          <span style="font-size:1.125rem;font-weight:300;color:var(--text)">8.4</span>
-          <span style="font-size:0.75rem;color:#ef4444">+1.2</span>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);display:block">Ortalama Pozisyon</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-1)">
+          <span style="font-size:var(--fs-lg);font-weight:300;color:var(--text)">8.4</span>
+          <span style="font-size:var(--fs-sm);color:#ef4444">+1.2</span>
         </div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
-        <span style="font-size:0.75rem;color:var(--muted);display:block">CTR</span>
-        <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-          <span style="font-size:1.125rem;font-weight:300;color:var(--text)">3.2%</span>
-          <span style="font-size:0.75rem;color:#ef4444">-0.8%</span>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);display:block">CTR</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-1)">
+          <span style="font-size:var(--fs-lg);font-weight:300;color:var(--text)">3.2%</span>
+          <span style="font-size:var(--fs-sm);color:#ef4444">-0.8%</span>
         </div>
       </div>
     </div>
 
     <!-- AI Explanation -->
     <span class="section-label">AI Analizi</span>
-    <div style="background:rgba(194,65,12,0.05);border:1px solid rgba(194,65,12,0.15);border-radius:8px;padding:16px;margin-bottom:20px">
-      <p style="font-size:0.8125rem;color:var(--text);line-height:1.7">Google'in 20 Mart 2026 tarihli core guncellemesi ozellikle ticari amacli anahtar kelimelerde siralama degisikliklerine neden oldu. Rakip analizi gosteriyor ki Rakip A ayni donemde 5 yeni uzun icerik yayinlayarak pozisyon kazandi. Iceriginizi guncelleyerek ve dahili baglanti yapisini guclendirerek toparlanma mumkun gorunuyor. Tahmini toparlanma suresi: 2-4 hafta.</p>
+    <div style="background:rgba(194,65,12,0.05);border:1px solid rgba(194,65,12,0.15);border-radius:var(--r-md);padding:var(--sp-4);margin-bottom:var(--sp-5)">
+      <p style="font-size:var(--fs-sm);color:var(--text);line-height:1.7">Google'in 20 Mart 2026 tarihli core guncellemesi ozellikle ticari amacli anahtar kelimelerde siralama degisikliklerine neden oldu. Rakip analizi gosteriyor ki Rakip A ayni donemde 5 yeni uzun icerik yayinlayarak pozisyon kazandi. Iceriginizi guncelleyerek ve dahili baglanti yapisini guclendirerek toparlanma mumkun gorunuyor. Tahmini toparlanma suresi: 2-4 hafta.</p>
     </div>
 
     <!-- Actions -->
-    <div x-data style="display:flex;gap:10px">
-      <button @click="$store.toast.show('Icerik guncelleme sayfasina yonlendiriliyorsunuz','info')" class="btn-primary" style="padding:10px 20px;font-size:0.8125rem"><i class="ph ph-pencil" style="margin-right:6px"></i>Icerik Guncelle</button>
-      <button @click="$store.toast.show('Hatirlatici kuruldu','success')" style="padding:10px 20px;font-size:0.8125rem;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;cursor:pointer"><i class="ph ph-bell" style="margin-right:6px"></i>Hatirlatici Kur</button>
-      <button @click="$store.toast.show('Link kopyalandi','success')" style="padding:10px 20px;font-size:0.8125rem;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;cursor:pointer"><i class="ph ph-share" style="margin-right:6px"></i>Paylas</button>
+    <div x-data style="display:flex;gap:var(--sp-3)">
+      <button @click="$store.toast.show('Icerik guncelleme sayfasina yonlendiriliyorsunuz','info')" class="btn-primary" style="padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm)"><i class="ph ph-pencil" style="margin-right:var(--sp-2)"></i>Icerik Guncelle</button>
+      <button @click="$store.toast.show('Hatirlatici kuruldu','success')" style="padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer"><i class="ph ph-bell" style="margin-right:var(--sp-2)"></i>Hatirlatici Kur</button>
+      <button @click="$store.toast.show('Link kopyalandi','success')" style="padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer"><i class="ph ph-share" style="margin-right:var(--sp-2)"></i>Paylas</button>
     </div>
   </div>
 
   <!-- Related Insights -->
   <div class="fade-in-d2" x-data>
     <span class="section-label">Ilgili Insightlar</span>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div class="card" @click="$store.toast.show('Insight detayina gidiliyor...','info')" style="padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s" @mouseenter="$el.style.borderColor='var(--accent)'" @mouseleave="$el.style.borderColor=''">
-        <i class="ph ph-file-search" style="font-size:1.125rem;color:#eab308"></i>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div class="card" @click="$store.toast.show('Insight detayina gidiliyor...','info')" style="padding:var(--sp-4);display:flex;align-items:center;gap:var(--sp-3);cursor:pointer;transition:border-color .2s" @mouseenter="$el.style.borderColor='var(--accent)'" @mouseleave="$el.style.borderColor=''">
+        <i class="ph ph-file-search" style="font-size:var(--fs-lg);color:#eab308"></i>
         <div style="flex:1">
-          <span style="font-weight:500;color:var(--text);font-size:0.8125rem">Icerik Eskime Uyarisi — 12 sayfa etkilendi</span>
-          <span style="font-size:0.6875rem;color:var(--muted);display:block;margin-top:2px">1 gun once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-sm)">Icerik Eskime Uyarisi — 12 sayfa etkilendi</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);display:block;margin-top:2px">1 gun once</span>
         </div>
         <i class="ph ph-arrow-right" style="color:var(--muted)"></i>
       </div>
-      <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer">
-        <i class="ph ph-chart-bar" style="font-size:1.125rem;color:#3b82f6"></i>
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:center;gap:var(--sp-3);cursor:pointer">
+        <i class="ph ph-chart-bar" style="font-size:var(--fs-lg);color:#3b82f6"></i>
         <div style="flex:1">
-          <span style="font-weight:500;color:var(--text);font-size:0.8125rem">Backlink Profil Degisimi — 3 yeni kayip</span>
-          <span style="font-size:0.6875rem;color:var(--muted);display:block;margin-top:2px">3 gun once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-sm)">Backlink Profil Degisimi — 3 yeni kayip</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);display:block;margin-top:2px">3 gun once</span>
         </div>
         <i class="ph ph-arrow-right" style="color:var(--muted)"></i>
       </div>
-      <div class="card" style="padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer">
-        <i class="ph ph-users" style="font-size:1.125rem;color:#a855f7"></i>
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:center;gap:var(--sp-3);cursor:pointer">
+        <i class="ph ph-users" style="font-size:var(--fs-lg);color:#a855f7"></i>
         <div style="flex:1">
-          <span style="font-weight:500;color:var(--text);font-size:0.8125rem">Rakip Icerik Aktivitesi — Rakip A 5 yeni yazi</span>
-          <span style="font-size:0.6875rem;color:var(--muted);display:block;margin-top:2px">5 gun once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-sm)">Rakip Icerik Aktivitesi — Rakip A 5 yeni yazi</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);display:block;margin-top:2px">5 gun once</span>
         </div>
         <i class="ph ph-arrow-right" style="color:var(--muted)"></i>
       </div>

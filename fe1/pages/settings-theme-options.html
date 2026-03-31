@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Tema Secenekleri — atonota Studio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/theme-options.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script src="../js/theme-store.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="form">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <h1 class="page-title">Tema Secenekleri</h1>
+    <p class="page-sub">Tum gorsel ve yerlisim tercihlerini tek panelde yonetin</p>
+  </div>
+
+  <div class="to-layout" x-data="tabs('colors')" x-init="['colors','typography','layout','components','motion','glass','advanced'].forEach(k=>registerTab(k))">
+    <!-- ═══ VERTICAL TABS ═══ -->
+    <div class="to-tabs" role="tablist" aria-label="Tema secenekleri kategorileri">
+      <button class="to-tab" role="tab" id="tab-colors" :aria-selected="isActive('colors')" aria-controls="tabpanel-colors" :tabindex="isActive('colors')?0:-1" :class="{'to-tab-active':isActive('colors')}" @click="select('colors')" @keydown="handleTabKey($event,'colors')"><i class="ph ph-palette"></i>Renkler</button>
+      <button class="to-tab" role="tab" id="tab-typography" :aria-selected="isActive('typography')" aria-controls="tabpanel-typography" :tabindex="isActive('typography')?0:-1" :class="{'to-tab-active':isActive('typography')}" @click="select('typography')" @keydown="handleTabKey($event,'typography')"><i class="ph ph-text-aa"></i>Tipografi</button>
+      <button class="to-tab" role="tab" id="tab-layout" :aria-selected="isActive('layout')" aria-controls="tabpanel-layout" :tabindex="isActive('layout')?0:-1" :class="{'to-tab-active':isActive('layout')}" @click="select('layout')" @keydown="handleTabKey($event,'layout')"><i class="ph ph-layout"></i>Yerlesim</button>
+      <button class="to-tab" role="tab" id="tab-components" :aria-selected="isActive('components')" aria-controls="tabpanel-components" :tabindex="isActive('components')?0:-1" :class="{'to-tab-active':isActive('components')}" @click="select('components')" @keydown="handleTabKey($event,'components')"><i class="ph ph-puzzle-piece"></i>Bilesenler</button>
+      <button class="to-tab" role="tab" id="tab-motion" :aria-selected="isActive('motion')" aria-controls="tabpanel-motion" :tabindex="isActive('motion')?0:-1" :class="{'to-tab-active':isActive('motion')}" @click="select('motion')" @keydown="handleTabKey($event,'motion')"><i class="ph ph-lightning"></i>Animasyon</button>
+      <button class="to-tab" role="tab" id="tab-glass" :aria-selected="isActive('glass')" aria-controls="tabpanel-glass" :tabindex="isActive('glass')?0:-1" :class="{'to-tab-active':isActive('glass')}" @click="select('glass')" @keydown="handleTabKey($event,'glass')"><i class="ph ph-drop-half-bottom"></i>Cam & Blur</button>
+      <button class="to-tab" role="tab" id="tab-advanced" :aria-selected="isActive('advanced')" aria-controls="tabpanel-advanced" :tabindex="isActive('advanced')?0:-1" :class="{'to-tab-active':isActive('advanced')}" @click="select('advanced')" @keydown="handleTabKey($event,'advanced')"><i class="ph ph-wrench"></i>Gelismis</button>
+    </div>
+
+    <!-- ═══ TAB CONTENT ═══ -->
+    <div class="to-content">
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 1: RENKLER                          -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('colors')" x-cloak role="tabpanel" id="tabpanel-colors" aria-labelledby="tab-colors" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-sun-moon"></i> Renk Semasi</div>
+          <div class="to-card">
+            <div class="to-mode-toggle" id="toModeToggle"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-paint-bucket"></i> Arka Plan Tonu</div>
+          <div class="to-card" id="toDarkTones">
+            <div class="to-card-label">Koyu Tema</div>
+            <div class="to-tone-grid" id="toDarkGrid"></div>
+            <div class="to-picker-row">
+              <input type="color" class="to-picker-input" id="toDarkPicker" value="#161412">
+              <input type="text" class="to-picker-hex" id="toDarkHex" value="#161412" maxlength="7">
+              <span style="font-size:var(--fs-2xs);color:var(--muted)">Ozel</span>
+            </div>
+          </div>
+          <div class="to-card" id="toLightTones">
+            <div class="to-card-label">Acik Tema</div>
+            <div class="to-tone-grid" id="toLightGrid"></div>
+            <div class="to-picker-row">
+              <input type="color" class="to-picker-input" id="toLightPicker" value="#F8F5EC">
+              <input type="text" class="to-picker-hex" id="toLightHex" value="#F8F5EC" maxlength="7">
+              <span style="font-size:var(--fs-2xs);color:var(--muted)">Ozel</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-star-four"></i> Vurgu Rengi — Koyu Mod</div>
+          <div class="to-card">
+            <div class="to-card-desc" style="margin-bottom:var(--sp-3)">Koyu tema aktifken kullanilacak renk</div>
+            <div class="to-pill-grid" id="toAccentDarkPills"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-star-four"></i> Vurgu Rengi — Acik Mod</div>
+          <div class="to-card">
+            <div class="to-card-desc" style="margin-bottom:var(--sp-3)">Acik tema aktifken kullanilacak renk</div>
+            <div class="to-pill-grid" id="toAccentLightPills"></div>
+          </div>
+        </div>
+
+        <div class="to-section" id="toChromeBgSection">
+          <div class="to-section-label"><i class="ph ph-frame-corners"></i> Cerceve Rengi</div>
+          <div class="to-card">
+            <div class="to-card-desc">Topbar, rail, tenant, footer arka plani (sadece acik temada)</div>
+            <div class="to-picker-row">
+              <input type="color" class="to-picker-input" id="toChromePicker" value="#171a1d">
+              <input type="text" class="to-picker-hex" id="toChromeHex" value="#171a1d" maxlength="7">
+              <button class="to-btn" id="toChromeReset" style="font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-3)">Sifirla</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 2: TİPOGRAFİ                        -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('typography')" x-cloak role="tabpanel" id="tabpanel-typography" aria-labelledby="tab-typography" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-text-t"></i> Yazi Tipi</div>
+          <div class="to-card">
+            <div class="to-card-label">Font Ailesi</div>
+            <div class="to-card-desc">Tum arayuz metinleri icin kullanilan font</div>
+            <div class="to-select-grid" id="toFontFamily"></div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Kod Fontu</div>
+            <div class="to-card-desc">Monospace alanlar icin font</div>
+            <div class="to-select-grid" id="toFontCode"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-text-align-left"></i> Boyut ve Agirlik</div>
+          <div class="to-card">
+            <div class="to-card-label">Font Boyutu</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toFontSize" min="13" max="18" step="1" value="15">
+              <span class="to-slider-val" id="toFontSizeVal">15px</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Govde Agirligi</div>
+            <div class="to-select-grid" id="toFontWeightBody"></div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Baslik Agirligi</div>
+            <div class="to-select-grid" id="toFontWeightHeading"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-arrows-out-line-horizontal"></i> Aralik</div>
+          <div class="to-card">
+            <div class="to-card-label">Harf Araligi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toLetterSpacing" min="0" max="0.05" step="0.005" value="0.01">
+              <span class="to-slider-val" id="toLetterSpacingVal">0.01em</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Satir Yuksekligi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toLineHeight" min="1.2" max="1.8" step="0.05" value="1.5">
+              <span class="to-slider-val" id="toLineHeightVal">1.5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-eye"></i> Onizleme</div>
+          <div class="to-font-preview">
+            <div class="to-font-preview-heading" style="font-size:var(--fs-xl)">Baslik Ornegi — Tema Secenekleri</div>
+            <div class="to-font-preview-body">Bu metin sectiginiz font ailesi, boyutu, agirligi ve satir yuksekligini gostermektedir. Turkce karakterler: cesitli uygulamalar icin kullanilabilir.</div>
+            <div style="margin-top:var(--sp-2);font-family:var(--font-family-code);font-size:var(--fs-sm);color:var(--muted)">const theme = { mode: 'dark', accent: 'violet' };</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 3: YERLEŞİM                         -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('layout')" x-cloak role="tabpanel" id="tabpanel-layout" aria-labelledby="tab-layout" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-columns"></i> Shell Boyutlari</div>
+          <div class="to-card">
+            <div class="to-card-label">Rail Genisligi</div>
+            <div class="to-card-desc">Sol navigasyon cubugu</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toRailW" min="64" max="120" step="4" value="96">
+              <span class="to-slider-val" id="toRailWVal">96px</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Sidebar Genisligi</div>
+            <div class="to-card-desc">Acilir yan panel</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toWideW" min="200" max="320" step="10" value="260">
+              <span class="to-slider-val" id="toWideWVal">260px</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Topbar Yuksekligi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toTopH" min="56" max="96" step="4" value="96">
+              <span class="to-slider-val" id="toTopHVal">96px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-arrows-out"></i> Icerik Alani</div>
+          <div class="to-card">
+            <div class="to-card-label">Icerik Padding Carpani</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toContentPadding" min="0.5" max="1.5" step="0.1" value="1">
+              <span class="to-slider-val" id="toContentPaddingVal">1x</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Icerik Max Genislik</div>
+            <div class="to-select-grid" id="toContentMaxW"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-gear"></i> Davranis</div>
+          <div class="to-card" style="padding:var(--sp-3) var(--sp-5)">
+            <div class="to-toggle-row">
+              <div class="to-toggle-info">
+                <div class="to-toggle-title">Kompakt Mod</div>
+                <div class="to-toggle-desc">Tum bosluklar %20 kucultulur</div>
+              </div>
+              <label class="to-switch">
+                <input type="checkbox" id="toCompact">
+                <span class="to-switch-track"></span>
+                <span class="to-switch-thumb"></span>
+              </label>
+            </div>
+            <div class="to-toggle-row">
+              <div class="to-toggle-info">
+                <div class="to-toggle-title">Sidebar Varsayilan Acik</div>
+                <div class="to-toggle-desc">Sayfa yuklendiginde yan panel acik gelsin</div>
+              </div>
+              <label class="to-switch">
+                <input type="checkbox" id="toSidebarDefault">
+                <span class="to-switch-track"></span>
+                <span class="to-switch-thumb"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 4: BİLEŞENLER                       -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('components')" x-cloak role="tabpanel" id="tabpanel-components" aria-labelledby="tab-components" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-corners-out"></i> Kenar Yuvarlagi</div>
+          <div class="to-card">
+            <div class="to-card-label">Border Radius</div>
+            <div class="to-card-desc">Tum bilesenlerin kenar yuvarlama seviyesi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toRadius" min="0" max="20" step="1" value="10">
+              <span class="to-slider-val" id="toRadiusVal">10px</span>
+            </div>
+            <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-3)">
+              <div style="width:60px;height:40px;background:var(--accent);border-radius:var(--radius-sm)"></div>
+              <div style="width:60px;height:40px;background:var(--accent);border-radius:var(--radius-base)"></div>
+              <div style="width:60px;height:40px;background:var(--accent);border-radius:var(--radius-lg)"></div>
+              <div style="width:60px;height:40px;background:var(--accent);border-radius:var(--radius-xl)"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-sun-dim"></i> Golge Yogunlugu</div>
+          <div class="to-card">
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toShadow" min="0" max="2" step="0.25" value="1">
+              <span class="to-slider-val" id="toShadowVal">1x</span>
+            </div>
+            <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-3)">
+              <div style="width:80px;height:50px;background:var(--surface);border-radius:var(--radius-base);box-shadow:0 4px 12px rgba(0,0,0,calc(0.15 * var(--shadow-scale)))"></div>
+              <div style="width:80px;height:50px;background:var(--surface);border-radius:var(--radius-base);box-shadow:0 8px 24px rgba(0,0,0,calc(0.2 * var(--shadow-scale)))"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-cards"></i> Kart Stili</div>
+          <div class="to-card">
+            <div class="to-select-grid" id="toCardStyle"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-cursor-click"></i> Buton Stili</div>
+          <div class="to-card">
+            <div class="to-select-grid" id="toButtonStyle"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-textbox"></i> Input Stili</div>
+          <div class="to-card">
+            <div class="to-select-grid" id="toInputStyle"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 5: ANİMASYON                         -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('motion')" x-cloak role="tabpanel" id="tabpanel-motion" aria-labelledby="tab-motion" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-timer"></i> Hiz</div>
+          <div class="to-card">
+            <div class="to-card-label">Animasyon Hiz Carpani</div>
+            <div class="to-card-desc">0 = animasyonlar kapali, 1 = normal, 2 = yavas</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toMotionScale" min="0" max="2" step="0.1" value="1">
+              <span class="to-slider-val" id="toMotionScaleVal">1x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-wave-sine"></i> Easing</div>
+          <div class="to-card">
+            <div class="to-card-label">Gecis Egrisi</div>
+            <div class="to-select-grid" id="toEasing"></div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-toggle-right"></i> Animasyon Tercihleri</div>
+          <div class="to-card" style="padding:var(--sp-3) var(--sp-5)">
+            <div class="to-toggle-row">
+              <div class="to-toggle-info">
+                <div class="to-toggle-title">Azaltilmis Hareket</div>
+                <div class="to-toggle-desc">Tum animasyonlari minimize eder</div>
+              </div>
+              <label class="to-switch"><input type="checkbox" id="toReducedMotion"><span class="to-switch-track"></span><span class="to-switch-thumb"></span></label>
+            </div>
+            <div class="to-toggle-row">
+              <div class="to-toggle-info">
+                <div class="to-toggle-title">Skeleton Animasyonu</div>
+                <div class="to-toggle-desc">Yukleme sirasinda shimmer efekti</div>
+              </div>
+              <label class="to-switch"><input type="checkbox" id="toSkeletonAnim" checked><span class="to-switch-track"></span><span class="to-switch-thumb"></span></label>
+            </div>
+            <div class="to-toggle-row">
+              <div class="to-toggle-info">
+                <div class="to-toggle-title">Sayfa Giris Animasyonu</div>
+                <div class="to-toggle-desc">Fade-in ve slide-up efektleri</div>
+              </div>
+              <label class="to-switch"><input type="checkbox" id="toEntranceAnim" checked><span class="to-switch-track"></span><span class="to-switch-thumb"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 6: CAM & BLUR                        -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('glass')" x-cloak role="tabpanel" id="tabpanel-glass" aria-labelledby="tab-glass" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-drop"></i> Blur Seviyesi</div>
+          <div class="to-card">
+            <div class="to-card-label">Backdrop Blur</div>
+            <div class="to-card-desc">Overlay ve dropdown arka plan bulanikligi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toBlur" min="0" max="20" step="1" value="6">
+              <span class="to-slider-val" id="toBlurVal">6px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-eye-slash"></i> Opaklik</div>
+          <div class="to-card">
+            <div class="to-card-label">Glass Opakligi</div>
+            <div class="to-card-desc">Topbar ve footer yari seffaflik seviyesi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toGlassOpacity" min="0" max="0.15" step="0.01" value="0.04">
+              <span class="to-slider-val" id="toGlassOpacityVal">0.04</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Backdrop Opakligi</div>
+            <div class="to-card-desc">Spotlight ve dropdown arka plan kararma seviyesi</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toBackdropOpacity" min="0.1" max="0.8" step="0.05" value="0.5">
+              <span class="to-slider-val" id="toBackdropOpacityVal">0.50</span>
+            </div>
+          </div>
+          <div class="to-card">
+            <div class="to-card-label">Panel Glassmorphism</div>
+            <div class="to-card-desc">Dropdown, spotlight, bildirim paneli seffaflik seviyesi (dusuk = daha cam efekti)</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toPanelOpacity" min="0.3" max="0.9" step="0.05" value="0.55">
+              <span class="to-slider-val" id="toPanelOpacityVal">0.55</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════ -->
+      <!-- TAB 7: GELİŞMİŞ                         -->
+      <!-- ════════════════════════════════════════ -->
+      <div x-show="isActive('advanced')" x-cloak role="tabpanel" id="tabpanel-advanced" aria-labelledby="tab-advanced" tabindex="0">
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-sparkle"></i> Hazir Temalar</div>
+          <div class="to-preset-grid" id="toPresets"></div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-code"></i> Ozel CSS</div>
+          <div class="to-card">
+            <div class="to-card-desc">Ozel CSS kurallari ekleyin (tum sayfalarda uygulanir)</div>
+            <textarea class="to-textarea" id="toCustomCss" placeholder="/* Ornek */&#10;.page-title { font-size: 2rem; }"></textarea>
+            <div style="margin-top:var(--sp-2)">
+              <button class="to-btn" id="toApplyCss">Uygula</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-download-simple"></i> Disa / Ice Aktar</div>
+          <div class="to-card">
+            <div class="to-btn-row">
+              <button class="to-btn" id="toExport"><i class="ph ph-export" style="margin-right:var(--sp-1)"></i>Temayi Disa Aktar</button>
+              <label class="to-btn" style="cursor:pointer"><i class="ph ph-upload-simple" style="margin-right:var(--sp-1)"></i>Tema Ice Aktar<input type="file" id="toImportFile" accept=".json" style="display:none"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-arrow-counter-clockwise"></i> Sifirlama</div>
+          <div class="to-card">
+            <div class="to-card-desc">Tum tema ayarlarini varsayilana dondur</div>
+            <button class="to-btn to-btn-danger" id="toResetAll"><i class="ph ph-trash" style="margin-right:var(--sp-1)"></i>Tum Ayarlari Sifirla</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /to-content -->
+  </div><!-- /to-layout -->
+</div><!-- /main -->
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var S = window.AppearanceStore;
+  var T = window.ThemeStore;
+  if (!S || !T) return;
+  T.apply();
+
+  // ── Undo/Redo keyboard shortcut ──
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      T.undo();
+    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'Z' || (e.key === 'z' && e.shiftKey))) {
+      e.preventDefault();
+      T.redo();
+    }
+  });
+
+  // ── Helpers ──
+  var _rebuildLock = false;
+
+  function bindSlider(id, valId, storeKey, suffix, transform) {
+    var el = document.getElementById(id);
+    var val = document.getElementById(valId);
+    el.addEventListener('input', function() {
+      _rebuildLock = true;
+      var v = transform ? transform(el.value) : parseFloat(el.value);
+      T.set(storeKey, v);
+      val.textContent = v + (suffix || '');
+      setTimeout(function() { _rebuildLock = false; }, 50);
+    });
+  }
+
+  function bindToggle(id, storeKey) {
+    var el = document.getElementById(id);
+    el.addEventListener('change', function() {
+      _rebuildLock = true;
+      T.set(storeKey, el.checked);
+      setTimeout(function() { _rebuildLock = false; }, 50);
+    });
+  }
+
+  function bindPicker(pickerId, hexId, fn) {
+    var cp = document.getElementById(pickerId);
+    var hi = document.getElementById(hexId);
+    cp.addEventListener('input', function() { hi.value = cp.value; fn(cp.value); });
+    hi.addEventListener('change', function() { if (/^#[0-9a-f]{6}$/i.test(hi.value)) { cp.value = hi.value; fn(hi.value); } });
+  }
+
+  function selectGrid(containerId, options, currentKey, onSelect) {
+    var el = document.getElementById(containerId);
+    el.innerHTML = '';
+    options.forEach(function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'to-select-card' + (opt.key === currentKey ? ' selected' : '');
+      btn.textContent = opt.label;
+      btn.onclick = function() { onSelect(opt.key); };
+      el.appendChild(btn);
+    });
+  }
+
+  // ═══ TAB 1: RENKLER ═══
+  function buildColors() {
+    var s = S.getState();
+
+    // Mode toggle
+    document.getElementById('toModeToggle').innerHTML = [
+      { key:'light', icon:'ph-sun', label:'Acik' },
+      { key:'dark', icon:'ph-moon', label:'Koyu' }
+    ].map(function(m) {
+      return '<button class="to-mode-btn' + (s.mode === m.key ? ' selected' : '') + '" onclick="AppearanceStore.setMode(\'' + m.key + '\')"><i class="ph ' + m.icon + '"></i>' + m.label + '</button>';
+    }).join('');
+
+    // Tone grids
+    var dg = document.getElementById('toDarkGrid'); dg.innerHTML = '';
+    S.DARK_TONES.forEach(function(t) {
+      var d = document.createElement('div');
+      d.className = 'to-tone' + (t.key === s.darkTone ? ' selected' : '');
+      d.title = t.label; d.style.background = t.base;
+      d.onclick = function() { S.setDarkTone(t.key); };
+      dg.appendChild(d);
+    });
+
+    var lg = document.getElementById('toLightGrid'); lg.innerHTML = '';
+    S.LIGHT_TONES.forEach(function(t) {
+      var d = document.createElement('div');
+      d.className = 'to-tone' + (t.key === s.lightTone ? ' selected' : '');
+      d.title = t.label; d.style.background = t.base;
+      d.onclick = function() { S.setLightTone(t.key); };
+      lg.appendChild(d);
+    });
+
+    document.getElementById('toDarkTones').style.display = s.mode === 'dark' ? 'block' : 'none';
+    document.getElementById('toLightTones').style.display = s.mode === 'light' ? 'block' : 'none';
+
+    // Sync pickers
+    var dt = S.DARK_TONES.find(function(x) { return x.key === s.darkTone; }) || S.DARK_TONES[0];
+    document.getElementById('toDarkPicker').value = s.customDark || dt.base;
+    document.getElementById('toDarkHex').value = s.customDark || dt.base;
+    var lt = S.LIGHT_TONES.find(function(x) { return x.key === s.lightTone; }) || S.LIGHT_TONES[3];
+    document.getElementById('toLightPicker').value = s.customLight || lt.base;
+    document.getElementById('toLightHex').value = s.customLight || lt.base;
+
+    // Accent pills — dark mode
+    var apd = document.getElementById('toAccentDarkPills'); apd.innerHTML = '';
+    S.ACCENTS.forEach(function(a) {
+      var d = document.createElement('div');
+      d.className = 'to-pill' + (a.key === s.accentDark ? ' selected' : '');
+      d.style.background = a.color; d.title = a.key;
+      d.setAttribute('aria-label', a.key + (a.key === s.accentDark ? ' (secili)' : ''));
+      d.onclick = function() { S.setAccentDark(a.key); };
+      apd.appendChild(d);
+    });
+
+    // Accent pills — light mode
+    var apl = document.getElementById('toAccentLightPills'); apl.innerHTML = '';
+    S.ACCENTS.forEach(function(a) {
+      var d = document.createElement('div');
+      d.className = 'to-pill' + (a.key === s.accentLight ? ' selected' : '');
+      d.style.background = a.color; d.title = a.key;
+      d.setAttribute('aria-label', a.key + (a.key === s.accentLight ? ' (secili)' : ''));
+      d.onclick = function() { S.setAccentLight(a.key); };
+      apl.appendChild(d);
+    });
+
+    // Chrome bg
+    var cs = document.getElementById('toChromeBgSection');
+    cs.style.display = s.mode === 'dark' ? 'none' : 'block';
+    if (s.mode === 'light') {
+      var resolved = S.getChromeBgResolved();
+      document.getElementById('toChromePicker').value = resolved;
+      document.getElementById('toChromeHex').value = resolved;
+      document.getElementById('toChromeReset').style.display = s.chromeBg ? 'inline-block' : 'none';
+    }
+  }
+  bindPicker('toDarkPicker', 'toDarkHex', function(h) { S.setCustomDark(h); });
+  bindPicker('toLightPicker', 'toLightHex', function(h) { S.setCustomLight(h); });
+  bindPicker('toChromePicker', 'toChromeHex', function(h) { S.setChromeBg(h); });
+  document.getElementById('toChromeReset').addEventListener('click', function() { S.setChromeBg(null); });
+
+  // ═══ TAB 2: TİPOGRAFİ ═══
+  function buildTypography() {
+    var ts = T.getState();
+    selectGrid('toFontFamily', T.FONTS, ts.fontFamily, function(k) { T.set('fontFamily', k); });
+    selectGrid('toFontCode', T.CODE_FONTS, ts.fontCode, function(k) { T.set('fontCode', k); });
+    selectGrid('toFontWeightBody', [
+      { key: 300, label: '300 Light' }, { key: 400, label: '400 Regular' }
+    ], ts.fontWeightBody, function(k) { T.set('fontWeightBody', parseInt(k)); });
+    selectGrid('toFontWeightHeading', [
+      { key: 500, label: '500 Medium' }, { key: 600, label: '600 Semi' }, { key: 700, label: '700 Bold' }
+    ], ts.fontWeightHeading, function(k) { T.set('fontWeightHeading', parseInt(k)); });
+
+    document.getElementById('toFontSize').value = ts.fontSize;
+    document.getElementById('toFontSizeVal').textContent = ts.fontSize + 'px';
+    document.getElementById('toLetterSpacing').value = ts.letterSpacing;
+    document.getElementById('toLetterSpacingVal').textContent = ts.letterSpacing + 'em';
+    document.getElementById('toLineHeight').value = ts.lineHeight;
+    document.getElementById('toLineHeightVal').textContent = ts.lineHeight;
+  }
+  bindSlider('toFontSize', 'toFontSizeVal', 'fontSize', 'px', function(v) { return parseInt(v); });
+  bindSlider('toLetterSpacing', 'toLetterSpacingVal', 'letterSpacing', 'em', parseFloat);
+  bindSlider('toLineHeight', 'toLineHeightVal', 'lineHeight', '', parseFloat);
+
+  // ═══ TAB 3: YERLEŞİM ═══
+  function buildLayout() {
+    var ts = T.getState();
+    document.getElementById('toRailW').value = ts.railW;
+    document.getElementById('toRailWVal').textContent = ts.railW + 'px';
+    document.getElementById('toWideW').value = ts.wideW;
+    document.getElementById('toWideWVal').textContent = ts.wideW + 'px';
+    document.getElementById('toTopH').value = ts.topH;
+    document.getElementById('toTopHVal').textContent = ts.topH + 'px';
+    document.getElementById('toContentPadding').value = ts.contentPadding;
+    document.getElementById('toContentPaddingVal').textContent = ts.contentPadding + 'x';
+    document.getElementById('toCompact').checked = ts.compact;
+    document.getElementById('toSidebarDefault').checked = ts.sidebarDefault === 'open';
+
+    selectGrid('toContentMaxW', [
+      { key: 'none', label: 'Sinirsiz' },
+      { key: '1200px', label: '1200px' },
+      { key: '1400px', label: '1400px' },
+      { key: '1600px', label: '1600px' }
+    ], ts.contentMaxW, function(k) { T.set('contentMaxW', k); });
+  }
+  bindSlider('toRailW', 'toRailWVal', 'railW', 'px', function(v) { return parseInt(v); });
+  bindSlider('toWideW', 'toWideWVal', 'wideW', 'px', function(v) { return parseInt(v); });
+  bindSlider('toTopH', 'toTopHVal', 'topH', 'px', function(v) { return parseInt(v); });
+  bindSlider('toContentPadding', 'toContentPaddingVal', 'contentPadding', 'x', parseFloat);
+  bindToggle('toCompact', 'compact');
+  document.getElementById('toSidebarDefault').addEventListener('change', function() {
+    T.set('sidebarDefault', this.checked ? 'open' : 'collapsed');
+  });
+
+  // ═══ TAB 4: BİLEŞENLER ═══
+  function buildComponents() {
+    var ts = T.getState();
+    document.getElementById('toRadius').value = ts.radius;
+    document.getElementById('toRadiusVal').textContent = ts.radius + 'px';
+    document.getElementById('toShadow').value = ts.shadowScale;
+    document.getElementById('toShadowVal').textContent = ts.shadowScale + 'x';
+
+    selectGrid('toCardStyle', [
+      { key: 'flat', label: 'Duz' }, { key: 'elevated', label: 'Yukseltilmis' }, { key: 'glass', label: 'Cam' }
+    ], ts.cardStyle, function(k) { T.set('cardStyle', k); });
+    selectGrid('toButtonStyle', [
+      { key: 'rounded', label: 'Yuvarlak' }, { key: 'pill', label: 'Hap' }, { key: 'sharp', label: 'Keskin' }
+    ], ts.buttonStyle, function(k) { T.set('buttonStyle', k); });
+    selectGrid('toInputStyle', [
+      { key: 'bordered', label: 'Kenarlikli' }, { key: 'filled', label: 'Dolgulu' }, { key: 'underline', label: 'Alt Cizgi' }
+    ], ts.inputStyle, function(k) { T.set('inputStyle', k); });
+  }
+  bindSlider('toRadius', 'toRadiusVal', 'radius', 'px', function(v) { return parseInt(v); });
+  bindSlider('toShadow', 'toShadowVal', 'shadowScale', 'x', parseFloat);
+
+  // ═══ TAB 5: ANİMASYON ═══
+  function buildMotion() {
+    var ts = T.getState();
+    document.getElementById('toMotionScale').value = ts.motionScale;
+    document.getElementById('toMotionScaleVal').textContent = ts.motionScale + 'x';
+    document.getElementById('toReducedMotion').checked = ts.reducedMotion;
+    document.getElementById('toSkeletonAnim').checked = ts.skeletonAnim;
+    document.getElementById('toEntranceAnim').checked = ts.entranceAnim;
+
+    selectGrid('toEasing', T.EASING_PRESETS, ts.motionEasing, function(k) { T.set('motionEasing', k); });
+  }
+  bindSlider('toMotionScale', 'toMotionScaleVal', 'motionScale', 'x', parseFloat);
+  bindToggle('toReducedMotion', 'reducedMotion');
+  bindToggle('toSkeletonAnim', 'skeletonAnim');
+  bindToggle('toEntranceAnim', 'entranceAnim');
+
+  // ═══ TAB 6: CAM & BLUR ═══
+  function buildGlass() {
+    var as = S.getState();
+    var ts = T.getState();
+    document.getElementById('toBlur').value = as.blurLevel;
+    document.getElementById('toBlurVal').textContent = as.blurLevel + 'px';
+    document.getElementById('toGlassOpacity').value = ts.glassOpacity;
+    document.getElementById('toGlassOpacityVal').textContent = ts.glassOpacity.toFixed(2);
+    document.getElementById('toBackdropOpacity').value = ts.backdropOpacity;
+    document.getElementById('toBackdropOpacityVal').textContent = ts.backdropOpacity.toFixed(2);
+    document.getElementById('toPanelOpacity').value = ts.panelOpacity;
+    document.getElementById('toPanelOpacityVal').textContent = ts.panelOpacity.toFixed(2);
+  }
+  document.getElementById('toBlur').addEventListener('input', function() {
+    _rebuildLock = true;
+    S.setBlur(parseInt(this.value, 10));
+    document.getElementById('toBlurVal').textContent = this.value + 'px';
+    setTimeout(function() { _rebuildLock = false; }, 50);
+  });
+  bindSlider('toGlassOpacity', 'toGlassOpacityVal', 'glassOpacity', '', function(v) { return parseFloat(parseFloat(v).toFixed(2)); });
+  bindSlider('toBackdropOpacity', 'toBackdropOpacityVal', 'backdropOpacity', '', function(v) { return parseFloat(parseFloat(v).toFixed(2)); });
+  bindSlider('toPanelOpacity', 'toPanelOpacityVal', 'panelOpacity', '', function(v) { return parseFloat(parseFloat(v).toFixed(2)); });
+
+  // ═══ TAB 7: GELİŞMİŞ ═══
+  function buildAdvanced() {
+    var ts = T.getState();
+    document.getElementById('toCustomCss').value = ts.customCss || '';
+
+    var pg = document.getElementById('toPresets'); pg.innerHTML = '';
+    T.THEME_PRESETS.forEach(function(p) {
+      var d = document.createElement('div');
+      d.className = 'to-preset';
+      d.innerHTML = '<div class="to-preset-title">' + p.label + '</div><div class="to-preset-desc">' + p.desc + '</div>';
+      d.onclick = function() { T.applyPreset(p.key); };
+      pg.appendChild(d);
+    });
+  }
+
+  document.getElementById('toApplyCss').addEventListener('click', function() {
+    T.set('customCss', document.getElementById('toCustomCss').value);
+  });
+
+  document.getElementById('toExport').addEventListener('click', function() {
+    var json = T.exportTheme();
+    var blob = new Blob([json], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'atonota-theme.json'; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('toImportFile').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var result = T.importTheme(ev.target.result);
+      if (result.ok) { rebuildAll(); alert('Tema basariyla ice aktarildi (' + result.count + ' ayar)'); }
+      else alert('Tema dosyasi okunamadi: ' + (result.error || ''));
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  document.getElementById('toResetAll').addEventListener('click', function() {
+    if (confirm('Tum tema ayarlari varsayilana donecek. Emin misiniz?')) {
+      T.resetAll();
+      rebuildAll();
+    }
+  });
+
+  // ═══ REBUILD ALL ═══
+  function rebuildAll() {
+    if (_rebuildLock) return;
+    buildColors();
+    buildTypography();
+    buildLayout();
+    buildComponents();
+    buildMotion();
+    buildGlass();
+    buildAdvanced();
+  }
+
+  var _rebuildTimer = null;
+  function debouncedRebuild() {
+    if (_rebuildLock) return;
+    clearTimeout(_rebuildTimer);
+    _rebuildTimer = setTimeout(rebuildAll, 30);
+  }
+
+  rebuildAll();
+
+  S.on('any-change', debouncedRebuild);
+  T.on('any-change', debouncedRebuild);
+});
+</script>
+</body>
+</html>

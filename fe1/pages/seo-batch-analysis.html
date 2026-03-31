@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="tool" x-data="{
   urlText: 'https://acme.com/blog/seo-rehberi\nhttps://acme.com/blog/dijital-pazarlama\nhttps://acme.com/urunler/analiz-araci\nhttps://acme.com/blog/backlink-stratejileri\nhttps://acme.com/hakkimizda',
   analyzed: false,
   loading: false,
@@ -81,28 +84,28 @@
   get urlCount() { return this.urlText.trim().split('\n').filter(u => u.trim()).length; }
 }">
   <!-- Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Toplu URL Analizi</h1>
     <p class="page-sub">Birden fazla URL'yi tek seferde analiz edin</p>
   </div>
 
   <!-- URL Input -->
-  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div class="fade-in-d1 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
       <span class="section-label" style="margin-bottom:0">URL Listesi</span>
-      <span style="font-size:0.75rem;color:var(--muted)" x-text="urlCount + ' / 200 URL'"></span>
+      <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="urlCount + ' / 200 URL'"></span>
     </div>
-    <textarea x-model="urlText" placeholder="URL'leri girin (satir basina bir URL, max 200)" style="width:100%;height:160px;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;font-family:'Courier New',monospace;outline:none;resize:vertical;line-height:1.7"></textarea>
-    <div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+    <textarea x-model="urlText" placeholder="URL'leri girin (satir basina bir URL, max 200)" style="width:100%;height:160px;padding:var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:'Courier New',monospace;outline:none;resize:vertical;line-height:1.7"></textarea>
+    <div style="display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-3)">
       <button @click="doAnalysis()" class="btn-primary" :disabled="loading || urlCount === 0">
         <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-lightning'" :style="loading && 'animation:spin 1s linear infinite'"></i>
         <span x-text="loading ? 'Analiz ediliyor...' : 'Analiz Et'"></span>
       </button>
       <div x-show="loading" style="flex:1;max-width:300px">
-        <div style="height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden">
-          <div :style="'height:100%;border-radius:3px;background:var(--accent);transition:width .3s;width:'+progress+'%'"></div>
+        <div style="height:6px;border-radius:var(--r-xs);background:var(--surface-2);overflow:hidden">
+          <div :style="'height:100%;border-radius:var(--r-xs);background:var(--accent);transition:width .3s;width:'+progress+'%'"></div>
         </div>
-        <span style="font-size:0.6875rem;color:var(--muted)" x-text="progress + '%'"></span>
+        <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="progress + '%'"></span>
       </div>
     </div>
   </div>
@@ -110,9 +113,9 @@
   <!-- Results -->
   <template x-if="analyzed">
     <div>
-      <div class="fade-in-d2" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-        <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="results.length + ' URL analiz edildi'"></span>
-        <button @click="exportCSV()" style="font-size:0.75rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-download-simple"></i> CSV Indir</button>
+      <div class="fade-in-d2" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4);flex-wrap:wrap;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="results.length + ' URL analiz edildi'"></span>
+        <button @click="exportCSV()" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-download-simple"></i> CSV Indir</button>
       </div>
 
       <div class="fade-in-d2 card" data-paginate="20" style="padding:0;overflow:hidden">
@@ -121,18 +124,18 @@
             <thead>
               <tr>
                 <th style="min-width:220px">URL</th>
-                <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doSort('ur')" style="cursor:pointer">UR <i class="ph" :class="sortCol==='ur' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doSort('backlinks')" style="cursor:pointer">Backlinks <i class="ph" :class="sortCol==='backlinks' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doSort('refDomains')" style="cursor:pointer">Ref. Domain <i class="ph" :class="sortCol==='refDomains' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doSort('traffic')" style="cursor:pointer">Trafik <i class="ph" :class="sortCol==='traffic' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doSort('ur')" style="cursor:pointer">UR <i class="ph" :class="sortCol==='ur' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doSort('backlinks')" style="cursor:pointer">Backlinks <i class="ph" :class="sortCol==='backlinks' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doSort('refDomains')" style="cursor:pointer">Ref. Domain <i class="ph" :class="sortCol==='refDomains' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doSort('traffic')" style="cursor:pointer">Trafik <i class="ph" :class="sortCol==='traffic' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
                 <th>Durum</th>
               </tr>
             </thead>
             <tbody>
               <template x-for="row in sorted" :key="row.url">
                 <tr>
-                  <td data-label="URL"><span style="font-size:0.75rem;color:var(--accent);word-break:break-all" x-text="row.url"></span></td>
+                  <td data-label="URL"><span style="font-size:var(--fs-sm);color:var(--accent);word-break:break-all" x-text="row.url"></span></td>
                   <td data-label="DR"><span style="font-weight:600;color:var(--text)" x-text="row.dr"></span></td>
                   <td data-label="UR"><span style="color:var(--text)" x-text="row.ur"></span></td>
                   <td data-label="Backlinks"><span style="color:var(--text)" x-text="row.backlinks.toLocaleString('tr-TR')"></span></td>

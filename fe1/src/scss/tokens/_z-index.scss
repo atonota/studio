@@ -1,0 +1,29 @@
+// ============================================
+// atonota Studio — Z-Index Tokens
+// ============================================
+@use 'sass:map';
+
+$layers: (
+  'base':      1,
+  'dropdown':  100,
+  'sticky':    200,
+  'sidebar':   300,
+  'header':    400,
+  'overlay':   500,
+  'modal':     600,
+  'popover':   700,
+  'toast':     800,
+  'tooltip':   900,
+  'max':       9999,
+) !default;
+
+/// Get a z-index value by layer name.
+/// @param {String} $layer
+/// @return {Number}
+@function z($layer) {
+  $val: map.get($layers, $layer);
+  @if not $val {
+    @error 'Unknown layer "#{$layer}". Available: #{map.keys($layers)}';
+  }
+  @return $val;
+}

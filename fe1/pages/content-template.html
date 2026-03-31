@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   keyword: '',
   generated: false,
   loading: false,
@@ -61,17 +64,17 @@
   }
 }">
   <!-- Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Icerik Sablonu Olusturucu</h1>
     <p class="page-sub">SERP analizine dayali, veri odakli icerik sablonlari olusturun</p>
   </div>
 
   <!-- Keyword Input -->
-  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <div class="fade-in-d1 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
       <div style="position:relative;flex:1;min-width:260px">
         <i class="ph ph-target" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
-        <input type="text" x-model="keyword" @keydown.enter="doGenerate()" placeholder="Hedef keyword girin..." style="width:100%;padding:10px 12px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+        <input type="text" x-model="keyword" @keydown.enter="doGenerate()" placeholder="Hedef keyword girin..." style="width:100%;padding:var(--sp-3) var(--sp-3) var(--sp-3) 36px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
       </div>
       <button @click="doGenerate()" class="btn-primary" :disabled="loading">
         <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-magic-wand'" :style="loading && 'animation:spin 1s linear infinite'"></i>
@@ -84,79 +87,79 @@
   <template x-if="generated">
     <div>
       <!-- SERP Analysis Banner -->
-      <div class="fade-in-d1" style="background:rgba(194,65,12,0.08);border:1px solid rgba(194,65,12,0.2);border-radius:10px;padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:10px">
-        <i class="ph ph-chart-pie" style="color:var(--accent);font-size:1.25rem"></i>
-        <span style="font-size:0.8125rem;color:var(--text)" x-text="serpAnalysis"></span>
+      <div class="fade-in-d1" style="background:rgba(194,65,12,0.08);border:1px solid rgba(194,65,12,0.2);border-radius:var(--r-md);padding:var(--sp-4) var(--sp-5);margin-bottom:var(--sp-6);display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-chart-pie" style="color:var(--accent);font-size:var(--fs-xl)"></i>
+        <span style="font-size:var(--fs-sm);color:var(--text)" x-text="serpAnalysis"></span>
       </div>
 
       <!-- Recommendations Grid -->
-      <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px">
+      <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--sp-4);margin-bottom:var(--sp-6)">
         <div class="stat-card" style="--stripe:#3b82f6">
-          <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kelime Sayisi</span>
-          <div style="font-size:1.5rem;font-weight:300;color:var(--text);margin-top:6px" x-text="wordCount.toLocaleString('tr-TR')"></div>
-          <span style="font-size:0.6875rem;color:var(--muted)">ort. top 10</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kelime Sayisi</span>
+          <div style="font-size:var(--fs-2xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)" x-text="wordCount.toLocaleString('tr-TR')"></div>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">ort. top 10</span>
         </div>
         <div class="stat-card" style="--stripe:#22c55e">
-          <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Readability</span>
-          <div style="font-size:1.5rem;font-weight:300;color:#22c55e;margin-top:6px" x-text="readability"></div>
-          <span style="font-size:0.6875rem;color:var(--muted)">onerilen seviye</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Readability</span>
+          <div style="font-size:var(--fs-2xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)" x-text="readability"></div>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">onerilen seviye</span>
         </div>
         <div class="stat-card" style="--stripe:#a855f7">
-          <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Semantik Kelime</span>
-          <div style="font-size:1.5rem;font-weight:300;color:var(--text);margin-top:6px" x-text="semanticKeywords.length"></div>
-          <span style="font-size:0.6875rem;color:var(--muted)">iliskili keyword</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Semantik Kelime</span>
+          <div style="font-size:var(--fs-2xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)" x-text="semanticKeywords.length"></div>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">iliskili keyword</span>
         </div>
         <div class="stat-card" style="--stripe:#eab308">
-          <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">H2 Baslik</span>
-          <div style="font-size:1.5rem;font-weight:300;color:var(--text);margin-top:6px" x-text="headings.length"></div>
-          <span style="font-size:0.6875rem;color:var(--muted)">onerilen baslik</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">H2 Baslik</span>
+          <div style="font-size:var(--fs-2xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)" x-text="headings.length"></div>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">onerilen baslik</span>
         </div>
       </div>
 
       <!-- Semantic Keywords -->
-      <div class="fade-in-d2 card" style="margin-bottom:24px;padding:20px">
+      <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6);padding:var(--sp-5)">
         <span class="section-label">Semantik Kelimeler</span>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-top:var(--sp-2)">
           <template x-for="kw in semanticKeywords" :key="kw">
-            <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;padding:6px 12px;font-size:0.75rem" x-text="kw"></span>
+            <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;padding:var(--sp-2) var(--sp-3);font-size:var(--fs-sm)" x-text="kw"></span>
           </template>
         </div>
       </div>
 
       <!-- H2 Headings -->
-      <div class="fade-in-d3 card" style="margin-bottom:24px;padding:0;overflow:hidden">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <div class="fade-in-d3 card" style="margin-bottom:var(--sp-6);padding:0;overflow:hidden">
+        <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
           <span class="section-label" style="margin-bottom:0">Onerilen H2 Basliklar</span>
         </div>
         <template x-for="(h, idx) in headings" :key="idx">
-          <div :style="'padding:12px 20px;display:flex;align-items:center;gap:10px;' + (idx < headings.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
-            <span style="width:24px;height:24px;border-radius:6px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--accent);flex-shrink:0" x-text="idx+1"></span>
-            <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="h"></span>
+          <div :style="'padding:var(--sp-3) var(--sp-5);display:flex;align-items:center;gap:var(--sp-3);' + (idx < headings.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
+            <span style="width:24px;height:24px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);font-weight:700;color:var(--accent);flex-shrink:0" x-text="idx+1"></span>
+            <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="h"></span>
           </div>
         </template>
       </div>
 
       <!-- Backlink Targets -->
-      <div class="fade-in-d3 card" style="margin-bottom:24px;padding:0;overflow:hidden">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <div class="fade-in-d3 card" style="margin-bottom:var(--sp-6);padding:0;overflow:hidden">
+        <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
           <span class="section-label" style="margin-bottom:0">Backlink Hedefleri</span>
         </div>
         <template x-for="(bt, idx) in backlinkTargets" :key="bt.site">
-          <div :style="'padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;' + (idx < backlinkTargets.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
+          <div :style="'padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2);' + (idx < backlinkTargets.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
             <div style="flex:1;min-width:200px">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                <span style="font-size:0.8125rem;color:var(--accent);font-weight:600" x-text="bt.site"></span>
+              <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+                <span style="font-size:var(--fs-sm);color:var(--accent);font-weight:600" x-text="bt.site"></span>
                 <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6" x-text="'DR '+bt.dr"></span>
               </div>
-              <span style="font-size:0.75rem;color:var(--muted)" x-text="bt.reason"></span>
+              <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="bt.reason"></span>
             </div>
           </div>
         </template>
       </div>
 
       <!-- Action Button -->
-      <div class="fade-in-d3" style="text-align:center;margin-bottom:24px">
-        <a href="content-pages.html" class="btn-primary" style="text-decoration:none;font-size:0.8125rem;padding:10px 24px;display:inline-flex;align-items:center;gap:6px"><i class="ph ph-pencil-line"></i> Yazim Asistaninda Ac</a>
+      <div class="fade-in-d3" style="text-align:center;margin-bottom:var(--sp-6)">
+        <a href="content-pages.html" class="btn-primary" style="text-decoration:none;font-size:var(--fs-sm);padding:var(--sp-3) var(--sp-6);display:inline-flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-pencil-line"></i> Yazim Asistaninda Ac</a>
       </div>
     </div>
   </template>

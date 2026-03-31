@@ -1,0 +1,65 @@
+/* ═══════════════════════════════════════════
+   KATMAN 1 — Primitive Tokens
+   Ham hex degerler. Insan yazar, makine tuketir.
+   Asla dogrudan bilesen CSS'inde kullanilmaz.
+   Semantic tokenlar bu degerlere referans verir.
+   Build output: css/primitives.css
+═══════════════════════════════════════════ */
+
+@use 'sass:map';
+@use 'tokens/colors' as c;
+
+:root {
+  // ── Brand ──
+  --p-orange-600: #{c.accent('orange')};
+  --p-orange-700: #9A3412;
+  --p-orange-800: #7C2D12;
+  --p-logo-orange: #C94B1A;
+
+  // ── Status ──
+  --p-green-500: #22c55e;
+  --p-green-600: #16a34a;
+  --p-blue-500: #3b82f6;
+  --p-blue-600: #2563eb;
+  --p-purple-500: #a855f7;
+  --p-purple-600: #9333ea;
+  --p-yellow-500: #eab308;
+  --p-yellow-600: #ca8a04;
+  --p-red-500: #ef4444;
+  --p-red-600: #dc2626;
+
+  // ── Social platforms ──
+  @each $name, $color in c.$social {
+    --p-#{$name}: #{$color};
+  }
+
+  // ── Light surfaces (milk tone — default) ──
+  @each $key, $val in c.$light-palette {
+    --p-light-#{$key}: #{$val};
+  }
+
+  // ── Dark surfaces (coal-warm — default) ──
+  @each $key, $val in c.$dark-palette {
+    --p-dark-#{$key}: #{$val};
+  }
+
+  // ── Glass ──
+  @each $key, $val in c.$glass {
+    --p-glass-#{$key}: #{$val};
+  }
+
+  // ── Accent presets (pastel palette) ──
+  @each $name, $colors in c.$accents {
+    --p-accent-#{$name}: #{map.get($colors, 'base')};
+    --p-accent-#{$name}-h: #{map.get($colors, 'hover')};
+  }
+
+  // ── Neutral ──
+  --p-white: #FFFFFF;
+  --p-black: #000000;
+
+  // ── Chart series ──
+  @each $key, $val in c.$chart-series {
+    --p-chart-#{$key}: #{$val};
+  }
+}

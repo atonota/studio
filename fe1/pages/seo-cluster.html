@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,26 +21,26 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="table">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Keyword Cluster Analizi</h1>
     <p class="page-sub">Anlamsal olarak gruplanmis anahtar kelime kumeleri</p>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Cluster</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">18</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Cluster</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">18</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Boyut</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">12 keyword</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Boyut</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">12 keyword</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kapsam</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">84%</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kapsam</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">84%</div>
     </div>
   </div>
 
@@ -48,24 +51,24 @@
     {name:'Backlink Stratejisi',intent:'Bilgi',intentColor:'#3b82f6',kwCount:8,volume:'3,100',keywords:['backlink nedir','backlink alma','backlink stratejisi','guest post','kirik link','link insasi','dofollow nofollow','backlink analizi']},
     {name:'Teknik SEO',intent:'Bilgi',intentColor:'#3b82f6',kwCount:11,volume:'4,800',keywords:['teknik seo','canonical tag','sitemap','robots txt','schema markup','sayfa hizi','core web vitals','crawl butcesi','hreflang','301 redirect','ssl sertifikasi']},
     {name:'Yerel SEO',intent:'Ticari',intentColor:'#a855f7',kwCount:9,volume:'2,900',keywords:['yerel seo','google isletme profili','yerel arama','google maps seo','yerel anahtar kelime','nap tutarliligi','yerel backlink','yerel icerik','yerel siralama']}
-  ] }" style="display:flex;flex-direction:column;gap:16px">
+  ] }" style="display:flex;flex-direction:column;gap:var(--sp-4)">
     <template x-for="(cluster, idx) in clusters" :key="idx">
-      <div class="card" style="padding:20px;cursor:pointer;transition:all .15s" @click="expanded = expanded === idx ? null : idx">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <i class="ph" :class="expanded === idx ? 'ph-caret-down' : 'ph-caret-right'" style="font-size:1rem;color:var(--accent);transition:transform .15s"></i>
-            <span style="font-weight:500;color:var(--text);font-size:1rem" x-text="cluster.name"></span>
+      <div class="card" style="padding:var(--sp-5);cursor:pointer;transition:all .15s" @click="expanded = expanded === idx ? null : idx">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2);margin-bottom:var(--sp-3)">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <i class="ph" :class="expanded === idx ? 'ph-caret-down' : 'ph-caret-right'" style="font-size:var(--fs-lg);color:var(--accent);transition:transform .15s"></i>
+            <span style="font-weight:500;color:var(--text);font-size:var(--fs-lg)" x-text="cluster.name"></span>
           </div>
           <span class="badge" :style="'background:rgba(' + (cluster.intent==='Ticari' ? '168,85,247' : '59,130,246') + ',0.1);color:' + cluster.intentColor" x-text="cluster.intent"></span>
         </div>
-        <div style="display:flex;gap:24px;font-size:0.8125rem;color:var(--muted)">
-          <div style="display:flex;align-items:center;gap:4px"><i class="ph ph-key" style="font-size:0.875rem"></i> <span x-text="cluster.kwCount + ' keyword'"></span></div>
-          <div style="display:flex;align-items:center;gap:4px"><i class="ph ph-chart-bar" style="font-size:0.875rem"></i> <span x-text="cluster.volume + ' hacim'"></span></div>
+        <div style="display:flex;gap:var(--sp-6);font-size:var(--fs-sm);color:var(--muted)">
+          <div style="display:flex;align-items:center;gap:var(--sp-1)"><i class="ph ph-key" style="font-size:var(--fs-md)"></i> <span x-text="cluster.kwCount + ' keyword'"></span></div>
+          <div style="display:flex;align-items:center;gap:var(--sp-1)"><i class="ph ph-chart-bar" style="font-size:var(--fs-md)"></i> <span x-text="cluster.volume + ' hacim'"></span></div>
         </div>
         <!-- Expanded keyword list -->
-        <div x-show="expanded === idx" x-transition style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px">
+        <div x-show="expanded === idx" x-transition style="margin-top:var(--sp-4);padding-top:var(--sp-4);border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:var(--sp-2)">
           <template x-for="kw in cluster.keywords" :key="kw">
-            <span style="padding:4px 10px;border-radius:6px;font-size:0.75rem;background:var(--surface-2);color:var(--text)" x-text="kw"></span>
+            <span style="padding:var(--sp-1) var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-sm);background:var(--surface-2);color:var(--text)" x-text="kw"></span>
           </template>
         </div>
       </div>

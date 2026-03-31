@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   fields: { headline: 'atonota ile SEO Analitigi', author: 'Mehmet Karaca', datePublished: '2026-03-15', imageUrl: 'https://atonota.com/blog/seo-analitigi.jpg' },
   errors: {},
   validate() {
@@ -34,12 +37,12 @@
   }
 }">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-code" style="color:#eab308;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-code" style="color:#eab308;font-size:var(--fs-xl)"></i>
     </div>
     <div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <h1 class="page-title">Schema Duzenle — Article</h1>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">JSON-LD</span>
       </div>
@@ -48,9 +51,9 @@
   </div>
 
   <!-- JSON-LD Code Block -->
-  <div class="fade-in-d1 card" style="margin-bottom:24px">
+  <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">JSON-LD Onizleme</span>
-    <pre style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'SF Mono',monospace;font-size:0.8125rem;color:var(--text-soft);overflow-x:auto;line-height:1.6;margin:0">{
+    <pre style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);font-family:'SF Mono',monospace;font-size:var(--fs-sm);color:var(--text-soft);overflow-x:auto;line-height:1.6;margin:0">{
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "atonota ile SEO Analitigi",
@@ -71,31 +74,31 @@
   <div class="fade-in-d2 card" style="max-width:640px">
     <span class="section-label">Alan Duzenle</span>
 
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Headline</label>
-      <input type="text" x-model="fields.headline" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none" :style="errors.headline ? 'border-color:#ef4444' : ''">
-      <span x-show="errors.headline" x-text="errors.headline" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
+    <div style="margin-bottom:var(--sp-5)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Headline</label>
+      <input type="text" x-model="fields.headline" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none" :style="errors.headline ? 'border-color:#ef4444' : ''">
+      <span x-show="errors.headline" x-text="errors.headline" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
     </div>
 
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Author</label>
-      <input type="text" x-model="fields.author" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none" :style="errors.author ? 'border-color:#ef4444' : ''">
-      <span x-show="errors.author" x-text="errors.author" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
+    <div style="margin-bottom:var(--sp-5)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Author</label>
+      <input type="text" x-model="fields.author" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none" :style="errors.author ? 'border-color:#ef4444' : ''">
+      <span x-show="errors.author" x-text="errors.author" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
     </div>
 
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Date Published</label>
-      <input type="text" x-model="fields.datePublished" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
+    <div style="margin-bottom:var(--sp-5)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Date Published</label>
+      <input type="text" x-model="fields.datePublished" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none">
     </div>
 
-    <div style="margin-bottom:24px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Image URL</label>
-      <input type="text" x-model="fields.imageUrl" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
+    <div style="margin-bottom:var(--sp-6)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Image URL</label>
+      <input type="text" x-model="fields.imageUrl" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none">
     </div>
 
-    <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end">
-      <button class="btn-secondary" style="padding:8px 20px;font-size:0.8125rem"><i class="ph ph-eye" style="margin-right:4px"></i>Onizleme</button>
-      <button class="btn-primary" style="padding:8px 20px;font-size:0.8125rem" @click="save()"><i class="ph ph-floppy-disk" style="margin-right:4px"></i>Kaydet</button>
+    <div style="display:flex;align-items:center;gap:var(--sp-3);justify-content:flex-end">
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)"><i class="ph ph-eye" style="margin-right:var(--sp-1)"></i>Onizleme</button>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" @click="save()"><i class="ph ph-floppy-disk" style="margin-right:var(--sp-1)"></i>Kaydet</button>
     </div>
   </div>
 </div>

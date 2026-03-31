@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   severity: 'tumu',
   alerts: [
     { id:1, title:'rakip1.com 3 yeni backlink kazandi', desc:'Kaynak domainler: techblog.com, dijitalajans.net, seoforum.com.tr', time:'1 saat once', icon:'ph-link', color:'#3b82f6', severity:'yuksek', dismissed:false },
@@ -36,37 +39,37 @@
     if (a) { a.dismissed = true; $store.toast.show('Uyari kaldirildi', 'success'); }
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Rakip Uyarilari</h1>
     <p class="page-sub">Rakiplerinizin son hareketleri</p>
   </div>
 
   <!-- Severity Filter -->
-  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:16px">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
     <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'yuksek',l:'Yuksek'},{v:'orta',l:'Orta'},{v:'dusuk',l:'Dusuk'}]">
-      <button @click="severity=pill.v" :style="severity===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+      <button @click="severity=pill.v" class="pill" :class="severity===pill.v ? 'active' : ''" x-text="pill.l"></button>
     </template>
   </div>
 
   <!-- Alert Cards -->
-  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:12px">
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-3)">
     <template x-for="a in filtered" :key="a.id">
-      <div class="card" style="display:flex;align-items:flex-start;gap:14px" x-transition>
-        <div :style="'width:40px;height:40px;border-radius:10px;background:'+a.color+'18;display:flex;align-items:center;justify-content:center;flex-shrink:0'">
-          <i class="ph" :class="a.icon" :style="'color:'+a.color+';font-size:1.25rem'"></i>
+      <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4)" x-transition>
+        <div :style="'width:40px;height:40px;border-radius:var(--r-md);background:'+a.color+'18;display:flex;align-items:center;justify-content:center;flex-shrink:0'">
+          <i class="ph" :class="a.icon" :style="'color:'+a.color+';font-size:var(--fs-xl)'"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)" x-text="a.title"></div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:4px" x-text="a.desc"></div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)" x-text="a.title"></div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)" x-text="a.desc"></div>
         </div>
-        <span style="font-size:0.6875rem;color:var(--muted);white-space:nowrap;flex-shrink:0" x-text="a.time"></span>
-        <button @click="dismiss(a.id)" style="background:none;border:none;cursor:pointer;padding:4px;color:var(--muted);flex-shrink:0" title="Kaldir">
-          <i class="ph ph-x" style="font-size:1rem"></i>
+        <span style="font-size:var(--fs-xs);color:var(--muted);white-space:nowrap;flex-shrink:0" x-text="a.time"></span>
+        <button @click="dismiss(a.id)" style="background:none;border:none;cursor:pointer;padding:var(--sp-1);color:var(--muted);flex-shrink:0" title="Kaldir">
+          <i class="ph ph-x" style="font-size:var(--fs-lg)"></i>
         </button>
       </div>
     </template>
-    <div x-show="filtered.length===0" style="text-align:center;padding:40px;color:var(--muted);font-size:0.875rem">
-      <i class="ph ph-bell-slash" style="font-size:2rem;display:block;margin-bottom:8px;opacity:0.5"></i>
+    <div x-show="filtered.length===0" style="text-align:center;padding:40px;color:var(--muted);font-size:var(--fs-md)">
+      <i class="ph ph-bell-slash" style="font-size:var(--fs-4xl);display:block;margin-bottom:var(--sp-2);opacity:0.5"></i>
       Uyari bulunmuyor
     </div>
   </div>

@@ -4,11 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>AI Insight Feed — atonota Studio</title>
+<title>Insights — atonota Studio</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,116 +22,150 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ module:'tumu', severity:'tumu', dateRange:'7gun' }">
-  <div class="fade-in" style="margin-bottom:24px">
-    <h1 class="page-title">AI Insight Feed</h1>
-    <p class="page-sub">Platformunuz icin uretilen yapay zeka icerik onerileri</p>
+<div id="main">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+    <div>
+      <h1 class="page-title">Insights</h1>
+      <p class="page-sub">AI destekli platform performans ozeti</p>
+    </div>
+    <a href="insights-feed.html" class="btn-primary" style="text-decoration:none"><i class="ph ph-funnel"></i> Tum Feed</a>
   </div>
 
-  <!-- Filters -->
-  <div class="fade-in-d1" style="margin-bottom:24px">
-    <div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <div style="display:flex;gap:6px">
-        <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'seo',l:'SEO'},{v:'reklam',l:'Reklam'},{v:'icerik',l:'Icerik'},{v:'guvenlik',l:'Guvenlik'},{v:'performans',l:'Performans'}]">
-          <button @click="module=pill.v" :style="module===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:4px 12px;border-radius:20px;font-size:0.6875rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
-        </template>
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+    <div class="stat-card" style="--stripe:#a855f7">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Insight</span>
+        <i class="ph ph-lightbulb" style="color:#a855f7;font-size:1.125rem"></i>
       </div>
-      <div style="flex:1"></div>
-      <div style="display:flex;gap:6px">
-        <template x-for="pill in [{v:'tumu',l:'Tumu'},{v:'kritik',l:'Kritik'},{v:'yuksek',l:'Yuksek'},{v:'bilgi',l:'Bilgi'}]">
-          <button @click="severity=pill.v" :style="severity===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:4px 12px;border-radius:20px;font-size:0.6875rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
-        </template>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">18</div>
+      <div style="font-size:0.75rem;color:#a855f7;margin-top:4px">Bu hafta <span style="color:var(--muted)">+5 yeni</span></div>
+    </div>
+    <div class="stat-card" style="--stripe:#ef4444">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kritik</span>
+        <i class="ph ph-warning-circle" style="color:#ef4444;font-size:1.125rem"></i>
       </div>
-      <select x-model="dateRange" style="background:transparent;border:1px solid var(--border);border-radius:6px;padding:6px 12px;color:var(--text);font-size:0.8125rem;outline:none">
-        <option value="7gun">Son 7 Gun</option>
-        <option value="30gun">Son 30 Gun</option>
-        <option value="90gun">Son 90 Gun</option>
-      </select>
-      <span style="font-size:0.8125rem;color:var(--muted)">5 insight</span>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">3</div>
+      <div style="font-size:0.75rem;color:#ef4444;margin-top:4px">Hemen aksiyon gerekli</div>
+    </div>
+    <div class="stat-card" style="--stripe:#eab308">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yuksek Oncelik</span>
+        <i class="ph ph-arrow-up-right" style="color:#eab308;font-size:1.125rem"></i>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">7</div>
+      <div style="font-size:0.75rem;color:#eab308;margin-top:4px">Yakin takip onerilen</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Olumlu Sinyal</span>
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+      </div>
+      <div style="font-size:1.75rem;font-weight:300;color:var(--text)">8</div>
+      <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">Gelisme tespit edildi</div>
     </div>
   </div>
 
-  <!-- Insight Cards -->
-  <div class="fade-in-d2" style="display:flex;flex-direction:column;gap:14px">
-    <!-- 1 -->
-    <div class="card" style="padding:18px;display:flex;align-items:flex-start;gap:14px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-chart-line-down" style="font-size:1.25rem;color:#ef4444"></i>
-      </div>
-      <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-weight:500;color:var(--text);font-size:0.9375rem">Organik Trafik Dususu Tespit Edildi</span>
-          <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">-12%</span>
-          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">SEO</span>
-        </div>
-        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:6px">Son 7 gunde organik trafik %12 azaldi. "dijital pazarlama" anahtar kelimesinde 3 pozisyon kaybi tespit edildi.</p>
-        <span style="font-size:0.6875rem;color:var(--muted)">2 saat once</span>
-      </div>
+  <!-- Chart + Modül Dagilimi -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px">
+    <div class="card">
+      <span class="section-label">Haftalik Insight Trendi (Son 30 Gun)</span>
+      <div id="chart-insights" style="width:100%;height:220px"></div>
     </div>
-
-    <!-- 2 -->
-    <div class="card" style="padding:18px;display:flex;align-items:flex-start;gap:14px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-trend-up" style="font-size:1.25rem;color:#22c55e"></i>
-      </div>
-      <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-weight:500;color:var(--text);font-size:0.9375rem">Reklam ROAS Artisi</span>
-          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">+28%</span>
-          <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Reklam</span>
-        </div>
-        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:6px">Meta Ads kampanyalarinda ROAS %28 artis gosteriyor. Butce artisi onerilir.</p>
-        <span style="font-size:0.6875rem;color:var(--muted)">5 saat once</span>
-      </div>
+    <div class="card">
+      <span class="section-label">Modul Dagilimi</span>
+      <div id="chart-modules" style="width:100%;height:220px"></div>
     </div>
+  </div>
 
-    <!-- 3 -->
-    <div class="card" style="padding:18px;display:flex;align-items:flex-start;gap:14px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-file-search" style="font-size:1.25rem;color:#eab308"></i>
+  <!-- Son Insightlar -->
+  <div class="fade-in-d3">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <span class="section-label" style="margin-bottom:0">Son Insightlar</span>
+        <a href="insights-feed.html" style="font-size:0.75rem;color:var(--accent);text-decoration:none">Tumunu Gor &rsaquo;</a>
       </div>
-      <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-weight:500;color:var(--text);font-size:0.9375rem">Icerik Eskime Uyarisi</span>
-          <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">12 sayfa</span>
-          <span class="badge" style="background:rgba(194,65,12,0.1);color:#C2410C">Icerik</span>
-        </div>
-        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:6px">12 blog yazisi 90 gunden uzun suredir guncellenmedi ve trafik kaybediyor.</p>
-        <span style="font-size:0.6875rem;color:var(--muted)">1 gun once</span>
-      </div>
-    </div>
+      <div style="display:flex;flex-direction:column;gap:0">
 
-    <!-- 4 -->
-    <div class="card" style="padding:18px;display:flex;align-items:flex-start;gap:14px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-shield-check" style="font-size:1.25rem;color:#3b82f6"></i>
-      </div>
-      <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-weight:500;color:var(--text);font-size:0.9375rem">SSL Sertifika Suresi Yaklasti</span>
-          <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">14 gun</span>
-          <span class="badge" style="background:rgba(123,114,105,0.15);color:#7B7269">Guvenlik</span>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+            <i class="ph ph-chart-line-down" style="color:#ef4444"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+              <span style="font-size:0.8125rem;color:var(--text);font-weight:500">Organik Trafik Dususu</span>
+              <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
+              <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">SEO</span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">Son 7 gunde organik trafik %12 azaldi. Pozisyon kaybi tespit edildi.</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0;margin-top:2px">2s</span>
         </div>
-        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:6px">SSL sertifikaniz 14 gun icinde sona erecek. Otomatik yenileme durumunu kontrol edin.</p>
-        <span style="font-size:0.6875rem;color:var(--muted)">2 gun once</span>
-      </div>
-    </div>
 
-    <!-- 5 -->
-    <div class="card" style="padding:18px;display:flex;align-items:flex-start;gap:14px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-lightning" style="font-size:1.25rem;color:#22c55e"></i>
-      </div>
-      <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-weight:500;color:var(--text);font-size:0.9375rem">Core Web Vitals Iyilesmesi</span>
-          <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">LCP -0.4s</span>
-          <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Performans</span>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+            <i class="ph ph-trend-up" style="color:#22c55e"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+              <span style="font-size:0.8125rem;color:var(--text);font-weight:500">Reklam ROAS Artisi</span>
+              <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Olumlu</span>
+              <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Reklam</span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">Meta Ads ROAS %28 artti. Butce artisi degerlendirebilirsiniz.</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0;margin-top:2px">5s</span>
         </div>
-        <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5;margin-bottom:6px">LCP metrigi 2.8s'den 2.4s'ye dustu. Gorsel optimizasyonu basarili oldu.</p>
-        <span style="font-size:0.6875rem;color:var(--muted)">3 gun once</span>
+
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+            <i class="ph ph-file-search" style="color:#eab308"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+              <span style="font-size:0.8125rem;color:var(--text);font-weight:500">Icerik Eskime Uyarisi</span>
+              <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Yuksek</span>
+              <span class="badge" style="background:rgba(194,65,12,0.1);color:#C2410C">Icerik</span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">12 blog yazisi 90 gunden uzun suredir guncellenmedi, trafik kaybediyor.</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0;margin-top:2px">1g</span>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+            <i class="ph ph-shield-check" style="color:#3b82f6"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+              <span style="font-size:0.8125rem;color:var(--text);font-weight:500">SSL Sertifika Suresi</span>
+              <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Bilgi</span>
+              <span class="badge" style="background:rgba(123,114,105,0.15);color:#7B7269">Guvenlik</span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">SSL sertifikasi 14 gun icinde sona erecek. Otomatik yenileme durumunu kontrol edin.</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0;margin-top:2px">2g</span>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">
+            <i class="ph ph-lightning" style="color:#22c55e"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+              <span style="font-size:0.8125rem;color:var(--text);font-weight:500">Core Web Vitals Iyilesmesi</span>
+              <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Olumlu</span>
+              <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Performans</span>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted)">LCP metrigi 2.8s'den 2.4s'ye dustu. Gorsel optimizasyonu basarili oldu.</div>
+          </div>
+          <span style="font-size:0.6875rem;color:var(--muted);flex-shrink:0;margin-top:2px">3g</span>
+        </div>
+
       </div>
     </div>
   </div>
@@ -135,6 +173,49 @@
 
 <div id="footbar"></div>
 <script src="../js/shell.js"></script>
-<script>document.addEventListener('DOMContentLoaded', () => initShell('ai'));</script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('insights'));</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const txtColor = '#F2EDE5';
+  const mutedColor = '#7B7269';
+  const borderColor = '#3C342C';
+
+  // Insight trend (bar chart)
+  const cInsights = echarts.init(document.getElementById('chart-insights'));
+  const weeks = ['1 Mar','8 Mar','15 Mar','22 Mar','29 Mar'];
+  cInsights.setOption({
+    tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    grid:{left:36,right:12,top:12,bottom:28},
+    xAxis:{type:'category',data:weeks,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
+    series:[
+      {name:'Kritik',type:'bar',stack:'total',data:[1,2,1,2,3],itemStyle:{color:'#ef4444',borderRadius:[0,0,0,0]}},
+      {name:'Yuksek',type:'bar',stack:'total',data:[3,4,5,4,7],itemStyle:{color:'#eab308'}},
+      {name:'Bilgi',type:'bar',stack:'total',data:[4,3,6,5,8],itemStyle:{color:'#22c55e',borderRadius:[4,4,0,0]}}
+    ]
+  });
+
+  // Modül dağılımı (donut)
+  const cModules = echarts.init(document.getElementById('chart-modules'));
+  cModules.setOption({
+    tooltip:{trigger:'item',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
+    legend:{bottom:0,textStyle:{color:mutedColor,fontSize:10},itemWidth:8,itemHeight:8,itemGap:10},
+    series:[{
+      type:'pie',radius:['45%','68%'],center:['50%','42%'],
+      label:{show:true,color:txtColor,fontSize:11,formatter:'{d}%',position:'outside'},
+      labelLine:{lineStyle:{color:borderColor}},
+      data:[
+        {value:6,name:'SEO',itemStyle:{color:'#22c55e'}},
+        {value:4,name:'Reklam',itemStyle:{color:'#a855f7'}},
+        {value:3,name:'Icerik',itemStyle:{color:'#C2410C'}},
+        {value:3,name:'Performans',itemStyle:{color:'#eab308'}},
+        {value:2,name:'Guvenlik',itemStyle:{color:'#3b82f6'}}
+      ]
+    }]
+  });
+
+  window.addEventListener('resize', () => { cInsights.resize(); cModules.resize(); });
+});
+</script>
 </body>
 </html>

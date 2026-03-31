@@ -1,0 +1,25 @@
+// ============================================
+// atonota Studio — Border Radius Tokens
+// ============================================
+@use 'sass:map';
+
+$radii: (
+  'none':  0,
+  'sm':    4px,
+  'md':    8px,
+  'lg':    12px,
+  'xl':    16px,
+  '2xl':   24px,
+  'full':  9999px,
+) !default;
+
+/// Get a border-radius value.
+/// @param {String} $key
+/// @return {Length}
+@function radius($key) {
+  $val: map.get($radii, $key);
+  @if $val == null {
+    @error 'Unknown radius "#{$key}". Available: #{map.keys($radii)}';
+  }
+  @return $val;
+}

@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,56 +22,56 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Pazar Payi Tahmini</h1>
     <p class="page-sub">Organik arama payi</p>
   </div>
 
   <!-- Date Range Pills -->
-  <div class="fade-in" x-data="{ range: '3ay' }" style="display:flex;gap:6px;margin-bottom:20px">
+  <div class="fade-in" x-data="{ range: '3ay' }" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5)">
     <template x-for="pill in [{v:'1ay',l:'1 Ay'},{v:'3ay',l:'3 Ay'},{v:'6ay',l:'6 Ay'},{v:'1yil',l:'1 Yil'}]">
-      <button @click="range=pill.v" :style="range===pill.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="pill.l"></button>
+      <button @click="range=pill.v" class="pill" :class="range===pill.v ? 'active' : ''" x-text="pill.l"></button>
     </template>
   </div>
 
-  <div style="display:flex;flex-direction:column;gap:20px;max-width:800px">
+  <div style="display:flex;flex-direction:column;gap:var(--sp-5);max-width:800px">
 
     <!-- Pie Chart -->
-    <div class="fade-in-d1 card" style="padding:20px">
+    <div class="fade-in-d1 card" style="padding:var(--sp-5)">
       <div id="pie-chart" style="width:100%;height:360px"></div>
     </div>
 
     <!-- Trend Card -->
-    <div class="fade-in-d1 card" style="display:flex;align-items:center;gap:14px;padding:16px 20px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.25rem"></i>
+    <div class="fade-in-d1 card" style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Son 6 ayda payimiz %9 → %12 artti (+3 puan)</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Ekim 2025 — Mart 2026 karsilastirmasi</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Son 6 ayda payimiz %9 → %12 artti (+3 puan)</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">Ekim 2025 — Mart 2026 karsilastirmasi</div>
       </div>
     </div>
 
     <!-- AI Insights -->
-    <div class="fade-in-d2 card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-        <i class="ph ph-brain" style="color:#a855f7;font-size:1.125rem"></i>
-        <span style="font-size:0.875rem;font-weight:600;color:var(--text)">AI Degerlendirmesi</span>
+    <div class="fade-in-d2 card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+        <i class="ph ph-brain" style="color:#a855f7;font-size:var(--fs-lg)"></i>
+        <span style="font-size:var(--fs-md);font-weight:600;color:var(--text)">AI Degerlendirmesi</span>
       </div>
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px">
-        <li style="display:flex;align-items:flex-start;gap:8px;font-size:0.8125rem;color:var(--muted);line-height:1.5">
-          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></span>
+      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--sp-3)">
+        <li style="display:flex;align-items:flex-start;gap:var(--sp-2);font-size:var(--fs-sm);color:var(--muted);line-height:1.5">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:var(--sp-2)"></span>
           Rakip1 en buyuk pay sahibi ancak son 3 ayda %2 dusus yasadi. Icerik guncelleme sikligi azalmis.
         </li>
-        <li style="display:flex;align-items:flex-start;gap:8px;font-size:0.8125rem;color:var(--muted);line-height:1.5">
-          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></span>
+        <li style="display:flex;align-items:flex-start;gap:var(--sp-2);font-size:var(--fs-sm);color:var(--muted);line-height:1.5">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:var(--sp-2)"></span>
           "Diger" segmentindeki paylarin %60'i son 12 ayda pazara giren yeni oyunculardan olusuyor.
         </li>
-        <li style="display:flex;align-items:flex-start;gap:8px;font-size:0.8125rem;color:var(--muted);line-height:1.5">
-          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:6px"></span>
+        <li style="display:flex;align-items:flex-start;gap:var(--sp-2);font-size:var(--fs-sm);color:var(--muted);line-height:1.5">
+          <span style="width:6px;height:6px;border-radius:50%;background:#a855f7;flex-shrink:0;margin-top:var(--sp-2)"></span>
           Mevcut buyume hizinizla 6 ay icinde Rakip3'u gecmeniz ve %15 paya ulasmaniz bekleniyor.
         </li>
       </ul>

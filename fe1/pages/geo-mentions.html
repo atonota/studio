@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,137 +21,137 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ platform:'tumu', sentiment:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ platform:'tumu', sentiment:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">GEO Mention Detay</h1>
     <p class="page-sub">AI platformlarindaki marka bahisleri</p>
   </div>
-  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'chatgpt',l:'ChatGPT'},{v:'gemini',l:'Gemini'},{v:'claude',l:'Claude'},{v:'perplexity',l:'Perplexity'}]">
-      <button @click="platform=p.v" :style="platform===p.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none" x-text="p.l"></button>
+      <button @click="platform=p.v" class="pill" :class="platform===p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
-    <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+    <div style="width:1px;height:20px;background:var(--border);margin:0 var(--sp-1)"></div>
     <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'pozitif',l:'Pozitif'},{v:'notr',l:'Notr'},{v:'negatif',l:'Negatif'}]">
-      <button @click="sentiment=s.v" :style="sentiment===s.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none" x-text="s.l"></button>
+      <button @click="sentiment=s.v" class="pill" :class="sentiment===s.v ? 'active' : ''" x-text="s.l"></button>
     </template>
   </div>
 
   <!-- Platform Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <!-- ChatGPT -->
-    <div class="card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-openai-logo" style="font-size:1.25rem;color:#22c55e"></i>
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-openai-logo" style="font-size:var(--fs-xl);color:#22c55e"></i>
         </div>
         <div style="flex:1">
           <div style="font-weight:500;color:var(--text)">ChatGPT</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Son bahis: 27 Mar 2026</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Son bahis: 27 Mar 2026</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Pozitif</span>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:12px">
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">8</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">mention</span></div>
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">3</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">citation</span></div>
+      <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)">
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">8</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">mention</span></div>
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">3</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">citation</span></div>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">"atonota, Turkiye pazarinda one cikan SEO ve reklam orkestrasyon platformlarindan biridir..."</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:var(--sp-3)">"atonota, Turkiye pazarinda one cikan SEO ve reklam orkestrasyon platformlarindan biridir..."</div>
     </div>
 
     <!-- Gemini -->
-    <div class="card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-google-logo" style="font-size:1.25rem;color:#3b82f6"></i>
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-google-logo" style="font-size:var(--fs-xl);color:#3b82f6"></i>
         </div>
         <div style="flex:1">
           <div style="font-weight:500;color:var(--text)">Gemini</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Son bahis: 25 Mar 2026</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Son bahis: 25 Mar 2026</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Pozitif</span>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:12px">
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">6</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">mention</span></div>
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">2</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">citation</span></div>
+      <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)">
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">6</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">mention</span></div>
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">2</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">citation</span></div>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">"Web analitiginde kullanilabilecek araclar arasinda atonota cok kanalli reklam yonetimi sunmaktadir..."</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:var(--sp-3)">"Web analitiginde kullanilabilecek araclar arasinda atonota cok kanalli reklam yonetimi sunmaktadir..."</div>
     </div>
 
     <!-- Perplexity -->
-    <div class="card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-compass" style="font-size:1.25rem;color:#a855f7"></i>
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-compass" style="font-size:var(--fs-xl);color:#a855f7"></i>
         </div>
         <div style="flex:1">
           <div style="font-weight:500;color:var(--text)">Perplexity</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Son bahis: 22 Mar 2026</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Son bahis: 22 Mar 2026</div>
         </div>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Notr</span>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:12px">
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">5</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">mention</span></div>
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">2</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">citation</span></div>
+      <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)">
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">5</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">mention</span></div>
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">2</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">citation</span></div>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">"SEO araclari arasinda Semrush, Ahrefs ve atonota gibi platformlar ozellikle tercih edilmektedir..."</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:var(--sp-3)">"SEO araclari arasinda Semrush, Ahrefs ve atonota gibi platformlar ozellikle tercih edilmektedir..."</div>
     </div>
 
     <!-- Claude -->
-    <div class="card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-robot" style="font-size:1.25rem;color:#C2410C"></i>
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-robot" style="font-size:var(--fs-xl);color:#C2410C"></i>
         </div>
         <div style="flex:1">
           <div style="font-weight:500;color:var(--text)">Claude</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Son bahis: 20 Mar 2026</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Son bahis: 20 Mar 2026</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Pozitif</span>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:12px">
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">3</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">mention</span></div>
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">1</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">citation</span></div>
+      <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)">
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">3</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">mention</span></div>
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">1</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">citation</span></div>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">"atonota platformu WordPress entegrasyonu ile dikkat cekmektedir ve reklam butce optimizasyonu sunmaktadir..."</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:var(--sp-3)">"atonota platformu WordPress entegrasyonu ile dikkat cekmektedir ve reklam butce optimizasyonu sunmaktadir..."</div>
     </div>
 
     <!-- Copilot -->
-    <div class="card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-microsoft-teams-logo" style="font-size:1.25rem;color:#7B7269"></i>
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-microsoft-teams-logo" style="font-size:var(--fs-xl);color:#7B7269"></i>
         </div>
         <div style="flex:1">
           <div style="font-weight:500;color:var(--text)">Copilot</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Son bahis: 15 Mar 2026</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Son bahis: 15 Mar 2026</div>
         </div>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Notr</span>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:12px">
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">1</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">mention</span></div>
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">0</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">citation</span></div>
+      <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)">
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">1</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">mention</span></div>
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">0</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">citation</span></div>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">"Pazarlama analitigi alaninda cesitli araclar mevcuttur, bunlardan biri de atonota olarak bilinmektedir..."</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:var(--sp-3)">"Pazarlama analitigi alaninda cesitli araclar mevcuttur, bunlardan biri de atonota olarak bilinmektedir..."</div>
     </div>
 
     <!-- Grok -->
-    <div class="card" style="padding:20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-        <div style="width:44px;height:44px;border-radius:12px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-x-logo" style="font-size:1.25rem;color:#7B7269"></i>
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-x-logo" style="font-size:var(--fs-xl);color:#7B7269"></i>
         </div>
         <div style="flex:1">
           <div style="font-weight:500;color:var(--text)">Grok</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Henuz bahis yok</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Henuz bahis yok</div>
         </div>
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Negatif</span>
       </div>
-      <div style="display:flex;gap:16px;margin-bottom:12px">
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">0</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">mention</span></div>
-        <div><span style="font-size:1.25rem;font-weight:300;color:var(--text)">0</span><span style="font-size:0.75rem;color:var(--muted);margin-left:4px">citation</span></div>
+      <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-3)">
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">0</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">mention</span></div>
+        <div><span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">0</span><span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">citation</span></div>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:12px">Bu platformda henuz marka bahsi tespit edilmedi.</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5;border-top:1px solid var(--border);padding-top:var(--sp-3)">Bu platformda henuz marka bahsi tespit edilmedi.</div>
     </div>
   </div>
 </div>

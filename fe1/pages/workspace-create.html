@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
@@ -19,45 +22,45 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="form({name:'', url:'', platform:''})">
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="form" x-data="form({name:'', url:'', platform:''})">
 
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Yeni Workspace</h1>
     <p class="page-sub">Yeni bir web sitesi baglantisi olusturun</p>
   </div>
 
   <div class="fade-in-d1 card" style="max-width:600px">
-    <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-5)">
 
       <!-- URL Input -->
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Site URL</label>
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Site URL</label>
         <div style="position:relative">
-          <input type="url" placeholder="https://acme.com" value="https://acme.com" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;padding-left:38px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem">
-          <i class="ph ph-globe" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem"></i>
+          <input type="url" placeholder="https://acme.com" value="https://acme.com" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);padding-left:38px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md)">
+          <i class="ph ph-globe" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:var(--fs-lg)"></i>
         </div>
         <!-- Auto-detect indicator -->
-        <div style="display:flex;align-items:center;gap:6px;margin-top:8px">
-          <i class="ph ph-spinner" style="color:var(--accent);font-size:0.875rem;animation:spin 1s linear infinite"></i>
-          <span style="font-size:0.75rem;color:var(--muted)">Platform algilaniyor...</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-2)">
+          <i class="ph ph-spinner" style="color:var(--accent);font-size:var(--fs-md);animation:spin 1s linear infinite"></i>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Platform algilaniyor...</span>
         </div>
       </div>
 
       <!-- Platform Detected -->
-      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.25rem"></i>
-        <span style="font-size:0.875rem;color:var(--text);font-weight:500">WordPress 6.7 algilandi</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) var(--sp-4);background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:var(--r-md)">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
+        <span style="font-size:var(--fs-md);color:var(--text);font-weight:500">WordPress 6.7 algilandi</span>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;margin-left:auto">Destekleniyor</span>
       </div>
 
       <!-- Workspace Name -->
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Workspace Adi</label>
-        <input type="text" placeholder="Acme Web Sitesi" value="Acme Web Sitesi" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem">
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Workspace Adi</label>
+        <input type="text" placeholder="Acme Web Sitesi" value="Acme Web Sitesi" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md)">
       </div>
 
-      <button class="btn-primary" style="align-self:flex-start;margin-top:4px"><i class="ph ph-plus-circle"></i> Olustur</button>
+      <button class="btn-primary" style="align-self:flex-start;margin-top:var(--sp-1)"><i class="ph ph-plus-circle"></i> Olustur</button>
     </div>
   </div>
 

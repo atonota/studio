@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,9 +22,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   yourDomain: 'acme.com',
   comp1: '',
   comp2: '',
@@ -70,29 +73,29 @@
   }
 }">
   <!-- Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Link Kesisim Analizi</h1>
     <p class="page-sub">Rakiplerinize link veren ama size vermeyen domainleri bulun</p>
   </div>
 
   <!-- Domain Inputs -->
-  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px">
+  <div class="fade-in-d1 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--sp-3);margin-bottom:var(--sp-4)">
       <div>
-        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Sizin Domain</label>
-        <input type="text" x-model="yourDomain" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--accent);background:var(--surface-2);color:var(--accent);font-size:0.8125rem;outline:none;font-family:inherit;font-weight:600">
+        <label style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:var(--sp-2)">Sizin Domain</label>
+        <input type="text" x-model="yourDomain" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--accent);background:var(--surface-2);color:var(--accent);font-size:var(--fs-sm);outline:none;font-family:inherit;font-weight:600">
       </div>
       <div>
-        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Rakip 1</label>
-        <input type="text" x-model="comp1" placeholder="rakip1.com" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+        <label style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:var(--sp-2)">Rakip 1</label>
+        <input type="text" x-model="comp1" placeholder="rakip1.com" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
       </div>
       <div>
-        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Rakip 2</label>
-        <input type="text" x-model="comp2" placeholder="rakip2.com" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+        <label style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:var(--sp-2)">Rakip 2</label>
+        <input type="text" x-model="comp2" placeholder="rakip2.com" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
       </div>
       <div>
-        <label style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:6px">Rakip 3</label>
-        <input type="text" x-model="comp3" placeholder="rakip3.com" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+        <label style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;display:block;margin-bottom:var(--sp-2)">Rakip 3</label>
+        <input type="text" x-model="comp3" placeholder="rakip3.com" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
       </div>
     </div>
     <button @click="doAnalysis()" class="btn-primary" :disabled="loading">
@@ -105,32 +108,32 @@
   <template x-if="analyzed">
     <div>
       <!-- Venn Diagram Placeholder -->
-      <div class="fade-in-d1 card" style="margin-bottom:24px;text-align:center;padding:32px">
+      <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6);text-align:center;padding:var(--sp-8)">
         <span class="section-label">Link Kesisim Diyagrami</span>
         <div id="chart-venn" style="width:100%;height:300px"></div>
       </div>
 
       <!-- Filter -->
-      <div class="fade-in-d2" style="display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+      <div class="fade-in-d2" style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-4);align-items:center;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:var(--sp-2);cursor:pointer">
           <input type="checkbox" x-model="onlyMissing" style="accent-color:var(--accent)">
-          <span style="font-size:0.8125rem;color:var(--text);font-weight:500">Sadece size link vermeyenler</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500">Sadece size link vermeyenler</span>
         </label>
-        <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' domain listeleniyor'"></span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="filtered.length + ' domain listeleniyor'"></span>
       </div>
 
       <!-- Results Table -->
       <div class="fade-in-d2 card" data-paginate="20" style="padding:0;overflow:hidden">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
           <span class="section-label" style="margin-bottom:0">Kesisim Sonuclari</span>
-          <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('link-kesisim',['Domain','DR','Rakip 1','Rakip 2','Rakip 3','Siz'])">CSV Indir</button>
+          <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('link-kesisim',['Domain','DR','Rakip 1','Rakip 2','Rakip 3','Siz'])">CSV Indir</button>
         </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>
               <tr>
-                <th @click="doSort('domain')" style="cursor:pointer">Domain <i class="ph" :class="sortCol==='domain' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doSort('domain')" style="cursor:pointer">Domain <i class="ph" :class="sortCol==='domain' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
                 <th>Rakip 1</th>
                 <th>Rakip 2</th>
                 <th>Rakip 3</th>
@@ -143,12 +146,12 @@
                 <tr>
                   <td data-label="Domain"><span style="font-weight:500;color:var(--text)" x-text="row.domain"></span></td>
                   <td data-label="DR"><span style="font-weight:600;color:var(--text)" x-text="row.dr"></span></td>
-                  <td data-label="Rakip 1"><i class="ph" :class="row.r1 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r1 ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
-                  <td data-label="Rakip 2"><i class="ph" :class="row.r2 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r2 ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
-                  <td data-label="Rakip 3"><i class="ph" :class="row.r3 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r3 ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
-                  <td data-label="Siz"><i class="ph" :class="row.you ? 'ph-check-circle' : 'ph-x-circle'" :style="row.you ? 'color:#22c55e;font-size:1.125rem' : 'color:#ef4444;font-size:1.125rem'"></i></td>
+                  <td data-label="Rakip 1"><i class="ph" :class="row.r1 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r1 ? 'color:#22c55e;font-size:var(--fs-lg)' : 'color:#ef4444;font-size:var(--fs-lg)'"></i></td>
+                  <td data-label="Rakip 2"><i class="ph" :class="row.r2 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r2 ? 'color:#22c55e;font-size:var(--fs-lg)' : 'color:#ef4444;font-size:var(--fs-lg)'"></i></td>
+                  <td data-label="Rakip 3"><i class="ph" :class="row.r3 ? 'ph-check-circle' : 'ph-x-circle'" :style="row.r3 ? 'color:#22c55e;font-size:var(--fs-lg)' : 'color:#ef4444;font-size:var(--fs-lg)'"></i></td>
+                  <td data-label="Siz"><i class="ph" :class="row.you ? 'ph-check-circle' : 'ph-x-circle'" :style="row.you ? 'color:#22c55e;font-size:var(--fs-lg)' : 'color:#ef4444;font-size:var(--fs-lg)'"></i></td>
                   <td data-label="Aksiyon">
-                    <button x-show="!row.you" style="font-size:0.6875rem;padding:4px 10px;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-family:inherit;font-weight:600;white-space:nowrap"><i class="ph ph-envelope-simple"></i> Iletisime Gec</button>
+                    <button x-show="!row.you" style="font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-family:inherit;font-weight:600;white-space:nowrap"><i class="ph ph-envelope-simple"></i> Iletisime Gec</button>
                   </td>
                 </tr>
               </template>

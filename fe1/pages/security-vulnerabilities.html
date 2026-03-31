@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,77 +21,77 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ scanning: false, progress: 0, severityFilter: 'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+<div id="main" data-skeleton="table" x-data="{ scanning: false, progress: 0, severityFilter: 'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">Zafiyet Tarama</h1>
       <p class="page-sub">Son tarama: 2 saat once</p>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
+    <div style="display:flex;gap:var(--sp-2);align-items:center">
       <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'kritik',l:'Kritik'},{v:'orta',l:'Orta'},{v:'dusuk',l:'Dusuk'}]">
-        <button @click="severityFilter = s.v" :style="severityFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+        <button @click="severityFilter = s.v" class="tab-btn" :class="severityFilter === s.v ? 'active' : ''" x-text="s.l"></button>
       </template>
-      <button @click="scanning = true; progress = 0; let iv = setInterval(() => { progress += 10; if(progress >= 100){ clearInterval(iv); scanning = false; $store.toast.show('Tarama tamamlandi — 2 zafiyet bulundu', 'success') }}, 300)" :disabled="scanning" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit" :style="scanning && 'opacity:0.7'">
-        <i class="ph" :class="scanning ? 'ph-spinner' : 'ph-scan'" :style="scanning && 'animation:spin 1s linear infinite'" style="font-size:1rem"></i>
+      <button @click="scanning = true; progress = 0; let iv = setInterval(() => { progress += 10; if(progress >= 100){ clearInterval(iv); scanning = false; $store.toast.show('Tarama tamamlandi — 2 zafiyet bulundu', 'success') }}, 300)" :disabled="scanning" style="background:var(--accent);color:#fff;border:none;padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit" :style="scanning && 'opacity:0.7'">
+        <i class="ph" :class="scanning ? 'ph-spinner' : 'ph-scan'" :style="scanning && 'animation:spin 1s linear infinite'" style="font-size:var(--fs-lg)"></i>
         <span x-text="scanning ? 'Taraniyor... %' + progress : 'Tarama Baslat'"></span>
       </button>
     </div>
   </div>
 
   <!-- Progress bar -->
-  <div x-show="scanning" x-transition style="margin-bottom:16px;height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden">
-    <div :style="'width:' + progress + '%;background:var(--accent);height:100%;border-radius:2px;transition:width 0.3s'"></div>
+  <div x-show="scanning" x-transition style="margin-bottom:var(--sp-4);height:4px;background:var(--surface-2);border-radius:var(--r-xs);overflow:hidden">
+    <div :style="'width:' + progress + '%;background:var(--accent);height:100%;border-radius:var(--r-xs);transition:width 0.3s'"></div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kritik</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">0</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kritik</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)">0</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Orta</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">0</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Orta</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)">0</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dusuk</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">2</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dusuk</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#eab308;margin-top:var(--sp-2)">2</div>
     </div>
   </div>
 
   <!-- Vulnerability List -->
   <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
       <span class="section-label" style="margin-bottom:0">Bulunan Zafiyetler</span>
     </div>
 
     <!-- Vuln 1 -->
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-        <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Dusuk</span>
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace">ATN-2026-0041</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Dusuk</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace">ATN-2026-0041</span>
       </div>
-      <div style="font-size:0.875rem;font-weight:500;color:var(--text);margin-bottom:6px">jQuery 3.5.1 bilinen XSS zafiyeti</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px">Etkilenen bilesen: /assets/js/jquery.min.js</div>
-      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface-2);border-radius:6px">
-        <i class="ph ph-wrench" style="color:var(--accent);font-size:0.875rem;flex-shrink:0"></i>
-        <span style="font-size:0.75rem;color:var(--text)">jQuery 3.7.1 veya ust surume guncelleyin</span>
+      <div style="font-size:var(--fs-md);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">jQuery 3.5.1 bilinen XSS zafiyeti</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-2)">Etkilenen bilesen: /assets/js/jquery.min.js</div>
+      <div style="display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-4);background:var(--surface-2);border-radius:var(--r-sm)">
+        <i class="ph ph-wrench" style="color:var(--accent);font-size:var(--fs-md);flex-shrink:0"></i>
+        <span style="font-size:var(--fs-sm);color:var(--text)">jQuery 3.7.1 veya ust surume guncelleyin</span>
       </div>
     </div>
 
     <!-- Vuln 2 -->
-    <div style="padding:16px 20px">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-        <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Dusuk</span>
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace">ATN-2026-0042</span>
+    <div style="padding:var(--sp-4) var(--sp-5)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Dusuk</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace">ATN-2026-0042</span>
       </div>
-      <div style="font-size:0.875rem;font-weight:500;color:var(--text);margin-bottom:6px">Acik dizin listeleme (directory listing)</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px">Etkilenen bilesen: /uploads/ dizini</div>
-      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface-2);border-radius:6px">
-        <i class="ph ph-wrench" style="color:var(--accent);font-size:0.875rem;flex-shrink:0"></i>
-        <span style="font-size:0.75rem;color:var(--text)">nginx veya .htaccess ile dizin listelemeyi kapatun</span>
+      <div style="font-size:var(--fs-md);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Acik dizin listeleme (directory listing)</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-2)">Etkilenen bilesen: /uploads/ dizini</div>
+      <div style="display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-4);background:var(--surface-2);border-radius:var(--r-sm)">
+        <i class="ph ph-wrench" style="color:var(--accent);font-size:var(--fs-md);flex-shrink:0"></i>
+        <span style="font-size:var(--fs-sm);color:var(--text)">nginx veya .htaccess ile dizin listelemeyi kapatun</span>
       </div>
     </div>
   </div>

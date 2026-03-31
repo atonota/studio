@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,55 +22,55 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="dashboard" x-data="{
   range: '30',
   seriesConfigs: [{key:'kw1',base:8,variance:5},{key:'kw2',base:15,variance:8}],
   updateCharts() { updateChartsForRange(this.range, window._chartInstances || {}, this.seriesConfigs); }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">SEO</h1>
       <p class="page-sub">Arama motoru optimizasyonu analizi</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="r in [{v:'7',l:'7 Gun'},{v:'30',l:'30 Gun'},{v:'90',l:'90 Gun'}]">
-        <button @click="range = r.v; updateCharts()" :class="range === r.v ? 'pill-active' : 'pill'" x-text="r.l" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" :style="range === r.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'"></button>
+        <button @click="range = r.v; updateCharts()" class="tab-btn" :class="range === r.v ? 'active' : ''" x-text="r.l"></button>
       </template>
     </div>
   </div>
 
   <!-- KPI Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <a href="seo-audit.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#a855f7;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Domain Authority</span>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">54</div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Domain Authority</span>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">54</div>
       </div>
     </a>
     <a href="seo-rankings.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#22c55e;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Top 10 Keyword</span>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">342</div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Top 10 Keyword</span>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">342</div>
       </div>
     </a>
     <a href="seo-backlinks.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#3b82f6;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Backlink</span>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">12.4K</div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Backlink</span>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">12.4K</div>
       </div>
     </a>
     <a href="seo-audit.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#ef4444;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Teknik Sorun</span>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">47</div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Teknik Sorun</span>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">47</div>
       </div>
     </a>
   </div>
 
   <!-- Charts Row -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <!-- Radar -->
     <div class="card">
       <span class="section-label">SEO Boyutlari</span>
@@ -81,18 +84,18 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="fade-in-d2" style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap">
-    <a href="seo-keyword-magic.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft)">
-      <i class="ph ph-magic-wand" style="font-size:0.875rem"></i> Keyword Magic Tool <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+  <div class="fade-in-d2" style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-6);flex-wrap:wrap">
+    <a href="seo-keyword-magic.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-md);background:var(--accent-soft)">
+      <i class="ph ph-magic-wand" style="font-size:var(--fs-md)"></i> Keyword Magic Tool <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
     </a>
-    <a href="seo-position-tracker.html" style="color:var(--muted);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2)">
-      <i class="ph ph-crosshair" style="font-size:0.875rem"></i> Pozisyon Takibi <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+    <a href="seo-position-tracker.html" style="color:var(--muted);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2)">
+      <i class="ph ph-crosshair" style="font-size:var(--fs-md)"></i> Pozisyon Takibi <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
     </a>
   </div>
 
   <!-- Keyword Table -->
   <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
       <span class="section-label" style="margin-bottom:0">Anahtar Kelimeler</span>
     </div>
     <table class="r-table">
@@ -111,16 +114,16 @@
           <td data-label="Intent"><span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Ticari</span></td>
           <td data-label="Hacim"><span style="color:var(--text)">14,800</span></td>
           <td data-label="Pozisyon">
-            <div style="display:flex;align-items:center;gap:4px">
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
               <span style="color:var(--text)">3</span>
-              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
-              <span style="font-size:0.6875rem;color:#22c55e">+2</span>
+              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+              <span style="font-size:var(--fs-xs);color:#22c55e">+2</span>
             </div>
           </td>
           <td data-label="Zorluk">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:80px"><div style="width:72%;height:100%;background:#ef4444;border-radius:2px"></div></div>
-              <span style="font-size:0.6875rem;color:var(--muted)">72</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <div style="flex:1;height:4px;background:var(--border);border-radius:var(--r-xs);max-width:80px"><div style="width:72%;height:100%;background:#ef4444;border-radius:var(--r-xs)"></div></div>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">72</span>
             </div>
           </td>
         </tr>
@@ -129,16 +132,16 @@
           <td data-label="Intent"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Bilgi</span></td>
           <td data-label="Hacim"><span style="color:var(--text)">22,400</span></td>
           <td data-label="Pozisyon">
-            <div style="display:flex;align-items:center;gap:4px">
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
               <span style="color:var(--text)">7</span>
-              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
-              <span style="font-size:0.6875rem;color:#22c55e">+5</span>
+              <i class="ph ph-arrow-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+              <span style="font-size:var(--fs-xs);color:#22c55e">+5</span>
             </div>
           </td>
           <td data-label="Zorluk">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:80px"><div style="width:58%;height:100%;background:#eab308;border-radius:2px"></div></div>
-              <span style="font-size:0.6875rem;color:var(--muted)">58</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <div style="flex:1;height:4px;background:var(--border);border-radius:var(--r-xs);max-width:80px"><div style="width:58%;height:100%;background:#eab308;border-radius:var(--r-xs)"></div></div>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">58</span>
             </div>
           </td>
         </tr>
@@ -147,16 +150,16 @@
           <td data-label="Intent"><span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Ticari</span></td>
           <td data-label="Hacim"><span style="color:var(--text)">6,200</span></td>
           <td data-label="Pozisyon">
-            <div style="display:flex;align-items:center;gap:4px">
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
               <span style="color:var(--text)">12</span>
-              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-              <span style="font-size:0.6875rem;color:#ef4444">-3</span>
+              <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+              <span style="font-size:var(--fs-xs);color:#ef4444">-3</span>
             </div>
           </td>
           <td data-label="Zorluk">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:80px"><div style="width:45%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-              <span style="font-size:0.6875rem;color:var(--muted)">45</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <div style="flex:1;height:4px;background:var(--border);border-radius:var(--r-xs);max-width:80px"><div style="width:45%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">45</span>
             </div>
           </td>
         </tr>
@@ -165,15 +168,15 @@
           <td data-label="Intent"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Nav</span></td>
           <td data-label="Hacim"><span style="color:var(--text)">1,800</span></td>
           <td data-label="Pozisyon">
-            <div style="display:flex;align-items:center;gap:4px">
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
               <span style="color:var(--text)">1</span>
-              <span style="font-size:0.6875rem;color:var(--muted)">—</span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">—</span>
             </div>
           </td>
           <td data-label="Zorluk">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:80px"><div style="width:12%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-              <span style="font-size:0.6875rem;color:var(--muted)">12</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <div style="flex:1;height:4px;background:var(--border);border-radius:var(--r-xs);max-width:80px"><div style="width:12%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">12</span>
             </div>
           </td>
         </tr>

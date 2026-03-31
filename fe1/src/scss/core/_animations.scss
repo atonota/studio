@@ -1,0 +1,47 @@
+// ============================================
+// atonota Studio — Keyframe Animations
+// Extracted from tokens.css + components.css
+// ============================================
+
+// -- Skeleton loading shimmer --
+@keyframes shimmer {
+  0%   { background-position: -200px 0; }
+  100% { background-position:  200px 0; }
+}
+
+// -- Fade up (entrance) --
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// -- Staggered fade-in helpers --
+.fade-in    { animation: fadeUp 0.35s ease forwards; }
+.fade-in-d1 { animation: fadeUp 0.35s ease 0.05s forwards; opacity: 0; }
+.fade-in-d2 { animation: fadeUp 0.35s ease 0.10s forwards; opacity: 0; }
+.fade-in-d3 { animation: fadeUp 0.35s ease 0.15s forwards; opacity: 0; }
+.fade-in-d4 { animation: fadeUp 0.35s ease 0.20s forwards; opacity: 0; }
+
+// -- Spotlight entrance --
+@keyframes spotIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// -- Dropdown entrance (drop-up from bottom) --
+@keyframes dropUp {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// -- Mega menu drop --
+@keyframes tmDrop {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// -- Pulse (status indicator) — from components.css --
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}

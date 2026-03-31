@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,104 +21,104 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
 <div id="main" x-data>
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Schema Engine Hub</h1>
     <p class="page-sub">Yapilandirilmis veri sablonlari ve uretim merkezi</p>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sablon</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">8</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sablon</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">8</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Uretilen</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">87</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Uretilen</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">87</div>
     </div>
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dogrulama Hatasi</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">3</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dogrulama Hatasi</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">3</div>
     </div>
   </div>
 
   <!-- Schema Type Grid -->
   <div class="fade-in-d2">
     <span class="section-label">Schema Turleri</span>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4)">
       <!-- Article -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-article" style="font-size:1.5rem;color:#3b82f6"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-article" style="font-size:var(--fs-2xl);color:#3b82f6"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Article</div>
-        <div style="font-size:0.75rem;color:var(--muted)">32 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Article</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">32 uretildi</div>
       </div>
 
       <!-- Product -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-package" style="font-size:1.5rem;color:#22c55e"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-package" style="font-size:var(--fs-2xl);color:#22c55e"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Product</div>
-        <div style="font-size:0.75rem;color:var(--muted)">18 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Product</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">18 uretildi</div>
       </div>
 
       <!-- FAQ -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-question" style="font-size:1.5rem;color:#a855f7"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-question" style="font-size:var(--fs-2xl);color:#a855f7"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">FAQ</div>
-        <div style="font-size:0.75rem;color:var(--muted)">15 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">FAQ</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">15 uretildi</div>
       </div>
 
       <!-- Organization -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-buildings" style="font-size:1.5rem;color:#C2410C"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-buildings" style="font-size:var(--fs-2xl);color:#C2410C"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Organization</div>
-        <div style="font-size:0.75rem;color:var(--muted)">8 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Organization</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">8 uretildi</div>
       </div>
 
       <!-- BreadcrumbList -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-list-dashes" style="font-size:1.5rem;color:#eab308"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-list-dashes" style="font-size:var(--fs-2xl);color:#eab308"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">BreadcrumbList</div>
-        <div style="font-size:0.75rem;color:var(--muted)">6 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">BreadcrumbList</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">6 uretildi</div>
       </div>
 
       <!-- HowTo -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-steps" style="font-size:1.5rem;color:#ef4444"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-steps" style="font-size:var(--fs-2xl);color:#ef4444"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">HowTo</div>
-        <div style="font-size:0.75rem;color:var(--muted)">4 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">HowTo</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">4 uretildi</div>
       </div>
 
       <!-- LocalBusiness -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-storefront" style="font-size:1.5rem;color:#7B7269"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-storefront" style="font-size:var(--fs-2xl);color:#7B7269"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">LocalBusiness</div>
-        <div style="font-size:0.75rem;color:var(--muted)">2 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">LocalBusiness</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">2 uretildi</div>
       </div>
 
       <!-- Event -->
-      <div class="card" style="padding:20px;text-align:center;cursor:pointer">
-        <div style="width:48px;height:48px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-          <i class="ph ph-calendar-blank" style="font-size:1.5rem;color:#3b82f6"></i>
+      <div class="card" style="padding:var(--sp-5);text-align:center;cursor:pointer">
+        <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)">
+          <i class="ph ph-calendar-blank" style="font-size:var(--fs-2xl);color:#3b82f6"></i>
         </div>
-        <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Event</div>
-        <div style="font-size:0.75rem;color:var(--muted)">2 uretildi</div>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Event</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">2 uretildi</div>
       </div>
     </div>
   </div>

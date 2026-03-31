@@ -8,94 +8,97 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ priority:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="dashboard" x-data="{ priority:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Marketplace Optimizasyon Onerileri</h1>
     <p class="page-sub">AI destekli urun iyilestirme tavsiyeleri</p>
   </div>
 
-  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:12px">
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-3)">
 
     <!-- Recommendation 1 -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:16px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-warning" style="font-size:1.25rem;color:#ef4444"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-warning" style="font-size:var(--fs-xl);color:#ef4444"></i>
       </div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
           <span style="font-weight:500;color:var(--text)">Ergonomik Ofis Sandalyesi</span>
           <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Yuksek Etki</span>
         </div>
-        <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:4px">Sorun: Urun basliginda anahtar kelime eksik</div>
-        <div style="font-size:0.8125rem;color:var(--text)">Oneri: Basliga "ergonomik ofis sandalyesi bel destekli" ekleyin — arama hacmi 9,800/ay</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-1)">Sorun: Urun basliginda anahtar kelime eksik</div>
+        <div style="font-size:var(--fs-sm);color:var(--text)">Oneri: Basliga "ergonomik ofis sandalyesi bel destekli" ekleyin — arama hacmi 9,800/ay</div>
       </div>
     </div>
 
     <!-- Recommendation 2 -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:16px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-image" style="font-size:1.25rem;color:#ef4444"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-image" style="font-size:var(--fs-xl);color:#ef4444"></i>
       </div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
           <span style="font-weight:500;color:var(--text)">Akilli Saat Pro Max</span>
           <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Yuksek Etki</span>
         </div>
-        <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:4px">Sorun: Urun gorselleri yetersiz (2/8 slot dolu)</div>
-        <div style="font-size:0.8125rem;color:var(--text)">Oneri: En az 6 gorsel ekleyin — detay, kullanim ve karsilastirma kareleri</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-1)">Sorun: Urun gorselleri yetersiz (2/8 slot dolu)</div>
+        <div style="font-size:var(--fs-sm);color:var(--text)">Oneri: En az 6 gorsel ekleyin — detay, kullanim ve karsilastirma kareleri</div>
       </div>
     </div>
 
     <!-- Recommendation 3 -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:16px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-text-aa" style="font-size:1.25rem;color:#eab308"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-text-aa" style="font-size:var(--fs-xl);color:#eab308"></i>
       </div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
           <span style="font-weight:500;color:var(--text)">Paslanmaz Celik Termos</span>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta Etki</span>
         </div>
-        <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:4px">Sorun: Urun aciklamasi cok kisa (45 karakter)</div>
-        <div style="font-size:0.8125rem;color:var(--text)">Oneri: Aciklamayi 200+ karaktere cikartin — ozellik, malzeme ve kullanim alani ekleyin</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-1)">Sorun: Urun aciklamasi cok kisa (45 karakter)</div>
+        <div style="font-size:var(--fs-sm);color:var(--text)">Oneri: Aciklamayi 200+ karaktere cikartin — ozellik, malzeme ve kullanim alani ekleyin</div>
       </div>
     </div>
 
     <!-- Recommendation 4 -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:16px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-tag" style="font-size:1.25rem;color:#eab308"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-tag" style="font-size:var(--fs-xl);color:#eab308"></i>
       </div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
           <span style="font-weight:500;color:var(--text)">Dogal Cilt Bakim Seti</span>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta Etki</span>
         </div>
-        <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:4px">Sorun: Kategori secimi yetersiz optimize</div>
-        <div style="font-size:0.8125rem;color:var(--text)">Oneri: "Cilt Bakim > Cilt Bakim Setleri" alt kategorisine tasiyin — daha az rekabet</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-1)">Sorun: Kategori secimi yetersiz optimize</div>
+        <div style="font-size:var(--fs-sm);color:var(--text)">Oneri: "Cilt Bakim > Cilt Bakim Setleri" alt kategorisine tasiyin — daha az rekabet</div>
       </div>
     </div>
 
     <!-- Recommendation 5 -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:16px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-star" style="font-size:1.25rem;color:#22c55e"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-star" style="font-size:var(--fs-xl);color:#22c55e"></i>
       </div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
           <span style="font-weight:500;color:var(--text)">Kablosuz Bluetooth Kulaklik</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Dusuk Etki</span>
         </div>
-        <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:4px">Sorun: Yorum sayisi rakiplerden dusuk</div>
-        <div style="font-size:0.8125rem;color:var(--text)">Oneri: Satin alma sonrasi otomatik yorum isteme akisi olusturun — hedef: 50+ yorum</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-1)">Sorun: Yorum sayisi rakiplerden dusuk</div>
+        <div style="font-size:var(--fs-sm);color:var(--text)">Oneri: Satin alma sonrasi otomatik yorum isteme akisi olusturun — hedef: 50+ yorum</div>
       </div>
     </div>
 

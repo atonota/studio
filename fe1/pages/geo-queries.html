@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,40 +21,40 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ search:'', quality:'tumu', brand:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ search:'', quality:'tumu', brand:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">GEO Sorgu Analizi</h1>
     <p class="page-sub">AI platformlarinda marka sorgularinin izlenmesi</p>
   </div>
-  <div class="fade-in" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap;align-items:center">
     <div style="position:relative;flex:1;min-width:200px;max-width:320px">
       <i class="ph ph-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
-      <input type="text" x-model="search" placeholder="Sorgu ara..." style="width:100%;padding:8px 12px 8px 36px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.8125rem;outline:none">
+      <input type="text" x-model="search" placeholder="Sorgu ara..." style="width:100%;padding:var(--sp-2) var(--sp-3) var(--sp-2) 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none">
     </div>
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'yuksek',l:'Yuksek'},{v:'orta',l:'Orta'},{v:'dusuk',l:'Dusuk'}]">
-      <button @click="quality=p.v" :style="quality===p.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none" x-text="p.l"></button>
+      <button @click="quality=p.v" class="pill" :class="quality===p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'branded',l:'Branded'},{v:'unbranded',l:'Unbranded'}]">
-      <button @click="brand=p.v" :style="brand===p.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none" x-text="p.l"></button>
+      <button @click="brand=p.v" class="pill" :class="brand===p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
   </div>
 
   <!-- Search (uses x-model="search" from filter bar above) -->
-  <div class="fade-in-d1" style="margin-bottom:24px">
-    <div class="card" style="display:flex;align-items:center;gap:12px">
-      <i class="ph ph-magnifying-glass" style="font-size:1.25rem;color:var(--muted)"></i>
-      <input type="text" x-model="search" placeholder="Sorgu ara..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:0.875rem">
-      <button class="btn-primary" style="padding:8px 16px;font-size:0.8125rem">Filtrele</button>
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-6)">
+    <div class="card" style="display:flex;align-items:center;gap:var(--sp-3)">
+      <i class="ph ph-magnifying-glass" style="font-size:var(--fs-xl);color:var(--muted)"></i>
+      <input type="text" x-model="search" placeholder="Sorgu ara..." style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--fs-md)">
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)">Filtrele</button>
     </div>
   </div>
 
   <!-- Query Table -->
   <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Sorgu Sonuclari</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Sorgu','Platform','Yanit Kalitesi','Marka Bahsi'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Sorgu','Platform','Yanit Kalitesi','Marka Bahsi'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>

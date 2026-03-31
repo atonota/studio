@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,76 +21,76 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
 <div id="main" x-data>
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Kullanim Detaylari</h1>
     <p class="page-sub">Mevcut plan limitleri ve tuketim durumu</p>
   </div>
 
-  <div style="display:flex;flex-direction:column;gap:20px;max-width:600px">
+  <div style="display:flex;flex-direction:column;gap:var(--sp-5);max-width:600px">
 
     <!-- Current Plan -->
-    <div class="fade-in-d1 card" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+    <div class="fade-in-d1 card" style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-5)">
       <div>
-        <div style="font-size:0.6875rem;color:var(--muted);margin-bottom:2px">Mevcut Plan</div>
-        <div style="font-size:1.125rem;font-weight:600;color:var(--text)">Pro</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:2px">Mevcut Plan</div>
+        <div style="font-size:var(--fs-lg);font-weight:600;color:var(--text)">Pro</div>
       </div>
       <div style="text-align:right">
-        <div style="font-size:1.125rem;font-weight:600;color:var(--text)">₺499<span style="font-size:0.75rem;font-weight:400;color:var(--muted)">/ay</span></div>
+        <div style="font-size:var(--fs-lg);font-weight:600;color:var(--text)">₺499<span style="font-size:var(--fs-sm);font-weight:400;color:var(--muted)">/ay</span></div>
       </div>
     </div>
 
     <!-- Usage Bars -->
-    <div class="fade-in-d1 card" style="padding:20px;display:flex;flex-direction:column;gap:20px">
+    <div class="fade-in-d1 card" style="padding:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-5)">
 
       <!-- Workspace -->
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Workspace</span>
-          <span style="font-size:0.75rem;color:var(--muted)">3 / 10 kullanilan</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2)">
+          <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Workspace</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">3 / 10 kullanilan</span>
         </div>
-        <div style="width:100%;height:8px;border-radius:4px;background:var(--border);overflow:hidden">
-          <div style="width:30%;height:100%;border-radius:4px;background:#22c55e"></div>
+        <div style="width:100%;height:8px;border-radius:var(--r-sm);background:var(--border);overflow:hidden">
+          <div style="width:30%;height:100%;border-radius:var(--r-sm);background:#22c55e"></div>
         </div>
-        <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">%30</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">%30</div>
       </div>
 
       <!-- Keyword -->
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Keyword</span>
-          <span style="font-size:0.75rem;color:var(--muted)">1,247 / 5,000</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2)">
+          <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Keyword</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">1,247 / 5,000</span>
         </div>
-        <div style="width:100%;height:8px;border-radius:4px;background:var(--border);overflow:hidden">
-          <div style="width:25%;height:100%;border-radius:4px;background:#3b82f6"></div>
+        <div style="width:100%;height:8px;border-radius:var(--r-sm);background:var(--border);overflow:hidden">
+          <div style="width:25%;height:100%;border-radius:var(--r-sm);background:#3b82f6"></div>
         </div>
-        <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">%25</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">%25</div>
       </div>
 
       <!-- API Cagri -->
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">API Cagri</span>
-          <span style="font-size:0.75rem;color:var(--muted)">12,400 / 50,000</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2)">
+          <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">API Cagri</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">12,400 / 50,000</span>
         </div>
-        <div style="width:100%;height:8px;border-radius:4px;background:var(--border);overflow:hidden">
-          <div style="width:25%;height:100%;border-radius:4px;background:#a855f7"></div>
+        <div style="width:100%;height:8px;border-radius:var(--r-sm);background:var(--border);overflow:hidden">
+          <div style="width:25%;height:100%;border-radius:var(--r-sm);background:#a855f7"></div>
         </div>
-        <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">%25</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">%25</div>
       </div>
 
       <!-- Depolama -->
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Depolama</span>
-          <span style="font-size:0.75rem;color:var(--muted)">2.1 GB / 10 GB</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2)">
+          <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Depolama</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">2.1 GB / 10 GB</span>
         </div>
-        <div style="width:100%;height:8px;border-radius:4px;background:var(--border);overflow:hidden">
-          <div style="width:21%;height:100%;border-radius:4px;background:#eab308"></div>
+        <div style="width:100%;height:8px;border-radius:var(--r-sm);background:var(--border);overflow:hidden">
+          <div style="width:21%;height:100%;border-radius:var(--r-sm);background:#eab308"></div>
         </div>
-        <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">%21</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">%21</div>
       </div>
 
     </div>

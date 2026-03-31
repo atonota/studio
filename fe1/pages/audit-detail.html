@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,60 +19,60 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Olay Detay #evt-2847</h1>
     <p class="page-sub">Audit log kaydi detaylari</p>
   </div>
 
   <!-- Event Info Card -->
-  <div class="fade-in-d1 card" style="padding:0;overflow:hidden;margin-bottom:24px">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
-      <i class="ph ph-clipboard-text" style="font-size:1.125rem;color:var(--accent)"></i>
+  <div class="fade-in-d1 card" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-3)">
+      <i class="ph ph-clipboard-text" style="font-size:var(--fs-lg);color:var(--accent)"></i>
       <span class="section-label" style="margin-bottom:0">Olay Bilgisi</span>
     </div>
 
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:0.8125rem;color:var(--muted)">Zaman</span>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">28 Mar 2026 14:32:15</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:var(--fs-sm);color:var(--muted)">Zaman</span>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">28 Mar 2026 14:32:15</span>
     </div>
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:0.8125rem;color:var(--muted)">Aktor</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">Ibrahim Karaca</span>
-        <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600">SA</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:var(--fs-sm);color:var(--muted)">Aktor</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Ibrahim Karaca</span>
+        <span style="font-size:var(--fs-xs);padding:2px var(--sp-2);border-radius:var(--r-full);background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600">SA</span>
       </div>
     </div>
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:0.8125rem;color:var(--muted)">Islem</span>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text);font-family:monospace">plugin.activate</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:var(--fs-sm);color:var(--muted)">Islem</span>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text);font-family:monospace">plugin.activate</span>
     </div>
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:0.8125rem;color:var(--muted)">Kaynak</span>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">WordPress Adaptor v2.1.4</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:var(--fs-sm);color:var(--muted)">Kaynak</span>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">WordPress Adaptor v2.1.4</span>
     </div>
-    <div style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:0.8125rem;color:var(--muted)">IP</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:0.8125rem;font-weight:500;color:var(--text);font-family:monospace">85.107.xx.xx</span>
-        <span style="font-size:0.6875rem;color:var(--muted)">Istanbul</span>
+    <div style="padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:var(--fs-sm);color:var(--muted)">IP</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text);font-family:monospace">85.107.xx.xx</span>
+        <span style="font-size:var(--fs-xs);color:var(--muted)">Istanbul</span>
       </div>
     </div>
   </div>
 
   <!-- Metadata JSON -->
-  <div class="fade-in-d2 card" style="padding:0;overflow:hidden;margin-bottom:24px">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="this.parentElement.querySelector('.json-body').classList.toggle('collapsed')">
-      <div style="display:flex;align-items:center;gap:10px">
-        <i class="ph ph-code" style="font-size:1.125rem;color:var(--accent)"></i>
+  <div class="fade-in-d2 card" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="this.parentElement.querySelector('.json-body').classList.toggle('collapsed')">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-code" style="font-size:var(--fs-lg);color:var(--accent)"></i>
         <span class="section-label" style="margin-bottom:0">Metadata</span>
       </div>
-      <i class="ph ph-caret-down" style="font-size:0.875rem;color:var(--muted);transition:transform 0.2s"></i>
+      <i class="ph ph-caret-down" style="font-size:var(--fs-md);color:var(--muted);transition:transform 0.2s"></i>
     </div>
-    <div class="json-body" style="padding:16px 20px">
-      <pre style="background:var(--surface-2);padding:16px;border-radius:8px;font-size:0.75rem;color:var(--text);overflow-x:auto;font-family:monospace;line-height:1.6;margin:0">{
+    <div class="json-body" style="padding:var(--sp-4) var(--sp-5)">
+      <pre style="background:var(--surface-2);padding:var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);color:var(--text);overflow-x:auto;font-family:monospace;line-height:1.6;margin:0">{
   "event_id": "evt-2847",
   "tenant_id": "tn_01HQ3KXYZ",
   "actor": {
@@ -97,29 +100,31 @@
 
   <!-- Related Events -->
   <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
       <span class="section-label" style="margin-bottom:0">Ilgili Olaylar</span>
     </div>
 
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
-      <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:72px">14:32:10</span>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text);flex:1">plugin.health_check</span>
-      <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">success</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:72px">14:32:10</span>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text);flex:1">plugin.health_check</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-2);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">success</span>
     </div>
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
-      <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:72px">14:32:15</span>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text);flex:1">plugin.activate</span>
-      <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">success</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:72px">14:32:15</span>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text);flex:1">plugin.activate</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-2);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">success</span>
     </div>
-    <div style="padding:14px 20px;display:flex;align-items:center;gap:14px">
-      <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:72px">14:32:18</span>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text);flex:1">plugin.config_sync</span>
-      <span style="font-size:0.6875rem;padding:2px 8px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">success</span>
+    <div style="padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:72px">14:32:18</span>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text);flex:1">plugin.config_sync</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-2);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">success</span>
     </div>
   </div>
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
 <style>

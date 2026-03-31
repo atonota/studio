@@ -8,24 +8,27 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ search:'', status:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ search:'', status:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Konum Yonetimi</h1>
     <p class="page-sub">Isletme konumlarinin detayli yonetimi</p>
   </div>
 
   <div class="fade-in-d1 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Konumlar</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Konum Adi','Adres','GBP Durumu','Yorum','Ort. Puan'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Konum Adi','Adres','GBP Durumu','Yorum','Ort. Puan'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -40,49 +43,49 @@
       <tbody>
         <tr>
           <td data-label="Konum Adi"><span style="font-weight:500;color:var(--text)">Istanbul Merkez</span></td>
-          <td data-label="Adres"><span style="font-size:0.8125rem;color:var(--muted)">Besiktas Mah. Cumhuriyet Cad. No:42, Besiktas/Istanbul</span></td>
+          <td data-label="Adres"><span style="font-size:var(--fs-sm);color:var(--muted)">Besiktas Mah. Cumhuriyet Cad. No:42, Besiktas/Istanbul</span></td>
           <td data-label="GBP Durumu"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Dogrulanmis</span></td>
           <td data-label="Yorum"><span style="color:var(--text)">72</span></td>
           <td data-label="Ort. Puan">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <span style="font-size:0.75rem;color:var(--muted);margin-left:4px">4.3</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">4.3</span>
             </div>
           </td>
         </tr>
         <tr>
           <td data-label="Konum Adi"><span style="font-weight:500;color:var(--text)">Ankara</span></td>
-          <td data-label="Adres"><span style="font-size:0.8125rem;color:var(--muted)">Kizilay Mah. Ataturk Blv. No:18, Cankaya/Ankara</span></td>
+          <td data-label="Adres"><span style="font-size:var(--fs-sm);color:var(--muted)">Kizilay Mah. Ataturk Blv. No:18, Cankaya/Ankara</span></td>
           <td data-label="GBP Durumu"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Dogrulanmis</span></td>
           <td data-label="Yorum"><span style="color:var(--text)">38</span></td>
           <td data-label="Ort. Puan">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <span style="font-size:0.75rem;color:var(--muted);margin-left:4px">4.1</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">4.1</span>
             </div>
           </td>
         </tr>
         <tr>
           <td data-label="Konum Adi"><span style="font-weight:500;color:var(--text)">Izmir</span></td>
-          <td data-label="Adres"><span style="font-size:0.8125rem;color:var(--muted)">Alsancak Mah. Kibris Sehitleri Cad. No:7, Konak/Izmir</span></td>
+          <td data-label="Adres"><span style="font-size:var(--fs-sm);color:var(--muted)">Alsancak Mah. Kibris Sehitleri Cad. No:7, Konak/Izmir</span></td>
           <td data-label="GBP Durumu"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Beklemede</span></td>
           <td data-label="Yorum"><span style="color:var(--text)">18</span></td>
           <td data-label="Ort. Puan">
-            <div style="display:flex;align-items:center;gap:4px">
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph-fill ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <i class="ph ph-star" style="color:#eab308;font-size:0.75rem"></i>
-              <span style="font-size:0.75rem;color:var(--muted);margin-left:4px">4.0</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-1)">
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <i class="ph ph-star" style="color:#eab308;font-size:var(--fs-sm)"></i>
+              <span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-1)">4.0</span>
             </div>
           </td>
         </tr>

@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,13 +21,13 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ campaignActive: true, statsFilter: 'tumu' }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-whatsapp-logo" style="color:#22c55e;font-size:1.25rem"></i>
+<div id="main" data-skeleton="table" x-data="{ campaignActive: true, statsFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-whatsapp-logo" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
         <h1 class="page-title">Click-to-WhatsApp Reklamlari</h1>
@@ -34,46 +37,46 @@
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Toplam Mesaj</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">342</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Toplam Mesaj</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">342</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Ort. Maliyet</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;4.2/mesaj</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Ort. Maliyet</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">&#8378;4.2/mesaj</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Donusum Orani</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#22c55e">%12</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Donusum Orani</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#22c55e">%12</div>
     </div>
   </div>
 
   <!-- WhatsApp Campaign Card -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
       <span class="section-label" style="margin:0">Aktif Kampanya</span>
       <span @click="campaignActive = !campaignActive; $store.toast.show(campaignActive ? 'Kampanya aktif edildi' : 'Kampanya duraklatildi', campaignActive ? 'success' : 'warning')" :style="campaignActive ? 'background:rgba(34,197,94,0.1);color:#22c55e;cursor:pointer' : 'background:rgba(234,179,8,0.1);color:#eab308;cursor:pointer'" class="badge" x-text="campaignActive ? 'Aktif' : 'Duraklat'"></span>
     </div>
-    <div style="display:flex;align-items:flex-start;gap:16px">
-      <div style="width:48px;height:48px;border-radius:12px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-headset" style="color:#22c55e;font-size:1.5rem"></i>
+    <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <div style="width:48px;height:48px;border-radius:var(--r-lg);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-headset" style="color:#22c55e;font-size:var(--fs-2xl)"></i>
       </div>
       <div style="flex:1">
-        <div style="font-weight:500;color:var(--text);margin-bottom:4px">Musteri Destek Hatti</div>
-        <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:12px">Meta uzerinden yonlendirme — 72 saat ucretsiz mesaj penceresi</div>
-        <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div style="font-weight:500;color:var(--text);margin-bottom:var(--sp-1)">Musteri Destek Hatti</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-3)">Meta uzerinden yonlendirme — 72 saat ucretsiz mesaj penceresi</div>
+        <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap">
           <div style="display:flex;flex-direction:column;gap:2px">
-            <span style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Platform</span>
-            <span style="font-size:0.8125rem;color:var(--text)">Meta Ads</span>
+            <span style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Platform</span>
+            <span style="font-size:var(--fs-sm);color:var(--text)">Meta Ads</span>
           </div>
           <div style="display:flex;flex-direction:column;gap:2px">
-            <span style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Mesaj Penceresi</span>
-            <span style="font-size:0.8125rem;color:var(--text)">72 saat</span>
+            <span style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Mesaj Penceresi</span>
+            <span style="font-size:var(--fs-sm);color:var(--text)">72 saat</span>
           </div>
           <div style="display:flex;flex-direction:column;gap:2px">
-            <span style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Durum</span>
-            <span style="font-size:0.8125rem;color:#22c55e">Aktif</span>
+            <span style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Durum</span>
+            <span style="font-size:var(--fs-sm);color:#22c55e">Aktif</span>
           </div>
         </div>
       </div>
@@ -82,11 +85,11 @@
 
   <!-- Info Card -->
   <div class="fade-in-d3 card" style="border-left:3px solid #22c55e">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <i class="ph ph-info" style="color:#22c55e;font-size:1rem"></i>
-      <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">WhatsApp Turkiye Istatistikleri</span>
+    <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+      <i class="ph ph-info" style="color:#22c55e;font-size:var(--fs-lg)"></i>
+      <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">WhatsApp Turkiye Istatistikleri</span>
     </div>
-    <p style="font-size:0.8125rem;color:var(--muted);line-height:1.6">WhatsApp Turkiye'de %88.6 penetrasyon oranina sahiptir — en yuksek donusum kanali. Click-to-WhatsApp reklamlari, klasik form bazli lead toplama yontemlerine gore 3-5x daha yuksek donusum orani saglar.</p>
+    <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6">WhatsApp Turkiye'de %88.6 penetrasyon oranina sahiptir — en yuksek donusum kanali. Click-to-WhatsApp reklamlari, klasik form bazli lead toplama yontemlerine gore 3-5x daha yuksek donusum orani saglar.</p>
   </div>
 </div>
 

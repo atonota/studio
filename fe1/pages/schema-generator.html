@@ -8,32 +8,35 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="form({url:'', type:'Article'})">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="form({url:'', type:'Article'})">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Schema Uretici</h1>
     <p class="page-sub">URL ve schema tipine gore yapilandirilmis veri uret</p>
   </div>
 
   <!-- URL Input + Schema Type -->
-  <div class="fade-in-d1 card" style="margin-bottom:24px">
+  <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Yeni Schema Olustur</span>
-    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+    <div style="display:flex;gap:var(--sp-3);align-items:flex-end;flex-wrap:wrap">
       <div style="flex:1;min-width:240px">
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Sayfa URL</label>
-        <input type="url" placeholder="https://ornek.com/urun/ayakkabi" style="width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">Sayfa URL</label>
+        <input type="url" placeholder="https://ornek.com/urun/ayakkabi" style="width:100%;padding:var(--sp-3) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-md);outline:none" />
       </div>
       <div style="min-width:180px">
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Schema Tipi</label>
-        <select style="width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;outline:none">
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">Schema Tipi</label>
+        <select style="width:100%;padding:var(--sp-3) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-md);outline:none">
           <option>Article</option>
           <option>Product</option>
           <option>FAQ</option>
@@ -44,16 +47,16 @@
           <option>BreadcrumbList</option>
         </select>
       </div>
-      <button class="btn-primary" style="padding:10px 24px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;white-space:nowrap">
-        <i class="ph ph-lightning" style="margin-right:4px"></i>Uret
+      <button class="btn-primary" style="padding:var(--sp-3) var(--sp-6);border-radius:var(--r-md);font-size:var(--fs-md);font-weight:600;cursor:pointer;white-space:nowrap">
+        <i class="ph ph-lightning" style="margin-right:var(--sp-1)"></i>Uret
       </button>
     </div>
   </div>
 
   <!-- Generated JSON-LD Preview -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Uretilen JSON-LD</span>
-    <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.8125rem;color:var(--text);line-height:1.6"><code>{
+    <pre style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);overflow-x:auto;font-size:var(--fs-sm);color:var(--text);line-height:1.6"><code>{
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "Klasik Deri Ayakkabi",
@@ -79,30 +82,30 @@
   <!-- Field Editor Form -->
   <div class="fade-in-d3 card">
     <span class="section-label">Alan Duzenleyici</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)">
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">name</label>
-        <input type="text" value="Klasik Deri Ayakkabi" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.8125rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">name</label>
+        <input type="text" value="Klasik Deri Ayakkabi" style="width:100%;padding:var(--sp-2) var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none" />
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">description</label>
-        <input type="text" value="El yapimi, dogal deri erkek ayakkabi" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.8125rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">description</label>
+        <input type="text" value="El yapimi, dogal deri erkek ayakkabi" style="width:100%;padding:var(--sp-2) var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none" />
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">brand.name</label>
-        <input type="text" value="Ornek Marka" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.8125rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">brand.name</label>
+        <input type="text" value="Ornek Marka" style="width:100%;padding:var(--sp-2) var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none" />
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">offers.price</label>
-        <input type="text" value="849.90" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.8125rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">offers.price</label>
+        <input type="text" value="849.90" style="width:100%;padding:var(--sp-2) var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none" />
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">offers.priceCurrency</label>
-        <input type="text" value="TRY" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.8125rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">offers.priceCurrency</label>
+        <input type="text" value="TRY" style="width:100%;padding:var(--sp-2) var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none" />
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">offers.availability</label>
-        <select style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.8125rem;outline:none">
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">offers.availability</label>
+        <select style="width:100%;padding:var(--sp-2) var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-sm);outline:none">
           <option>InStock</option>
           <option>OutOfStock</option>
           <option>PreOrder</option>

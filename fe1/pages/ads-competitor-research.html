@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,9 +22,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="dashboard" x-data="{
   domain: '',
   analyzed: false,
   loading: false,
@@ -111,17 +114,17 @@
   prevAd() { this.currentAd = this.currentAd === 0 ? this.adCopies.length - 1 : this.currentAd - 1; }
 }">
   <!-- Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Rakip Reklam Analizi</h1>
     <p class="page-sub">Rakiplerinizin reklam stratejilerini analiz edin</p>
   </div>
 
   <!-- Domain Input -->
-  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <div class="fade-in-d1 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
       <div style="position:relative;flex:1;min-width:260px">
         <i class="ph ph-globe" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
-        <input type="text" x-model="domain" @keydown.enter="doAnalysis()" placeholder="Rakip domain girin..." style="width:100%;padding:10px 12px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+        <input type="text" x-model="domain" @keydown.enter="doAnalysis()" placeholder="Rakip domain girin..." style="width:100%;padding:var(--sp-3) var(--sp-3) var(--sp-3) 36px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
       </div>
       <button @click="doAnalysis()" class="btn-primary" :disabled="loading">
         <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-magnifying-glass'" :style="loading && 'animation:spin 1s linear infinite'"></i>
@@ -134,68 +137,68 @@
   <template x-if="analyzed">
     <div>
       <!-- Stat Cards -->
-      <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+      <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
         <div class="stat-card" style="--stripe:#a855f7">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Aktif Reklam</span>
-          <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">47</div>
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Aktif Reklam</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">47</div>
         </div>
         <div class="stat-card" style="--stripe:#eab308">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Tahmini Butce</span>
-          <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">&#8378;125K/ay</div>
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Tahmini Butce</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:#eab308;margin-top:var(--sp-2)">&#8378;125K/ay</div>
         </div>
         <div class="stat-card" style="--stripe:#3b82f6">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Keyword</span>
-          <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">892</div>
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Keyword</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">892</div>
         </div>
         <div class="stat-card" style="--stripe:#22c55e">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Landing Page</span>
-          <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">34</div>
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Landing Page</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">34</div>
         </div>
       </div>
 
       <!-- Ad Copy Carousel -->
-      <div class="fade-in-d2 card" style="margin-bottom:24px;padding:20px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6);padding:var(--sp-5)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
           <span class="section-label" style="margin-bottom:0">Reklam Ornekleri</span>
-          <div style="display:flex;gap:6px;align-items:center">
-            <button @click="prevAd()" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ph ph-caret-left"></i></button>
-            <span style="font-size:0.75rem;color:var(--muted)" x-text="(currentAd+1)+' / '+adCopies.length"></span>
-            <button @click="nextAd()" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ph ph-caret-right"></i></button>
+          <div style="display:flex;gap:var(--sp-2);align-items:center">
+            <button @click="prevAd()" style="width:28px;height:28px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ph ph-caret-left"></i></button>
+            <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="(currentAd+1)+' / '+adCopies.length"></span>
+            <button @click="nextAd()" style="width:28px;height:28px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="ph ph-caret-right"></i></button>
           </div>
         </div>
-        <div style="border:1px solid var(--border);border-radius:10px;padding:20px;background:var(--surface-2)">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+        <div style="border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-5);background:var(--surface-2)">
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3)">
             <i class="ph" :class="adCopies[currentAd].platformIcon" :style="'color:'+adCopies[currentAd].platformColor"></i>
             <span class="badge" :style="'background:'+adCopies[currentAd].platformColor+'1a;color:'+adCopies[currentAd].platformColor" x-text="adCopies[currentAd].platform"></span>
-            <span style="font-size:0.6875rem;color:var(--muted)">Sponsorlu</span>
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Sponsorlu</span>
           </div>
-          <div style="font-size:1rem;font-weight:600;color:var(--accent);margin-bottom:8px;line-height:1.4" x-text="adCopies[currentAd].headline"></div>
-          <p style="font-size:0.8125rem;color:var(--text);line-height:1.6;margin-bottom:8px" x-text="adCopies[currentAd].desc"></p>
-          <span style="font-size:0.75rem;color:var(--muted)" x-text="adCopies[currentAd].displayUrl"></span>
+          <div style="font-size:var(--fs-lg);font-weight:600;color:var(--accent);margin-bottom:var(--sp-2);line-height:1.4" x-text="adCopies[currentAd].headline"></div>
+          <p style="font-size:var(--fs-sm);color:var(--text);line-height:1.6;margin-bottom:var(--sp-2)" x-text="adCopies[currentAd].desc"></p>
+          <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="adCopies[currentAd].displayUrl"></span>
         </div>
       </div>
 
       <!-- Spend Trend Chart -->
-      <div class="fade-in-d3 card" style="padding:16px;margin-bottom:24px">
-        <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">Tahmini Reklam Harcamasi Trendi (6 Ay)</div>
+      <div class="fade-in-d3 card" style="padding:var(--sp-4);margin-bottom:var(--sp-6)">
+        <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:var(--sp-3)">Tahmini Reklam Harcamasi Trendi (6 Ay)</div>
         <div id="spend-trend-chart" style="width:100%;height:260px"></div>
       </div>
 
       <!-- Top PPC Keywords -->
-      <div class="fade-in-d3 card" data-paginate="10" style="padding:0;overflow:hidden;margin-bottom:24px">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div class="fade-in-d3 card" data-paginate="10" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+        <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
           <span class="section-label" style="margin-bottom:0">Top PPC Keywordler</span>
-          <button onclick="if(window.exportToCSV)exportToCSV(['Keyword','Pozisyon','CPC','Hacim','Trafik'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+          <button onclick="if(window.exportToCSV)exportToCSV(['Keyword','Pozisyon','CPC','Hacim','Trafik'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
         </div>
         <div style="overflow-x:auto">
           <table class="r-table">
             <thead>
               <tr>
-                <th @click="doAdSort('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="adSortIcon('keyword')" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doAdSort('pos')" style="cursor:pointer;user-select:none">Pozisyon <i class="ph" :class="adSortIcon('pos')" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doAdSort('cpc')" style="cursor:pointer;user-select:none">CPC <i class="ph" :class="adSortIcon('cpc')" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doAdSort('volume')" style="cursor:pointer;user-select:none">Hacim <i class="ph" :class="adSortIcon('volume')" style="font-size:0.625rem;opacity:0.5"></i></th>
-                <th @click="doAdSort('traffic')" style="cursor:pointer;user-select:none">Trafik <i class="ph" :class="adSortIcon('traffic')" style="font-size:0.625rem;opacity:0.5"></i></th>
+                <th @click="doAdSort('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="adSortIcon('keyword')" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doAdSort('pos')" style="cursor:pointer;user-select:none">Pozisyon <i class="ph" :class="adSortIcon('pos')" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doAdSort('cpc')" style="cursor:pointer;user-select:none">CPC <i class="ph" :class="adSortIcon('cpc')" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doAdSort('volume')" style="cursor:pointer;user-select:none">Hacim <i class="ph" :class="adSortIcon('volume')" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+                <th @click="doAdSort('traffic')" style="cursor:pointer;user-select:none">Trafik <i class="ph" :class="adSortIcon('traffic')" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
               </tr>
             </thead>
             <tbody>
@@ -215,22 +218,22 @@
 
       <!-- Landing Pages -->
       <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
-        <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+        <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
           <span class="section-label" style="margin-bottom:0">Landing Page Listesi</span>
         </div>
         <template x-for="(lp, idx) in landingPages" :key="lp.url">
-          <div :style="'padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;' + (idx < landingPages.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
+          <div :style="'padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2);' + (idx < landingPages.length - 1 ? 'border-bottom:1px solid var(--border)' : '')">
             <div style="flex:1;min-width:200px">
-              <span style="font-size:0.8125rem;color:var(--accent);font-weight:500" x-text="lp.url"></span>
+              <span style="font-size:var(--fs-sm);color:var(--accent);font-weight:500" x-text="lp.url"></span>
             </div>
-            <div style="display:flex;gap:20px;align-items:center">
+            <div style="display:flex;gap:var(--sp-5);align-items:center">
               <div style="text-align:center">
-                <span style="font-size:0.6875rem;color:var(--muted);display:block">Reklam</span>
-                <span style="font-size:0.875rem;font-weight:600;color:var(--text)" x-text="lp.adCount"></span>
+                <span style="font-size:var(--fs-xs);color:var(--muted);display:block">Reklam</span>
+                <span style="font-size:var(--fs-md);font-weight:600;color:var(--text)" x-text="lp.adCount"></span>
               </div>
               <div style="text-align:center">
-                <span style="font-size:0.6875rem;color:var(--muted);display:block">Trafik</span>
-                <span style="font-size:0.875rem;font-weight:600;color:var(--text)" x-text="lp.traffic"></span>
+                <span style="font-size:var(--fs-xs);color:var(--muted);display:block">Trafik</span>
+                <span style="font-size:var(--fs-md);font-weight:600;color:var(--text)" x-text="lp.traffic"></span>
               </div>
             </div>
           </div>

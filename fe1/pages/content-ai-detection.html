@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   rangeFilter: 'tumu',
   sortCol: '',
   sortDir: 'asc',
@@ -49,49 +52,49 @@
     else { this.sortCol = col; this.sortDir = 'asc'; }
   }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">AI Icerik Tespiti</h1>
       <p class="page-sub">Sayfalardaki AI uretimi icerik analizi</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'dusuk',l:'Dusuk (<15%)'},{v:'orta',l:'Orta (15-30%)'},{v:'yuksek',l:'Yuksek (>30%)'}]">
-        <button @click="rangeFilter = f.v" :style="rangeFilter === f.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f.l"></button>
+        <button @click="rangeFilter = f.v" class="tab-btn" :class="rangeFilter === f.v ? 'active' : ''" x-text="f.l"></button>
       </template>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort AI Orani</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">%8</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort AI Orani</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">%8</div>
     </div>
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yuksek AI</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">3</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">sayfa</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yuksek AI</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444;margin-top:var(--sp-2)">3</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">sayfa</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Siralama Korelasyonu</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">-0.12</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Siralama Korelasyonu</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">-0.12</div>
     </div>
   </div>
 
   <!-- AI Detection Table -->
-  <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden;margin-bottom:24px">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+  <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Sayfa Bazli AI Analizi</span>
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('ai-tespit',['URL','AI %','Insan %','Tespit Skoru','Siralama'])">CSV Indir</button>
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('ai-tespit',['URL','AI %','Insan %','Tespit Skoru','Siralama'])">CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>
         <tr>
           <th>URL</th>
-          <th @click="doSort('ai')" style="cursor:pointer">AI % <i class="ph" :class="sortCol==='ai' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('ai')" style="cursor:pointer">AI % <i class="ph" :class="sortCol==='ai' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
           <th>Insan %</th>
-          <th @click="doSort('skor')" style="cursor:pointer">Tespit Skoru <i class="ph" :class="sortCol==='skor' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-          <th @click="doSort('siralama')" style="cursor:pointer">Siralama <i class="ph" :class="sortCol==='siralama' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+          <th @click="doSort('skor')" style="cursor:pointer">Tespit Skoru <i class="ph" :class="sortCol==='skor' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+          <th @click="doSort('siralama')" style="cursor:pointer">Siralama <i class="ph" :class="sortCol==='siralama' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
         </tr>
       </thead>
       <tbody>
@@ -109,11 +112,11 @@
   </div>
 
   <!-- Info Card -->
-  <div class="fade-in-d3 card" style="display:flex;align-items:flex-start;gap:12px;border-left:3px solid #3b82f6">
-    <i class="ph ph-info" style="color:#3b82f6;font-size:1.25rem;flex-shrink:0;margin-top:2px"></i>
+  <div class="fade-in-d3 card" style="display:flex;align-items:flex-start;gap:var(--sp-3);border-left:3px solid #3b82f6">
+    <i class="ph ph-info" style="color:#3b82f6;font-size:var(--fs-xl);flex-shrink:0;margin-top:2px"></i>
     <div>
-      <div style="font-size:0.875rem;font-weight:500;color:var(--text);margin-bottom:4px">AI Icerik ve Siralama</div>
-      <div style="font-size:0.8125rem;color:var(--text-soft);line-height:1.6">Dusuk AI orani (&lt;%15) siralamaya negatif etki gostermemektedir. Yuksek AI oranli sayfalarda icerik cesitliligi ve benzersizlik arttirarak tespit skorunu dusurmeniz onerilir.</div>
+      <div style="font-size:var(--fs-md);font-weight:500;color:var(--text);margin-bottom:var(--sp-1)">AI Icerik ve Siralama</div>
+      <div style="font-size:var(--fs-sm);color:var(--text-soft);line-height:1.6">Dusuk AI orani (&lt;%15) siralamaya negatif etki gostermemektedir. Yuksek AI oranli sayfalarda icerik cesitliligi ve benzersizlik arttirarak tespit skorunu dusurmeniz onerilir.</div>
     </div>
   </div>
 </div>

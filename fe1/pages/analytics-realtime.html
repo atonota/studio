@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,8 +21,8 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="table" x-data="{
   liveCount: 47,
   init() {
     setInterval(() => {
@@ -29,78 +32,78 @@
     }, 3000);
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Gercek Zamanli Izleme</h1>
     <p class="page-sub">Canli ziyaretci aktivitesi</p>
   </div>
 
   <!-- Hero Number -->
-  <div class="fade-in-d1 card" style="text-align:center;padding:32px 20px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px">
+  <div class="fade-in-d1 card" style="text-align:center;padding:var(--sp-8) var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:center;gap:var(--sp-3);margin-bottom:var(--sp-2)">
       <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite"></span>
-      <span style="font-size:0.875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Canli Ziyaretci</span>
+      <span style="font-size:var(--fs-md);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Canli Ziyaretci</span>
     </div>
     <div style="font-size:3.5rem;font-weight:200;color:var(--text);line-height:1;transition:all 0.3s" x-text="liveCount"></div>
   </div>
 
   <!-- Mini Cards -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Son 5 dk</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">23 yeni</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Son 5 dk</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">23 yeni</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">En Cok Sayfa</span>
-      <div style="font-size:1rem;font-weight:400;color:var(--text);margin-top:8px">/blog/seo-rehberi</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">En Cok Sayfa</span>
+      <div style="font-size:var(--fs-lg);font-weight:400;color:var(--text);margin-top:var(--sp-2)">/blog/seo-rehberi</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ust Kaynak</span>
-      <div style="font-size:1rem;font-weight:400;color:var(--text);margin-top:8px">Google</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ust Kaynak</span>
+      <div style="font-size:var(--fs-lg);font-weight:400;color:var(--text);margin-top:var(--sp-2)">Google</div>
     </div>
   </div>
 
   <!-- Live Event List -->
   <div class="fade-in-d3 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-2)">
       <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite"></span>
       <span class="section-label" style="margin-bottom:0">Canli Etkinlikler</span>
     </div>
 
     <div style="display:flex;flex-direction:column">
       <!-- Event 1 -->
-      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:32:15</span>
-        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/urunler</span>
-        <span style="font-size:0.8125rem;color:var(--muted)">Google</span>
-        <span style="font-size:1rem">🇹🇷</span>
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:64px">14:32:15</span>
+        <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">/urunler</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Google</span>
+        <span style="font-size:var(--fs-lg)">🇹🇷</span>
       </div>
       <!-- Event 2 -->
-      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:32:08</span>
-        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/blog/seo-rehberi</span>
-        <span style="font-size:0.8125rem;color:var(--muted)">Direct</span>
-        <span style="font-size:1rem">🇹🇷</span>
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:64px">14:32:08</span>
+        <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">/blog/seo-rehberi</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Direct</span>
+        <span style="font-size:var(--fs-lg)">🇹🇷</span>
       </div>
       <!-- Event 3 -->
-      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:31:54</span>
-        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/blog/backlink-rehberi</span>
-        <span style="font-size:0.8125rem;color:var(--muted)">Google</span>
-        <span style="font-size:1rem">🇩🇪</span>
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:64px">14:31:54</span>
+        <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">/blog/backlink-rehberi</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Google</span>
+        <span style="font-size:var(--fs-lg)">🇩🇪</span>
       </div>
       <!-- Event 4 -->
-      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:31:42</span>
-        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/fiyatlandirma</span>
-        <span style="font-size:0.8125rem;color:var(--muted)">LinkedIn</span>
-        <span style="font-size:1rem">🇹🇷</span>
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:64px">14:31:42</span>
+        <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">/fiyatlandirma</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">LinkedIn</span>
+        <span style="font-size:var(--fs-lg)">🇹🇷</span>
       </div>
       <!-- Event 5 -->
-      <div style="padding:14px 20px;display:flex;align-items:center;gap:16px">
-        <span style="font-size:0.75rem;color:var(--muted);font-family:monospace;min-width:64px">14:31:29</span>
-        <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">/blog/dijital-pazarlama</span>
-        <span style="font-size:0.8125rem;color:var(--muted)">Twitter</span>
-        <span style="font-size:1rem">🇬🇧</span>
+      <div style="padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;gap:var(--sp-4)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-family:monospace;min-width:64px">14:31:29</span>
+        <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">/blog/dijital-pazarlama</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Twitter</span>
+        <span style="font-size:var(--fs-lg)">🇬🇧</span>
       </div>
     </div>
   </div>

@@ -1,33 +1,140 @@
 <!DOCTYPE html>
+<!--
+  ═══════════════════════════════════════════════════════
+  atonota Studio — Sayfa Sablonu
+  -------------------------------------------------------
+  KULLANIM:
+    1. PAGE_TITLE  → sayfa basligi (title + h1)
+    2. PAGE_DESC   → kisa aciklama (page-sub)
+    3. PAGE_KEY    → initShell() anahtari (asagida liste var)
+    4. data-skeleton → sayfa duzen turu (asagida secenekler)
+  ═══════════════════════════════════════════════════════
+-->
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<!--
+  color-scheme: tarayici UI elementlerinin (scrollbar, input, select)
+  temaya uyum saglamasini saglar. Her zaman "light dark" kalsın.
+-->
 <meta name="color-scheme" content="light dark">
 <title>PAGE_TITLE — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
+
+<!--
+  SCRIPT YUKLEME SIRASI — degistirme:
+  1. appearance-store.js  → CSS variable'lari tanimlar (FOUC onleme)
+  2. appearance-init.js   → localStorage'dan uygular (body'den once calisir)
+  3. Alpine.js            → defer (DOM hazir olduktan sonra)
+  4. components.js        → Alpine x-data component'leri
+  5. shell.js + initShell → layout, nav, rail, topbar
+-->
+
+<!-- Temaya ozgu CDN fontlar appearance-init.js tarafindan dinamik yuklenir -->
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+<!-- CSS: primitives (ham tokenlar) → tokens (semantic + a11y katmani) -->
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+
+<!-- Tema: FOUC onlemek icin defer OLMADAN, senkron yuklenir -->
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
-<!-- Shell skeleton — filled by shell.js -->
+
+<!-- ══ SHELL — shell.js tarafindan doldurulur, elle degistirme ══ -->
 <div id="topbar"></div>
 <div id="spotlight-backdrop"></div>
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<!-- ══════ MAIN CONTENT ══════ -->
-<div id="main">
-  <!-- PAGE CONTENT HERE -->
-</div>
+<!-- ══ ANA ICERIK ══════════════════════════════════════════════════
+  data-skeleton secenekleri:
+    dashboard  → KPI kartlari + grafik icin optimize padding/scroll
+    table      → tam genislik tablo duzenlemeleri
+    tool       → iki sutunlu icerik/panel yapisi
+    chat       → alt sabitli input alani
+    form       → dar sutun, okunabilir form padding
+    cards      → grid kart duzenlemesi
 
-<!-- Footer -->
+  Semantik kurallar:
+    - Her sayfada bir <h1 class="page-title"> olmali
+    - Baslik blogu fade-in, icerik fade-in-d1/d2/d3... ile animasyonlanir
+    - Inline style yerine CSS variable kullan: var(--sp-*), var(--fs-*)
+    - Dogrudan token'a yazma — sadece --color-*, --font-*, --sp-* kullan
+═══════════════════════════════════════════════════════════════════ -->
+<div id="main" data-skeleton="dashboard">
+
+  <div class="fade-in" style="margin-bottom:var(--sp-7)">
+    <h1 class="page-title">PAGE_TITLE</h1>
+    <p class="page-sub">PAGE_DESC</p>
+  </div>
+
+  <!-- SAYFA ICERIGI BURAYA -->
+
+</div><!-- /#main -->
+
 <div id="footbar"></div>
 
+<!-- Alpine defer — DOM'dan sonra yukle -->
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
+<!--
+  PAGE_KEY secenekleri:
+  dashboard | seo | content | ads | analytics | geo | competitor
+  local | performance | insights | reports | settings | yonetim
+-->
 <script>document.addEventListener('DOMContentLoaded', () => initShell('PAGE_KEY'));</script>
+
+<!--
+  ═══ ALPINE COMPONENT REFERANSI ═══════════════════════════════
+
+  TABS:
+    <div x-data="tabs('tab1')">
+      <button @click="select('tab1')" :class="{'active':isActive('tab1')}">Tab 1</button>
+      <div x-show="isActive('tab1')">Icerik 1</div>
+    </div>
+
+  FORM (validasyon + submit):
+    <div x-data="form({name:'', email:''})">
+      <input type="text" x-model="fields.name">
+      <span x-show="hasError('name')" x-text="getError('name')"></span>
+      <button @click="submit()">Kaydet</button>
+    </div>
+
+  DATATABLE (arama + sıralama + sayfalama):
+    <div x-data="dataTable(rows)">
+      <input x-model="searchQuery" @input="filter(searchQuery)">
+    </div>
+
+  TOAST:
+    window.showToast('Kaydedildi!', 3000)
+
+  CONFIRM:
+    $store.confirm.ask('Emin misiniz?', () => doSomething())
+
+  ═══ CSS TOKEN REHBERI ═══════════════════════════════════════
+
+  Renkler:   var(--text), var(--muted), var(--accent), var(--base)
+             var(--surface), var(--surface-2), var(--border)
+  Yeni API:  var(--color-text-primary), var(--color-bg-base)
+  Boşluk:    var(--sp-1)=4px ... var(--sp-8)=32px
+  Yazı:      var(--fs-2xs) ... var(--fs-3xl)
+  Radius:    var(--r-sm), var(--r-md), var(--r-lg)
+  Kart:      class="card" + padding inline
+
+  ═══ A11Y KURALLARI ═══════════════════════════════════════════
+
+  - Interaktif elementin min boyutu: 44×44px (WCAG 2.5.5)
+  - Her form alaninin bir <label> veya aria-label'i olmali
+  - Icon-only butonlara: aria-label="Aciklama"
+  - Modal/dropdown: aria-modal, focus trap
+  - Dinamik icerik degisimi: aria-live="polite"
+  - Renk tek basina bilgi tasimamali (ikon veya metin ekle)
+-->
 </body>
 </html>

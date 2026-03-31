@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,109 +21,109 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ expandedIncident: -1, testingUptime: false }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ expandedIncident: -1, testingUptime: false }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Uptime Izleme</h1>
     <p class="page-sub">Site erisim durumu ve kesinti kayitlari</p>
   </div>
 
   <!-- Hero Uptime -->
-  <div class="fade-in-d1" style="text-align:center;margin-bottom:24px;padding:32px 0">
+  <div class="fade-in-d1" style="text-align:center;margin-bottom:var(--sp-6);padding:var(--sp-8) 0">
     <div style="font-size:3rem;font-weight:300;color:#22c55e;letter-spacing:-0.02em">99.97%</div>
-    <div style="font-size:0.8125rem;color:var(--muted);margin-top:4px">Son 30 gun uptime orani</div>
+    <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Son 30 gun uptime orani</div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Son 30 Gun</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#22c55e">99.97%</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Son 30 Gun</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#22c55e">99.97%</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Toplam Kesinti</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">2</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Toplam Kesinti</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">2</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Ort. Kesinti Suresi</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">4 dk</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Ort. Kesinti Suresi</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">4 dk</div>
     </div>
   </div>
 
   <!-- Uptime Bar -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Son 30 Gun</span>
-    <div style="display:flex;gap:3px;margin-top:8px">
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="1 Mar — Calisir"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="2 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="3 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="4 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="5 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="6 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="7 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#ef4444" title="8 Mar — 3 dk kesinti"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="9 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="10 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="11 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="12 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="13 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="14 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="15 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="16 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="17 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="18 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="19 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="20 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#ef4444" title="21 Mar — 5 dk kesinti"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="22 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="23 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="24 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="25 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="26 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="27 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="28 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="29 Mar"></div>
-      <div style="flex:1;height:28px;border-radius:4px;background:#22c55e" title="30 Mar"></div>
+    <div style="display:flex;gap:3px;margin-top:var(--sp-2)">
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="1 Mar — Calisir"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="2 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="3 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="4 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="5 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="6 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="7 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#ef4444" title="8 Mar — 3 dk kesinti"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="9 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="10 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="11 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="12 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="13 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="14 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="15 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="16 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="17 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="18 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="19 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="20 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#ef4444" title="21 Mar — 5 dk kesinti"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="22 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="23 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="24 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="25 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="26 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="27 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="28 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="29 Mar"></div>
+      <div style="flex:1;height:28px;border-radius:var(--r-sm);background:#22c55e" title="30 Mar"></div>
     </div>
-    <div style="display:flex;justify-content:space-between;margin-top:8px">
-      <span style="font-size:0.6875rem;color:var(--muted)">1 Mar</span>
-      <span style="font-size:0.6875rem;color:var(--muted)">30 Mar</span>
+    <div style="display:flex;justify-content:space-between;margin-top:var(--sp-2)">
+      <span style="font-size:var(--fs-xs);color:var(--muted)">1 Mar</span>
+      <span style="font-size:var(--fs-xs);color:var(--muted)">30 Mar</span>
     </div>
   </div>
 
   <!-- Incident List -->
   <div class="fade-in-d3 card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
       <span class="section-label" style="margin-bottom:0">Kesinti Kayitlari</span>
-      <button @click="testingUptime = true; setTimeout(() => { testingUptime = false; $store.toast.show('Uptime testi basarili — site erisiliyor', 'success') }, 1500)" :disabled="testingUptime" style="background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit">
-        <i class="ph" :class="testingUptime ? 'ph-spinner' : 'ph-globe'" :style="testingUptime && 'animation:spin 1s linear infinite'" style="font-size:0.875rem"></i>
+      <button @click="testingUptime = true; setTimeout(() => { testingUptime = false; $store.toast.show('Uptime testi basarili — site erisiliyor', 'success') }, 1500)" :disabled="testingUptime" style="background:var(--accent);color:#fff;border:none;padding:var(--sp-2) var(--sp-4);border-radius:var(--r-sm);font-size:var(--fs-sm);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit">
+        <i class="ph" :class="testingUptime ? 'ph-spinner' : 'ph-globe'" :style="testingUptime && 'animation:spin 1s linear infinite'" style="font-size:var(--fs-md)"></i>
         <span x-text="testingUptime ? 'Test ediliyor...' : 'Test Et'"></span>
       </button>
     </div>
     <div style="display:flex;flex-direction:column;gap:0">
-      <div @click="expandedIncident = expandedIncident === 0 ? -1 : 0" style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer">
-        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:6px;flex-shrink:0"></div>
+      <div @click="expandedIncident = expandedIncident === 0 ? -1 : 0" style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:var(--sp-2);flex-shrink:0"></div>
         <div style="flex:1">
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">21 Mar 2026 — 14:22 (5 dk)</div>
-            <i class="ph" :class="expandedIncident === 0 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted);font-size:0.75rem"></i>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">21 Mar 2026 — 14:22 (5 dk)</div>
+            <i class="ph" :class="expandedIncident === 0 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted);font-size:var(--fs-sm)"></i>
           </div>
-          <div style="font-size:0.8125rem;color:var(--muted);margin-top:2px">Veritabani baglanti havuzu doldu. Otomatik restart ile cozuldu.</div>
-          <div x-show="expandedIncident === 0" x-transition style="margin-top:8px;padding:10px;background:var(--surface-2);border-radius:6px;font-size:0.75rem;color:var(--muted)">
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">Veritabani baglanti havuzu doldu. Otomatik restart ile cozuldu.</div>
+          <div x-show="expandedIncident === 0" x-transition style="margin-top:var(--sp-2);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-sm);font-size:var(--fs-sm);color:var(--muted)">
             Baslangic: 14:22 UTC | Bitis: 14:27 UTC | Etkilenen: API endpoint'leri | Cozum: PgBouncer otomatik restart
           </div>
         </div>
       </div>
-      <div @click="expandedIncident = expandedIncident === 1 ? -1 : 1" style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;cursor:pointer">
-        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:6px;flex-shrink:0"></div>
+      <div @click="expandedIncident = expandedIncident === 1 ? -1 : 1" style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3) 0;cursor:pointer">
+        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:var(--sp-2);flex-shrink:0"></div>
         <div style="flex:1">
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">8 Mar 2026 — 03:15 (3 dk)</div>
-            <i class="ph" :class="expandedIncident === 1 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted);font-size:0.75rem"></i>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">8 Mar 2026 — 03:15 (3 dk)</div>
+            <i class="ph" :class="expandedIncident === 1 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted);font-size:var(--fs-sm)"></i>
           </div>
-          <div style="font-size:0.8125rem;color:var(--muted);margin-top:2px">CDN saglayicisi gecici erisim sorunu. Otomatik failover ile cozuldu.</div>
-          <div x-show="expandedIncident === 1" x-transition style="margin-top:8px;padding:10px;background:var(--surface-2);border-radius:6px;font-size:0.75rem;color:var(--muted)">
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">CDN saglayicisi gecici erisim sorunu. Otomatik failover ile cozuldu.</div>
+          <div x-show="expandedIncident === 1" x-transition style="margin-top:var(--sp-2);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-sm);font-size:var(--fs-sm);color:var(--muted)">
             Baslangic: 03:15 UTC | Bitis: 03:18 UTC | Etkilenen: Statik dosyalar | Cozum: CDN failover
           </div>
         </div>

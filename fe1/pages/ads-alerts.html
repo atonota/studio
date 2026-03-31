@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,114 +21,114 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ severityFilter: 'tumu', alerts: [{id:1,visible:true,read:false},{id:2,visible:true,read:false},{id:3,visible:true,read:false},{id:4,visible:true,read:false}] }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ severityFilter: 'tumu', alerts: [{id:1,visible:true,read:false},{id:2,visible:true,read:false},{id:3,visible:true,read:false},{id:4,visible:true,read:false}] }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Reklam Uyarilari</h1>
       <p class="page-sub">Kampanya uyari ve bildirimleri</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'kritik',l:'Kritik'},{v:'uyari',l:'Uyari'},{v:'bilgi',l:'Bilgi'},{v:'hata',l:'Hata'}]">
-        <button @click="severityFilter = s.v" :style="severityFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+        <button @click="severityFilter = s.v" class="tab-btn" :class="severityFilter === s.v ? 'active' : ''" x-text="s.l"></button>
       </template>
     </div>
   </div>
 
-  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:16px">
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-4)">
     <!-- Alert 1: Kritik -->
-    <div class="card" style="padding:20px 24px;border-left:3px solid #ef4444">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);border-left:3px solid #ef4444">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-warning-circle" style="color:#ef4444;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-2)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-warning-circle" style="color:#ef4444;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">Meta CPA esik asti &#8378;62 &gt; &#8378;60</div>
               <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
             </div>
           </div>
-          <div style="font-size:0.75rem;color:var(--muted)">
-            <i class="ph ph-clock" style="margin-right:4px"></i>5 dakika once
+          <div style="font-size:var(--fs-sm);color:var(--muted)">
+            <i class="ph ph-clock" style="margin-right:var(--sp-1)"></i>5 dakika once
           </div>
         </div>
-        <div style="display:flex;gap:6px">
-          <button @click="alerts[0].read = true" :style="alerts[0].read && 'opacity:0.5'" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer" x-text="alerts[0].read ? 'Okundu' : 'Okundu isaretle'"></button>
-          <button @click="alerts[0].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer">Kapat</button>
+        <div style="display:flex;gap:var(--sp-2)">
+          <button @click="alerts[0].read = true" :style="alerts[0].read && 'opacity:0.5'" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer" x-text="alerts[0].read ? 'Okundu' : 'Okundu isaretle'"></button>
+          <button @click="alerts[0].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer">Kapat</button>
         </div>
       </div>
     </div>
 
     <!-- Alert 2: Uyari -->
-    <div class="card" style="padding:20px 24px;border-left:3px solid #eab308">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);border-left:3px solid #eab308">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-warning" style="color:#eab308;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-2)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-warning" style="color:#eab308;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">TikTok butce %90 harcandi</div>
               <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Uyari</span>
             </div>
           </div>
-          <div style="font-size:0.75rem;color:var(--muted)">
-            <i class="ph ph-clock" style="margin-right:4px"></i>1 saat once
+          <div style="font-size:var(--fs-sm);color:var(--muted)">
+            <i class="ph ph-clock" style="margin-right:var(--sp-1)"></i>1 saat once
           </div>
         </div>
-        <div style="display:flex;gap:6px">
-          <button @click="alerts[1].read = true" :style="alerts[1].read && 'opacity:0.5'" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer" x-text="alerts[1].read ? 'Okundu' : 'Okundu isaretle'"></button>
-          <button @click="alerts[1].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer">Kapat</button>
+        <div style="display:flex;gap:var(--sp-2)">
+          <button @click="alerts[1].read = true" :style="alerts[1].read && 'opacity:0.5'" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer" x-text="alerts[1].read ? 'Okundu' : 'Okundu isaretle'"></button>
+          <button @click="alerts[1].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer">Kapat</button>
         </div>
       </div>
     </div>
 
     <!-- Alert 3: Bilgi -->
-    <div class="card" style="padding:20px 24px;border-left:3px solid #3b82f6">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);border-left:3px solid #3b82f6">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-info" style="color:#3b82f6;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-2)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-info" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">LinkedIn CTR dusuk %0.8</div>
               <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Bilgi</span>
             </div>
           </div>
-          <div style="font-size:0.75rem;color:var(--muted)">
-            <i class="ph ph-clock" style="margin-right:4px"></i>3 saat once
+          <div style="font-size:var(--fs-sm);color:var(--muted)">
+            <i class="ph ph-clock" style="margin-right:var(--sp-1)"></i>3 saat once
           </div>
         </div>
-        <div style="display:flex;gap:6px">
-          <button @click="alerts[2].read = true" :style="alerts[2].read && 'opacity:0.5'" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer" x-text="alerts[2].read ? 'Okundu' : 'Okundu isaretle'"></button>
-          <button @click="alerts[2].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer">Kapat</button>
+        <div style="display:flex;gap:var(--sp-2)">
+          <button @click="alerts[2].read = true" :style="alerts[2].read && 'opacity:0.5'" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer" x-text="alerts[2].read ? 'Okundu' : 'Okundu isaretle'"></button>
+          <button @click="alerts[2].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer">Kapat</button>
         </div>
       </div>
     </div>
 
     <!-- Alert 4: Hata -->
-    <div class="card" style="padding:20px 24px;border-left:3px solid #ef4444">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);border-left:3px solid #ef4444">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-x-circle" style="color:#ef4444;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-2)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-x-circle" style="color:#ef4444;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">Pinterest hesap baglantisi koptu</div>
               <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Hata</span>
             </div>
           </div>
-          <div style="font-size:0.75rem;color:var(--muted)">
-            <i class="ph ph-clock" style="margin-right:4px"></i>1 gun once
+          <div style="font-size:var(--fs-sm);color:var(--muted)">
+            <i class="ph ph-clock" style="margin-right:var(--sp-1)"></i>1 gun once
           </div>
         </div>
-        <div style="display:flex;gap:6px">
-          <button @click="alerts[3].read = true" :style="alerts[3].read && 'opacity:0.5'" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer" x-text="alerts[3].read ? 'Okundu' : 'Okundu isaretle'"></button>
-          <button @click="alerts[3].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.75rem;cursor:pointer">Kapat</button>
+        <div style="display:flex;gap:var(--sp-2)">
+          <button @click="alerts[3].read = true" :style="alerts[3].read && 'opacity:0.5'" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer" x-text="alerts[3].read ? 'Okundu' : 'Okundu isaretle'"></button>
+          <button @click="alerts[3].visible = false; $store.toast.show('Uyari kapatildi', 'success')" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-sm);cursor:pointer">Kapat</button>
         </div>
       </div>
     </div>

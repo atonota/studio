@@ -1,0 +1,115 @@
+// ═══ TENANT SWITCHER ═══
+
+// Tenant backdrop overlay
+#tenant-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 299;
+  background: rgba(0, 0, 0, var(--backdrop-opacity));
+  backdrop-filter: blur(var(--blur-level));
+  -webkit-backdrop-filter: blur(var(--blur-level));
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-top: calc(var(--top-h) + 12px);
+  padding-left: 12px;
+
+  &.show {
+    display: flex;
+  }
+}
+
+// Tenant dropdown panel
+.tenant-dropdown {
+  background: var(--color-glass-panel);
+  backdrop-filter: blur(var(--blur-level)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-level)) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  width: 240px;
+  padding: 4px 0;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, calc(0.3 * var(--shadow-scale)));
+  animation: dropUp 0.18s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+// Tenant dropdown item
+.td-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  color: var(--text-soft);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+}
+
+.td-item-active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+// Tenant icon
+.td-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1.5px solid var(--border);
+
+  i {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+}
+
+.td-icon-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+
+  i {
+    color: var(--accent);
+  }
+}
+
+// ── Mobile tenant modal (full-width, centered, blur backdrop) ──
+#tenant-modal {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(0, 0, 0, var(--backdrop-opacity));
+  backdrop-filter: blur(var(--blur-level));
+  -webkit-backdrop-filter: blur(var(--blur-level));
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  .tenant-dropdown {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+// ── Mobile: tenant backdrop full-screen centered ──
+@media (max-width: 767px) {
+  #tenant-backdrop {
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+
+    .tenant-dropdown {
+      width: calc(100% - 48px);
+      max-width: 320px;
+    }
+  }
+}

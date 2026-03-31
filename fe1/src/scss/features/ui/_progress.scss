@@ -1,0 +1,28 @@
+// ── Progress Bar ──
+
+.prog-bar,
+.progress-bar {
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.prog-fill,
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+$prog-colors: (
+  'green':  #22c55e,
+  'blue':   #3b82f6,
+  'yellow': #eab308,
+  'red':    #ef4444,
+);
+
+@each $name, $color in $prog-colors {
+  .prog-fill--#{$name} { background: $color; }
+}
+.prog-fill--accent { background: var(--accent); }

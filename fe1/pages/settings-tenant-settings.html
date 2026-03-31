@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="form" x-data="{
   fields: { ad: 'Acme Corp.', slug: 'acme', domain: 'acme.com' },
   errors: {},
   validate() {
@@ -33,63 +36,63 @@
     if (this.validate()) { $store.toast.show('Ayarlar kaydedildi!', 'success'); }
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Tenant Ayarlari</h1>
     <p class="page-sub">Organizasyon bilgileri ve plan yonetimi</p>
   </div>
 
   <!-- Tenant Info -->
-  <div class="fade-in-d1 card" style="max-width:640px;margin-bottom:24px">
+  <div class="fade-in-d1 card" style="max-width:640px;margin-bottom:var(--sp-6)">
     <span class="section-label">Tenant Bilgileri</span>
-    <div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4);margin-top:var(--sp-4)">
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Ad</label>
-        <input type="text" x-model="fields.ad" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.875rem;outline:none" :style="errors.ad ? 'border-color:#ef4444' : ''" />
-        <span x-show="errors.ad" x-text="errors.ad" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:var(--sp-2)">Ad</label>
+        <input type="text" x-model="fields.ad" style="width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:var(--fs-md);outline:none" :style="errors.ad ? 'border-color:#ef4444' : ''" />
+        <span x-show="errors.ad" x-text="errors.ad" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Slug</label>
-        <input type="text" x-model="fields.slug" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);font-size:0.875rem;outline:none" readonly />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:var(--sp-2)">Slug</label>
+        <input type="text" x-model="fields.slug" style="width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);font-size:var(--fs-md);outline:none" readonly />
       </div>
       <div>
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Domain</label>
-        <input type="text" x-model="fields.domain" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:0.875rem;outline:none" :style="errors.domain ? 'border-color:#ef4444' : ''" />
-        <span x-show="errors.domain" x-text="errors.domain" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:var(--sp-2)">Domain</label>
+        <input type="text" x-model="fields.domain" style="width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:var(--fs-md);outline:none" :style="errors.domain ? 'border-color:#ef4444' : ''" />
+        <span x-show="errors.domain" x-text="errors.domain" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
       </div>
-      <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:8px">
+      <div style="display:flex;justify-content:flex-end;gap:var(--sp-3);margin-top:var(--sp-2)">
         <button class="btn-primary" @click="save()">Kaydet</button>
       </div>
     </div>
   </div>
 
   <!-- Plan Info -->
-  <div class="fade-in-d2 card" style="max-width:640px;margin-bottom:24px">
+  <div class="fade-in-d2 card" style="max-width:640px;margin-bottom:var(--sp-6)">
     <span class="section-label">Plan Bilgisi</span>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:44px;height:44px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-crown" style="color:#a855f7;font-size:1.25rem"></i>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--sp-4)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <div style="width:44px;height:44px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-crown" style="color:#a855f7;font-size:var(--fs-xl)"></i>
         </div>
         <div>
-          <div style="font-size:1rem;font-weight:600;color:var(--text)">Pro</div>
-          <div style="font-size:0.75rem;color:var(--muted)">Tum ozellikler dahil — sinir yok</div>
+          <div style="font-size:var(--fs-lg);font-weight:600;color:var(--text)">Pro</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)">Tum ozellikler dahil — sinir yok</div>
         </div>
       </div>
-      <a href="#" style="font-size:0.8125rem;color:var(--accent);font-weight:500;text-decoration:none">Plan Degistir</a>
+      <a href="#" style="font-size:var(--fs-sm);color:var(--accent);font-weight:500;text-decoration:none">Plan Degistir</a>
     </div>
   </div>
 
   <!-- Danger Zone -->
-  <div class="fade-in-d3" style="max-width:640px;border:1px solid #ef4444;border-radius:12px;padding:24px;background:rgba(239,68,68,0.04)">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <i class="ph ph-warning" style="color:#ef4444;font-size:1.25rem"></i>
-      <span style="font-size:0.875rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.06em">Tehlikeli Bolge</span>
+  <div class="fade-in-d3" style="max-width:640px;border:1px solid #ef4444;border-radius:var(--r-lg);padding:var(--sp-6);background:rgba(239,68,68,0.04)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+      <i class="ph ph-warning" style="color:#ef4444;font-size:var(--fs-xl)"></i>
+      <span style="font-size:var(--fs-md);font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.06em">Tehlikeli Bolge</span>
     </div>
-    <p style="font-size:0.8125rem;color:var(--text-soft);margin-bottom:16px;line-height:1.6">
+    <p style="font-size:var(--fs-sm);color:var(--text-soft);margin-bottom:var(--sp-4);line-height:1.6">
       Tenant silindiginde tum workspace'ler, adaptor baglantilari, bildirim kurallari ve analitik verileri kalici olarak kaldiirlir. Bu islem geri alinamaz.
     </p>
-    <button style="padding:10px 20px;border-radius:8px;border:1px solid #ef4444;background:transparent;color:#ef4444;font-size:0.8125rem;font-weight:600;cursor:pointer">
-      <i class="ph ph-trash" style="margin-right:6px"></i>Tenant Sil
+    <button style="padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);border:1px solid #ef4444;background:transparent;color:#ef4444;font-size:var(--fs-sm);font-weight:600;cursor:pointer">
+      <i class="ph ph-trash" style="margin-right:var(--sp-2)"></i>Tenant Sil
     </button>
   </div>
 </div>

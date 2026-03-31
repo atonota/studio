@@ -1,0 +1,96 @@
+// ═══ RAIL ═══
+// Mobile-first: rail tam yukseklik, top:0 bottom:0
+
+#rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--rail-w);
+  background: var(--chrome-bg);
+  border-right: 1px solid var(--glass-border);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
+  gap: 2px;
+  z-index: 250;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: background-color 0.22s ease;
+}
+
+@media (min-width: 768px) {
+  #rail {
+    display: flex;
+    top: var(--top-h);
+    bottom: var(--foot-h);
+    justify-content: flex-start;
+    z-index: 150;
+  }
+}
+
+// Navigation item
+.ni {
+  width: 80px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--muted);
+  border-radius: 10px;
+  position: relative;
+  user-select: none;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text-soft);
+  }
+
+  &.active {
+    background: var(--rail-accent-soft);
+    color: var(--rail-accent);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 24px;
+      background: var(--rail-accent);
+      border-radius: 0 3px 3px 0;
+    }
+  }
+
+  i {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+}
+
+.ni-label {
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ni-div {
+  width: 48px;
+  height: 1px;
+  background: var(--border);
+  margin: 4px auto;
+  opacity: 0.5;
+}

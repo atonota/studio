@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -20,9 +23,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="dashboard" x-data="{
   tab: 'genel',
   editingBudget: false,
   budgetVal: '1,200',
@@ -38,19 +41,19 @@
     }
   }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
       <h1 class="page-title">Bahar Kampanyasi</h1>
       <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta Ads</span>
       <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <a href="ads-adgroups.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">
-        <i class="ph ph-plus" style="font-size:0.75rem"></i> Reklam Grubu Ekle <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+      <a href="ads-adgroups.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">
+        <i class="ph ph-plus" style="font-size:var(--fs-sm)"></i> Reklam Grubu Ekle <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
-      <div style="display:flex;gap:4px">
+      <div style="display:flex;gap:var(--sp-1)">
         <template x-for="d in [{v:'7gun',l:'7G'},{v:'30gun',l:'30G'},{v:'90gun',l:'90G'}]">
-          <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+          <button @click="dateRange = d.v; updateCharts()" class="tab-btn" :class="dateRange === d.v ? 'active' : ''" x-text="d.l"></button>
         </template>
       </div>
       <button class="btn-secondary"><i class="ph ph-pause"></i> Duraklat</button>
@@ -59,45 +62,45 @@
   </div>
 
   <!-- Tabs -->
-  <div style="display:flex;gap:4px;margin-bottom:24px">
+  <div style="display:flex;gap:var(--sp-1);margin-bottom:var(--sp-6)">
     <template x-for="t in [{v:'genel',l:'Genel'},{v:'performans',l:'Performans'},{v:'kreatif',l:'Kreatif'}]">
-      <button @click="tab = t.v" :style="tab === t.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="t.l"></button>
+      <button @click="tab = t.v" class="tab-btn" :class="tab === t.v ? 'active' : ''" x-text="t.l"></button>
     </template>
   </div>
 
   <!-- Stat Cards -->
-  <div x-show="tab === 'genel' || tab === 'performans'" x-effect="if(tab==='genel'||tab==='performans') $el.style.display='grid'" class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div x-show="tab === 'genel' || tab === 'performans'" x-effect="if(tab==='genel'||tab==='performans') $el.style.display='grid'" class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Harcama</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;8,240</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Harcama</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">&#8378;8,240</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Gosterim</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">124K</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Gosterim</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">124K</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Tiklanma</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">3,420</div>
-      <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">CTR 2.76%</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Tiklanma</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">3,420</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">CTR 2.76%</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Donusum</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">186</div>
-      <div style="font-size:0.6875rem;color:var(--muted);margin-top:4px">CPA &#8378;44.3</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Donusum</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">186</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">CPA &#8378;44.3</div>
     </div>
   </div>
 
   <!-- Daily Performance Chart -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Gunluk Performans (Son 7 Gun)</span>
     <div id="chart-daily" style="width:100%;height:320px"></div>
   </div>
 
   <!-- Ad Group Table -->
   <div class="fade-in-d3 card" data-paginate="10">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Reklam Gruplari</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Grup Adi','Durum','Butce','Harcama','Tiklanma'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Grup Adi','Durum','Butce','Harcama','Tiklanma'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>

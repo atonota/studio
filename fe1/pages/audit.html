@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,9 +19,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   searchQuery: '',
   catFilter: 'Tumu',
   categories: ['Tumu','Auth','Tenant','Plugin','Reklam'],
@@ -36,34 +39,34 @@
     });
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Audit Log</h1>
     <p class="page-sub">Sistem olay gecmisi</p>
   </div>
 
   <!-- Search -->
-  <div class="fade-in-d1" style="margin-bottom:16px">
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-4)">
     <div style="position:relative;max-width:400px">
-      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.125rem;color:var(--muted)"></i>
-      <input type="text" placeholder="Kullanici, islem veya kaynak ara..." x-model="searchQuery" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 42px;color:var(--text);width:100%;font-family:inherit;font-size:0.875rem;outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:var(--fs-lg);color:var(--muted)"></i>
+      <input type="text" placeholder="Kullanici, islem veya kaynak ara..." x-model="searchQuery" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4) var(--sp-3) 42px;color:var(--text);width:100%;font-family:inherit;font-size:var(--fs-md);outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
   </div>
 
   <!-- Category Filters -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-bottom:var(--sp-5)">
     <template x-for="cat in categories" :key="cat">
       <span class="badge" @click="catFilter = cat"
         :style="catFilter === cat
-          ? 'background:var(--accent-soft);color:var(--accent);cursor:pointer;padding:6px 14px;font-size:0.75rem'
-          : 'background:var(--surface-2);color:var(--text-soft);cursor:pointer;padding:6px 14px;font-size:0.75rem;border:1px solid var(--border)'"
+          ? 'background:var(--accent-soft);color:var(--accent);cursor:pointer;padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)'
+          : 'background:var(--surface-2);color:var(--text-soft);cursor:pointer;padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);border:1px solid var(--border)'"
         x-text="cat"></span>
     </template>
   </div>
 
   <!-- Audit Table -->
   <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
-      <button onclick="if(window.exportToCSV)exportToCSV(['Zaman','Kullanici','Islem','Kaynak'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+      <button onclick="if(window.exportToCSV)exportToCSV(['Zaman','Kullanici','Islem','Kaynak'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -78,21 +81,21 @@
       <tbody>
         <template x-for="row in filtered" :key="row.time + row.action">
           <tr>
-            <td data-label="Zaman"><span style="font-size:0.75rem;color:var(--muted)" x-text="row.time"></span></td>
+            <td data-label="Zaman"><span style="font-size:var(--fs-sm);color:var(--muted)" x-text="row.time"></span></td>
             <td data-label="Kullanici">
-              <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:var(--sp-2)">
                 <div :style="'width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;background:'+row.initialsBg+';color:'+row.initialsColor" x-text="row.initials"></div>
                 <span style="color:var(--text)" x-text="row.user"></span>
               </div>
             </td>
             <td data-label="Islem"><span class="badge" :style="'background:'+row.actionBg+';color:'+row.actionColor" x-text="row.action"></span></td>
             <td data-label="Kaynak"><span style="color:var(--text)" x-text="row.resource"></span></td>
-            <td><a href="audit-detail.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">Detay <i class="ph ph-arrow-right" style="font-size:0.75rem"></i></a></td>
+            <td><a href="audit-detail.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);">Detay <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i></a></td>
           </tr>
         </template>
       </tbody>
     </table>
-    <div x-show="filtered.length === 0" style="padding:24px;text-align:center;color:var(--muted);font-size:0.875rem">
+    <div x-show="filtered.length === 0" style="padding:var(--sp-6);text-align:center;color:var(--muted);font-size:var(--fs-md)">
       Secili filtrelere uygun kayit bulunamadi.
     </div>
   </div>

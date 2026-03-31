@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,14 +21,14 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ search: '', platformFilter: 'tumu', statusFilter: 'tumu', sortCol: '', sortDir: 'asc' }">
+<div id="main" data-skeleton="table" x-data="{ search: '', platformFilter: 'tumu', statusFilter: 'tumu', sortCol: '', sortDir: 'asc' }">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-folders" style="color:#22c55e;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-folders" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
         <h1 class="page-title">Reklam Gruplari</h1>
@@ -36,21 +39,21 @@
   </div>
 
   <!-- Filters -->
-  <div class="fade-in" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
-    <input type="text" x-model="search" placeholder="Grup ara..." style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;font-family:inherit;min-width:200px">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-bottom:var(--sp-4);align-items:center">
+    <input type="text" x-model="search" placeholder="Grup ara..." style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit;min-width:200px">
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'Meta',l:'Meta'},{v:'TikTok',l:'TikTok'},{v:'LinkedIn',l:'LinkedIn'}]">
-      <button @click="platformFilter = p.v" :style="platformFilter === p.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="p.l"></button>
+      <button @click="platformFilter = p.v" class="tab-btn" :class="platformFilter === p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
     <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'Aktif',l:'Aktif'},{v:'Duraklatildi',l:'Duraklatildi'}]">
-      <button @click="statusFilter = s.v" :style="statusFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+      <button @click="statusFilter = s.v" class="tab-btn" :class="statusFilter === s.v ? 'active' : ''" x-text="s.l"></button>
     </template>
   </div>
 
   <!-- Ad Groups Table -->
   <div class="fade-in-d1 card" data-paginate="10">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Tum Reklam Gruplari</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Grup Adi','Kampanya','Platform','Durum','Gunluk Butce','Harcama','CPC'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Grup Adi','Kampanya','Platform','Durum','Gunluk Butce','Harcama','CPC'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -67,7 +70,7 @@
       <tbody>
         <tr>
           <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">18-34 Kadin — Istanbul</td>
-          <td data-label="Kampanya" style="font-size:0.8125rem">Bahar Kampanyasi</td>
+          <td data-label="Kampanya" style="font-size:var(--fs-sm)">Bahar Kampanyasi</td>
           <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span></td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
           <td data-label="Gunluk Butce">&#8378;250/gun</td>
@@ -76,7 +79,7 @@
         </tr>
         <tr>
           <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">25-44 Erkek — Ankara</td>
-          <td data-label="Kampanya" style="font-size:0.8125rem">Bahar Kampanyasi</td>
+          <td data-label="Kampanya" style="font-size:var(--fs-sm)">Bahar Kampanyasi</td>
           <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span></td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
           <td data-label="Gunluk Butce">&#8378;150/gun</td>
@@ -85,7 +88,7 @@
         </tr>
         <tr>
           <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">GenZ Ilgi Alani</td>
-          <td data-label="Kampanya" style="font-size:0.8125rem">TikTok Lansman</td>
+          <td data-label="Kampanya" style="font-size:var(--fs-sm)">TikTok Lansman</td>
           <td data-label="Platform"><span class="badge" style="background:rgba(var(--text-rgb),0.1);color:var(--text)">TikTok</span></td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
           <td data-label="Gunluk Butce">&#8378;500/gun</td>
@@ -94,7 +97,7 @@
         </tr>
         <tr>
           <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">IT Manager — Turkiye</td>
-          <td data-label="Kampanya" style="font-size:0.8125rem">B2B Lead Gen Q1</td>
+          <td data-label="Kampanya" style="font-size:var(--fs-sm)">B2B Lead Gen Q1</td>
           <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">LinkedIn</span></td>
           <td data-label="Durum"><span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Duraklatildi</span></td>
           <td data-label="Gunluk Butce">&#8378;400/gun</td>
@@ -103,7 +106,7 @@
         </tr>
         <tr>
           <td data-label="Grup Adi" style="font-weight:500;color:var(--text)">Retargeting — Site Ziyaretci</td>
-          <td data-label="Kampanya" style="font-size:0.8125rem">Bahar Kampanyasi</td>
+          <td data-label="Kampanya" style="font-size:var(--fs-sm)">Bahar Kampanyasi</td>
           <td data-label="Platform"><span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta</span></td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
           <td data-label="Gunluk Butce">&#8378;100/gun</td>

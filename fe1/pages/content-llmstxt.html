@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
@@ -19,21 +22,21 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
+<div id="main" data-skeleton="table">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-file-text" style="color:#a855f7;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-file-text" style="color:#a855f7;font-size:var(--fs-xl)"></i>
       </div>
       <div>
         <h1 class="page-title">llms.txt Generator</h1>
         <p class="page-sub">AI tarayicilari icin site haritasi</p>
       </div>
     </div>
-    <div x-data="{ regenerating: false }" style="display:flex;gap:8px">
+    <div x-data="{ regenerating: false }" style="display:flex;gap:var(--sp-2)">
       <button class="btn-secondary" @click="regenerating=true;setTimeout(()=>{regenerating=false;$store.toast.show('llms.txt yeniden olusturuldu!','success')},1500)">
         <i class="ph" :class="regenerating ? 'ph-spinner' : 'ph-arrows-clockwise'" :style="regenerating ? 'animation:spin 1s linear infinite' : ''"></i>
         <span x-text="regenerating ? 'Uretiliyor...' : 'Yeniden Uret'"></span>
@@ -43,28 +46,28 @@
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Satir</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">142</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Satir</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">142</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Kapsam</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">87 sayfa</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Kapsam</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">87 sayfa</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Boyut</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">4.2 KB</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Boyut</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">4.2 KB</div>
     </div>
   </div>
 
   <!-- Preview Card -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
       <span class="section-label" style="margin-bottom:0">llms.txt Onizleme</span>
-      <span style="font-size:0.75rem;color:var(--muted)">Son uretim: 28 Mart 2026, 14:32</span>
+      <span style="font-size:var(--fs-sm);color:var(--muted)">Son uretim: 28 Mart 2026, 14:32</span>
     </div>
-    <pre style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'SF Mono',monospace;font-size:0.8125rem;color:var(--text);line-height:1.7;overflow-x:auto;white-space:pre;margin:0"># atonota.com
+    <pre style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);font-family:'SF Mono',monospace;font-size:var(--fs-sm);color:var(--text);line-height:1.7;overflow-x:auto;white-space:pre;margin:0"># atonota.com
 # llms.txt — AI tarayicilari icin site haritasi
 # Olusturulma: 2026-03-28T14:32:00+03:00
 
@@ -91,13 +94,13 @@
 
   <!-- Info -->
   <div class="fade-in-d3 card">
-    <div style="display:flex;align-items:flex-start;gap:12px">
-      <div style="width:36px;height:36px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-info" style="color:#a855f7;font-size:1rem"></i>
+    <div style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-info" style="color:#a855f7;font-size:var(--fs-lg)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text);margin-bottom:4px">llms.txt Nedir?</div>
-        <div style="font-size:0.8125rem;color:var(--muted);line-height:1.6">llms.txt, AI tarayicilarina ve buyuk dil modellerine sitenizin yapisini ve icerigini tanimlar. robots.txt'in AI versiyonu olarak dusunebilirsiniz. Bu dosya sitenizin kok dizinine yerlestirilir ve AI araclarina hangi sayfalarin onemli oldugunu bildirir.</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text);margin-bottom:var(--sp-1)">llms.txt Nedir?</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6">llms.txt, AI tarayicilarina ve buyuk dil modellerine sitenizin yapisini ve icerigini tanimlar. robots.txt'in AI versiyonu olarak dusunebilirsiniz. Bu dosya sitenizin kok dizinine yerlestirilir ve AI araclarina hangi sayfalarin onemli oldugunu bildirir.</div>
       </div>
     </div>
   </div>

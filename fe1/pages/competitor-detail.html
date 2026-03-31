@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,66 +21,66 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="tabs('genel')">
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-globe" style="color:#ef4444;font-size:1.25rem"></i>
+<div id="main" data-skeleton="table" x-data="tabs('genel')">
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-globe" style="color:#ef4444;font-size:var(--fs-xl)"></i>
     </div>
     <div>
       <h1 class="page-title">rakip1.com</h1>
       <p class="page-sub">Rakip detay analizi</p>
     </div>
-    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
-      <a href="competitor-swot.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">
-        <i class="ph ph-chart-pie-slice" style="font-size:0.875rem"></i> SWOT Analizi <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+    <div style="margin-left:auto;display:flex;gap:var(--sp-2);flex-wrap:wrap">
+      <a href="competitor-swot.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">
+        <i class="ph ph-chart-pie-slice" style="font-size:var(--fs-md)"></i> SWOT Analizi <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
-      <a href="competitor-techstack.html" style="color:var(--muted);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--surface-2)">
-        <i class="ph ph-stack" style="font-size:0.875rem"></i> Tech Stack <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      <a href="competitor-techstack.html" style="color:var(--muted);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface-2)">
+        <i class="ph ph-stack" style="font-size:var(--fs-md)"></i> Tech Stack <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Domain Authority</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">62</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Domain Authority</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">62</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Keyword Sayisi</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">2,840</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Keyword Sayisi</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">2,840</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Backlink</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">18.2K</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Backlink</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">18.2K</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Trafik Tahmini</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">45K/ay</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Trafik Tahmini</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">45K/ay</div>
     </div>
   </div>
 
   <!-- Tabs -->
-  <div class="fade-in-d2" style="display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0">
+  <div class="fade-in-d2" style="display:flex;gap:var(--sp-1);margin-bottom:var(--sp-5);border-bottom:1px solid var(--border);padding-bottom:0">
     <template x-for="t in [{id:'genel',l:'Genel'},{id:'swot',l:'SWOT'},{id:'tech',l:'Tech Stack'},{id:'pazar',l:'Pazar'}]">
-      <button @click="select(t.id)" :style="isActive(t.id) ? 'color:var(--accent);border-bottom:2px solid var(--accent);font-weight:600' : 'color:var(--muted);border-bottom:2px solid transparent'" style="padding:10px 18px;font-size:0.8125rem;background:none;border:none;cursor:pointer;transition:all .2s" x-text="t.l"></button>
+      <button @click="select(t.id)" :style="isActive(t.id) ? 'color:var(--accent);border-bottom:2px solid var(--accent);font-weight:600' : 'color:var(--muted);border-bottom:2px solid transparent'" style="padding:var(--sp-3) 18px;font-size:var(--fs-sm);background:none;border:none;cursor:pointer;transition:all .2s" x-text="t.l"></button>
     </template>
   </div>
 
   <!-- Tab: Genel -->
   <div x-show="isActive('genel')" x-transition>
-    <div class="card" style="margin-bottom:24px">
+    <div class="card" style="margin-bottom:var(--sp-6)">
       <span class="section-label">Metrik Karsilastirma</span>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px">
-        <div style="padding:12px;border-radius:8px;background:var(--surface);border:1px solid var(--border)">
-          <div style="font-size:0.6875rem;color:var(--muted)">Ortak Keywordler</div>
-          <div style="font-size:1.25rem;font-weight:500;color:var(--text);margin-top:4px">128</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-3);margin-top:var(--sp-3)">
+        <div style="padding:var(--sp-3);border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)">
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Ortak Keywordler</div>
+          <div style="font-size:var(--fs-xl);font-weight:500;color:var(--text);margin-top:var(--sp-1)">128</div>
         </div>
-        <div style="padding:12px;border-radius:8px;background:var(--surface);border:1px solid var(--border)">
-          <div style="font-size:0.6875rem;color:var(--muted)">Kazanilan / Kaybedilen</div>
-          <div style="margin-top:4px"><span style="color:#22c55e;font-weight:500">42</span> / <span style="color:#ef4444;font-weight:500">86</span></div>
+        <div style="padding:var(--sp-3);border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)">
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Kazanilan / Kaybedilen</div>
+          <div style="margin-top:var(--sp-1)"><span style="color:#22c55e;font-weight:500">42</span> / <span style="color:#ef4444;font-weight:500">86</span></div>
         </div>
       </div>
     </div>
@@ -86,39 +89,39 @@
   <!-- Tab: SWOT -->
   <div x-show="isActive('swot')" x-transition>
     <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-        <i class="ph ph-robot" style="color:var(--accent);font-size:1rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+        <i class="ph ph-robot" style="color:var(--accent);font-size:var(--fs-lg)"></i>
         <span class="section-label" style="margin:0">AI SWOT Analizi</span>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
-        <div style="padding:16px;border-radius:10px;background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15)">
-          <div style="font-size:0.75rem;font-weight:600;color:#22c55e;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Guclu Yanlar</div>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-check" style="color:#22c55e;margin-top:2px;flex-shrink:0"></i>Yuksek DA ile guclu organik gorunurluk</li>
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-check" style="color:#22c55e;margin-top:2px;flex-shrink:0"></i>Kapsamli blog icerigi ve duzenli guncelleme</li>
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-check" style="color:#22c55e;margin-top:2px;flex-shrink:0"></i>Guclu backlink profili (edu/gov linkleri)</li>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4)">
+        <div style="padding:var(--sp-4);border-radius:var(--r-md);background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:#22c55e;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Guclu Yanlar</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--sp-2)">
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-check" style="color:#22c55e;margin-top:2px;flex-shrink:0"></i>Yuksek DA ile guclu organik gorunurluk</li>
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-check" style="color:#22c55e;margin-top:2px;flex-shrink:0"></i>Kapsamli blog icerigi ve duzenli guncelleme</li>
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-check" style="color:#22c55e;margin-top:2px;flex-shrink:0"></i>Guclu backlink profili (edu/gov linkleri)</li>
           </ul>
         </div>
-        <div style="padding:16px;border-radius:10px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15)">
-          <div style="font-size:0.75rem;font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Zayif Yanlar</div>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-x" style="color:#ef4444;margin-top:2px;flex-shrink:0"></i>Mobil performans skoru dusuk (65/100)</li>
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-x" style="color:#ef4444;margin-top:2px;flex-shrink:0"></i>Sayfa yukleme suresi 3.5s uzerinde</li>
+        <div style="padding:var(--sp-4);border-radius:var(--r-md);background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:#ef4444;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Zayif Yanlar</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--sp-2)">
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-x" style="color:#ef4444;margin-top:2px;flex-shrink:0"></i>Mobil performans skoru dusuk (65/100)</li>
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-x" style="color:#ef4444;margin-top:2px;flex-shrink:0"></i>Sayfa yukleme suresi 3.5s uzerinde</li>
           </ul>
         </div>
-        <div style="padding:16px;border-radius:10px;background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.15)">
-          <div style="font-size:0.75rem;font-weight:600;color:#3b82f6;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Firsatlar</div>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-lightbulb" style="color:#3b82f6;margin-top:2px;flex-shrink:0"></i>Video icerik stratejisi henuz yok</li>
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-lightbulb" style="color:#3b82f6;margin-top:2px;flex-shrink:0"></i>Yerel SEO optimizasyonu zayif</li>
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-lightbulb" style="color:#3b82f6;margin-top:2px;flex-shrink:0"></i>Sosyal medya reklamlari sinirli</li>
+        <div style="padding:var(--sp-4);border-radius:var(--r-md);background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.15)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:#3b82f6;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Firsatlar</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--sp-2)">
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-lightbulb" style="color:#3b82f6;margin-top:2px;flex-shrink:0"></i>Video icerik stratejisi henuz yok</li>
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-lightbulb" style="color:#3b82f6;margin-top:2px;flex-shrink:0"></i>Yerel SEO optimizasyonu zayif</li>
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-lightbulb" style="color:#3b82f6;margin-top:2px;flex-shrink:0"></i>Sosyal medya reklamlari sinirli</li>
           </ul>
         </div>
-        <div style="padding:16px;border-radius:10px;background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.15)">
-          <div style="font-size:0.75rem;font-weight:600;color:#eab308;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px">Tehditler</div>
-          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px">
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-warning" style="color:#eab308;margin-top:2px;flex-shrink:0"></i>AI destekli icerik uretimi ile hizli buyuyor</li>
-            <li style="font-size:0.8125rem;color:var(--text);display:flex;align-items:flex-start;gap:6px"><i class="ph ph-warning" style="color:#eab308;margin-top:2px;flex-shrink:0"></i>Agresif backlink olusturma stratejisi</li>
+        <div style="padding:var(--sp-4);border-radius:var(--r-md);background:rgba(234,179,8,0.05);border:1px solid rgba(234,179,8,0.15)">
+          <div style="font-size:var(--fs-sm);font-weight:600;color:#eab308;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Tehditler</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--sp-2)">
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-warning" style="color:#eab308;margin-top:2px;flex-shrink:0"></i>AI destekli icerik uretimi ile hizli buyuyor</li>
+            <li style="font-size:var(--fs-sm);color:var(--text);display:flex;align-items:flex-start;gap:var(--sp-2)"><i class="ph ph-warning" style="color:#eab308;margin-top:2px;flex-shrink:0"></i>Agresif backlink olusturma stratejisi</li>
           </ul>
         </div>
       </div>
@@ -129,12 +132,12 @@
   <div x-show="isActive('tech')" x-transition>
     <div class="card">
       <span class="section-label">Teknoloji Yigini</span>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
-        <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;padding:6px 12px">WordPress</span>
-        <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;padding:6px 12px">WooCommerce</span>
-        <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;padding:6px 12px">Cloudflare</span>
-        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;padding:6px 12px">Google Analytics</span>
-        <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;padding:6px 12px">Yoast SEO</span>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--sp-2);margin-top:var(--sp-1)">
+        <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;padding:var(--sp-2) var(--sp-3)">WordPress</span>
+        <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;padding:var(--sp-2) var(--sp-3)">WooCommerce</span>
+        <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;padding:var(--sp-2) var(--sp-3)">Cloudflare</span>
+        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;padding:var(--sp-2) var(--sp-3)">Google Analytics</span>
+        <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;padding:var(--sp-2) var(--sp-3)">Yoast SEO</span>
       </div>
     </div>
   </div>
@@ -143,14 +146,14 @@
   <div x-show="isActive('pazar')" x-transition>
     <div class="card">
       <span class="section-label">Pazar Konumu</span>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px">
-        <div style="padding:12px;border-radius:8px;background:var(--surface);border:1px solid var(--border)">
-          <div style="font-size:0.6875rem;color:var(--muted)">Pazar Payi</div>
-          <div style="font-size:1.25rem;font-weight:500;color:var(--text);margin-top:4px">%28</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-3);margin-top:var(--sp-3)">
+        <div style="padding:var(--sp-3);border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)">
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Pazar Payi</div>
+          <div style="font-size:var(--fs-xl);font-weight:500;color:var(--text);margin-top:var(--sp-1)">%28</div>
         </div>
-        <div style="padding:12px;border-radius:8px;background:var(--surface);border:1px solid var(--border)">
-          <div style="font-size:0.6875rem;color:var(--muted)">Trafik Trendi</div>
-          <div style="font-size:1.25rem;font-weight:500;color:#ef4444;margin-top:4px">-%2 (son 3 ay)</div>
+        <div style="padding:var(--sp-3);border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)">
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Trafik Trendi</div>
+          <div style="font-size:var(--fs-xl);font-weight:500;color:#ef4444;margin-top:var(--sp-1)">-%2 (son 3 ay)</div>
         </div>
       </div>
     </div>

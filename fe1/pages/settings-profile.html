@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,54 +20,54 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="form({name:'Ismail Karaca', email:'ismail@atonota.com', phone:'+90 532 xxx xx xx', title:'Kurucu & CEO'})">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="form" x-data="form({name:'Ismail Karaca', email:'ismail@atonota.com', phone:'+90 532 xxx xx xx', title:'Kurucu & CEO'})">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Profil</h1>
     <p class="page-sub">Kisisel bilgiler ve tercihler</p>
   </div>
 
   <div class="fade-in-d1 card" style="max-width:560px">
     <!-- Avatar -->
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px">
-      <div style="width:80px;height:80px;border-radius:50%;background:var(--accent-soft);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:var(--accent);flex-shrink:0">IK</div>
+    <div style="display:flex;align-items:center;gap:var(--sp-4);margin-bottom:var(--sp-7)">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--accent-soft);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:var(--fs-2xl);font-weight:700;color:var(--accent);flex-shrink:0">IK</div>
       <div>
-        <div style="font-weight:500;color:var(--text);font-size:1rem;margin-bottom:4px" x-text="fields.name">Ismail Karaca</div>
-        <a href="#" @click.prevent="$store.toast.show('Avatar degistirme ozelligi yakinda!','info')" style="font-size:0.8125rem;color:var(--accent);text-decoration:none">Degistir</a>
+        <div style="font-weight:500;color:var(--text);font-size:var(--fs-lg);margin-bottom:var(--sp-1)" x-text="fields.name">Ismail Karaca</div>
+        <a href="#" @click.prevent="$store.toast.show('Avatar degistirme ozelligi yakinda!','info')" style="font-size:var(--fs-sm);color:var(--accent);text-decoration:none">Degistir</a>
       </div>
     </div>
 
     <!-- Form -->
-    <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-5)">
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Ad Soyad</label>
-        <input type="text" x-model="fields.name" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Ad Soyad</label>
+        <input type="text" x-model="fields.name" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('name') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('name')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('name')"></span>
+        <span x-show="hasError('name')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('name')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">E-posta</label>
-        <input type="email" x-model="fields.email" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">E-posta</label>
+        <input type="email" x-model="fields.email" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('email') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('email')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('email')"></span>
+        <span x-show="hasError('email')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('email')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Telefon</label>
-        <input type="tel" x-model="fields.phone" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box">
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Telefon</label>
+        <input type="tel" x-model="fields.phone" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box">
       </div>
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Unvan</label>
-        <input type="text" x-model="fields.title" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box">
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Unvan</label>
+        <input type="text" x-model="fields.title" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box">
       </div>
-      <div style="margin-top:4px">
+      <div style="margin-top:var(--sp-1)">
         <button class="btn-primary" :disabled="submitting" @click="
           errors = {};
           if(!fields.name.trim()) errors.name = 'Ad soyad zorunlu';
           if(!fields.email.includes('@')) errors.email = 'Gecerli bir e-posta girin';
           if(Object.keys(errors).length === 0) { submitting=true; setTimeout(()=>{ submitting=false; submitted=true; $store.toast.show('Profil kaydedildi!','success') }, 1200) }
         ">
-          <template x-if="submitting"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner ph-spin"></i> Kaydediliyor...</span></template>
+          <template x-if="submitting"><span style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-spinner ph-spin"></i> Kaydediliyor...</span></template>
           <template x-if="!submitting"><span><i class="ph ph-floppy-disk"></i> Kaydet</span></template>
         </button>
       </div>

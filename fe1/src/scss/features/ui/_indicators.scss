@@ -1,0 +1,59 @@
+// ── Icon Circle ──
+
+$indicator-colors: (
+  'green':  #22c55e,
+  'blue':   #3b82f6,
+  'purple': #a855f7,
+  'yellow': #eab308,
+  'red':    #ef4444,
+);
+
+.icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i { font-size: 1.125rem; }
+}
+
+@each $name, $color in $indicator-colors {
+  .icon-circle--#{$name} {
+    background: rgba($color, 0.1);
+    color: $color;
+  }
+}
+.icon-circle--accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+// ── Status Dot ──
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.green  { background: #22c55e; }
+  &.yellow { background: #eab308; }
+  &.red    { background: #ef4444; }
+  &.blue   { background: #3b82f6; }
+  &.pulse  { animation: pulse 2s infinite; }
+}
+
+// ── Notification Card ──
+
+.notif-card {
+  border-left: 3px solid var(--border);
+  padding: 16px 20px;
+
+  &--high   { border-left-color: var(--accent); }
+  &--medium { border-left-color: #3b82f6; }
+  &--low    { border-left-color: #22c55e; }
+  &--read   { opacity: 0.7; }
+}

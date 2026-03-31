@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   typeFilter: 'tumu',
   entities: [
     {name:'atonota',type:'Organizasyon',typeColor:'#3b82f6',links:24},
@@ -35,83 +38,83 @@
     return this.entities.filter(e => e.type === this.typeFilter);
   }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">Knowledge Graph</h1>
       <p class="page-sub">Entity iliskileri ve bilgi grafigi</p>
     </div>
-    <div style="display:flex;gap:4px;flex-wrap:wrap">
-      <button @click="typeFilter = 'tumu'" :style="typeFilter === 'tumu' ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s">Tumu</button>
+    <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap">
+      <button @click="typeFilter = 'tumu'" class="tab-btn" :class="typeFilter === 'tumu' ? 'active' : ''">Tumu</button>
       <template x-for="t in types">
-        <button @click="typeFilter = t" :style="typeFilter === t ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="t"></button>
+        <button @click="typeFilter = t" class="tab-btn" :class="typeFilter === t ? 'active' : ''" x-text="t"></button>
       </template>
     </div>
   </div>
 
   <!-- Graph Placeholder -->
-  <div class="fade-in-d1 card" style="margin-bottom:24px;text-align:center;padding:48px 24px">
-    <div style="width:64px;height:64px;border-radius:16px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
-      <i class="ph ph-graph" style="font-size:2rem;color:#a855f7"></i>
+  <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6);text-align:center;padding:48px var(--sp-6)">
+    <div style="width:64px;height:64px;border-radius:var(--r-xl);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-4)">
+      <i class="ph ph-graph" style="font-size:var(--fs-4xl);color:#a855f7"></i>
     </div>
-    <div style="font-weight:500;color:var(--text);font-size:1rem;margin-bottom:4px">Entity iliskileri gorsellestirilecek</div>
-    <div style="font-size:0.8125rem;color:var(--muted)">42 entity, 128 iliski</div>
+    <div style="font-weight:500;color:var(--text);font-size:var(--fs-lg);margin-bottom:var(--sp-1)">Entity iliskileri gorsellestirilecek</div>
+    <div style="font-size:var(--fs-sm);color:var(--muted)">42 entity, 128 iliski</div>
   </div>
 
   <!-- Entity List -->
   <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
       <span class="section-label" style="margin-bottom:0">Entity Listesi</span>
     </div>
 
     <div style="display:flex;flex-direction:column">
       <!-- Entity 1 -->
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">atonota</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">atonota</div>
         </div>
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Organizasyon</span>
         <div style="text-align:right;min-width:80px">
-          <span style="font-size:0.8125rem;color:var(--muted)">24 baglanti</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">24 baglanti</span>
         </div>
       </div>
       <!-- Entity 2 -->
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">SEO Analiz</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">SEO Analiz</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Hizmet</span>
         <div style="text-align:right;min-width:80px">
-          <span style="font-size:0.8125rem;color:var(--muted)">18 baglanti</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">18 baglanti</span>
         </div>
       </div>
       <!-- Entity 3 -->
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Reklam Orkestrasyon</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Reklam Orkestrasyon</div>
         </div>
         <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Kavram</span>
         <div style="text-align:right;min-width:80px">
-          <span style="font-size:0.8125rem;color:var(--muted)">15 baglanti</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">15 baglanti</span>
         </div>
       </div>
       <!-- Entity 4 -->
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">WordPress</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">WordPress</div>
         </div>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Platform</span>
         <div style="text-align:right;min-width:80px">
-          <span style="font-size:0.8125rem;color:var(--muted)">12 baglanti</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">12 baglanti</span>
         </div>
       </div>
       <!-- Entity 5 -->
-      <div style="display:flex;align-items:center;gap:14px;padding:14px 20px">
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5)">
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Meta Ads</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Meta Ads</div>
         </div>
         <span class="badge" style="background:rgba(194,65,12,0.1);color:#C2410C">Entegrasyon</span>
         <div style="text-align:right;min-width:80px">
-          <span style="font-size:0.8125rem;color:var(--muted)">9 baglanti</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">9 baglanti</span>
         </div>
       </div>
     </div>

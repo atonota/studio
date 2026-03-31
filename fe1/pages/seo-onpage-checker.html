@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,9 +22,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="tool" x-data="{
   url: '',
   checked: false,
   loading: false,
@@ -103,17 +106,17 @@
   }
 }">
   <!-- Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">On-Page SEO Denetimi</h1>
     <p class="page-sub">Tek sayfa bazinda detayli SEO analizi</p>
   </div>
 
   <!-- URL Input -->
-  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:24px">
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <div class="fade-in-d1 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
       <div style="position:relative;flex:1;min-width:260px">
-        <i class="ph ph-globe" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
-        <input type="text" x-model="url" @keydown.enter="doCheck()" placeholder="Sayfa URL'si girin..." style="width:100%;padding:10px 12px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+        <i class="ph ph-globe" style="position:absolute;left:var(--sp-3);top:50%;transform:translateY(-50%);color:var(--muted)"></i>
+        <input type="text" x-model="url" @keydown.enter="doCheck()" placeholder="Sayfa URL'si girin..." style="width:100%;padding:var(--sp-3) var(--sp-3) var(--sp-3) 36px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
       </div>
       <button @click="doCheck()" class="btn-primary" :disabled="loading">
         <i class="ph" :class="loading ? 'ph-circle-notch' : 'ph-magnifying-glass'" :style="loading && 'animation:spin 1s linear infinite'"></i>
@@ -126,43 +129,43 @@
   <template x-if="checked">
     <div>
       <!-- Overall Score Gauge -->
-      <div class="fade-in-d1 card" style="margin-bottom:24px;text-align:center;padding:24px">
+      <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6);text-align:center;padding:var(--sp-6)">
         <span class="section-label">Genel SEO Skoru</span>
         <div id="chart-overall" style="width:100%;height:220px"></div>
       </div>
 
       <!-- Category Cards -->
-      <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px">
+      <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-3);margin-bottom:var(--sp-6)">
         <template x-for="cat in categories" :key="cat.name">
           <div class="stat-card" :style="'--stripe:'+cat.color+';cursor:pointer'" @click="cat.open = !cat.open">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
-              <i class="ph" :class="cat.icon" :style="'color:'+cat.color+';font-size:1rem'"></i>
-              <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase" x-text="cat.name"></span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+              <i class="ph" :class="cat.icon" :style="'color:'+cat.color+';font-size:var(--fs-lg)'"></i>
+              <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase" x-text="cat.name"></span>
             </div>
-            <div :style="'font-size:1.5rem;font-weight:300;color:'+getScoreColor(cat.score)" x-text="cat.score + '/100'"></div>
+            <div :style="'font-size:var(--fs-2xl);font-weight:300;color:'+getScoreColor(cat.score)" x-text="cat.score + '/100'"></div>
           </div>
         </template>
       </div>
 
       <!-- Category Accordions -->
-      <div class="fade-in-d3" style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+      <div class="fade-in-d3" style="display:flex;flex-direction:column;gap:var(--sp-3);margin-bottom:var(--sp-6)">
         <template x-for="cat in categories" :key="'acc-'+cat.name">
           <div class="card" style="padding:0;overflow:hidden">
-            <div @click="cat.open = !cat.open" style="padding:16px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
-              <div style="display:flex;align-items:center;gap:10px">
-                <i class="ph" :class="cat.icon" :style="'color:'+cat.color+';font-size:1.125rem'"></i>
-                <span style="font-weight:600;color:var(--text);font-size:0.9375rem" x-text="cat.name"></span>
-                <span :style="'font-size:0.75rem;font-weight:600;color:'+getScoreColor(cat.score)" x-text="cat.score + '/100'"></span>
+            <div @click="cat.open = !cat.open" style="padding:var(--sp-4) var(--sp-5);cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <div style="display:flex;align-items:center;gap:var(--sp-3)">
+                <i class="ph" :class="cat.icon" :style="'color:'+cat.color+';font-size:var(--fs-lg)'"></i>
+                <span style="font-weight:600;color:var(--text);font-size:var(--fs-base)" x-text="cat.name"></span>
+                <span :style="'font-size:var(--fs-sm);font-weight:600;color:'+getScoreColor(cat.score)" x-text="cat.score + '/100'"></span>
               </div>
               <i class="ph" :class="cat.open ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
             </div>
             <div x-show="cat.open" x-transition>
               <template x-for="(item, idx) in cat.items" :key="idx">
-                <div :style="'padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:flex-start;gap:10px'">
-                  <i class="ph" :class="getStatusIcon(item.status)" :style="'color:'+getStatusColor(item.status)+';font-size:1.125rem;margin-top:1px;flex-shrink:0'"></i>
+                <div :style="'padding:var(--sp-3) var(--sp-5);border-top:1px solid var(--border);display:flex;align-items:flex-start;gap:var(--sp-3)'">
+                  <i class="ph" :class="getStatusIcon(item.status)" :style="'color:'+getStatusColor(item.status)+';font-size:var(--fs-lg);margin-top:1px;flex-shrink:0'"></i>
                   <div style="flex:1">
-                    <span style="font-size:0.8125rem;color:var(--text)" x-text="item.text"></span>
-                    <div x-show="item.fix" style="margin-top:4px;font-size:0.75rem;color:var(--muted);display:flex;align-items:center;gap:4px">
+                    <span style="font-size:var(--fs-sm);color:var(--text)" x-text="item.text"></span>
+                    <div x-show="item.fix" style="margin-top:var(--sp-1);font-size:var(--fs-sm);color:var(--muted);display:flex;align-items:center;gap:var(--sp-1)">
                       <i class="ph ph-lightbulb" style="color:var(--accent)"></i>
                       <span x-text="item.fix"></span>
                     </div>
@@ -175,8 +178,8 @@
       </div>
 
       <!-- Download Button -->
-      <div class="fade-in-d3" style="text-align:center;margin-bottom:24px">
-        <button class="btn-primary" style="font-size:0.8125rem;padding:10px 24px"><i class="ph ph-file-pdf"></i> Tum Onerileri Indir (PDF)</button>
+      <div class="fade-in-d3" style="text-align:center;margin-bottom:var(--sp-6)">
+        <button class="btn-primary" style="font-size:var(--fs-sm);padding:var(--sp-3) var(--sp-6)"><i class="ph ph-file-pdf"></i> Tum Onerileri Indir (PDF)</button>
       </div>
     </div>
   </template>

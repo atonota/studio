@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,58 +21,58 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
 <div id="main" x-data>
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">AI Citation Widget</h1>
     <p class="page-sub">Sitenize gomebileceginiz AI citation rozeti</p>
   </div>
 
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <!-- Widget Preview -->
-    <div class="card" style="padding:24px">
+    <div class="card" style="padding:var(--sp-6)">
       <span class="section-label">Onizleme</span>
-      <div style="display:flex;justify-content:center;padding:32px 0">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.15)">
-          <div style="width:36px;height:36px;border-radius:8px;background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center">
-            <i class="ph ph-seal-check" style="font-size:1.25rem;color:#C2410C"></i>
+      <div style="display:flex;justify-content:center;padding:var(--sp-8) 0">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-4) var(--sp-5);display:inline-flex;align-items:center;gap:var(--sp-3);box-shadow:0 2px 8px rgba(0,0,0,0.15)">
+          <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center">
+            <i class="ph ph-seal-check" style="font-size:var(--fs-xl);color:#C2410C"></i>
           </div>
           <div>
-            <div style="font-size:0.8125rem;font-weight:600;color:var(--text)">AI Tarafindan Oneriliyor</div>
-            <div style="font-size:0.6875rem;color:var(--muted)">4 platformda 23 bahis</div>
+            <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">AI Tarafindan Oneriliyor</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted)">4 platformda 23 bahis</div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Customization -->
-    <div class="card" style="padding:24px">
+    <div class="card" style="padding:var(--sp-6)">
       <span class="section-label">Ozellestirme</span>
-      <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
         <div>
-          <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:6px">Renk Temasi</label>
-          <div style="display:flex;gap:8px">
-            <div style="width:28px;height:28px;border-radius:6px;background:#C2410C;cursor:pointer;border:2px solid var(--accent)"></div>
-            <div style="width:28px;height:28px;border-radius:6px;background:#3b82f6;cursor:pointer;border:2px solid transparent"></div>
-            <div style="width:28px;height:28px;border-radius:6px;background:#22c55e;cursor:pointer;border:2px solid transparent"></div>
-            <div style="width:28px;height:28px;border-radius:6px;background:#a855f7;cursor:pointer;border:2px solid transparent"></div>
+          <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Renk Temasi</label>
+          <div style="display:flex;gap:var(--sp-2)">
+            <div style="width:28px;height:28px;border-radius:var(--r-sm);background:#C2410C;cursor:pointer;border:2px solid var(--accent)"></div>
+            <div style="width:28px;height:28px;border-radius:var(--r-sm);background:#3b82f6;cursor:pointer;border:2px solid transparent"></div>
+            <div style="width:28px;height:28px;border-radius:var(--r-sm);background:#22c55e;cursor:pointer;border:2px solid transparent"></div>
+            <div style="width:28px;height:28px;border-radius:var(--r-sm);background:#a855f7;cursor:pointer;border:2px solid transparent"></div>
           </div>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:6px">Boyut</label>
-          <div style="display:flex;gap:8px">
-            <button class="btn-primary" style="padding:6px 14px;font-size:0.75rem">Kucuk</button>
-            <button style="padding:6px 14px;font-size:0.75rem;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer">Orta</button>
-            <button style="padding:6px 14px;font-size:0.75rem;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer">Buyuk</button>
+          <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Boyut</label>
+          <div style="display:flex;gap:var(--sp-2)">
+            <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)">Kucuk</button>
+            <button style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer">Orta</button>
+            <button style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer">Buyuk</button>
           </div>
         </div>
         <div>
-          <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:6px">Konum</label>
-          <div style="display:flex;gap:8px">
-            <button class="btn-primary" style="padding:6px 14px;font-size:0.75rem">Sag Alt</button>
-            <button style="padding:6px 14px;font-size:0.75rem;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer">Sol Alt</button>
-            <button style="padding:6px 14px;font-size:0.75rem;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer">Inline</button>
+          <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Konum</label>
+          <div style="display:flex;gap:var(--sp-2)">
+            <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)">Sag Alt</button>
+            <button style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer">Sol Alt</button>
+            <button style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer">Inline</button>
           </div>
         </div>
       </div>
@@ -77,9 +80,9 @@
   </div>
 
   <!-- Embed Code -->
-  <div class="fade-in-d2 card" style="padding:24px">
+  <div class="fade-in-d2 card" style="padding:var(--sp-6)">
     <span class="section-label">Gomme Kodu</span>
-    <div style="background:#1a1714;border:1px solid var(--border);border-radius:8px;padding:16px;font-family:'Fira Code',monospace;font-size:0.8125rem;color:#a8a29e;line-height:1.8;overflow-x:auto">
+    <div style="background:#1a1714;border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);font-family:'Fira Code',monospace;font-size:var(--fs-sm);color:#a8a29e;line-height:1.8;overflow-x:auto">
       <div style="color:#7B7269">&lt;!-- atonota AI Citation Widget --&gt;</div>
       <div>&lt;<span style="color:#C2410C">script</span> <span style="color:#eab308">src</span>=<span style="color:#22c55e">"https://cdn.atonota.com/widget/citation.js"</span>&gt;&lt;/<span style="color:#C2410C">script</span>&gt;</div>
       <div>&lt;<span style="color:#C2410C">div</span></div>

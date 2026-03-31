@@ -10,13 +10,16 @@
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="tool" x-data="{
   device: 'tumu',
   location: 'Turkiye',
   dateRange: '30',
@@ -169,7 +172,7 @@
   },
 
   initSparklines() {
-    document.querySelectorAll('[id^=\"pt-spark-\"]').forEach(el => {
+    document.querySelectorAll('[id^=pt-spark-]').forEach(el => {
       if (el._ec) return;
       const t = getChartTheme();
       const data = Array.from({length:12}, () => Math.floor(Math.random()*50)+1);
@@ -186,94 +189,89 @@
 }">
 
   <!-- Page Header -->
-  <div class="fade-in" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">Pozisyon Takibi</h1>
       <p class="page-sub">Anahtar kelime siralamalarinizi izleyin ve analiz edin</p>
     </div>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:var(--sp-2)">
       <button @click="(() => {
         const headers = ['Keyword','Pozisyon','Onceki','Degisim','Hacim','URL','Son Guncelleme'];
         const rows = filtered.map(k => [k.keyword, k.position, k.prevPosition, k.change, k.volume, k.url, k.lastUpdate]);
         exportToCSV(headers, rows, 'pozisyon-takibi.csv');
-      })()" style="padding:10px 20px;border-radius:10px;font-size:0.8125rem;font-weight:600;background:var(--surface-2);color:var(--text);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit">
-        <i class="ph ph-download-simple" style="font-size:1rem"></i> CSV Indir
+      })()" style="padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;background:var(--surface-2);color:var(--text);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit">
+        <i class="ph ph-download-simple" style="font-size:var(--fs-lg)"></i> CSV Indir
       </button>
-      <button @click="showAddModal = true" style="padding:10px 20px;border-radius:10px;font-size:0.8125rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit">
-        <i class="ph ph-plus" style="font-size:1rem"></i> Keyword Ekle
+      <button @click="showAddModal = true" style="padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit">
+        <i class="ph ph-plus" style="font-size:var(--fs-lg)"></i> Keyword Ekle
       </button>
     </div>
   </div>
 
   <!-- Filter Bar -->
-  <div class="fade-in-d1" style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-5);flex-wrap:wrap;align-items:center">
     <!-- Device Pills -->
-    <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border)">
+    <div style="display:flex;gap:var(--sp-1);background:var(--surface-2);border-radius:var(--r-md);padding:3px;border:1px solid var(--border)">
       <template x-for="d in [{id:'tumu',label:'Tumu',icon:'ph-devices'},{id:'masaustu',label:'Masaustu',icon:'ph-desktop'},{id:'mobil',label:'Mobil',icon:'ph-device-mobile'}]" :key="d.id">
         <button @click="device = d.id; page=1"
-          :style="device === d.id
-            ? 'padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px'
-            : 'padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px'">
-          <i class="ph" :class="d.icon" style="font-size:0.875rem"></i>
+          class="tab-btn" :class="device === d.id ? 'active' : ''" >
+          <i class="ph" :class="d.icon" style="font-size:var(--fs-md)"></i>
           <span x-text="d.label"></span>
         </button>
       </template>
     </div>
 
     <!-- Location -->
-    <select x-model="location" style="padding:7px 12px;border-radius:8px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;outline:none">
+    <select x-model="location" style="padding:7px var(--sp-3);border-radius:var(--r-md);font-size:var(--fs-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;outline:none">
       <option>Turkiye</option><option>Istanbul</option><option>Ankara</option><option>Izmir</option>
     </select>
 
     <!-- Date Range -->
-    <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border)">
+    <div style="display:flex;gap:var(--sp-1);background:var(--surface-2);border-radius:var(--r-md);padding:3px;border:1px solid var(--border)">
       <template x-for="dr in [{id:'7',label:'7 Gun'},{id:'30',label:'30 Gun'},{id:'90',label:'90 Gun'}]" :key="dr.id">
         <button @click="dateRange = dr.id; updateCharts()"
-          :style="dateRange === dr.id
-            ? 'padding:5px 12px;border-radius:7px;font-size:0.6875rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit'
-            : 'padding:5px 12px;border-radius:7px;font-size:0.6875rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit'"
-          x-text="dr.label"></button>
+          class="tab-btn" :class="dateRange === dr.id ? 'active' : ''" x-text="dr.label"></button>
       </template>
     </div>
   </div>
 
   <!-- Visibility Gauge + KPI Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:240px 1fr;gap:16px;margin-bottom:20px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:240px 1fr;gap:var(--sp-4);margin-bottom:var(--sp-5)">
     <!-- Gauge -->
-    <div class="card" style="padding:12px;display:flex;align-items:center;justify-content:center">
+    <div class="card" style="padding:var(--sp-3);display:flex;align-items:center;justify-content:center">
       <div id="gauge-chart" style="width:200px;height:180px"></div>
     </div>
     <!-- KPI Cards -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)">
       <template x-for="kpi in [
         {label:'Top 3',value:kpiData.top3,icon:'ph-trophy',color:'#22c55e'},
         {label:'Top 10',value:kpiData.top10,icon:'ph-medal',color:'#3b82f6'},
         {label:'Top 50',value:kpiData.top50,icon:'ph-chart-line-up',color:'#a855f7'},
         {label:'Top 100',value:kpiData.top100,icon:'ph-chart-bar',color:'#eab308'}
       ]" :key="kpi.label">
-        <div class="card" style="padding:20px;text-align:center">
-          <i class="ph" :class="kpi.icon" :style="'font-size:1.5rem;color:'+kpi.color+';margin-bottom:8px'"></i>
-          <div style="font-size:1.75rem;font-weight:700;color:var(--text)" x-text="kpi.value"></div>
-          <div style="font-size:0.75rem;color:var(--muted)" x-text="kpi.label + ' keyword'"></div>
+        <div class="card" style="padding:var(--sp-5);text-align:center">
+          <i class="ph" :class="kpi.icon" :style="'font-size:var(--fs-2xl);color:'+kpi.color+';margin-bottom:var(--sp-2)'"></i>
+          <div style="font-size:var(--fs-3xl);font-weight:700;color:var(--text)" x-text="kpi.value"></div>
+          <div style="font-size:var(--fs-sm);color:var(--muted)" x-text="kpi.label + ' keyword'"></div>
         </div>
       </template>
     </div>
   </div>
 
   <!-- Position Distribution Chart -->
-  <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px">
-    <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">Pozisyon Dagilimi (30 Gun)</div>
+  <div class="fade-in-d2 card" style="padding:var(--sp-4);margin-bottom:var(--sp-5)">
+    <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:var(--sp-3)">Pozisyon Dagilimi (30 Gun)</div>
     <div id="dist-chart" style="width:100%;height:280px"></div>
   </div>
 
   <!-- Keyword Tracking Table -->
   <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
-    <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div style="padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Takip Edilen Keywordler</span>
       <div style="position:relative;width:240px">
-        <i class="ph ph-magnifying-glass" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:0.875rem;color:var(--muted)"></i>
+        <i class="ph ph-magnifying-glass" style="position:absolute;left:var(--sp-3);top:50%;transform:translateY(-50%);font-size:var(--fs-md);color:var(--muted)"></i>
         <input type="text" x-model="searchQuery" @input="page=1" placeholder="Keyword veya URL ara..."
-          style="width:100%;padding:7px 10px 7px 32px;font-size:0.75rem;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;outline:none">
+          style="width:100%;padding:7px var(--sp-3) 7px var(--sp-8);font-size:var(--fs-sm);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-family:inherit;outline:none">
       </div>
     </div>
 
@@ -281,10 +279,10 @@
       <table class="r-table" style="min-width:860px">
         <thead>
           <tr>
-            <th @click="sort('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="sortIcon('keyword')" style="font-size:0.75rem"></i></th>
-            <th @click="sort('position')" style="cursor:pointer;user-select:none;width:90px">Pozisyon <i class="ph" :class="sortIcon('position')" style="font-size:0.75rem"></i></th>
+            <th @click="sort('keyword')" style="cursor:pointer;user-select:none">Keyword <i class="ph" :class="sortIcon('keyword')" style="font-size:var(--fs-sm)"></i></th>
+            <th @click="sort('position')" style="cursor:pointer;user-select:none;width:90px">Pozisyon <i class="ph" :class="sortIcon('position')" style="font-size:var(--fs-sm)"></i></th>
             <th style="width:70px">Onceki</th>
-            <th @click="sort('volume')" style="cursor:pointer;user-select:none;width:70px">Hacim <i class="ph" :class="sortIcon('volume')" style="font-size:0.75rem"></i></th>
+            <th @click="sort('volume')" style="cursor:pointer;user-select:none;width:70px">Hacim <i class="ph" :class="sortIcon('volume')" style="font-size:var(--fs-sm)"></i></th>
             <th style="width:180px">URL</th>
             <th style="width:100px">SERP</th>
             <th style="width:70px">Trend</th>
@@ -295,47 +293,47 @@
           <template x-for="(kw, idx) in paged" :key="kw.keyword+'-'+idx">
             <tr>
               <td data-label="Keyword">
-                <div style="display:flex;align-items:center;gap:6px">
+                <div style="display:flex;align-items:center;gap:var(--sp-2)">
                   <span x-show="kw.cannibalization" title="Cannibalization uyarisi: Birden fazla URL ayni keyword icin siralaniyor" style="cursor:help">
-                    <i class="ph ph-warning-diamond" style="font-size:0.875rem;color:#eab308"></i>
+                    <i class="ph ph-warning-diamond" style="font-size:var(--fs-md);color:#eab308"></i>
                   </span>
-                  <span style="font-weight:500;color:var(--text);font-size:0.8125rem" x-text="kw.keyword"></span>
+                  <span style="font-weight:500;color:var(--text);font-size:var(--fs-sm)" x-text="kw.keyword"></span>
                 </div>
               </td>
               <td data-label="Pozisyon">
-                <div style="display:flex;align-items:center;gap:6px">
-                  <span style="font-weight:700;font-size:0.9375rem;color:var(--text)" x-text="kw.position"></span>
+                <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                  <span style="font-weight:700;font-size:var(--fs-base);color:var(--text)" x-text="kw.position"></span>
                   <template x-if="kw.change > 0">
                     <span style="display:flex;align-items:center;gap:2px;color:#22c55e">
-                      <i class="ph ph-arrow-up" style="font-size:0.75rem"></i>
-                      <span style="font-size:0.6875rem;font-weight:600" x-text="'+'+kw.change"></span>
+                      <i class="ph ph-arrow-up" style="font-size:var(--fs-sm)"></i>
+                      <span style="font-size:var(--fs-xs);font-weight:600" x-text="'+'+kw.change"></span>
                     </span>
                   </template>
                   <template x-if="kw.change < 0">
                     <span style="display:flex;align-items:center;gap:2px;color:#ef4444">
-                      <i class="ph ph-arrow-down" style="font-size:0.75rem"></i>
-                      <span style="font-size:0.6875rem;font-weight:600" x-text="kw.change"></span>
+                      <i class="ph ph-arrow-down" style="font-size:var(--fs-sm)"></i>
+                      <span style="font-size:var(--fs-xs);font-weight:600" x-text="kw.change"></span>
                     </span>
                   </template>
                   <template x-if="kw.change === 0">
-                    <span style="font-size:0.6875rem;color:var(--muted)">—</span>
+                    <span style="font-size:var(--fs-xs);color:var(--muted)">—</span>
                   </template>
                 </div>
               </td>
-              <td data-label="Onceki" style="font-size:0.8125rem;color:var(--muted)" x-text="kw.prevPosition"></td>
-              <td data-label="Hacim" style="font-size:0.8125rem;color:var(--text)" x-text="kw.volume.toLocaleString('tr-TR')"></td>
-              <td data-label="URL" style="font-size:0.6875rem;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="kw.url"></td>
+              <td data-label="Onceki" style="font-size:var(--fs-sm);color:var(--muted)" x-text="kw.prevPosition"></td>
+              <td data-label="Hacim" style="font-size:var(--fs-sm);color:var(--text)" x-text="kw.volume.toLocaleString('tr-TR')"></td>
+              <td data-label="URL" style="font-size:var(--fs-xs);color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="kw.url"></td>
               <td data-label="SERP">
-                <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap">
                   <template x-for="sf in kw.serpFeatures.slice(0,3)" :key="sf">
-                    <span :title="sf" style="width:20px;height:20px;border-radius:4px;background:var(--surface-2);display:flex;align-items:center;justify-content:center">
-                      <i class="ph" :class="serpFeatureIcons[sf] || 'ph-globe'" style="font-size:0.625rem;color:var(--muted)"></i>
+                    <span :title="sf" style="width:20px;height:20px;border-radius:var(--r-sm);background:var(--surface-2);display:flex;align-items:center;justify-content:center">
+                      <i class="ph" :class="serpFeatureIcons[sf] || 'ph-globe'" style="font-size:var(--fs-2xs);color:var(--muted)"></i>
                     </span>
                   </template>
                 </div>
               </td>
               <td data-label="Trend"><div :id="'pt-spark-'+idx" style="width:64px;height:24px"></div></td>
-              <td data-label="Son Guncelleme" style="font-size:0.6875rem;color:var(--muted)" x-text="kw.lastUpdate"></td>
+              <td data-label="Son Guncelleme" style="font-size:var(--fs-xs);color:var(--muted)" x-text="kw.lastUpdate"></td>
             </tr>
           </template>
         </tbody>
@@ -343,30 +341,30 @@
     </div>
 
     <!-- Pagination -->
-    <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:10px">
-      <span style="font-size:0.75rem;color:var(--muted)" x-text="showing"></span>
+    <div style="padding:var(--sp-3) var(--sp-4);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:var(--sp-3)">
+      <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="showing"></span>
       <button @click="prevPage()" :disabled="page<=1"
-        :style="page<=1?'opacity:0.4;cursor:not-allowed;padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit':'padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit'">Onceki</button>
+        :style="page<=1?'opacity:0.4;cursor:not-allowed;padding:5px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit':'padding:5px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit'">Onceki</button>
       <button @click="nextPage()" :disabled="page>=totalPages"
-        :style="page>=totalPages?'opacity:0.4;cursor:not-allowed;padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit':'padding:5px 10px;border-radius:6px;font-size:0.75rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit'">Sonraki</button>
+        :style="page>=totalPages?'opacity:0.4;cursor:not-allowed;padding:5px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit':'padding:5px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit'">Sonraki</button>
     </div>
   </div>
 
   <!-- Add Keyword Modal -->
-  <div x-show="showAddModal" x-transition style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center" @click.self="showAddModal=false" x-cloak>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:440px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-        <h3 style="font-size:1rem;font-weight:700;color:var(--text)">Keyword Ekle</h3>
-        <button @click="showAddModal=false" style="background:none;border:none;cursor:pointer;color:var(--muted)"><i class="ph ph-x" style="font-size:1.25rem"></i></button>
+  <div x-show="showAddModal" x-transition class="ap-confirm-backdrop" style="z-index:500" @click.self="showAddModal=false" x-cloak>
+    <div style="background:var(--color-glass-panel);backdrop-filter:blur(var(--blur-level)) saturate(1.4);-webkit-backdrop-filter:blur(var(--blur-level)) saturate(1.4);border:1px solid var(--glass-border);border-radius:var(--r-xl);padding:var(--sp-6);max-width:440px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-5)">
+        <h3 style="font-size:var(--fs-lg);font-weight:700;color:var(--text)">Keyword Ekle</h3>
+        <button @click="showAddModal=false" style="background:none;border:none;cursor:pointer;color:var(--muted)"><i class="ph ph-x" style="font-size:var(--fs-xl)"></i></button>
       </div>
-      <div style="margin-bottom:16px">
-        <label style="font-size:0.75rem;color:var(--muted);display:block;margin-bottom:6px">Anahtar Kelime</label>
+      <div style="margin-bottom:var(--sp-4)">
+        <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Anahtar Kelime</label>
         <input type="text" x-model="newKeyword" @keydown.enter="addKeyword()" placeholder="ornek: dijital pazarlama"
-          style="width:100%;padding:10px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
+          style="width:100%;padding:var(--sp-3) var(--sp-4);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none">
       </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button @click="showAddModal=false" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit">Iptal</button>
-        <button @click="addKeyword()" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;font-weight:600">Ekle</button>
+      <div style="display:flex;gap:var(--sp-2);justify-content:flex-end">
+        <button @click="showAddModal=false" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit">Iptal</button>
+        <button @click="addKeyword()" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;font-weight:600">Ekle</button>
       </div>
     </div>
   </div>

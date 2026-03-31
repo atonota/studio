@@ -8,7 +8,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,10 +19,10 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="form">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">API Anahtarlari</h1>
       <p class="page-sub">Platform API erisim anahtarlari</p>
@@ -42,27 +45,27 @@
       <tbody>
         <tr>
           <td data-label="Anahtar Adi" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
               <i class="ph ph-key" style="color:var(--accent)"></i> Production Key
             </div>
           </td>
-          <td data-label="Anahtar" style="font-family:monospace;font-size:0.75rem;color:var(--text-soft)">sk-prod-xxx...xxx</td>
-          <td data-label="Olusturma" style="font-size:0.8125rem;color:var(--text-soft)">15 Oca 2026</td>
-          <td data-label="Son Kullanim" style="font-size:0.8125rem;color:var(--text-soft)">Bugun 14:32</td>
+          <td data-label="Anahtar" style="font-family:monospace;font-size:var(--fs-sm);color:var(--text-soft)">sk-prod-xxx...xxx</td>
+          <td data-label="Olusturma" style="font-size:var(--fs-sm);color:var(--text-soft)">15 Oca 2026</td>
+          <td data-label="Son Kullanim" style="font-size:var(--fs-sm);color:var(--text-soft)">Bugun 14:32</td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
-          <td data-label=""><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-family:inherit;font-size:0.8125rem;font-weight:500;padding:4px 8px">Iptal Et</button></td>
+          <td data-label=""><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-family:inherit;font-size:var(--fs-sm);font-weight:500;padding:var(--sp-1) var(--sp-2)">Iptal Et</button></td>
         </tr>
         <tr>
           <td data-label="Anahtar Adi" style="font-weight:500;color:var(--text)">
-            <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
               <i class="ph ph-key" style="color:var(--muted)"></i> Test Key
             </div>
           </td>
-          <td data-label="Anahtar" style="font-family:monospace;font-size:0.75rem;color:var(--text-soft)">sk-test-xxx...xxx</td>
-          <td data-label="Olusturma" style="font-size:0.8125rem;color:var(--text-soft)">20 Sub 2026</td>
-          <td data-label="Son Kullanim" style="font-size:0.8125rem;color:var(--text-soft)">3 gun once</td>
+          <td data-label="Anahtar" style="font-family:monospace;font-size:var(--fs-sm);color:var(--text-soft)">sk-test-xxx...xxx</td>
+          <td data-label="Olusturma" style="font-size:var(--fs-sm);color:var(--text-soft)">20 Sub 2026</td>
+          <td data-label="Son Kullanim" style="font-size:var(--fs-sm);color:var(--text-soft)">3 gun once</td>
           <td data-label="Durum"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span></td>
-          <td data-label=""><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-family:inherit;font-size:0.8125rem;font-weight:500;padding:4px 8px">Iptal Et</button></td>
+          <td data-label=""><button style="background:none;border:none;color:#ef4444;cursor:pointer;font-family:inherit;font-size:var(--fs-sm);font-weight:500;padding:var(--sp-1) var(--sp-2)">Iptal Et</button></td>
         </tr>
       </tbody>
     </table>
@@ -70,6 +73,8 @@
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
 </body>

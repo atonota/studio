@@ -9,7 +9,10 @@
 <script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,27 +20,27 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ ...wizard(3), ...selectCard('meta'), objective:'Donusum', campaignName:'', dailyBudget:'', startDate:'', endDate:'', budgetError:'', dateError:'', nameError:'' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="form" x-data="{ ...wizard(3), ...selectCard('meta'), objective:'Donusum', campaignName:'', dailyBudget:'', startDate:'', endDate:'', budgetError:'', dateError:'', nameError:'' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Yeni Kampanya Olustur</h1>
     <p class="page-sub">Adim adim kampanya olusturma sihirbazi</p>
   </div>
 
   <!-- Wizard Steps -->
-  <div class="fade-in-d1" style="display:flex;align-items:center;gap:0;margin-bottom:32px;max-width:640px">
+  <div class="fade-in-d1" style="display:flex;align-items:center;gap:0;margin-bottom:var(--sp-8);max-width:640px">
     <template x-for="(label, idx) in ['Platform & Hedef','Butce & Takvim','Hedef Kitle']" :key="idx">
       <div style="display:contents">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;transition:all 0.15s"
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);font-weight:600;transition:all 0.15s"
                :style="isActive(idx+1) ? 'background:var(--accent);color:white' : isCompleted(idx+1) ? 'background:#22c55e;color:white' : 'background:var(--surface-2);border:1px solid var(--border);color:var(--muted)'">
-            <template x-if="isCompleted(idx+1)"><i class="ph ph-check" style="font-size:0.75rem"></i></template>
+            <template x-if="isCompleted(idx+1)"><i class="ph ph-check" style="font-size:var(--fs-sm)"></i></template>
             <template x-if="!isCompleted(idx+1)"><span x-text="idx+1"></span></template>
           </div>
-          <span style="font-size:0.8125rem" :style="isActive(idx+1) ? 'color:var(--text);font-weight:500' : 'color:var(--muted)'" x-text="label"></span>
+          <span style="font-size:var(--fs-sm)" :style="isActive(idx+1) ? 'color:var(--text);font-weight:500' : 'color:var(--muted)'" x-text="label"></span>
         </div>
-        <div x-show="idx < 2" style="flex:1;height:1px;background:var(--border);margin:0 12px"></div>
+        <div x-show="idx < 2" style="flex:1;height:1px;background:var(--border);margin:0 var(--sp-3)"></div>
       </div>
     </template>
   </div>
@@ -47,36 +50,36 @@
     <span class="section-label">1. Platform &amp; Hedef</span>
 
     <!-- Platform Selection -->
-    <div style="margin-bottom:24px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:12px">Platform</label>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-        <div @click="select('meta')" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:10px;cursor:pointer;transition:all 0.15s"
+    <div style="margin-bottom:var(--sp-6)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-3)">Platform</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-2)">
+        <div @click="select('meta')" style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);padding:var(--sp-4) var(--sp-2);border-radius:var(--r-md);cursor:pointer;transition:all 0.15s"
              :style="isSelected('meta') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:1px solid var(--border);background:var(--surface-2)'">
-          <i class="ph ph-meta-logo" style="font-size:1.5rem" :style="isSelected('meta') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-          <span style="font-size:0.75rem;font-weight:500" :style="isSelected('meta') ? 'color:var(--text)' : 'color:var(--muted)'">Meta</span>
+          <i class="ph ph-meta-logo" style="font-size:var(--fs-2xl)" :style="isSelected('meta') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+          <span style="font-size:var(--fs-sm);font-weight:500" :style="isSelected('meta') ? 'color:var(--text)' : 'color:var(--muted)'">Meta</span>
         </div>
-        <div @click="select('tiktok')" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:10px;cursor:pointer;transition:all 0.15s"
+        <div @click="select('tiktok')" style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);padding:var(--sp-4) var(--sp-2);border-radius:var(--r-md);cursor:pointer;transition:all 0.15s"
              :style="isSelected('tiktok') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:1px solid var(--border);background:var(--surface-2)'">
-          <i class="ph ph-tiktok-logo" style="font-size:1.5rem" :style="isSelected('tiktok') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-          <span style="font-size:0.75rem" :style="isSelected('tiktok') ? 'color:var(--text)' : 'color:var(--muted)'">TikTok</span>
+          <i class="ph ph-tiktok-logo" style="font-size:var(--fs-2xl)" :style="isSelected('tiktok') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+          <span style="font-size:var(--fs-sm)" :style="isSelected('tiktok') ? 'color:var(--text)' : 'color:var(--muted)'">TikTok</span>
         </div>
-        <div @click="select('linkedin')" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:10px;cursor:pointer;transition:all 0.15s"
+        <div @click="select('linkedin')" style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);padding:var(--sp-4) var(--sp-2);border-radius:var(--r-md);cursor:pointer;transition:all 0.15s"
              :style="isSelected('linkedin') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:1px solid var(--border);background:var(--surface-2)'">
-          <i class="ph ph-linkedin-logo" style="font-size:1.5rem" :style="isSelected('linkedin') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-          <span style="font-size:0.75rem" :style="isSelected('linkedin') ? 'color:var(--text)' : 'color:var(--muted)'">LinkedIn</span>
+          <i class="ph ph-linkedin-logo" style="font-size:var(--fs-2xl)" :style="isSelected('linkedin') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+          <span style="font-size:var(--fs-sm)" :style="isSelected('linkedin') ? 'color:var(--text)' : 'color:var(--muted)'">LinkedIn</span>
         </div>
-        <div @click="select('pinterest')" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:10px;cursor:pointer;transition:all 0.15s"
+        <div @click="select('pinterest')" style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);padding:var(--sp-4) var(--sp-2);border-radius:var(--r-md);cursor:pointer;transition:all 0.15s"
              :style="isSelected('pinterest') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:1px solid var(--border);background:var(--surface-2)'">
-          <i class="ph ph-pinterest-logo" style="font-size:1.5rem" :style="isSelected('pinterest') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-          <span style="font-size:0.75rem" :style="isSelected('pinterest') ? 'color:var(--text)' : 'color:var(--muted)'">Pinterest</span>
+          <i class="ph ph-pinterest-logo" style="font-size:var(--fs-2xl)" :style="isSelected('pinterest') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+          <span style="font-size:var(--fs-sm)" :style="isSelected('pinterest') ? 'color:var(--text)' : 'color:var(--muted)'">Pinterest</span>
         </div>
       </div>
     </div>
 
     <!-- Campaign Objective -->
-    <div style="margin-bottom:24px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Kampanya Hedefi</label>
-      <select x-model="objective" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box">
+    <div style="margin-bottom:var(--sp-6)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Kampanya Hedefi</label>
+      <select x-model="objective" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none;box-sizing:border-box">
         <option>Donusum</option>
         <option>Farkindalik</option>
         <option>Trafik</option>
@@ -85,21 +88,21 @@
     </div>
 
     <!-- Campaign Name -->
-    <div style="margin-bottom:24px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Kampanya Adi</label>
-      <input type="text" x-model="campaignName" placeholder="ornek: Bahar Kampanyasi 2026" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box" :style="nameError ? 'border-color:#ef4444' : ''">
-      <span x-show="nameError" x-text="nameError" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
+    <div style="margin-bottom:var(--sp-6)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Kampanya Adi</label>
+      <input type="text" x-model="campaignName" placeholder="ornek: Bahar Kampanyasi 2026" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none;box-sizing:border-box" :style="nameError ? 'border-color:#ef4444' : ''">
+      <span x-show="nameError" x-text="nameError" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
     </div>
 
     <!-- Actions -->
-    <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end">
-      <button class="btn-secondary" style="padding:8px 20px;font-size:0.8125rem" onclick="history.back()">Iptal</button>
-      <button class="btn-primary" style="padding:8px 20px;font-size:0.8125rem" @click="
+    <div style="display:flex;align-items:center;gap:var(--sp-3);justify-content:flex-end">
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" onclick="history.back()">Iptal</button>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" @click="
         nameError='';
         if(!campaignName.trim()) { nameError='Kampanya adi zorunlu'; return; }
         if(!selected) { $store.toast.show('Platform secin','warning'); return; }
         next();
-      ">Ileri <i class="ph ph-arrow-right" style="margin-left:4px"></i></button>
+      ">Ileri <i class="ph ph-arrow-right" style="margin-left:var(--sp-1)"></i></button>
     </div>
   </div>
 
@@ -107,35 +110,35 @@
   <div x-show="isActive(2)" x-transition class="card" style="max-width:640px">
     <span class="section-label">2. Butce &amp; Takvim</span>
 
-    <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:24px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-5);margin-bottom:var(--sp-6)">
       <div>
-        <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Gunluk Butce (USD)</label>
-        <input type="number" x-model="dailyBudget" placeholder="50" min="1" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Gunluk Butce (USD)</label>
+        <input type="number" x-model="dailyBudget" placeholder="50" min="1" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none;box-sizing:border-box"
                :style="budgetError ? 'border-color:#ef4444' : ''">
-        <span x-show="budgetError" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="budgetError"></span>
+        <span x-show="budgetError" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="budgetError"></span>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)">
         <div>
-          <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Baslangic Tarihi</label>
-          <input type="date" x-model="startDate" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box">
+          <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Baslangic Tarihi</label>
+          <input type="date" x-model="startDate" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none;box-sizing:border-box">
         </div>
         <div>
-          <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Bitis Tarihi</label>
-          <input type="date" x-model="endDate" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none;box-sizing:border-box">
+          <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Bitis Tarihi</label>
+          <input type="date" x-model="endDate" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none;box-sizing:border-box">
         </div>
       </div>
-      <span x-show="dateError" style="font-size:0.75rem;color:#ef4444" x-text="dateError"></span>
+      <span x-show="dateError" style="font-size:var(--fs-sm);color:#ef4444" x-text="dateError"></span>
     </div>
 
-    <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end">
-      <button class="btn-secondary" style="padding:8px 20px;font-size:0.8125rem" @click="prev()"><i class="ph ph-arrow-left" style="margin-right:4px"></i> Geri</button>
-      <button class="btn-primary" style="padding:8px 20px;font-size:0.8125rem" @click="
+    <div style="display:flex;align-items:center;gap:var(--sp-3);justify-content:flex-end">
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" @click="prev()"><i class="ph ph-arrow-left" style="margin-right:var(--sp-1)"></i> Geri</button>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" @click="
         budgetError=''; dateError='';
         if(!dailyBudget || Number(dailyBudget) <= 0) { budgetError='Butce zorunlu ve 0\'dan buyuk olmali'; return; }
         if(!startDate) { dateError='Baslangic tarihi zorunlu'; return; }
         if(endDate && endDate < startDate) { dateError='Bitis tarihi baslangictan once olamaz'; return; }
         next();
-      ">Ileri <i class="ph ph-arrow-right" style="margin-left:4px"></i></button>
+      ">Ileri <i class="ph ph-arrow-right" style="margin-left:var(--sp-1)"></i></button>
     </div>
   </div>
 
@@ -143,18 +146,18 @@
   <div x-show="isActive(3)" x-transition class="card" style="max-width:640px">
     <span class="section-label">3. Hedef Kitle &amp; Ozet</span>
 
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;padding:16px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Platform</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500;text-transform:capitalize" x-text="selected"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Hedef</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="objective"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Kampanya</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="campaignName"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Gunluk Butce</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="'$' + dailyBudget"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Tarih Araligi</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="startDate + (endDate ? ' — ' + endDate : ' — Suresiz')"></span></div>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3);margin-bottom:var(--sp-6);padding:var(--sp-4);background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Platform</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500;text-transform:capitalize" x-text="selected"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Hedef</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="objective"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Kampanya</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="campaignName"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Gunluk Butce</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="'$' + dailyBudget"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Tarih Araligi</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="startDate + (endDate ? ' — ' + endDate : ' — Suresiz')"></span></div>
     </div>
 
-    <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end">
-      <button class="btn-secondary" style="padding:8px 20px;font-size:0.8125rem" @click="prev()"><i class="ph ph-arrow-left" style="margin-right:4px"></i> Geri</button>
-      <button class="btn-primary" style="padding:8px 20px;font-size:0.8125rem" @click="$store.confirm.ask('Kampanyayi olusturmak istediginize emin misiniz?', () => { $store.toast.show('Kampanya basariyla olusturuldu!','success'); setTimeout(()=>{ window.location.href='ads.html' }, 1500) })">
-        <i class="ph ph-rocket" style="margin-right:4px"></i> Kampanya Olustur
+    <div style="display:flex;align-items:center;gap:var(--sp-3);justify-content:flex-end">
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" @click="prev()"><i class="ph ph-arrow-left" style="margin-right:var(--sp-1)"></i> Geri</button>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-5);font-size:var(--fs-sm)" @click="$store.confirm.ask('Kampanyayi olusturmak istediginize emin misiniz?', () => { $store.toast.show('Kampanya basariyla olusturuldu!','success'); setTimeout(()=>{ window.location.href='ads.html' }, 1500) })">
+        <i class="ph ph-rocket" style="margin-right:var(--sp-1)"></i> Kampanya Olustur
       </button>
     </div>
   </div>
