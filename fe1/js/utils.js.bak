@@ -1,0 +1,71 @@
+/* ═══════════════════════════════════════════
+   atonota Studio — Utility Functions
+   Sorumluluk: Formatlama + HTML fragment uretimi
+   Yan etki: YOK — tum fonksiyonlar saf (pure)
+   Bagimlilik: YOK — diger JS dosyalarina bagimli degil
+═══════════════════════════════════════════ */
+
+/**
+ * Turkce binlik ayirici ile sayi formatla
+ * @param {number} n — formatlanacak sayi
+ * @returns {string} — "24.891" gibi noktali format
+ */
+function fmtNum(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+/**
+ * TRY para birimi formatla
+ * @param {number} n — miktar
+ * @returns {string} — "₺24.891" formati
+ */
+function fmtTRY(n) {
+  return '₺' + fmtNum(n);
+}
+
+/**
+ * Goreceli zaman metni uret (Turkce)
+ * @param {number} minutes — gecen dakika sayisi
+ * @returns {string} — "5 dk once", "2 saat once", "3 gun once"
+ */
+function timeAgo(minutes) {
+  if (minutes < 60) return minutes + ' dk once';
+  if (minutes < 1440) return Math.floor(minutes / 60) + ' saat once';
+  return Math.floor(minutes / 1440) + ' gun once';
+}
+
+/**
+ * Stat card HTML fragment olustur
+ * @param {string} label — kart baslik metni
+ * @param {string} value — gosterilen deger
+ * @param {string} change — degisim metni ("+12.4%", "↓ 3")
+ * @param {string} color — renk varyanti ("green", "blue", "red", "yellow", "purple")
+ * @param {number} [delay] — fade-in gecikme index'i (1-4)
+ * @returns {string} — HTML string
+ */
+function statCard(label, value, change, color, delay) {
+  const cls = delay ? ` fade-in-d${delay}` : '';
+  const changeColor = change.startsWith('+') || change.startsWith('↑') ? 'stat-change--up' :
+                      change.startsWith('-') || change.startsWith('↓') ? 'stat-change--down' : 'stat-change--flat';
+  return `<div class="stat-card stat-card--${color}${cls}"><div class="stat-label">${label}</div><div class="stat-value">${value}</div><div class="stat-change ${changeColor}">${change}</div></div>`;
+}
+
+/**
+ * Badge HTML fragment olustur
+ * @param {string} text — badge metni
+ * @param {string} color — renk varyanti ("green", "blue", "red", "yellow")
+ * @returns {string} — HTML string
+ */
+function badge(text, color) {
+  return `<span class="badge badge--${color}">${text}</span>`;
+}
+
+/**
+ * Icon circle HTML fragment olustur
+ * @param {string} icon — Phosphor icon class ("ph-chart-line-up")
+ * @param {string} color — renk varyanti
+ * @returns {string} — HTML string
+ */
+function iconCircle(icon, color) {
+  return `<div class="icon-circle icon-circle--${color}"><i class="ph ${icon}"></i></div>`;
+}

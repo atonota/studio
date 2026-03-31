@@ -161,7 +161,14 @@ function emit(event: string, payload: unknown): void {
 
 function load(): void {
   try {
-    state.mode = (localStorage.getItem(PREFIX + 'mode') || 'dark') as 'dark' | 'light';
+    // Respect OS color scheme on first visit (no stored preference)
+    const storedMode = localStorage.getItem(PREFIX + 'mode');
+    if (storedMode) {
+      state.mode = storedMode as 'dark' | 'light';
+    } else {
+      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true;
+      state.mode = prefersDark ? 'dark' : 'light';
+    }
     state.lightTone = localStorage.getItem(PREFIX + 'light_tone') || 'milk';
     state.darkTone = localStorage.getItem(PREFIX + 'dark_tone') || 'coal-warm';
     // Schema migration: ap_accent (v1) → ap_accent_dark + ap_accent_light (v2)
@@ -234,14 +241,19 @@ function applyAccentVars(key: string): void {
   const a = ACCENTS.find(x => x.key === key) ?? ACCENTS[6];
   if (!a) return;
   const { r, g, b } = hexToRgb(a.color);
+  const isDark = R.classList.contains('dark');
+
   R.style.setProperty('--color-primary', a.color);
   R.style.setProperty('--color-primary-hover', a.h);
-  R.style.setProperty('--color-primary-soft', `rgba(${r},${g},${b},0.12)`);
-  R.style.setProperty('--color-primary-muted', `rgba(${r},${g},${b},0.22)`);
+  // Set RGB triplet for mode-aware rgba() in _semantic-tokens.scss
+  R.style.setProperty('--_primary-rgb', `${r}, ${g}, ${b}`);
+  // Mode-aware soft/muted — light needs more opacity for visibility, dark needs less
+  R.style.setProperty('--color-primary-soft', `rgba(${r},${g},${b},${isDark ? 0.10 : 0.15})`);
+  R.style.setProperty('--color-primary-muted', `rgba(${r},${g},${b},${isDark ? 0.20 : 0.25})`);
   R.style.setProperty('--accent', a.color);
   R.style.setProperty('--accent-h', a.h);
-  R.style.setProperty('--accent-soft', `rgba(${r},${g},${b},0.1)`);
-  R.style.setProperty('--accent-muted', `rgba(${r},${g},${b},0.2)`);
+  R.style.setProperty('--accent-soft', `rgba(${r},${g},${b},${isDark ? 0.08 : 0.12})`);
+  R.style.setProperty('--accent-muted', `rgba(${r},${g},${b},${isDark ? 0.16 : 0.22})`);
 
   const railAccent = desaturate(a.color, 0.45);
   const railRgb = hexToRgb(railAccent);

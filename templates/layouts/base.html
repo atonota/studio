@@ -10,15 +10,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="/static/manifest.json">
     <title>{% block title %}atonota Studio{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet">
+    <!-- Tailwind CDN — Jinja2 template'ler utility class kullanır (fe1 sayfaları kullanmaz) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={darkMode:'class'}</script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
     <style>
         /* atonota Global Rules */
         /* Min font-weight: 300 (light). Never thinner. */
-        * { font-weight: max(var(--tw-font-weight, inherit), 300) !important; }
+        * { font-weight: max(var(--font-weight-body, inherit), 300) !important; }
         body { font-weight: 300; }
         h1, h2, h3, h4, h5, h6, th, strong, b, .font-bold, .font-semibold, .font-medium {
             font-weight: revert !important;
@@ -150,7 +151,6 @@
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
     {% block content %}{% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     {% block scripts %}{% endblock %}
 </body>

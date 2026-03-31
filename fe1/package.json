@@ -4,18 +4,25 @@
   "private": true,
   "description": "atonota Developer Studio — Frontend Prototype",
   "scripts": {
-    "build": "npm run css:build && node build.mjs",
+    "build": "npm run css:build && node build.mjs --prod",
+    "build:dev": "npm run css:build && node build.mjs",
     "build:ts": "node build.mjs",
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "css:build": "sass src/scss/main.scss css/tokens.css --style=expanded --no-source-map && sass src/scss/primitives.scss css/primitives.css --style=expanded --no-source-map && sass src/scss/pages/theme-options.scss css/theme-options.css --style=expanded --no-source-map",
     "css:watch": "sass --watch src/scss/main.scss:css/tokens.css src/scss/primitives.scss:css/primitives.css src/scss/pages/theme-options.scss:css/theme-options.css",
     "css:dev": "sass src/scss/main.scss css/tokens.css --style=expanded --source-map && sass src/scss/primitives.scss css/primitives.css --style=expanded --source-map && sass src/scss/pages/theme-options.scss css/theme-options.css --style=expanded --source-map",
-    "serve": "python3 -m http.server 8002"
+    "serve": "python3 -m http.server 8002",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.2",
     "esbuild": "^0.24.0",
+    "jsdom": "^29.0.1",
     "sass": "^1.98.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.2"
   }
 }

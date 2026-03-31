@@ -66,7 +66,7 @@
     - Inline style yerine CSS variable kullan: var(--sp-*), var(--fs-*)
     - Dogrudan token'a yazma — sadece --color-*, --font-*, --sp-* kullan
 ═══════════════════════════════════════════════════════════════════ -->
-<div id="main" data-skeleton="dashboard">
+<div id="main" role="main" aria-label="Sayfa icerigi" data-skeleton="dashboard">
 
   <div class="fade-in" style="margin-bottom:var(--sp-7)">
     <h1 class="page-title">PAGE_TITLE</h1>
@@ -77,7 +77,7 @@
 
 </div><!-- /#main -->
 
-<div id="footbar"></div>
+<div id="footbar" role="contentinfo" aria-label="Sistem durumu"></div>
 
 <!-- Alpine defer — DOM'dan sonra yukle -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
@@ -127,13 +127,39 @@
   Radius:    var(--r-sm), var(--r-md), var(--r-lg)
   Kart:      class="card" + padding inline
 
-  ═══ A11Y KURALLARI ═══════════════════════════════════════════
+  ═══ A11Y KURALLARI (WCAG 2.2 AAA) ═════════════════════════
 
-  - Interaktif elementin min boyutu: 44×44px (WCAG 2.5.5)
-  - Her form alaninin bir <label> veya aria-label'i olmali
-  - Icon-only butonlara: aria-label="Aciklama"
-  - Modal/dropdown: aria-modal, focus trap
-  - Dinamik icerik degisimi: aria-live="polite"
+  Kontrast:
+  - Normal text: min 7:1 (AAA)
+  - Large text (≥18px bold / ≥24px): min 4.5:1 (AAA)
+  - UI components (border, icon): min 3:1
+
+  Interaktif elementler:
+  - Min boyut: 44×44px (WCAG 2.5.5)
+  - Tum butonlar: aria-label (icon-only ise)
+  - Toggle butonlar: aria-pressed="true|false"
+  - Collapsible: aria-expanded="true|false"
+
+  Form:
+  - Her input: <label> veya aria-label
+  - Hata: aria-invalid="true" + aria-describedby
+  - Zorunlu: aria-required="true"
+
+  Dinamik icerik:
+  - Modal/drawer: role="dialog" + aria-modal="true" + focus trap
+  - Toast/alert: aria-live="polite" veya "assertive"
+  - Loading: aria-busy="true" on container
+
+  Navigasyon:
+  - Aktif sayfa link: aria-current="page"
+  - Aktif bolum: aria-current="section"
+  - Gruplar: role="group" + aria-label
+
+  Dekoratif:
+  - Ikon: aria-hidden="true" (i.ph elementi)
+  - Separator: role="separator"
+
+  Renk:
   - Renk tek basina bilgi tasimamali (ikon veya metin ekle)
 -->
 </body>

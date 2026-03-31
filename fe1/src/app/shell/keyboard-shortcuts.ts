@@ -44,19 +44,43 @@ function showShortcutsHelp(): void {
   overlay.id = 'shortcuts-help-modal';
   overlay.className = 'ap-confirm-backdrop';
   overlay.style.cssText = 'z-index:9999;';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Klavye kisayollari');
   overlay.innerHTML =
     `<div style="background:var(--color-glass-panel);backdrop-filter:blur(var(--blur-level)) saturate(1.4);-webkit-backdrop-filter:blur(var(--blur-level)) saturate(1.4);border:1px solid var(--glass-border);border-radius:16px;padding:28px 32px;min-width:340px;max-width:420px;box-shadow:0 24px 48px rgba(0,0,0,0.4);">` +
     `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">` +
-    `<h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0">Klavye Kisayollari</h3>` +
-    `<button id="shortcuts-close" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.25rem;padding:4px"><i class="ph ph-x"></i></button></div>` +
-    `<div style="display:flex;flex-direction:column;gap:12px">${rows}</div></div>`;
+    `<h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0" id="shortcuts-title">Klavye Kisayollari</h3>` +
+    `<button id="shortcuts-close" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.25rem;padding:4px" aria-label="Kapat"><i class="ph ph-x" aria-hidden="true"></i></button></div>` +
+    `<div style="display:flex;flex-direction:column;gap:12px" role="list">${rows}</div></div>`;
 
   document.body.appendChild(overlay);
+
+  // Focus trap for modal dialog
+  const closeBtn = document.getElementById('shortcuts-close');
+  if (closeBtn) {
+    closeBtn.focus();
+    closeBtn.onclick = () => overlay.remove();
+  }
   overlay.onclick = (ev: MouseEvent) => {
     if (ev.target === overlay) overlay.remove();
   };
-  const closeBtn = document.getElementById('shortcuts-close');
-  if (closeBtn) closeBtn.onclick = () => overlay.remove();
+  overlay.addEventListener('keydown', (ev: KeyboardEvent) => {
+    if (ev.key === 'Tab') {
+      // Trap focus within the modal
+      const focusable = overlay.querySelectorAll<HTMLElement>('button, [tabindex]:not([tabindex="-1"])');
+      if (focusable.length === 0) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (ev.shiftKey && document.activeElement === first) {
+        ev.preventDefault();
+        last.focus();
+      } else if (!ev.shiftKey && document.activeElement === last) {
+        ev.preventDefault();
+        first.focus();
+      }
+    }
+  });
 }
 
 // ── Bind global keydown ──────────────────────────

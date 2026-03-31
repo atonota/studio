@@ -85,9 +85,13 @@ export function initSkeleton(): void {
     // Create skeleton overlay
     const skel = document.createElement('div');
     skel.id = 'skeleton-overlay';
+    skel.setAttribute('aria-hidden', 'true');
     skel.style.cssText =
       `position:absolute;top:0;left:0;right:0;padding:var(--sp-6) var(--sp-4);z-index:10;transition:opacity ${FADE_MS}ms ease`;
     skel.innerHTML = template;
+
+    // Mark main as loading for assistive technology
+    main.setAttribute('aria-busy', 'true');
 
     // Position main relative for absolute skeleton overlay
     main.style.position = 'relative';
@@ -112,6 +116,7 @@ export function initSkeleton(): void {
       setTimeout(() => {
         try { skel.remove(); } catch (e) { console.warn('Skeleton: remove failed', e); }
         try { main.style.position = ''; } catch (e) { console.warn('Skeleton: position restore failed', e); }
+        main.removeAttribute('aria-busy');
 
         // Fade in real content with stagger
         children.forEach((c, i) => {

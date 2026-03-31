@@ -132,8 +132,8 @@
       removeFavorite(href);
       if (btn) {
         btn.classList.remove("bc-star-active");
-        const icon = btn.querySelector("i");
-        if (icon) icon.className = "ph ph-star";
+        const icon2 = btn.querySelector("i");
+        if (icon2) icon2.className = "ph ph-star";
         btn.title = "Kisayollara ekle";
       }
       document.querySelectorAll(`.ws-star[data-fav-href="${href}"]`).forEach((s) => {
@@ -147,8 +147,8 @@
     addFavorite(label, href);
     if (btn) {
       btn.classList.add("bc-star-active");
-      const icon = btn.querySelector("i");
-      if (icon) icon.className = "ph ph-star-fill";
+      const icon2 = btn.querySelector("i");
+      if (icon2) icon2.className = "ph ph-star-fill";
       btn.title = "Kisayollardan kaldir";
     }
     document.querySelectorAll(`.ws-star[data-fav-href="${href}"]`).forEach((s) => {
@@ -167,8 +167,8 @@
       const bcStar2 = document.getElementById("bc-star-btn");
       if (bcStar2 && window.location.pathname.split("/").pop() === href) {
         bcStar2.classList.remove("bc-star-active");
-        const icon = bcStar2.querySelector("i");
-        if (icon) icon.className = "ph ph-star";
+        const icon2 = bcStar2.querySelector("i");
+        if (icon2) icon2.className = "ph ph-star";
       }
       if (window.Alpine && Alpine.store("toast")) {
         Alpine.store("toast").show(label + " kisayollardan kaldirildi", "info", 2e3);
@@ -180,8 +180,8 @@
     const bcStar = document.getElementById("bc-star-btn");
     if (bcStar && window.location.pathname.split("/").pop() === href) {
       bcStar.classList.add("bc-star-active");
-      const icon = bcStar.querySelector("i");
-      if (icon) icon.className = "ph ph-star-fill";
+      const icon2 = bcStar.querySelector("i");
+      if (icon2) icon2.className = "ph ph-star-fill";
     }
     if (window.Alpine && Alpine.store("toast")) {
       Alpine.store("toast").show(label + " kisayollara eklendi", "success", 2e3);
@@ -275,25 +275,29 @@
   function renderSidebar(base, key) {
     const sidebarEl = document.getElementById("sidebar-wide");
     if (!sidebarEl) return;
+    sidebarEl.setAttribute("role", "navigation");
+    sidebarEl.setAttribute("aria-label", "Alt navigasyon");
     const sidebarData = SIDEBAR_DATA[key] ?? [];
     const secInfo = findSectionInfo(key);
     const currentFile = getCurrentFile();
     const inPages = isInPages();
-    let html = SIDEBAR_HIDDEN.includes(key) ? "" : `<div class="ws-header"><i class="ph ${secInfo ? secInfo.icon : "ph-squares-four"}" style="font-size:0.8125rem"></i><span>${secInfo ? secInfo.title : "Dashboard"}</span></div>`;
+    let html = SIDEBAR_HIDDEN.includes(key) ? "" : `<div class="ws-header"><i class="ph ${secInfo ? secInfo.icon : "ph-squares-four"}" style="font-size:0.8125rem" aria-hidden="true"></i><span>${secInfo ? secInfo.title : "Dashboard"}</span></div>`;
     html += '<div style="flex:1;overflow-y:auto">';
     if (secInfo && !SIDEBAR_HIDDEN.includes(key)) {
       const dashHref = secInfo.href.replace("pages/", "");
       const resolvedDash = inPages ? dashHref : "pages/" + dashHref;
       const dashActive = currentFile === dashHref ? " active" : "";
-      html += `<a class="ws-dash${dashActive}" href="${resolvedDash}"><i class="ph ph-squares-four"></i><span>Dashboard</span></a>`;
+      const dashAriaCurrent = dashActive ? ' aria-current="page"' : "";
+      html += `<a class="ws-dash${dashActive}" href="${resolvedDash}"${dashAriaCurrent}><i class="ph ph-squares-four" aria-hidden="true"></i><span>Dashboard</span></a>`;
     }
     sidebarData.forEach((group) => {
       const groupHasActive = group.ch.some((ch) => {
-        const h = ch.split("|")[2];
-        return h !== void 0 && h !== "" && currentFile === h;
+        const h2 = ch.split("|")[2];
+        return h2 !== void 0 && h2 !== "" && currentFile === h2;
       });
       const openClass = groupHasActive ? " open" : "";
-      html += `<div class="ws-section"><div class="ws-l1${openClass}" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')"><span>${group.l}</span><i class="ph ph-caret-right chevron"></i></div><div class="ws-l1-body${openClass}">`;
+      const expanded = groupHasActive ? "true" : "false";
+      html += `<div class="ws-section"><button class="ws-l1${openClass}" aria-expanded="${expanded}" onclick="const o=this.classList.toggle('open');this.setAttribute('aria-expanded',o);this.nextElementSibling.classList.toggle('open')"><span>${group.l}</span><i class="ph ph-caret-right chevron" aria-hidden="true"></i></button><div class="ws-l1-body${openClass}" role="group" aria-label="${group.l}">`;
       group.ch.forEach((ch) => {
         const parts = ch.split("|");
         const label = parts[0];
@@ -303,8 +307,10 @@
         const activeClass = isActive ? " active" : "";
         if (href) {
           const resolvedHref = resolveChildHref(href, inPages);
-          const starClass = isFavorite(href) ? "ws-star active" : "ws-star";
-          html += `<a class="ws-l2${activeClass}" href="${resolvedHref}"><span>${label}</span>` + (badge ? `<span class="ws-badge">${badge}</span>` : "") + `<button class="${starClass}" data-fav-href="${href}" data-fav-label="${label}" title="Kisayol ekle/kaldir" onclick="event.preventDefault();event.stopPropagation();toggleFav(this)"><i class="ph ph-star"></i></button></a>`;
+          const isFav = isFavorite(href);
+          const starClass = isFav ? "ws-star active" : "ws-star";
+          const ariaCurrent = isActive ? ' aria-current="page"' : "";
+          html += `<a class="ws-l2${activeClass}" href="${resolvedHref}"${ariaCurrent}><span>${label}</span>` + (badge ? `<span class="ws-badge">${badge}</span>` : "") + `<button class="${starClass}" data-fav-href="${href}" data-fav-label="${label}" aria-label="${isFav ? "Favorilerden kaldir" : "Favorilere ekle"}: ${label}" aria-pressed="${isFav}" onclick="event.preventDefault();event.stopPropagation();toggleFav(this)"><i class="ph ph-star" aria-hidden="true"></i></button></a>`;
         } else {
           html += `<div class="ws-l2${activeClass}"><span>${label}</span>` + (badge ? `<span class="ws-badge">${badge}</span>` : "") + "</div>";
         }
@@ -335,38 +341,10 @@
     const toggleBtn = document.createElement("button");
     toggleBtn.id = "wide-toggle-tb";
     toggleBtn.title = "Sidebar toggle";
-    toggleBtn.innerHTML = '<span class="toggle-arrow"><i class="ph ph-caret-left"></i></span>';
+    toggleBtn.setAttribute("aria-label", "Alt navigasyonu ac/kapat");
+    toggleBtn.setAttribute("aria-expanded", document.body.classList.contains("wide-open") ? "true" : "false");
+    toggleBtn.innerHTML = '<span class="toggle-arrow"><i class="ph ph-caret-left" aria-hidden="true"></i></span>';
     document.body.appendChild(toggleBtn);
-  }
-
-  // src/app/shell/rail.ts
-  function renderRail(base, activeKey) {
-    const railEl = document.getElementById("rail");
-    if (!railEl) return;
-    let railHTML = "";
-    MENU.forEach((group, gi) => {
-      if (gi > 0) railHTML += '<div class="ni-div"></div>';
-      group.items.forEach((item) => {
-        const active = item.key === activeKey ? " active" : "";
-        railHTML += `<button class="ni${active}" data-key="${item.key}" data-href="${base}${item.href}" title="${item.title}" onclick="railClick(this)"><i class="ph ${item.icon}"></i><span class="ni-label">${item.title}</span></button>`;
-      });
-    });
-    railEl.innerHTML = railHTML;
-  }
-  function railClick(btn, _activeKey) {
-    const clickedKey = btn.dataset.key ?? "";
-    const base = window.__SHELL_BASE ?? "";
-    const currentSidebarKey = window.__SIDEBAR_KEY ?? "";
-    const sidebarOpen = document.body.classList.contains("wide-open");
-    if (clickedKey === currentSidebarKey && sidebarOpen) {
-      document.body.classList.remove("wide-open");
-      return;
-    }
-    renderSidebar(base, clickedKey);
-    window.__SIDEBAR_KEY = clickedKey;
-    document.body.classList.add("wide-open");
-    document.querySelectorAll(".ni").forEach((ni) => ni.classList.remove("active"));
-    btn.classList.add("active");
   }
 
   // src/app/shell/breadcrumb.ts
@@ -402,7 +380,7 @@
     const quickItems = MENU.flatMap((g) => g.items).slice(0, 6).map(
       (i) => `<a class="sp-item" href="${base}${i.href}"><div class="sp-item-icon"><i class="ph ${i.icon}"></i></div><div><div class="sp-item-title">${i.title}</div></div></a>`
     ).join("");
-    spotBd.innerHTML = `<div id="spotlight"><div class="sp-input-wrap"><i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:var(--muted)"></i><input id="sp-input" class="sp-input" type="text" placeholder="Panelde ara..." autocomplete="off"><span class="sp-kbd" id="sp-close">ESC</span></div><div class="sp-results"><div class="sp-section-label">Hizli Erisim</div>${quickItems}</div><div class="sp-footer"><span style="display:flex;align-items:center;gap:4px"><span class="sp-key">\u2191\u2193</span> gezin</span><span style="display:flex;align-items:center;gap:4px"><span class="sp-key">\u21B5</span> ac</span><span style="display:flex;align-items:center;gap:4px"><span class="sp-key">ESC</span> kapat</span></div></div>`;
+    spotBd.innerHTML = `<div id="spotlight" role="dialog" aria-modal="true" aria-label="Spotlight arama"><div class="sp-input-wrap"><i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:var(--muted)" aria-hidden="true"></i><input id="sp-input" class="sp-input" type="text" placeholder="Panelde ara..." autocomplete="off" role="combobox" aria-expanded="true" aria-controls="sp-results-list" aria-autocomplete="list"><span class="sp-kbd" id="sp-close" role="button" tabindex="0" aria-label="Kapat">ESC</span></div><div class="sp-results" id="sp-results-list" role="listbox"><div class="sp-section-label" id="sp-quick-label">Hizli Erisim</div>${quickItems}</div><div class="sp-footer" aria-hidden="true"><span style="display:flex;align-items:center;gap:4px"><span class="sp-key">\u2191\u2193</span> gezin</span><span style="display:flex;align-items:center;gap:4px"><span class="sp-key">\u21B5</span> ac</span><span style="display:flex;align-items:center;gap:4px"><span class="sp-key">ESC</span> kapat</span></div></div>`;
   }
   function initSpotlightNav(base) {
     const spotBd = document.getElementById("spotlight-backdrop");
@@ -519,16 +497,84 @@
     }
   }
 
+  // src/core/event-bus.ts
+  function createEventBus() {
+    const listeners = {};
+    return {
+      on(event, cb) {
+        (listeners[event] = listeners[event] || []).push(cb);
+      },
+      off(event, cb) {
+        if (listeners[event]) {
+          listeners[event] = listeners[event].filter((f) => f !== cb);
+        }
+      },
+      emit(event, payload) {
+        (listeners[event] || []).forEach((cb) => {
+          try {
+            cb(payload);
+          } catch (e) {
+            console.error(`EventBus[${event}]:`, e);
+          }
+        });
+      }
+    };
+  }
+
+  // src/domain/notification/NotificationStore.ts
+  var NotificationStore = class {
+    items;
+    bus = createEventBus();
+    static CATEGORIES = [
+      { key: "tumu", label: "Tumu" },
+      { key: "seo", label: "SEO" },
+      { key: "icerik", label: "Icerik" },
+      { key: "reklamlar", label: "Reklamlar" },
+      { key: "sistem", label: "Sistem" },
+      { key: "ai", label: "AI Raporlar" }
+    ];
+    constructor(initialItems) {
+      this.items = [...initialItems];
+    }
+    /** Get items filtered by category. 'tumu' returns all. */
+    getFiltered(cat) {
+      return cat === "tumu" ? this.items : this.items.filter((n) => n.cat === cat);
+    }
+    /** Get unread count. */
+    get unreadCount() {
+      return this.items.filter((n) => !n.read).length;
+    }
+    /** Mark a single item as read. */
+    markAsRead(id) {
+      const item = this.items.find((n) => n.id === id);
+      if (item) {
+        item.read = true;
+        this.bus.emit("change", {});
+      }
+    }
+    /** Remove an item. */
+    dismiss(id) {
+      this.items = this.items.filter((n) => n.id !== id);
+      this.bus.emit("change", {});
+    }
+    /** Mark all as read. */
+    markAllAsRead() {
+      this.items.forEach((n) => {
+        n.read = true;
+      });
+      this.bus.emit("change", {});
+    }
+    on(event, cb) {
+      this.bus.on(event, cb);
+    }
+    off(event, cb) {
+      this.bus.off(event, cb);
+    }
+  };
+
   // src/app/shell/notification-panel.ts
-  var NP_CATS = [
-    { key: "tumu", label: "Tumu" },
-    { key: "seo", label: "SEO" },
-    { key: "icerik", label: "Icerik" },
-    { key: "reklamlar", label: "Reklamlar" },
-    { key: "sistem", label: "Sistem" },
-    { key: "ai", label: "AI Raporlar" }
-  ];
-  var NP_DATA = [
+  var NP_CATS = NotificationStore.CATEGORIES;
+  var npStore = new NotificationStore([
     { id: 1, cat: "seo", icon: "ph-chart-line-up", ic: "#22c55e", ib: "rgba(34,197,94,0.1)", t: "Anahtar kelime 'flutter developer' 3. siraya yukseldi", d: "Google SERP pozisyon takibi guncel sonuclari.", time: "5 dk once", read: false },
     { id: 2, cat: "seo", icon: "ph-link-simple", ic: "#3b82f6", ib: "rgba(59,130,246,0.1)", t: "Backlink profili %12 buyudu", d: "Son 7 gunde 34 yeni kaliteli backlink kazanildi.", time: "23 dk once", read: false },
     { id: 3, cat: "seo", icon: "ph-bug", ic: "#a855f7", ib: "rgba(168,85,247,0.1)", t: "Teknik SEO skoru 92'ye cikti", d: "Site denetimi tamamlandi. 3 uyari giderildi.", time: "1 saat once", read: false },
@@ -551,11 +597,11 @@
     { id: 20, cat: "ai", icon: "ph-trend-down", ic: "#ef4444", ib: "rgba(239,68,68,0.1)", t: "Anomali: organik trafikte %18 dusus", d: "Son 72 saatlik trafik verisi normal bandinin altinda.", time: "40 dk once", read: false },
     { id: 21, cat: "ai", icon: "ph-lightning", ic: "#eab308", ib: "rgba(234,179,8,0.1)", t: "AI Digest: Haftalik insight ozeti", d: "12 insight, 3 oncelikli aksiyon onerisi iceriyor.", time: "2 saat once", read: true },
     { id: 22, cat: "ai", icon: "ph-brain", ic: "#22c55e", ib: "rgba(34,197,94,0.1)", t: "Brand Radar: 8 yeni bahsetme tespit edildi", d: "Reddit, Twitter ve blog platformlarinda marka bahsetmeleri.", time: "3 saat once", read: true }
-  ];
+  ]);
   function renderNpList(activeTab) {
     const listEl = document.getElementById("np-list");
     if (!listEl) return;
-    const items = activeTab === "tumu" ? NP_DATA : NP_DATA.filter((n) => n.cat === activeTab);
+    const items = npStore.getFiltered(activeTab);
     if (!items.length) {
       listEl.innerHTML = '<div class="np-empty"><i class="ph ph-bell-slash"></i><span>Bu kategoride bildirim yok</span></div>';
       return;
@@ -565,7 +611,7 @@
     ).join("");
   }
   function syncBadges() {
-    const unread = NP_DATA.filter((n) => !n.read).length;
+    const unread = npStore.unreadCount;
     const el = document.getElementById("np-count");
     if (el) el.textContent = String(unread);
     const tb = document.getElementById("notif-badge");
@@ -583,7 +629,7 @@
     let activeTab = "tumu";
     document.body.insertAdjacentHTML(
       "beforeend",
-      '<div id="np-backdrop"></div><div id="np-panel"><div class="np-header"><span class="np-title">Bildirimler</span><span class="np-badge" id="np-count">0</span><button class="np-close" id="np-close-btn" title="Kapat"><i class="ph ph-x"></i></button></div><div class="np-tabs" id="np-tabs"></div><div class="np-list" id="np-list"></div><div class="np-footer"><button class="np-footer-btn" id="np-mark-all">Tumunu okundu isaretle</button><a class="np-footer-link" id="np-view-all" href="' + base + 'pages/notifications.html">Tumunu Gor <i class="ph ph-arrow-right"></i></a></div></div>'
+      '<div id="np-backdrop"></div><div id="np-panel" role="dialog" aria-modal="true" aria-label="Bildirimler"><div class="np-header"><span class="np-title" id="np-title">Bildirimler</span><span class="np-badge" id="np-count" aria-live="polite">0</span><button class="np-close" id="np-close-btn" title="Kapat" aria-label="Bildirimleri kapat"><i class="ph ph-x" aria-hidden="true"></i></button></div><div class="np-tabs" id="np-tabs" role="tablist" aria-label="Bildirim kategorileri"></div><div class="np-list" id="np-list" role="log" aria-live="polite" aria-label="Bildirim listesi"></div><div class="np-footer"><button class="np-footer-btn" id="np-mark-all">Tumunu okundu isaretle</button><a class="np-footer-link" id="np-view-all" href="' + base + 'pages/notifications.html">Tumunu Gor <i class="ph ph-arrow-right" aria-hidden="true"></i></a></div></div>'
     );
     const tabsEl = document.getElementById("np-tabs");
     if (tabsEl) {
@@ -592,10 +638,14 @@
         btn.className = "np-tab" + (c.key === activeTab ? " active" : "");
         btn.textContent = c.label;
         btn.dataset.cat = c.key;
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-selected", c.key === activeTab ? "true" : "false");
         btn.onclick = () => {
           activeTab = c.key;
           tabsEl.querySelectorAll(".np-tab").forEach((t) => {
-            t.classList.toggle("active", t.dataset.cat === activeTab);
+            const isActive = t.dataset.cat === activeTab;
+            t.classList.toggle("active", isActive);
+            t.setAttribute("aria-selected", isActive ? "true" : "false");
           });
           renderNpList(activeTab);
         };
@@ -609,15 +659,12 @@
         const readBtn = target.closest("[data-np-read]");
         const dismissBtn = target.closest("[data-np-dismiss]");
         if (readBtn) {
-          const n = NP_DATA.find((x) => x.id === parseInt(readBtn.dataset.npRead ?? "", 10));
-          if (n) {
-            n.read = true;
-            renderNpList(activeTab);
-            syncBadges();
-          }
+          npStore.markAsRead(parseInt(readBtn.dataset.npRead ?? "", 10));
+          renderNpList(activeTab);
+          syncBadges();
         }
         if (dismissBtn) {
-          NP_DATA = NP_DATA.filter((x) => x.id !== parseInt(dismissBtn.dataset.npDismiss ?? "", 10));
+          npStore.dismiss(parseInt(dismissBtn.dataset.npDismiss ?? "", 10));
           renderNpList(activeTab);
           syncBadges();
         }
@@ -634,9 +681,7 @@
     const markAll = document.getElementById("np-mark-all");
     if (markAll) {
       markAll.onclick = () => {
-        NP_DATA.forEach((n) => {
-          n.read = true;
-        });
+        npStore.markAllAsRead();
         renderNpList(activeTab);
         syncBadges();
         if (window.Alpine && Alpine.store("toast")) {
@@ -723,79 +768,6 @@
       };
       document.body.appendChild(modal);
     };
-  }
-
-  // src/app/shell/keyboard-shortcuts.ts
-  var CREATE_PAGES = {
-    yonetim: "tenant-create.html",
-    seo: "seo-keyword-magic.html",
-    content: "content-writing-assistant.html",
-    ads: "ads-campaign-create.html"
-  };
-  function showShortcutsHelp() {
-    if (document.getElementById("shortcuts-help-modal")) return;
-    const mac = /mac/i.test(navigator.platform);
-    const modLabel = mac ? "\u2318" : "Ctrl+";
-    const shortcuts = [
-      [modLabel + "K", "Spotlight Arama"],
-      [modLabel + "N", "Yeni Olustur"],
-      ["?", "Kisayol Yardimi"],
-      ["ESC", "Kapat"]
-    ];
-    const rows = shortcuts.map(
-      ([k, v]) => `<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--text)">${v}</span><kbd style="font-size:0.75rem;font-weight:600;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);padding:3px 10px;border-radius:6px;font-family:monospace;min-width:48px;text-align:center">${k}</kbd></div>`
-    ).join("");
-    const overlay = document.createElement("div");
-    overlay.id = "shortcuts-help-modal";
-    overlay.className = "ap-confirm-backdrop";
-    overlay.style.cssText = "z-index:9999;";
-    overlay.innerHTML = `<div style="background:var(--color-glass-panel);backdrop-filter:blur(var(--blur-level)) saturate(1.4);-webkit-backdrop-filter:blur(var(--blur-level)) saturate(1.4);border:1px solid var(--glass-border);border-radius:16px;padding:28px 32px;min-width:340px;max-width:420px;box-shadow:0 24px 48px rgba(0,0,0,0.4);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0">Klavye Kisayollari</h3><button id="shortcuts-close" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.25rem;padding:4px"><i class="ph ph-x"></i></button></div><div style="display:flex;flex-direction:column;gap:12px">${rows}</div></div>`;
-    document.body.appendChild(overlay);
-    overlay.onclick = (ev) => {
-      if (ev.target === overlay) overlay.remove();
-    };
-    const closeBtn = document.getElementById("shortcuts-close");
-    if (closeBtn) closeBtn.onclick = () => overlay.remove();
-  }
-  function initKeyboardShortcuts(base) {
-    window.addEventListener("keydown", (e) => {
-      const mod = e.metaKey || e.ctrlKey;
-      if (mod && e.key === "k") {
-        e.preventDefault();
-        const spotBd = document.getElementById("spotlight-backdrop");
-        if (spotBd) {
-          spotBd.classList.add("open");
-          document.getElementById("sp-input")?.focus();
-        }
-        return;
-      }
-      if (e.key === "Escape") {
-        const spotBd = document.getElementById("spotlight-backdrop");
-        if (spotBd) spotBd.classList.remove("open");
-        const udBd = document.getElementById("ud-backdrop");
-        if (udBd) udBd.classList.remove("show");
-        tmCloseAll();
-        const np = document.getElementById("np-panel");
-        if (np && np.classList.contains("open")) toggleNotifPanel();
-        const tb = document.getElementById("tenant-backdrop");
-        if (tb) tb.classList.remove("show");
-        const hm = document.getElementById("shortcuts-help-modal");
-        if (hm) hm.remove();
-        return;
-      }
-      if (mod && e.key === "n") {
-        e.preventDefault();
-        const skey = window.__SHELL_KEY;
-        if (skey && CREATE_PAGES[skey]) {
-          window.location.href = base + "pages/" + CREATE_PAGES[skey];
-        }
-        return;
-      }
-      if (e.key === "?" && !e.ctrlKey && !e.metaKey && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName ?? "")) {
-        e.preventDefault();
-        showShortcutsHelp();
-      }
-    });
   }
 
   // src/app/shell/user-dropdown.ts
@@ -1030,7 +1002,275 @@
     });
   }
 
+  // src/app/shell/rail.ts
+  function railClick(btn, _activeKey) {
+    const clickedKey = btn.dataset.key ?? "";
+    const base = window.__SHELL_BASE ?? "";
+    const currentSidebarKey = window.__SIDEBAR_KEY ?? "";
+    const sidebarOpen = document.body.classList.contains("wide-open");
+    if (clickedKey === currentSidebarKey && sidebarOpen) {
+      document.body.classList.remove("wide-open");
+      return;
+    }
+    renderSidebar(base, clickedKey);
+    window.__SIDEBAR_KEY = clickedKey;
+    document.body.classList.add("wide-open");
+    document.querySelectorAll(".ni").forEach((ni) => ni.classList.remove("active"));
+    btn.classList.add("active");
+  }
+
+  // src/ui/base/Component.ts
+  var Component = class {
+    constructor(containerId, bus) {
+      this.containerId = containerId;
+      this.bus = bus;
+    }
+    el = null;
+    boundListeners = [];
+    busListeners = [];
+    /** Render into container element. */
+    render() {
+      this.el = document.getElementById(this.containerId);
+      if (!this.el) return;
+      this.el.innerHTML = this.buildHTML();
+      this.onRendered();
+    }
+    /** Called after render — subclasses bind events here. */
+    onRendered() {
+    }
+    /** Safely add a DOM event listener (auto-cleaned on destroy). */
+    listen(target, event, handler) {
+      target.addEventListener(event, handler);
+      this.boundListeners.push({ target, event, handler });
+    }
+    /** Safely subscribe to event bus (auto-cleaned on destroy). */
+    on(event, cb) {
+      this.bus.on(event, cb);
+      this.busListeners.push({ event, cb });
+    }
+    /** Query within this component's container. */
+    query(selector) {
+      return this.el?.querySelector(selector) ?? null;
+    }
+    /** Query all within this component's container. */
+    queryAll(selector) {
+      return this.el ? Array.from(this.el.querySelectorAll(selector)) : [];
+    }
+    /** Set ARIA attribute on the container element. */
+    setAria(attr, value) {
+      this.el?.setAttribute(attr, value);
+    }
+    /** Cleanup — remove all listeners, nullify references. */
+    destroy() {
+      for (const { target, event, handler } of this.boundListeners) {
+        target.removeEventListener(event, handler);
+      }
+      this.boundListeners = [];
+      for (const { event, cb } of this.busListeners) {
+        this.bus.off(event, cb);
+      }
+      this.busListeners = [];
+      this.el = null;
+    }
+  };
+
+  // src/ui/base/DOMHelper.ts
+  var ENTITY_MAP = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  };
+  function esc(str) {
+    return str.replace(/[&<>"']/g, (ch) => ENTITY_MAP[ch] ?? ch);
+  }
+  var VOID = /* @__PURE__ */ new Set(["br", "hr", "img", "input", "meta", "link"]);
+  function h(tag, attrs, ...children) {
+    let a = "";
+    if (attrs) {
+      for (const [k, v] of Object.entries(attrs)) {
+        if (v === false || v === void 0 || v === null) continue;
+        a += v === true ? ` ${k}` : ` ${k}="${esc(String(v))}"`;
+      }
+    }
+    if (VOID.has(tag)) return `<${tag}${a}>`;
+    return `<${tag}${a}>${children.join("")}</${tag}>`;
+  }
+  function icon(name, style) {
+    return h("i", { class: `ph ${name}`, "aria-hidden": "true", style });
+  }
+  function separator() {
+    return h("div", { role: "separator", class: "ni-div" });
+  }
+
+  // src/shell/components/RailComponent.ts
+  var RailComponent = class extends Component {
+    constructor(containerId, bus, menu, base) {
+      super(containerId, bus);
+      this.menu = menu;
+      this.base = base;
+    }
+    activeKey = "";
+    setActiveKey(key) {
+      this.activeKey = key;
+    }
+    buildHTML() {
+      let html = "";
+      this.menu.forEach((group, gi) => {
+        if (gi > 0) html += separator();
+        group.items.forEach((item) => {
+          const active = item.key === this.activeKey ? " active" : "";
+          const ariaCurrent = item.key === this.activeKey ? "section" : void 0;
+          html += h(
+            "button",
+            {
+              class: `ni${active}`,
+              "data-key": item.key,
+              "data-href": `${this.base}${item.href}`,
+              "aria-label": item.title,
+              "aria-current": ariaCurrent
+            },
+            icon(item.icon),
+            h("span", { class: "ni-label" }, item.title)
+          );
+        });
+      });
+      return html;
+    }
+    onRendered() {
+      this.setAria("role", "navigation");
+      this.setAria("aria-label", "Ana navigasyon");
+      this.queryAll(".ni").forEach((btn) => {
+        this.listen(btn, "click", () => this.handleClick(btn));
+      });
+    }
+    handleClick(btn) {
+      const clickedKey = btn.dataset["key"] ?? "";
+      this.bus.emit("rail:click", { key: clickedKey, base: this.base });
+      this.queryAll(".ni").forEach((ni) => ni.classList.remove("active"));
+      btn.classList.add("active");
+    }
+  };
+
+  // src/shell/components/FooterComponent.ts
+  var FooterComponent = class extends Component {
+    buildHTML() {
+      return '<span class="fb-dot"></span><span>Sistem aktif</span><span class="fb-sep"></span><span><strong style="color:var(--text);font-weight:700">12</strong> tenant</span><span class="fb-sep"></span><span><strong style="color:var(--text);font-weight:700">47</strong> workspace</span><span class="fb-sep"></span><span><strong style="color:var(--text);font-weight:700">5</strong> adaptor</span><span style="margin-left:auto;font-size:0.625rem;letter-spacing:0.05em">v0.1.0</span>';
+    }
+    onRendered() {
+      this.setAria("role", "contentinfo");
+      this.setAria("aria-label", "Sistem durumu");
+    }
+  };
+
+  // src/shell/components/KeyboardShortcutManager.ts
+  var KeyboardShortcutManager = class {
+    constructor(bus) {
+      this.bus = bus;
+    }
+    handlers = [];
+    keydownHandler = null;
+    /** Register a keyboard shortcut. */
+    register(combo, handler) {
+      this.handlers.push({ combo, handler });
+    }
+    /** Start listening for keyboard events. */
+    init() {
+      this.keydownHandler = (e) => {
+        const mod = e.metaKey || e.ctrlKey;
+        const activeTag = document.activeElement?.tagName ?? "";
+        const inInput = ["INPUT", "TEXTAREA", "SELECT"].includes(activeTag);
+        for (const { combo, handler } of this.handlers) {
+          if (combo.mod && !mod) continue;
+          if (!combo.mod && mod && combo.key !== "Escape") continue;
+          if (combo.notInInput && inInput) continue;
+          if (e.key === combo.key || e.key.toLowerCase() === combo.key.toLowerCase()) {
+            e.preventDefault();
+            handler(e);
+            return;
+          }
+        }
+      };
+      window.addEventListener("keydown", this.keydownHandler);
+    }
+    /** Show shortcuts help modal. */
+    showHelp() {
+      if (document.getElementById("shortcuts-help-modal")) return;
+      const mac = /mac/i.test(navigator.platform);
+      const modLabel = mac ? "\u2318" : "Ctrl+";
+      const shortcuts = [
+        [modLabel + "K", "Spotlight Arama"],
+        [modLabel + "N", "Yeni Olustur"],
+        ["?", "Kisayol Yardimi"],
+        ["ESC", "Kapat"]
+      ];
+      const rows = shortcuts.map(
+        ([k, v]) => h(
+          "div",
+          { style: "display:flex;align-items:center;justify-content:space-between", role: "listitem" },
+          h("span", { style: "font-size:0.8125rem;color:var(--text)" }, v),
+          h("kbd", { style: "font-size:0.75rem;font-weight:600;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);padding:3px 10px;border-radius:6px;font-family:monospace;min-width:48px;text-align:center" }, k)
+        )
+      ).join("");
+      const overlay = document.createElement("div");
+      overlay.id = "shortcuts-help-modal";
+      overlay.className = "ap-confirm-backdrop";
+      overlay.style.cssText = "z-index:9999;";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-label", "Klavye kisayollari");
+      overlay.innerHTML = h(
+        "div",
+        { style: "background:var(--color-glass-panel);backdrop-filter:blur(var(--blur-level)) saturate(1.4);-webkit-backdrop-filter:blur(var(--blur-level)) saturate(1.4);border:1px solid var(--glass-border);border-radius:16px;padding:28px 32px;min-width:340px;max-width:420px;box-shadow:0 24px 48px rgba(0,0,0,0.4)" },
+        h(
+          "div",
+          { style: "display:flex;align-items:center;justify-content:space-between;margin-bottom:20px" },
+          h("h3", { style: "font-size:1rem;font-weight:700;color:var(--text);margin:0" }, "Klavye Kisayollari"),
+          h("button", { id: "shortcuts-close", style: "background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.25rem;padding:4px", "aria-label": "Kapat" }, icon("ph-x"))
+        ),
+        h("div", { style: "display:flex;flex-direction:column;gap:12px", role: "list" }, rows)
+      );
+      document.body.appendChild(overlay);
+      const closeBtn = document.getElementById("shortcuts-close");
+      if (closeBtn) {
+        closeBtn.focus();
+        closeBtn.onclick = () => overlay.remove();
+      }
+      overlay.onclick = (ev) => {
+        if (ev.target === overlay) overlay.remove();
+      };
+      overlay.addEventListener("keydown", (ev) => {
+        if (ev.key === "Tab") {
+          const focusable = overlay.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+          if (focusable.length === 0) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (ev.shiftKey && document.activeElement === first) {
+            ev.preventDefault();
+            last.focus();
+          } else if (!ev.shiftKey && document.activeElement === last) {
+            ev.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    }
+    /** Stop listening. */
+    destroy() {
+      if (this.keydownHandler) {
+        window.removeEventListener("keydown", this.keydownHandler);
+        this.keydownHandler = null;
+      }
+      this.handlers = [];
+    }
+  };
+
   // src/app/shell/index.ts
+  var shellBus = createEventBus();
+  var railComponent = null;
+  var footerComponent = null;
+  var keyboardManager = null;
   function initShell(pageKey) {
     const rawKey = pageKey ?? getCurrentKey();
     const key = KEY_MAP[rawKey] ?? rawKey;
@@ -1039,12 +1279,51 @@
     const base = getBasePath();
     window.__SHELL_BASE = base;
     document.body.insertAdjacentHTML("afterbegin", '<a href="#main" class="skip-link">Icerige atla</a>');
+    const mainEl = document.getElementById("main");
+    if (mainEl) {
+      mainEl.setAttribute("role", "main");
+      mainEl.setAttribute("aria-label", "Sayfa icerigi");
+    }
+    railComponent = new RailComponent("rail", shellBus, MENU, base);
+    railComponent.setActiveKey(key);
+    railComponent.render();
+    footerComponent = new FooterComponent("footbar", shellBus);
+    footerComponent.render();
+    keyboardManager = new KeyboardShortcutManager(shellBus);
+    keyboardManager.register({ key: "k", mod: true }, () => {
+      const spotBd = document.getElementById("spotlight-backdrop");
+      if (spotBd) {
+        spotBd.classList.add("open");
+        document.getElementById("sp-input")?.focus();
+      }
+    });
+    keyboardManager.register({ key: "Escape" }, () => {
+      document.getElementById("spotlight-backdrop")?.classList.remove("open");
+      document.getElementById("ud-backdrop")?.classList.remove("show");
+      tmCloseAll();
+      const np = document.getElementById("np-panel");
+      if (np && np.classList.contains("open")) toggleNotifPanel();
+      document.getElementById("tenant-backdrop")?.classList.remove("show");
+      document.getElementById("shortcuts-help-modal")?.remove();
+    });
+    keyboardManager.register({ key: "n", mod: true }, () => {
+      const skey = window.__SHELL_KEY ?? "";
+      const createPages = {
+        yonetim: "tenant-create.html",
+        seo: "seo-keyword-magic.html",
+        content: "content-writing-assistant.html",
+        ads: "ads-campaign-create.html"
+      };
+      if (createPages[skey]) window.location.href = base + "pages/" + createPages[skey];
+    });
+    keyboardManager.register({ key: "?", notInInput: true }, () => {
+      keyboardManager?.showHelp();
+    });
+    keyboardManager.init();
     renderTopbar(base);
     buildTopMenu();
-    renderRail(base, key);
     renderSidebar(base, key);
     renderBreadcrumb(base, key);
-    renderFooter();
     renderBottomNav(base, key);
     renderSpotlight(base);
     initSpotlightNav(base);
@@ -1055,7 +1334,8 @@
     const wideToggle = document.getElementById("wide-toggle-tb");
     if (wideToggle) {
       wideToggle.onclick = () => {
-        document.body.classList.toggle("wide-open");
+        const isOpen = document.body.classList.toggle("wide-open");
+        wideToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
       };
     }
     const wideOverlay = document.getElementById("wide-overlay");
@@ -1066,7 +1346,6 @@
         wideOverlay.classList.remove("show");
       };
     }
-    initKeyboardShortcuts(base);
     loadAndInitLogo();
     if (!document.querySelector('link[rel="manifest"]')) {
       const manifestLink = document.createElement("link");
@@ -1085,11 +1364,18 @@
     initAutoSaveToast();
     initTenantSwitcher();
     initMobileTenantSwitcher();
-  }
-  function renderFooter() {
-    const footbar = document.getElementById("footbar");
-    if (!footbar) return;
-    footbar.innerHTML = '<span class="fb-dot"></span><span>Sistem aktif</span><span class="fb-sep"></span><span><strong style="color:var(--text);font-weight:700">12</strong> tenant</span><span class="fb-sep"></span><span><strong style="color:var(--text);font-weight:700">47</strong> workspace</span><span class="fb-sep"></span><span><strong style="color:var(--text);font-weight:700">5</strong> adaptor</span><span style="margin-left:auto;font-size:0.625rem;letter-spacing:0.05em">v0.1.0</span>';
+    shellBus.on("rail:click", (payload) => {
+      const p = payload;
+      const currentSidebarKey = window.__SIDEBAR_KEY ?? "";
+      const sidebarOpen = document.body.classList.contains("wide-open");
+      if (p.key === currentSidebarKey && sidebarOpen) {
+        document.body.classList.remove("wide-open");
+        return;
+      }
+      renderSidebar(p.base, p.key);
+      window.__SIDEBAR_KEY = p.key;
+      document.body.classList.add("wide-open");
+    });
   }
   function initAutoSaveToast() {
     let timer = null;

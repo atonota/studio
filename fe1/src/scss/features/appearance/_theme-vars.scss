@@ -15,8 +15,8 @@
   --color-primary: var(--p-orange-600, #C2410C);
   --color-primary-hover: var(--p-orange-700, #9A3412);
   --color-primary-foreground: #FFFFFF;
-  --color-primary-soft: rgba(194, 65, 12, 0.1);
-  --color-primary-muted: rgba(194, 65, 12, 0.2);
+  // primary-soft/muted are mode-aware — defined in _semantic-tokens.scss
+  // --_primary-rgb is set by JS (AppearanceStore.applyAccentVars)
 
   // ── Typography ──
   --font-family-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

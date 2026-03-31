@@ -1,43 +1,21 @@
 /**
  * notification-panel.ts
- * Responsibility: Off-canvas notification panel — renders 22 mock notification
- * items across 6 categories, handles tab filtering, read/dismiss actions,
+ * Responsibility: Off-canvas notification panel — renders notification items
+ * across categories, handles tab filtering, read/dismiss actions,
  * badge syncing (topbar + bottom-nav), and panel open/close toggle.
+ * Uses NotificationStore (OOP) for data management.
  */
+
+import { NotificationStore } from '../../domain/notification/NotificationStore';
+import type { NotifItem } from '../../domain/notification/NotificationStore';
 
 declare const Alpine: { store: (name: string) => { show: (msg: string, type: string, dur: number) => void } };
 
-// ── Types ──────────────────────────
+// ── Store instance (OOP — replaces module-level let NP_DATA) ──────────────────────────
 
-interface NotifCategory {
-  key: string;
-  label: string;
-}
+const NP_CATS = NotificationStore.CATEGORIES;
 
-interface NotifItem {
-  id: number;
-  cat: string;
-  icon: string;
-  ic: string;
-  ib: string;
-  t: string;
-  d: string;
-  time: string;
-  read: boolean;
-}
-
-// ── Data ──────────────────────────
-
-const NP_CATS: readonly NotifCategory[] = [
-  { key: 'tumu', label: 'Tumu' },
-  { key: 'seo', label: 'SEO' },
-  { key: 'icerik', label: 'Icerik' },
-  { key: 'reklamlar', label: 'Reklamlar' },
-  { key: 'sistem', label: 'Sistem' },
-  { key: 'ai', label: 'AI Raporlar' },
-];
-
-let NP_DATA: NotifItem[] = [
+const npStore = new NotificationStore([
   { id:1,cat:'seo',icon:'ph-chart-line-up',ic:'#22c55e',ib:'rgba(34,197,94,0.1)',t:"Anahtar kelime 'flutter developer' 3. siraya yukseldi",d:'Google SERP pozisyon takibi guncel sonuclari.',time:'5 dk once',read:false },
   { id:2,cat:'seo',icon:'ph-link-simple',ic:'#3b82f6',ib:'rgba(59,130,246,0.1)',t:'Backlink profili %12 buyudu',d:'Son 7 gunde 34 yeni kaliteli backlink kazanildi.',time:'23 dk once',read:false },
   { id:3,cat:'seo',icon:'ph-bug',ic:'#a855f7',ib:'rgba(168,85,247,0.1)',t:"Teknik SEO skoru 92'ye cikti",d:'Site denetimi tamamlandi. 3 uyari giderildi.',time:'1 saat once',read:false },
@@ -60,7 +38,7 @@ let NP_DATA: NotifItem[] = [
   { id:20,cat:'ai',icon:'ph-trend-down',ic:'#ef4444',ib:'rgba(239,68,68,0.1)',t:'Anomali: organik trafikte %18 dusus',d:'Son 72 saatlik trafik verisi normal bandinin altinda.',time:'40 dk once',read:false },
   { id:21,cat:'ai',icon:'ph-lightning',ic:'#eab308',ib:'rgba(234,179,8,0.1)',t:'AI Digest: Haftalik insight ozeti',d:'12 insight, 3 oncelikli aksiyon onerisi iceriyor.',time:'2 saat once',read:true },
   { id:22,cat:'ai',icon:'ph-brain',ic:'#22c55e',ib:'rgba(34,197,94,0.1)',t:'Brand Radar: 8 yeni bahsetme tespit edildi',d:'Reddit, Twitter ve blog platformlarinda marka bahsetmeleri.',time:'3 saat once',read:true },
-];
+]);
 
 // ── Rendering ──────────────────────────
 
@@ -68,9 +46,7 @@ function renderNpList(activeTab: string): void {
   const listEl = document.getElementById('np-list');
   if (!listEl) return;
 
-  const items = activeTab === 'tumu'
-    ? NP_DATA
-    : NP_DATA.filter((n) => n.cat === activeTab);
+  const items = npStore.getFiltered(activeTab);
 
   if (!items.length) {
     listEl.innerHTML =
@@ -92,7 +68,7 @@ function renderNpList(activeTab: string): void {
 }
 
 function syncBadges(): void {
-  const unread = NP_DATA.filter((n) => !n.read).length;
+  const unread = npStore.unreadCount;
   const el = document.getElementById('np-count');
   if (el) el.textContent = String(unread);
 
@@ -116,12 +92,12 @@ export function initNotificationPanel(base: string): void {
 
   document.body.insertAdjacentHTML(
     'beforeend',
-    '<div id="np-backdrop"></div><div id="np-panel">' +
-    '<div class="np-header"><span class="np-title">Bildirimler</span><span class="np-badge" id="np-count">0</span>' +
-    '<button class="np-close" id="np-close-btn" title="Kapat"><i class="ph ph-x"></i></button></div>' +
-    '<div class="np-tabs" id="np-tabs"></div><div class="np-list" id="np-list"></div>' +
+    '<div id="np-backdrop"></div><div id="np-panel" role="dialog" aria-modal="true" aria-label="Bildirimler">' +
+    '<div class="np-header"><span class="np-title" id="np-title">Bildirimler</span><span class="np-badge" id="np-count" aria-live="polite">0</span>' +
+    '<button class="np-close" id="np-close-btn" title="Kapat" aria-label="Bildirimleri kapat"><i class="ph ph-x" aria-hidden="true"></i></button></div>' +
+    '<div class="np-tabs" id="np-tabs" role="tablist" aria-label="Bildirim kategorileri"></div><div class="np-list" id="np-list" role="log" aria-live="polite" aria-label="Bildirim listesi"></div>' +
     '<div class="np-footer"><button class="np-footer-btn" id="np-mark-all">Tumunu okundu isaretle</button>' +
-    '<a class="np-footer-link" id="np-view-all" href="' + base + 'pages/notifications.html">Tumunu Gor <i class="ph ph-arrow-right"></i></a></div></div>',
+    '<a class="np-footer-link" id="np-view-all" href="' + base + 'pages/notifications.html">Tumunu Gor <i class="ph ph-arrow-right" aria-hidden="true"></i></a></div></div>',
   );
 
   const tabsEl = document.getElementById('np-tabs');
@@ -131,10 +107,14 @@ export function initNotificationPanel(base: string): void {
       btn.className = 'np-tab' + (c.key === activeTab ? ' active' : '');
       btn.textContent = c.label;
       btn.dataset.cat = c.key;
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', c.key === activeTab ? 'true' : 'false');
       btn.onclick = () => {
         activeTab = c.key;
         tabsEl.querySelectorAll('.np-tab').forEach((t) => {
-          t.classList.toggle('active', (t as HTMLElement).dataset.cat === activeTab);
+          const isActive = (t as HTMLElement).dataset.cat === activeTab;
+          t.classList.toggle('active', isActive);
+          t.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
         renderNpList(activeTab);
       };
@@ -149,13 +129,12 @@ export function initNotificationPanel(base: string): void {
       const readBtn = target.closest<HTMLElement>('[data-np-read]');
       const dismissBtn = target.closest<HTMLElement>('[data-np-dismiss]');
       if (readBtn) {
-        const n = NP_DATA.find((x) => x.id === parseInt(readBtn.dataset.npRead ?? '', 10));
-        if (n) { n.read = true; renderNpList(activeTab); syncBadges(); }
+        npStore.markAsRead(parseInt(readBtn.dataset.npRead ?? '', 10));
+        renderNpList(activeTab); syncBadges();
       }
       if (dismissBtn) {
-        NP_DATA = NP_DATA.filter((x) => x.id !== parseInt(dismissBtn.dataset.npDismiss ?? '', 10));
-        renderNpList(activeTab);
-        syncBadges();
+        npStore.dismiss(parseInt(dismissBtn.dataset.npDismiss ?? '', 10));
+        renderNpList(activeTab); syncBadges();
       }
     });
   }
@@ -169,7 +148,7 @@ export function initNotificationPanel(base: string): void {
   const markAll = document.getElementById('np-mark-all');
   if (markAll) {
     markAll.onclick = () => {
-      NP_DATA.forEach((n) => { n.read = true; });
+      npStore.markAllAsRead();
       renderNpList(activeTab);
       syncBadges();
       if (window.Alpine && Alpine.store('toast')) {

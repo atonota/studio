@@ -30,13 +30,13 @@ export function renderSpotlight(base: string): void {
     .join('');
 
   spotBd.innerHTML =
-    `<div id="spotlight">` +
+    `<div id="spotlight" role="dialog" aria-modal="true" aria-label="Spotlight arama">` +
     `<div class="sp-input-wrap">` +
-    `<i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:var(--muted)"></i>` +
-    `<input id="sp-input" class="sp-input" type="text" placeholder="Panelde ara..." autocomplete="off">` +
-    `<span class="sp-kbd" id="sp-close">ESC</span></div>` +
-    `<div class="sp-results"><div class="sp-section-label">Hizli Erisim</div>${quickItems}</div>` +
-    `<div class="sp-footer">` +
+    `<i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:var(--muted)" aria-hidden="true"></i>` +
+    `<input id="sp-input" class="sp-input" type="text" placeholder="Panelde ara..." autocomplete="off" role="combobox" aria-expanded="true" aria-controls="sp-results-list" aria-autocomplete="list">` +
+    `<span class="sp-kbd" id="sp-close" role="button" tabindex="0" aria-label="Kapat">ESC</span></div>` +
+    `<div class="sp-results" id="sp-results-list" role="listbox"><div class="sp-section-label" id="sp-quick-label">Hizli Erisim</div>${quickItems}</div>` +
+    `<div class="sp-footer" aria-hidden="true">` +
     `<span style="display:flex;align-items:center;gap:4px"><span class="sp-key">\u2191\u2193</span> gezin</span>` +
     `<span style="display:flex;align-items:center;gap:4px"><span class="sp-key">\u21B5</span> ac</span>` +
     `<span style="display:flex;align-items:center;gap:4px"><span class="sp-key">ESC</span> kapat</span>` +

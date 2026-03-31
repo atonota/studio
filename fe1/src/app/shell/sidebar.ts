@@ -19,6 +19,10 @@ export function renderSidebar(base: string, key: string): void {
   const sidebarEl = document.getElementById('sidebar-wide');
   if (!sidebarEl) return;
 
+  // ARIA landmark
+  sidebarEl.setAttribute('role', 'navigation');
+  sidebarEl.setAttribute('aria-label', 'Alt navigasyon');
+
   const sidebarData = SIDEBAR_DATA[key] ?? [];
   const secInfo = findSectionInfo(key);
   const currentFile = getCurrentFile();
@@ -27,7 +31,7 @@ export function renderSidebar(base: string, key: string): void {
   // Section header
   let html = SIDEBAR_HIDDEN.includes(key)
     ? ''
-    : `<div class="ws-header"><i class="ph ${secInfo ? secInfo.icon : 'ph-squares-four'}" style="font-size:0.8125rem"></i><span>${secInfo ? secInfo.title : 'Dashboard'}</span></div>`;
+    : `<div class="ws-header"><i class="ph ${secInfo ? secInfo.icon : 'ph-squares-four'}" style="font-size:0.8125rem" aria-hidden="true"></i><span>${secInfo ? secInfo.title : 'Dashboard'}</span></div>`;
 
   html += '<div style="flex:1;overflow-y:auto">';
 
@@ -36,7 +40,8 @@ export function renderSidebar(base: string, key: string): void {
     const dashHref = secInfo.href.replace('pages/', '');
     const resolvedDash = inPages ? dashHref : 'pages/' + dashHref;
     const dashActive = currentFile === dashHref ? ' active' : '';
-    html += `<a class="ws-dash${dashActive}" href="${resolvedDash}"><i class="ph ph-squares-four"></i><span>Dashboard</span></a>`;
+    const dashAriaCurrent = dashActive ? ' aria-current="page"' : '';
+    html += `<a class="ws-dash${dashActive}" href="${resolvedDash}"${dashAriaCurrent}><i class="ph ph-squares-four" aria-hidden="true"></i><span>Dashboard</span></a>`;
   }
 
   // Sidebar groups
@@ -47,7 +52,8 @@ export function renderSidebar(base: string, key: string): void {
     });
     const openClass = groupHasActive ? ' open' : '';
 
-    html += `<div class="ws-section"><div class="ws-l1${openClass}" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')"><span>${group.l}</span><i class="ph ph-caret-right chevron"></i></div><div class="ws-l1-body${openClass}">`;
+    const expanded = groupHasActive ? 'true' : 'false';
+    html += `<div class="ws-section"><button class="ws-l1${openClass}" aria-expanded="${expanded}" onclick="const o=this.classList.toggle('open');this.setAttribute('aria-expanded',o);this.nextElementSibling.classList.toggle('open')"><span>${group.l}</span><i class="ph ph-caret-right chevron" aria-hidden="true"></i></button><div class="ws-l1-body${openClass}" role="group" aria-label="${group.l}">`;
 
     group.ch.forEach((ch) => {
       const parts = ch.split('|');
@@ -59,14 +65,17 @@ export function renderSidebar(base: string, key: string): void {
 
       if (href) {
         const resolvedHref = resolveChildHref(href, inPages);
-        const starClass = isFavorite(href) ? 'ws-star active' : 'ws-star';
+        const isFav = isFavorite(href);
+        const starClass = isFav ? 'ws-star active' : 'ws-star';
+        const ariaCurrent = isActive ? ' aria-current="page"' : '';
         html +=
-          `<a class="ws-l2${activeClass}" href="${resolvedHref}">` +
+          `<a class="ws-l2${activeClass}" href="${resolvedHref}"${ariaCurrent}>` +
           `<span>${label}</span>` +
           (badge ? `<span class="ws-badge">${badge}</span>` : '') +
           `<button class="${starClass}" data-fav-href="${href}" data-fav-label="${label}" ` +
-          `title="Kisayol ekle/kaldir" onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">` +
-          `<i class="ph ph-star"></i></button></a>`;
+          `aria-label="${isFav ? 'Favorilerden kaldir' : 'Favorilere ekle'}: ${label}" aria-pressed="${isFav}" ` +
+          `onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">` +
+          `<i class="ph ph-star" aria-hidden="true"></i></button></a>`;
       } else {
         html +=
           `<div class="ws-l2${activeClass}"><span>${label}</span>` +
@@ -123,6 +132,8 @@ function ensureToggleButton(): void {
   const toggleBtn = document.createElement('button');
   toggleBtn.id = 'wide-toggle-tb';
   toggleBtn.title = 'Sidebar toggle';
-  toggleBtn.innerHTML = '<span class="toggle-arrow"><i class="ph ph-caret-left"></i></span>';
+  toggleBtn.setAttribute('aria-label', 'Alt navigasyonu ac/kapat');
+  toggleBtn.setAttribute('aria-expanded', document.body.classList.contains('wide-open') ? 'true' : 'false');
+  toggleBtn.innerHTML = '<span class="toggle-arrow"><i class="ph ph-caret-left" aria-hidden="true"></i></span>';
   document.body.appendChild(toggleBtn);
 }

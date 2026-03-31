@@ -116,6 +116,11 @@ body {
 //   3. [data-*] attribute overrides — kullanıcı tercihleri (her zaman kazanır)
 // ════════════════════════════════════════════
 
+// ── Dyslexia-friendly font loading ──
+// Atkinson Hyperlegible: optimized for letterform distinction
+// Loaded via CDN when [data-dyslexia] is activated by JS (appearance-init.ts)
+// @font-face declarations not needed — CDN <link> is injected dynamically
+
 // ── OS-level high contrast ──
 @media (prefers-contrast: more) {
   :root {
@@ -190,17 +195,26 @@ body {
 }
 
 // ── User: Dyslexia-friendly ──
+// Font loaded via Google Fonts CDN in appearance-init.ts
 [data-dyslexia] {
-  --font-family-body: 'Atkinson Hyperlegible', 'OpenDyslexic', system-ui, sans-serif !important;
+  --font-family-body: 'Atkinson Hyperlegible', system-ui, sans-serif !important;
   --letter-spacing-base: 0.05em !important;
   --line-height-base: 1.8 !important;
   --font-weight-body: 400 !important;
+  word-spacing: 0.12em;
 
-  p, li { text-align: left !important; }
+  p, li { text-align: left !important; max-width: 75ch; }
 
   input, textarea, select {
     line-height: 1.8;
     letter-spacing: 0.04em;
+  }
+
+  // Improved readability: avoid italic in dyslexia mode
+  em, i:not([class*="ph"]) {
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-style: dotted;
   }
 }
 
@@ -217,6 +231,40 @@ body {
     outline-offset: 6px;
     box-shadow: 0 0 0 4px var(--color-bg-base), 0 0 0 8px var(--accent) !important;
   }
+}
+
+// ── User: Cursor size ──
+[data-cursor="large"] {
+  cursor: default;
+
+  *, *::before, *::after {
+    cursor: inherit;
+  }
+
+  // Large cursor: 1.5× scale via SVG data URI
+  --_cursor-size: 32;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 4l16 14h-10l6 10-3 1.5-6-10-3 6z' fill='%23000' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, default;
+}
+
+[data-cursor="xl"] {
+  cursor: default;
+
+  *, *::before, *::after {
+    cursor: inherit;
+  }
+
+  // XL cursor: 2× scale
+  --_cursor-size: 48;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M12 6l24 21h-15l9 15-4.5 2.25-9-15-4.5 9z' fill='%23000' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 6 6, default;
+}
+
+// Dark mode cursor inversion
+.dark[data-cursor="large"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 4l16 14h-10l6 10-3 1.5-6-10-3 6z' fill='%23fff' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, default;
+}
+
+.dark[data-cursor="xl"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M12 6l24 21h-15l9 15-4.5 2.25-9-15-4.5 9z' fill='%23fff' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 6 6, default;
 }
 
 // ── A11y font scale multiplier ──

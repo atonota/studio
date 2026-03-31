@@ -129,7 +129,17 @@ function applyThemeTokens(): void {
   const a11yHighContrast = g('a11y_high_contrast', 'off'); // 'off' | 'soft' | 'hard'
   if (a11yHighContrast !== 'off') R.setAttribute('data-high-contrast', a11yHighContrast);
   if (g('a11y_reduced_transparency', 'false') === 'true') R.setAttribute('data-reduced-transparency', '');
-  if (g('a11y_dyslexia', 'false') === 'true') R.setAttribute('data-dyslexia', '');
+  if (g('a11y_dyslexia', 'false') === 'true') {
+    R.setAttribute('data-dyslexia', '');
+    // Load Atkinson Hyperlegible font (optimized for letterform distinction)
+    if (!document.getElementById('font-a11y-dyslexia')) {
+      const link = document.createElement('link');
+      link.id = 'font-a11y-dyslexia';
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+      document.head.appendChild(link);
+    }
+  }
   const a11yFocusSize = g('a11y_focus_size', 'default'); // 'default' | 'large' | 'xl'
   if (a11yFocusSize !== 'default') R.setAttribute('data-focus-size', a11yFocusSize);
   // Font size override (a11y) takes precedence over theme font size

@@ -11,16 +11,22 @@ export function renderRail(base: string, activeKey: string): void {
   const railEl = document.getElementById('rail');
   if (!railEl) return;
 
+  // ARIA landmark
+  railEl.setAttribute('role', 'navigation');
+  railEl.setAttribute('aria-label', 'Ana navigasyon');
+
   let railHTML = '';
   MENU.forEach((group, gi) => {
-    if (gi > 0) railHTML += '<div class="ni-div"></div>';
+    if (gi > 0) railHTML += '<div class="ni-div" role="separator"></div>';
     group.items.forEach((item) => {
       const active = item.key === activeKey ? ' active' : '';
+      const ariaCurrent = item.key === activeKey ? ' aria-current="section"' : '';
       railHTML +=
         `<button class="ni${active}" data-key="${item.key}" ` +
         `data-href="${base}${item.href}" title="${item.title}" ` +
+        `aria-label="${item.title}"${ariaCurrent} ` +
         `onclick="railClick(this)">` +
-        `<i class="ph ${item.icon}"></i>` +
+        `<i class="ph ${item.icon}" aria-hidden="true"></i>` +
         `<span class="ni-label">${item.title}</span></button>`;
     });
   });

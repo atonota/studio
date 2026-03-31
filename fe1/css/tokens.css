@@ -162,17 +162,24 @@ body {
 }
 
 [data-dyslexia] {
-  --font-family-body: 'Atkinson Hyperlegible', 'OpenDyslexic', system-ui, sans-serif !important;
+  --font-family-body: 'Atkinson Hyperlegible', system-ui, sans-serif !important;
   --letter-spacing-base: 0.05em !important;
   --line-height-base: 1.8 !important;
   --font-weight-body: 400 !important;
+  word-spacing: 0.12em;
 }
 [data-dyslexia] p, [data-dyslexia] li {
   text-align: left !important;
+  max-width: 75ch;
 }
 [data-dyslexia] input, [data-dyslexia] textarea, [data-dyslexia] select {
   line-height: 1.8;
   letter-spacing: 0.04em;
+}
+[data-dyslexia] em, [data-dyslexia] i:not([class*=ph]) {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }
 
 [data-focus-size=large] *:focus-visible {
@@ -183,6 +190,36 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 6px;
   box-shadow: 0 0 0 4px var(--color-bg-base), 0 0 0 8px var(--accent) !important;
+}
+
+[data-cursor=large] {
+  cursor: default;
+}
+[data-cursor=large] *, [data-cursor=large] *::before, [data-cursor=large] *::after {
+  cursor: inherit;
+}
+[data-cursor=large] {
+  --_cursor-size: 32;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 4l16 14h-10l6 10-3 1.5-6-10-3 6z' fill='%23000' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, default;
+}
+
+[data-cursor=xl] {
+  cursor: default;
+}
+[data-cursor=xl] *, [data-cursor=xl] *::before, [data-cursor=xl] *::after {
+  cursor: inherit;
+}
+[data-cursor=xl] {
+  --_cursor-size: 48;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M12 6l24 21h-15l9 15-4.5 2.25-9-15-4.5 9z' fill='%23000' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 6 6, default;
+}
+
+.dark[data-cursor=large] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 4l16 14h-10l6 10-3 1.5-6-10-3 6z' fill='%23fff' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, default;
+}
+
+.dark[data-cursor=xl] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M12 6l24 21h-15l9 15-4.5 2.25-9-15-4.5 9z' fill='%23fff' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 6 6, default;
 }
 
 :root {
@@ -349,8 +386,6 @@ pre {
   --color-primary: var(--p-orange-600, #C2410C);
   --color-primary-hover: var(--p-orange-700, #9A3412);
   --color-primary-foreground: #FFFFFF;
-  --color-primary-soft: rgba(194, 65, 12, 0.1);
-  --color-primary-muted: rgba(194, 65, 12, 0.2);
   --font-family-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-family-code: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   --font-size-base: 15px;
@@ -449,26 +484,28 @@ pre {
   --color-bg-sunken: var(--p-light-surface-2, #E8E4D8);
   --color-bg-overlay: rgba(255, 255, 255, 0.7);
   --color-text-primary: var(--p-light-text, #1E1A14);
-  --color-text-secondary: var(--p-light-text-soft, #5C5649);
-  --color-text-tertiary: var(--p-light-muted, #9B9485);
-  --color-text-disabled: #B8B0A5;
+  --color-text-secondary: #3D372D;
+  --color-text-tertiary: #635B4F;
+  --color-text-disabled: #8A8279;
   --color-text-inverse: var(--p-dark-text, #F2EDE5);
   --color-text-on-primary: #FFFFFF;
   --color-border-subtle: rgba(0, 0, 0, 0.06);
   --color-border-default: var(--p-light-border, #D6D1C2);
-  --color-border-strong: var(--p-light-text-soft, #5C5649);
+  --color-border-strong: #3D372D;
   --color-border-focus: var(--p-orange-600, #C2410C);
+  --color-primary-soft: rgba(var(--_primary-rgb, 194, 65, 12), 0.15);
+  --color-primary-muted: rgba(var(--_primary-rgb, 194, 65, 12), 0.25);
   --color-success: var(--p-green-600, #16a34a);
-  --color-success-muted: rgba(34, 197, 94, 0.1);
+  --color-success-muted: rgba(34, 197, 94, 0.15);
   --color-success-foreground: #065f46;
   --color-warning: var(--p-yellow-600, #ca8a04);
-  --color-warning-muted: rgba(234, 179, 8, 0.1);
+  --color-warning-muted: rgba(234, 179, 8, 0.15);
   --color-warning-foreground: #78350f;
   --color-danger: var(--p-red-600, #dc2626);
-  --color-danger-muted: rgba(239, 68, 68, 0.1);
+  --color-danger-muted: rgba(239, 68, 68, 0.12);
   --color-danger-foreground: #7f1d1d;
   --color-info: var(--p-blue-600, #2563eb);
-  --color-info-muted: rgba(59, 130, 246, 0.1);
+  --color-info-muted: rgba(59, 130, 246, 0.12);
   --color-info-foreground: #1e3a5f;
   --color-hover-overlay: rgba(0, 0, 0, 0.04);
   --color-active-overlay: rgba(0, 0, 0, 0.08);
@@ -490,23 +527,29 @@ pre {
   --color-bg-sunken: var(--p-dark-surface-2, #2A2420);
   --color-bg-overlay: rgba(0, 0, 0, 0.6);
   --color-text-primary: var(--p-dark-text, #F2EDE5);
-  --color-text-secondary: var(--p-dark-text-soft, #BDB4A9);
-  --color-text-tertiary: var(--p-dark-muted, #7B7269);
+  --color-text-secondary: #C8C0B5;
+  --color-text-tertiary: #9E958A;
   --color-text-disabled: #5A524A;
   --color-text-inverse: var(--p-light-text, #1E1A14);
   --color-border-subtle: rgba(255, 255, 255, 0.06);
   --color-border-default: var(--p-dark-border, #3C342C);
-  --color-border-strong: var(--p-dark-text-soft, #BDB4A9);
+  --color-border-strong: #C8C0B5;
   --color-shadow: rgba(0, 0, 0, 0.4);
   --color-hover-overlay: rgba(255, 255, 255, 0.04);
   --color-active-overlay: rgba(255, 255, 255, 0.08);
+  --color-primary-soft: rgba(var(--_primary-rgb, 194, 65, 12), 0.10);
+  --color-primary-muted: rgba(var(--_primary-rgb, 194, 65, 12), 0.20);
   --color-success: var(--p-green-500, #22c55e);
+  --color-success-muted: rgba(34, 197, 94, 0.12);
   --color-success-foreground: #bbf7d0;
   --color-warning: var(--p-yellow-500, #eab308);
+  --color-warning-muted: rgba(234, 179, 8, 0.12);
   --color-warning-foreground: #fef3c7;
   --color-danger: var(--p-red-500, #ef4444);
+  --color-danger-muted: rgba(239, 68, 68, 0.10);
   --color-danger-foreground: #fecaca;
   --color-info: var(--p-blue-500, #3b82f6);
+  --color-info-muted: rgba(59, 130, 246, 0.10);
   --color-info-foreground: #bfdbfe;
 }
 

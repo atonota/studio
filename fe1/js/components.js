@@ -122,8 +122,10 @@
       const template = SKELETON_TEMPLATES[skelType];
       const skel = document.createElement("div");
       skel.id = "skeleton-overlay";
+      skel.setAttribute("aria-hidden", "true");
       skel.style.cssText = `position:absolute;top:0;left:0;right:0;padding:var(--sp-6) var(--sp-4);z-index:10;transition:opacity ${FADE_MS}ms ease`;
       skel.innerHTML = template;
+      main.setAttribute("aria-busy", "true");
       main.style.position = "relative";
       const children = Array.from(main.children);
       children.forEach((c) => {
@@ -145,6 +147,7 @@
           } catch (e) {
             console.warn("Skeleton: position restore failed", e);
           }
+          main.removeAttribute("aria-busy");
           children.forEach((c, i) => {
             setTimeout(() => {
               c.style.opacity = "1";

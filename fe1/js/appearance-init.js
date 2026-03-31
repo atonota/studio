@@ -99,7 +99,16 @@
     const a11yHighContrast = g("a11y_high_contrast", "off");
     if (a11yHighContrast !== "off") R.setAttribute("data-high-contrast", a11yHighContrast);
     if (g("a11y_reduced_transparency", "false") === "true") R.setAttribute("data-reduced-transparency", "");
-    if (g("a11y_dyslexia", "false") === "true") R.setAttribute("data-dyslexia", "");
+    if (g("a11y_dyslexia", "false") === "true") {
+      R.setAttribute("data-dyslexia", "");
+      if (!document.getElementById("font-a11y-dyslexia")) {
+        const link = document.createElement("link");
+        link.id = "font-a11y-dyslexia";
+        link.rel = "stylesheet";
+        link.href = "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap";
+        document.head.appendChild(link);
+      }
+    }
     const a11yFocusSize = g("a11y_focus_size", "default");
     if (a11yFocusSize !== "default") R.setAttribute("data-focus-size", a11yFocusSize);
     const a11yFontScale = gf("a11y_font_scale", 1);

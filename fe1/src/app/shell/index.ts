@@ -1,30 +1,43 @@
 /**
- * index.ts — Shell Orchestrator
- * Responsibility: Main entry point that imports all shell sub-modules,
- * runs initShell(pageKey) to render the entire app shell, and exposes
- * required functions to window.* for inline onclick handlers in HTML.
+ * @module shell/index
+ * Shell Orchestrator — manages app shell lifecycle.
+ * Uses OOP components where migrated, procedural functions elsewhere.
+ * Exposes window.* compat layer for inline onclick handlers in HTML.
  */
 
-import { KEY_MAP } from './navigation-config';
+import { KEY_MAP, MENU } from './navigation-config';
 import { togglePageFav, toggleFav } from './favorites';
 import { renderTopbar } from './topbar';
-import { renderRail, railClick } from './rail';
 import { renderSidebar } from './sidebar';
 import { renderBreadcrumb } from './breadcrumb';
 import { renderSpotlight, initSpotlightNav, bindSpotlightEvents } from './spotlight';
 import { initNotificationPanel, toggleNotifPanel } from './notification-panel';
 import { initTenantSwitcher, initMobileTenantSwitcher } from './tenant-switcher';
-import { initKeyboardShortcuts } from './keyboard-shortcuts';
 import { renderUserDropdown, bindUserDropdownEvents } from './user-dropdown';
 import { loadAndInitLogo } from './logo-animation';
 import { renderBottomNav, initMobileMenu } from './mobile-menu';
 import { getBasePath, getCurrentKey, showToast, tmCloseAll, buildTopMenu } from './helpers';
+import { railClick } from './rail';
+
+// OOP Components
+import { createEventBus } from '../../core/event-bus';
+import { RailComponent } from '../../shell/components/RailComponent';
+import { FooterComponent } from '../../shell/components/FooterComponent';
+import { KeyboardShortcutManager } from '../../shell/components/KeyboardShortcutManager';
 
 // ── CDN global declarations ──────────────────────────
 
 declare const Alpine: { store: (name: string) => unknown; data: (...args: unknown[]) => unknown };
 
-// Window type extensions are declared in shared/types/index.ts
+// ── Shared event bus for shell components ──────────────────────────
+
+const shellBus = createEventBus();
+
+// ── Component instances (lifecycle managed) ──────────────────────────
+
+let railComponent: RailComponent | null = null;
+let footerComponent: FooterComponent | null = null;
+let keyboardManager: KeyboardShortcutManager | null = null;
 
 // ── initShell ──────────────────────────
 
@@ -39,13 +52,61 @@ export function initShell(pageKey?: string): void {
   // Skip link
   document.body.insertAdjacentHTML('afterbegin', '<a href="#main" class="skip-link">Icerige atla</a>');
 
-  // Render shell sections
+  // ARIA landmarks for main content
+  const mainEl = document.getElementById('main');
+  if (mainEl) {
+    mainEl.setAttribute('role', 'main');
+    mainEl.setAttribute('aria-label', 'Sayfa icerigi');
+  }
+
+  // ── OOP Components ──────────────────────────
+
+  // Rail (OOP — replaces procedural renderRail)
+  railComponent = new RailComponent('rail', shellBus, MENU, base);
+  railComponent.setActiveKey(key);
+  railComponent.render();
+
+  // Footer (OOP — replaces procedural renderFooter)
+  footerComponent = new FooterComponent('footbar', shellBus);
+  footerComponent.render();
+
+  // Keyboard shortcuts (OOP — replaces procedural initKeyboardShortcuts)
+  keyboardManager = new KeyboardShortcutManager(shellBus);
+  keyboardManager.register({ key: 'k', mod: true }, () => {
+    const spotBd = document.getElementById('spotlight-backdrop');
+    if (spotBd) {
+      spotBd.classList.add('open');
+      (document.getElementById('sp-input') as HTMLInputElement | null)?.focus();
+    }
+  });
+  keyboardManager.register({ key: 'Escape' }, () => {
+    document.getElementById('spotlight-backdrop')?.classList.remove('open');
+    document.getElementById('ud-backdrop')?.classList.remove('show');
+    tmCloseAll();
+    const np = document.getElementById('np-panel');
+    if (np && np.classList.contains('open')) toggleNotifPanel();
+    document.getElementById('tenant-backdrop')?.classList.remove('show');
+    document.getElementById('shortcuts-help-modal')?.remove();
+  });
+  keyboardManager.register({ key: 'n', mod: true }, () => {
+    const skey = window.__SHELL_KEY ?? '';
+    const createPages: Record<string, string> = {
+      yonetim: 'tenant-create.html', seo: 'seo-keyword-magic.html',
+      content: 'content-writing-assistant.html', ads: 'ads-campaign-create.html',
+    };
+    if (createPages[skey]) window.location.href = base + 'pages/' + createPages[skey];
+  });
+  keyboardManager.register({ key: '?', notInInput: true }, () => {
+    keyboardManager?.showHelp();
+  });
+  keyboardManager.init();
+
+  // ── Procedural renders (not yet migrated to OOP) ──────────────────────────
+
   renderTopbar(base);
   buildTopMenu();
-  renderRail(base, key);
   renderSidebar(base, key);
   renderBreadcrumb(base, key);
-  renderFooter();
   renderBottomNav(base, key);
   renderSpotlight(base);
   initSpotlightNav(base);
@@ -57,7 +118,10 @@ export function initShell(pageKey?: string): void {
   // Wide sidebar toggle
   const wideToggle = document.getElementById('wide-toggle-tb');
   if (wideToggle) {
-    wideToggle.onclick = () => { document.body.classList.toggle('wide-open'); };
+    wideToggle.onclick = () => {
+      const isOpen = document.body.classList.toggle('wide-open');
+      wideToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
   }
   const wideOverlay = document.getElementById('wide-overlay');
   if (wideOverlay) {
@@ -67,9 +131,6 @@ export function initShell(pageKey?: string): void {
       wideOverlay.classList.remove('show');
     };
   }
-
-  // Keyboard shortcuts
-  initKeyboardShortcuts(base);
 
   // GSAP logo animation
   loadAndInitLogo();
@@ -100,19 +161,21 @@ export function initShell(pageKey?: string): void {
   // Tenant switcher (desktop + mobile)
   initTenantSwitcher();
   initMobileTenantSwitcher();
-}
 
-// ── Footer ──────────────────────────
+  // ── Bus: rail click → sidebar render ──────────────────────────
+  shellBus.on('rail:click', (payload) => {
+    const p = payload as { key: string; base: string };
+    const currentSidebarKey = window.__SIDEBAR_KEY ?? '';
+    const sidebarOpen = document.body.classList.contains('wide-open');
 
-function renderFooter(): void {
-  const footbar = document.getElementById('footbar');
-  if (!footbar) return;
-  footbar.innerHTML =
-    '<span class="fb-dot"></span><span>Sistem aktif</span><span class="fb-sep"></span>' +
-    '<span><strong style="color:var(--text);font-weight:700">12</strong> tenant</span><span class="fb-sep"></span>' +
-    '<span><strong style="color:var(--text);font-weight:700">47</strong> workspace</span><span class="fb-sep"></span>' +
-    '<span><strong style="color:var(--text);font-weight:700">5</strong> adaptor</span>' +
-    '<span style="margin-left:auto;font-size:0.625rem;letter-spacing:0.05em">v0.1.0</span>';
+    if (p.key === currentSidebarKey && sidebarOpen) {
+      document.body.classList.remove('wide-open');
+      return;
+    }
+    renderSidebar(p.base, p.key);
+    window.__SIDEBAR_KEY = p.key;
+    document.body.classList.add('wide-open');
+  });
 }
 
 // ── Auto-save toast ──────────────────────────
@@ -133,10 +196,11 @@ function initAutoSaveToast(): void {
   if (window.ThemeStore) window.ThemeStore.on('any-change', trigger);
 }
 
-// ── Window assignments (for inline onclick handlers) ──────────────────────────
+// ── Window assignments (compat layer for inline onclick handlers) ──────────────────────────
 
 window.initShell = initShell;
 window.railClick = function windowRailClick(btn: HTMLElement): void {
+  // Compat: old HTML onclick="railClick(this)" still works
   const key = window.__SHELL_KEY ?? '';
   railClick(btn, key);
 };
@@ -146,5 +210,3 @@ window.toggleFav = toggleFav;
 window.showToast = showToast;
 window.tmCloseAll = tmCloseAll;
 window.buildTopMenu = buildTopMenu;
-
-// Window type extensions are declared in shared/types/index.ts

@@ -250,36 +250,44 @@
     return +(min + Math.random() * (max - min)).toFixed(dec);
   }
   function getChartTheme() {
-    const isDark = document.documentElement.classList.contains("dark");
+    const R = document.documentElement;
+    const isDark = R.classList.contains("dark");
+    const cs = getComputedStyle(R);
+    const text = cs.getPropertyValue("--color-text-primary").trim() || (isDark ? "#F2EDE5" : "#1E1A14");
+    const muted = cs.getPropertyValue("--color-text-tertiary").trim() || (isDark ? "#9E958A" : "#635B4F");
+    const border = cs.getPropertyValue("--color-border-default").trim() || (isDark ? "#3C342C" : "#D6D1C2");
+    const bg = cs.getPropertyValue("--color-bg-elevated").trim() || (isDark ? "#201C18" : "#F0EDE3");
+    const accent = cs.getPropertyValue("--color-primary").trim() || "#C2410C";
+    const accentSoft = cs.getPropertyValue("--color-primary-soft").trim() || (isDark ? "rgba(194,65,12,0.10)" : "rgba(194,65,12,0.15)");
     if (isDark) {
       return {
-        text: "#F2EDE5",
-        muted: "#7B7269",
-        border: "#3C342C",
-        bg: "#201C18",
-        accent: "#C2410C",
-        accentSoft: "rgba(194,65,12,0.15)",
+        text,
+        muted,
+        border,
+        bg,
+        accent,
+        accentSoft,
         green: "#22c55e",
         red: "#ef4444",
         blue: "#3b82f6",
         yellow: "#eab308",
         purple: "#a855f7",
-        tooltip: { backgroundColor: "#201C18", borderColor: "#3C342C", textStyle: { color: "#F2EDE5", fontSize: 12 } }
+        tooltip: { backgroundColor: bg, borderColor: border, textStyle: { color: text, fontSize: 12 } }
       };
     }
     return {
-      text: "#1E1A14",
-      muted: "#9B9485",
-      border: "#D6D1C2",
-      bg: "#F8F5EC",
-      accent: "#C2410C",
-      accentSoft: "rgba(194,65,12,0.1)",
+      text,
+      muted,
+      border,
+      bg,
+      accent,
+      accentSoft,
       green: "#16a34a",
       red: "#dc2626",
       blue: "#2563eb",
       yellow: "#ca8a04",
       purple: "#9333ea",
-      tooltip: { backgroundColor: "#FFFFFF", borderColor: "#D6D1C2", textStyle: { color: "#1E1A14", fontSize: 12 } }
+      tooltip: { backgroundColor: bg, borderColor: border, textStyle: { color: text, fontSize: 12 } }
     };
   }
   function refreshAllCharts() {
