@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Entity: atonota — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,16 +17,16 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
+<div id="main" data-skeleton="table">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-buildings" style="color:#a855f7;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-buildings" style="color:#a855f7;font-size:var(--fs-xl)"></i>
     </div>
     <div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <h1 class="page-title">Entity: atonota</h1>
         <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Kurum</span>
       </div>
@@ -34,40 +35,40 @@
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Mention</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">24</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Mention</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">24</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Iliski</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">18</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Iliski</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">18</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Sentiment</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#22c55e">Pozitif</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Sentiment</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#22c55e">Pozitif</div>
     </div>
   </div>
 
   <!-- Detail Rows -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Entity Bilgileri</span>
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div style="display:flex;align-items:flex-start;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border)">
-        <span style="font-size:0.8125rem;color:var(--muted);min-width:120px;flex-shrink:0">Tanim</span>
-        <span style="font-size:0.8125rem;color:var(--text)">Pazarlama zekasi ve reklam orkestrasyon platformu. SEO, icerik, performans ve cok kanalli reklam yonetimi.</span>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding-bottom:var(--sp-4);border-bottom:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);min-width:120px;flex-shrink:0">Tanim</span>
+        <span style="font-size:var(--fs-sm);color:var(--text)">Pazarlama zekasi ve reklam orkestrasyon platformu. SEO, icerik, performans ve cok kanalli reklam yonetimi.</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border)">
-        <span style="font-size:0.8125rem;color:var(--muted);min-width:120px;flex-shrink:0">Wikipedia URL</span>
-        <span style="font-size:0.8125rem;color:var(--accent)">—</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding-bottom:var(--sp-4);border-bottom:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);min-width:120px;flex-shrink:0">Wikipedia URL</span>
+        <span style="font-size:var(--fs-sm);color:var(--accent)">—</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border)">
-        <span style="font-size:0.8125rem;color:var(--muted);min-width:120px;flex-shrink:0">Domain</span>
-        <span style="font-size:0.8125rem;color:var(--text);font-family:'SF Mono',monospace">atonota.com</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding-bottom:var(--sp-4);border-bottom:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);min-width:120px;flex-shrink:0">Domain</span>
+        <span style="font-size:var(--fs-sm);color:var(--text);font-family:'SF Mono',monospace">atonota.com</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <span style="font-size:0.8125rem;color:var(--muted);min-width:120px;flex-shrink:0">Kurulus Yili</span>
-        <span style="font-size:0.8125rem;color:var(--text)">2025</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <span style="font-size:var(--fs-sm);color:var(--muted);min-width:120px;flex-shrink:0">Kurulus Yili</span>
+        <span style="font-size:var(--fs-sm);color:var(--text)">2025</span>
       </div>
     </div>
   </div>
@@ -75,39 +76,39 @@
   <!-- Related Entities -->
   <div class="fade-in-d3 card">
     <span class="section-label">Iliskili Entity'ler</span>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:10px">
-          <i class="ph ph-code" style="color:var(--muted);font-size:1rem"></i>
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">WordPress</span>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <i class="ph ph-code" style="color:var(--muted);font-size:var(--fs-lg)"></i>
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">WordPress</span>
         </div>
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Platform</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:10px">
-          <i class="ph ph-magnifying-glass" style="color:var(--muted);font-size:1rem"></i>
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Google Search Console</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <i class="ph ph-magnifying-glass" style="color:var(--muted);font-size:var(--fs-lg)"></i>
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Google Search Console</span>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Arac</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:10px">
-          <i class="ph ph-buildings" style="color:var(--muted);font-size:1rem"></i>
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Hetzner</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <i class="ph ph-buildings" style="color:var(--muted);font-size:var(--fs-lg)"></i>
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Hetzner</span>
         </div>
         <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Altyapi</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:10px">
-          <i class="ph ph-database" style="color:var(--muted);font-size:1rem"></i>
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">PostgreSQL</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <i class="ph ph-database" style="color:var(--muted);font-size:var(--fs-lg)"></i>
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">PostgreSQL</span>
         </div>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Teknoloji</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
-        <div style="display:flex;align-items:center;gap:10px">
-          <i class="ph ph-chart-line-up" style="color:var(--muted);font-size:1rem"></i>
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">SEO Analitiği</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) 0">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <i class="ph ph-chart-line-up" style="color:var(--muted);font-size:var(--fs-lg)"></i>
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">SEO Analitiği</span>
         </div>
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Hizmet</span>
       </div>
@@ -116,6 +117,8 @@
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
 </body>

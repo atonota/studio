@@ -5,10 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Ayarlar — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<style>
+/* Settings row */
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none;padding-bottom:0}
+.settings-row-info{display:flex;align-items:center;gap:12px}
+.settings-row-info i{font-size:1.25rem;color:var(--muted);flex-shrink:0}
+.settings-row-title{font-size:0.875rem;font-weight:500;color:var(--text)}
+.settings-row-desc{font-size:0.75rem;color:var(--muted)}
+/* Quick-link card */
+.ql-card{display:flex;align-items:center;justify-content:space-between;padding:var(--sp-5) var(--sp-6);background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;margin-bottom:20px;max-width:720px;text-decoration:none;transition:border-color 0.15s,background 0.15s;cursor:pointer}
+.ql-card:hover{border-color:var(--accent);background:var(--surface)}
+</style>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,70 +27,60 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="form">
+  <div class="fade-in" style="margin-bottom:var(--sp-7)">
     <h1 class="page-title">Ayarlar</h1>
     <p class="page-sub">Hesap ve sistem tercihleri</p>
   </div>
 
-  <div class="fade-in-d1 card" style="max-width:640px">
-    <div style="display:flex;flex-direction:column;gap:0">
-      <!-- Tema -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:12px">
-          <i class="ph ph-moon" style="font-size:1.25rem;color:var(--muted)"></i>
-          <div>
-            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Tema</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Acik veya koyu gorunum</div>
-          </div>
-        </div>
-        <div style="width:44px;height:24px;border-radius:12px;background:var(--accent);position:relative;cursor:pointer">
-          <div style="width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;right:2px;transition:right 0.2s"></div>
-        </div>
+  <!-- TEMA VE GORUNUM → settings-theme-options.html -->
+  <a href="settings-theme-options.html" class="ql-card fade-in-d1">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <i class="ph ph-palette" style="font-size:var(--fs-xl);color:var(--accent)"></i>
+      <div>
+        <div style="font-size:var(--fs-md);font-weight:600;color:var(--text)">Tema ve Gorunum</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">Renk semasi, tipografi, yerlesim ve daha fazlasi</div>
       </div>
+    </div>
+    <i class="ph ph-caret-right" style="font-size:var(--fs-lg);color:var(--muted)"></i>
+  </a>
 
-      <!-- Dil -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:12px">
-          <i class="ph ph-translate" style="font-size:1.25rem;color:var(--muted)"></i>
-          <div>
-            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Dil</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Arayuz dili</div>
-          </div>
-        </div>
-        <span class="badge" style="background:var(--accent-soft);color:var(--accent)">TR</span>
+  <!-- ═══════════════════════════════════════ -->
+  <!-- DIGER AYARLAR                          -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="ap-card fade-in-d2" style="padding:var(--sp-5) var(--sp-6)">
+    <!-- Dil -->
+    <div class="settings-row">
+      <div class="settings-row-info">
+        <i class="ph ph-translate"></i>
+        <div><div class="settings-row-title">Dil</div><div class="settings-row-desc">Arayuz dili</div></div>
       </div>
-
-      <!-- 2FA -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:12px">
-          <i class="ph ph-shield-check" style="font-size:1.25rem;color:var(--muted)"></i>
-          <div>
-            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Iki Faktorlu Kimlik Dogrulama</div>
-            <div style="font-size:0.75rem;color:var(--muted)">TOTP ile ek guvenlik</div>
-          </div>
-        </div>
-        <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
+      <span class="badge" style="background:var(--accent-soft);color:var(--accent)">TR</span>
+    </div>
+    <!-- 2FA -->
+    <div class="settings-row">
+      <div class="settings-row-info">
+        <i class="ph ph-shield-check"></i>
+        <div><div class="settings-row-title">Iki Faktorlu Dogrulama</div><div class="settings-row-desc">TOTP ile ek guvenlik</div></div>
       </div>
-
-      <!-- API Keys -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 0">
-        <div style="display:flex;align-items:center;gap:12px">
-          <i class="ph ph-key" style="font-size:1.25rem;color:var(--muted)"></i>
-          <div>
-            <div style="font-size:0.875rem;font-weight:500;color:var(--text)">API Anahtarlari</div>
-            <div style="font-size:0.75rem;color:var(--muted)">2 anahtar aktif</div>
-          </div>
-        </div>
-        <button class="btn-secondary" style="padding:6px 12px;font-size:0.75rem">Yonet</button>
+      <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
+    </div>
+    <!-- API Keys -->
+    <div class="settings-row">
+      <div class="settings-row-info">
+        <i class="ph ph-key"></i>
+        <div><div class="settings-row-title">API Anahtarlari</div><div class="settings-row-desc">2 anahtar aktif</div></div>
       </div>
+      <a href="settings-apikeys.html" style="padding:var(--sp-2) var(--sp-3);font-size:var(--fs-sm);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);text-decoration:none;font-weight:500;background:var(--surface-2)">Yonet</a>
     </div>
   </div>
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
 </body>

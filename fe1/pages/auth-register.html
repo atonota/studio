@@ -5,25 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Kayit Ol — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body class="dark" style="display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:auto">
 
-  <div class="fade-in" style="width:100%;max-width:420px;margin:24px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:40px 32px"
+  <div class="fade-in" style="width:100%;max-width:420px;margin:var(--sp-6);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:40px var(--sp-8)"
        x-data="form({name:'', email:'', password:'', confirm:''})">
 
     <!-- Logo -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px">
-      <div style="width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center">
-        <span style="font-weight:800;font-size:1.125rem;color:white">a</span>
+    <div style="display:flex;align-items:center;justify-content:center;gap:var(--sp-3);margin-bottom:var(--sp-2)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:var(--accent);display:flex;align-items:center;justify-content:center">
+        <span style="font-weight:800;font-size:var(--fs-lg);color:white">a</span>
       </div>
-      <span style="font-size:1.25rem;font-weight:600;color:var(--text);letter-spacing:-0.02em">atonota</span>
+      <span style="font-size:var(--fs-xl);font-weight:600;color:var(--text);letter-spacing:-0.02em">atonota</span>
     </div>
-    <h2 style="text-align:center;font-size:1.25rem;font-weight:500;color:var(--text);margin-bottom:28px">Yeni Hesap</h2>
+    <h2 style="text-align:center;font-size:var(--fs-xl);font-weight:500;color:var(--text);margin-bottom:var(--sp-7)">Yeni Hesap</h2>
 
     <!-- Form -->
     <form @submit.prevent="
@@ -33,40 +34,40 @@
       if(!fields.password || fields.password.length < 8) errors.password = 'Sifre en az 8 karakter olmali';
       if(fields.password !== fields.confirm) errors.confirm = 'Sifreler eslesmiyor';
       if(Object.keys(errors).length === 0) { submitting=true; setTimeout(()=>{ submitting=false; submitted=true; $store.toast.show('Hesap olusturuldu! Giris sayfasina yonlendiriliyorsunuz...','success'); setTimeout(()=>{ window.location.href='auth-login.html' }, 2000) }, 1500) }
-    " style="display:flex;flex-direction:column;gap:16px">
+    " style="display:flex;flex-direction:column;gap:var(--sp-4)">
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Ad Soyad</label>
-        <input type="text" x-model="fields.name" placeholder="Ahmet Yilmaz" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Ad Soyad</label>
+        <input type="text" x-model="fields.name" placeholder="Ahmet Yilmaz" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('name') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('name')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('name')"></span>
+        <span x-show="hasError('name')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('name')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">E-posta</label>
-        <input type="email" x-model="fields.email" placeholder="ornek@sirket.com" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">E-posta</label>
+        <input type="email" x-model="fields.email" placeholder="ornek@sirket.com" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('email') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('email')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('email')"></span>
+        <span x-show="hasError('email')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('email')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Sifre</label>
-        <input type="password" x-model="fields.password" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Sifre</label>
+        <input type="password" x-model="fields.password" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('password') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('password')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('password')"></span>
+        <span x-show="hasError('password')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('password')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Sifre Tekrar</label>
-        <input type="password" x-model="fields.confirm" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Sifre Tekrar</label>
+        <input type="password" x-model="fields.confirm" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('confirm') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('confirm')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('confirm')"></span>
+        <span x-show="hasError('confirm')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('confirm')"></span>
       </div>
 
-      <button type="submit" class="btn-primary" :disabled="submitting" style="width:100%;justify-content:center;margin-top:8px;padding:12px 18px;font-size:0.9375rem">
-        <template x-if="submitting"><span style="display:flex;align-items:center;justify-content:center;gap:8px"><i class="ph ph-spinner ph-spin"></i> Kayit olunuyor...</span></template>
+      <button type="submit" class="btn-primary" :disabled="submitting" style="width:100%;justify-content:center;margin-top:var(--sp-2);padding:var(--sp-3) 18px;font-size:var(--fs-base)">
+        <template x-if="submitting"><span style="display:flex;align-items:center;justify-content:center;gap:var(--sp-2)"><i class="ph ph-spinner ph-spin"></i> Kayit olunuyor...</span></template>
         <template x-if="!submitting">Kayit Ol</template>
       </button>
 
-      <div style="text-align:center;margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
-        <span style="font-size:0.8125rem;color:var(--muted)">Zaten hesabiniz var mi?</span>
-        <a href="auth-login.html" style="font-size:0.8125rem;color:var(--accent);text-decoration:none;font-weight:600;margin-left:4px">Giris Yap</a>
+      <div style="text-align:center;margin-top:var(--sp-2);padding-top:var(--sp-4);border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Zaten hesabiniz var mi?</span>
+        <a href="auth-login.html" style="font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;margin-left:var(--sp-1)">Giris Yap</a>
       </div>
     </form>
   </div>

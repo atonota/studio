@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Plan ve Faturalandirma — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,103 +17,103 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ currentPlan: 'pro', hoveredPlan: '' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ currentPlan: 'pro', hoveredPlan: '' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Plan ve Faturalandirma</h1>
     <p class="page-sub">Abonelik plani ve odeme bilgileri</p>
-    <div style="margin-top:8px">
-      <a href="billing-usage.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-        <i class="ph ph-chart-bar" style="font-size:0.875rem"></i> Kullanim Detay <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+    <div style="margin-top:var(--sp-2)">
+      <a href="billing-usage.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);">
+        <i class="ph ph-chart-bar" style="font-size:var(--fs-md)"></i> Kullanim Detay <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
     </div>
   </div>
 
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);align-items:start">
     <!-- Free -->
     <div class="card" @mouseenter="hoveredPlan='free'" @mouseleave="hoveredPlan=''"
-      :style="'display:flex;flex-direction:column;gap:16px;transition:transform 0.2s,box-shadow 0.2s;'+(hoveredPlan==='free'?'transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.15)':'')">
+      :style="'display:flex;flex-direction:column;gap:var(--sp-4);transition:transform 0.2s,box-shadow 0.2s;'+(hoveredPlan==='free'?'transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.15)':'')">
       <div>
-        <div style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Free</div>
-        <div style="display:flex;align-items:baseline;gap:4px">
-          <span style="font-size:2rem;font-weight:300;color:var(--text)">&#8378;0</span>
-          <span style="font-size:0.75rem;color:var(--muted)">/ay</span>
+        <div style="font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Free</div>
+        <div style="display:flex;align-items:baseline;gap:var(--sp-1)">
+          <span style="font-size:var(--fs-4xl);font-weight:300;color:var(--text)">&#8378;0</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">/ay</span>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">1 workspace</span>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">1 workspace</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">100 keyword takibi</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">100 keyword takibi</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-x" style="color:var(--muted);font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--muted)">Reklam yonetimi</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-x" style="color:var(--muted);font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Reklam yonetimi</span>
         </div>
       </div>
-      <button class="btn-secondary" style="padding:8px 16px;font-size:0.8125rem;opacity:0.5;cursor:default">Mevcut degil</button>
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);opacity:0.5;cursor:default">Mevcut degil</button>
     </div>
 
     <!-- Pro (Current) -->
     <div class="card" @mouseenter="hoveredPlan='pro'" @mouseleave="hoveredPlan=''"
-      :style="'display:flex;flex-direction:column;gap:16px;border:2px solid var(--accent);position:relative;transition:transform 0.2s,box-shadow 0.2s;'+(hoveredPlan==='pro'?'transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.15)':'')">
-      <span class="badge" style="background:var(--accent);color:white;position:absolute;top:-10px;right:16px;padding:4px 10px;font-size:0.6875rem">Mevcut Plan</span>
+      :style="'display:flex;flex-direction:column;gap:var(--sp-4);border:2px solid var(--accent);position:relative;transition:transform 0.2s,box-shadow 0.2s;'+(hoveredPlan==='pro'?'transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.15)':'')">
+      <span class="badge" style="background:var(--accent);color:white;position:absolute;top:-10px;right:16px;padding:var(--sp-1) var(--sp-3);font-size:var(--fs-xs)">Mevcut Plan</span>
       <div>
-        <div style="font-size:0.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Pro</div>
-        <div style="display:flex;align-items:baseline;gap:4px">
-          <span style="font-size:2rem;font-weight:300;color:var(--text)">&#8378;499</span>
-          <span style="font-size:0.75rem;color:var(--muted)">/ay</span>
+        <div style="font-size:var(--fs-sm);font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Pro</div>
+        <div style="display:flex;align-items:baseline;gap:var(--sp-1)">
+          <span style="font-size:var(--fs-4xl);font-weight:300;color:var(--text)">&#8378;499</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">/ay</span>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">10 workspace</span>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">10 workspace</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">5,000 keyword takibi</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">5,000 keyword takibi</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">Reklam yonetimi</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">Reklam yonetimi</span>
         </div>
       </div>
-      <button class="btn-secondary" style="padding:8px 16px;font-size:0.8125rem;opacity:0.5;cursor:default">Aktif Plan</button>
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm);opacity:0.5;cursor:default">Aktif Plan</button>
     </div>
 
     <!-- Enterprise -->
     <div class="card" @mouseenter="hoveredPlan='enterprise'" @mouseleave="hoveredPlan=''"
-      :style="'display:flex;flex-direction:column;gap:16px;transition:transform 0.2s,box-shadow 0.2s;'+(hoveredPlan==='enterprise'?'transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.15)':'')">
+      :style="'display:flex;flex-direction:column;gap:var(--sp-4);transition:transform 0.2s,box-shadow 0.2s;'+(hoveredPlan==='enterprise'?'transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,0.15)':'')">
       <div>
-        <div style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Enterprise</div>
-        <div style="display:flex;align-items:baseline;gap:4px">
-          <span style="font-size:1.5rem;font-weight:300;color:var(--text)">Ozel Fiyat</span>
+        <div style="font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Enterprise</div>
+        <div style="display:flex;align-items:baseline;gap:var(--sp-1)">
+          <span style="font-size:var(--fs-2xl);font-weight:300;color:var(--text)">Ozel Fiyat</span>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">Sinirsiz workspace</span>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">Sinirsiz workspace</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">Sinirsiz keyword</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">Sinirsiz keyword</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">White-label</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">White-label</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
-          <span style="font-size:0.8125rem;color:var(--text)">Oncelikli destek</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text)">Oncelikli destek</span>
         </div>
       </div>
-      <button class="btn-primary" style="padding:8px 16px;font-size:0.8125rem"
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)"
         @click="$store.confirm.ask('Enterprise plana yukseltmek istediginizden emin misiniz?', () => { currentPlan = 'enterprise'; $store.toast.show('Enterprise plana yukseltme talebi gonderildi', 'success') })">Yukselt</button>
     </div>
   </div>

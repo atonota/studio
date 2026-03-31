@@ -1,0 +1,48 @@
+// ═══ CHART SKELETON & RESPONSIVE HEIGHT ═══
+
+.skeleton-chart {
+  height: 300px;
+  border-radius: var(--r-lg);
+}
+
+// Chart container responsive heights (override inline style)
+[id^="chart-"] {
+  min-height: 180px;
+}
+
+@media (max-width: 599px) {
+  .skeleton-chart {
+    height: 200px;
+  }
+
+  [id^="chart-"] {
+    height: 220px !important;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 767px) {
+  .skeleton-chart {
+    height: 240px;
+  }
+}
+
+// 320px: daha kompakt chart
+@media (max-width: 374px) {
+  [id^="chart-"] {
+    height: 180px !important;
+  }
+
+  .skeleton-chart {
+    height: 160px;
+  }
+}
+
+// ── Skeleton Grid (responsive) ──
+.skel-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+
+  @media (max-width: 767px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 374px) { grid-template-columns: 1fr; }
+}

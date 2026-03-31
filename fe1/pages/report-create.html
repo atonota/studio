@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Yeni Rapor Olustur — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
@@ -19,10 +20,10 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="form">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Yeni Rapor Olustur</h1>
     <p class="page-sub">Manuel veya AI destekli rapor olusturma</p>
   </div>
@@ -31,16 +32,16 @@
     <span class="section-label">Rapor Bilgileri</span>
 
     <!-- Rapor Adi -->
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Rapor Adi</label>
-      <input type="text" x-model="fields.name" placeholder="ornek: Mart 2026 SEO Raporu" :style="hasError('name') ? 'border-color:#ef4444' : ''" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
-      <div x-show="hasError('name')" style="font-size:0.75rem;color:#ef4444;margin-top:4px" x-text="getError('name')"></div>
+    <div style="margin-bottom:var(--sp-5)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Rapor Adi</label>
+      <input type="text" x-model="fields.name" placeholder="ornek: Mart 2026 SEO Raporu" :style="hasError('name') ? 'border-color:#ef4444' : ''" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none">
+      <div x-show="hasError('name')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1)" x-text="getError('name')"></div>
     </div>
 
     <!-- Rapor Tipi -->
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Rapor Tipi</label>
-      <select x-model="fields.type" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
+    <div style="margin-bottom:var(--sp-5)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Rapor Tipi</label>
+      <select x-model="fields.type" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none">
         <option>SEO</option>
         <option>Performans</option>
         <option>Reklam</option>
@@ -49,24 +50,24 @@
     </div>
 
     <!-- Format -->
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Format</label>
-      <div style="display:flex;gap:16px">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+    <div style="margin-bottom:var(--sp-5)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Format</label>
+      <div style="display:flex;gap:var(--sp-4)">
+        <label style="display:flex;align-items:center;gap:var(--sp-2);cursor:pointer">
           <input type="radio" name="format" value="pdf" x-model="fields.format" style="accent-color:var(--accent)">
-          <span style="font-size:0.8125rem;color:var(--text)">PDF</span>
+          <span style="font-size:var(--fs-sm);color:var(--text)">PDF</span>
         </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <label style="display:flex;align-items:center;gap:var(--sp-2);cursor:pointer">
           <input type="radio" name="format" value="html" x-model="fields.format" style="accent-color:var(--accent)">
-          <span style="font-size:0.8125rem;color:var(--text)">HTML</span>
+          <span style="font-size:var(--fs-sm);color:var(--text)">HTML</span>
         </label>
       </div>
     </div>
 
     <!-- Donem -->
-    <div style="margin-bottom:24px">
-      <label style="display:block;font-size:0.8125rem;font-weight:500;color:var(--text);margin-bottom:8px">Donem</label>
-      <select x-model="fields.period" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;font-family:inherit;outline:none">
+    <div style="margin-bottom:var(--sp-6)">
+      <label style="display:block;font-size:var(--fs-sm);font-weight:500;color:var(--text);margin-bottom:var(--sp-2)">Donem</label>
+      <select x-model="fields.period" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none">
         <option>Son 7 gun</option>
         <option>Son 30 gun</option>
         <option>Son 90 gun</option>
@@ -74,23 +75,23 @@
     </div>
 
     <!-- AI Suggestion -->
-    <div style="margin-bottom:24px;padding:16px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-muted)">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <i class="ph ph-robot" style="color:var(--accent);font-size:1rem"></i>
-        <span style="font-size:0.8125rem;font-weight:500;color:var(--text)">AI ile Rapor Tanimlama</span>
+    <div style="margin-bottom:var(--sp-6);padding:var(--sp-4);border-radius:var(--r-md);background:var(--accent-soft);border:1px solid var(--accent-muted)">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3)">
+        <i class="ph ph-robot" style="color:var(--accent);font-size:var(--fs-lg)"></i>
+        <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">AI ile Rapor Tanimlama</span>
       </div>
-      <textarea x-model="fields.aiPrompt" placeholder="ornek: Son 30 gunun SEO performansini ozetle, keyword degisimlerini ve rakip karsilastirmasini ekle" rows="3" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;font-family:inherit;outline:none;resize:vertical"></textarea>
+      <textarea x-model="fields.aiPrompt" placeholder="ornek: Son 30 gunun SEO performansini ozetle, keyword degisimlerini ve rakip karsilastirmasini ekle" rows="3" style="width:100%;padding:var(--sp-3) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit;outline:none;resize:vertical"></textarea>
     </div>
 
     <!-- Success -->
-    <div x-show="submitted" x-transition style="margin-bottom:16px;padding:12px;border-radius:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);font-size:0.8125rem;color:#22c55e;display:flex;align-items:center;gap:8px">
+    <div x-show="submitted" x-transition style="margin-bottom:var(--sp-4);padding:var(--sp-3);border-radius:var(--r-md);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);font-size:var(--fs-sm);color:#22c55e;display:flex;align-items:center;gap:var(--sp-2)">
       <i class="ph ph-check-circle"></i> Rapor basariyla olusturuldu!
     </div>
 
     <!-- Actions -->
-    <div style="display:flex;justify-content:flex-end;gap:10px">
-      <button @click="reset()" class="btn-ghost" style="padding:10px 16px;font-size:0.8125rem">Sifirla</button>
-      <button @click="submit()" :disabled="submitting" class="btn-primary" style="padding:10px 24px;font-size:0.8125rem;display:flex;align-items:center;gap:6px">
+    <div style="display:flex;justify-content:flex-end;gap:var(--sp-3)">
+      <button @click="reset()" class="btn-ghost" style="padding:var(--sp-3) var(--sp-4);font-size:var(--fs-sm)">Sifirla</button>
+      <button @click="submit()" :disabled="submitting" class="btn-primary" style="padding:var(--sp-3) var(--sp-6);font-size:var(--fs-sm);display:flex;align-items:center;gap:var(--sp-2)">
         <i class="ph" :class="submitting ? 'ph-circle-notch' : 'ph-file-text'" :style="submitting ? 'animation:spin 1s linear infinite' : ''"></i>
         <span x-text="submitting ? 'Olusturuluyor...' : 'Olustur'"></span>
       </button>

@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Hiz Testi Sonuclari — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,31 +19,31 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ testing: false }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ testing: false }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Hiz Testi Sonuclari</h1>
       <p class="page-sub">PageSpeed ve Core Web Vitals metrikleri</p>
     </div>
-    <button @click="testing = true; setTimeout(() => { testing = false; $store.toast.show('Hiz testi tamamlandi', 'success') }, 2500)" :disabled="testing" style="background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit" :style="testing && 'opacity:0.7;cursor:wait'">
-      <i class="ph" :class="testing ? 'ph-spinner' : 'ph-arrows-clockwise'" :style="testing && 'animation:spin 1s linear infinite'" style="font-size:1rem"></i>
+    <button @click="testing = true; setTimeout(() => { testing = false; $store.toast.show('Hiz testi tamamlandi', 'success') }, 2500)" :disabled="testing" style="background:var(--accent);color:#fff;border:none;padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit" :style="testing && 'opacity:0.7;cursor:wait'">
+      <i class="ph" :class="testing ? 'ph-spinner' : 'ph-arrows-clockwise'" :style="testing && 'animation:spin 1s linear infinite'" style="font-size:var(--fs-lg)"></i>
       <span x-text="testing ? 'Test ediliyor...' : 'Tekrar Test'"></span>
     </button>
   </div>
 
   <!-- Score Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px">
-    <div class="stat-card" style="--stripe:#eab308;text-align:center;padding:24px">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">Mobil Skor</div>
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div class="stat-card" style="--stripe:#eab308;text-align:center;padding:var(--sp-6)">
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Mobil Skor</div>
       <div style="font-size:2.5rem;font-weight:300;color:#eab308">78</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">/ 100</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/ 100</div>
     </div>
-    <div class="stat-card" style="--stripe:#22c55e;text-align:center;padding:24px">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">Desktop Skor</div>
+    <div class="stat-card" style="--stripe:#22c55e;text-align:center;padding:var(--sp-6)">
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Desktop Skor</div>
       <div style="font-size:2.5rem;font-weight:300;color:#22c55e">92</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">/ 100</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/ 100</div>
     </div>
   </div>
 
@@ -51,68 +52,68 @@
     <span class="section-label">Metrik Detaylari</span>
     <div style="display:flex;flex-direction:column;gap:0">
       <!-- FCP -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) 0;border-bottom:1px solid var(--border)">
         <div>
-          <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">First Contentful Paint (FCP)</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Ilk icerik boyama suresi</div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">First Contentful Paint (FCP)</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Ilk icerik boyama suresi</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">1.2s</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">1.2s</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
         </div>
       </div>
       <!-- LCP -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) 0;border-bottom:1px solid var(--border)">
         <div>
-          <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Largest Contentful Paint (LCP)</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">En buyuk icerik boyama suresi</div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Largest Contentful Paint (LCP)</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">En buyuk icerik boyama suresi</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">1.8s</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">1.8s</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
         </div>
       </div>
       <!-- TBT -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) 0;border-bottom:1px solid var(--border)">
         <div>
-          <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Total Blocking Time (TBT)</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Toplam engelleme suresi</div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Total Blocking Time (TBT)</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Toplam engelleme suresi</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">180ms</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">180ms</span>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
         </div>
       </div>
       <!-- CLS -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) 0;border-bottom:1px solid var(--border)">
         <div>
-          <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Cumulative Layout Shift (CLS)</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Kumulatif duzensizlik kaymasi</div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Cumulative Layout Shift (CLS)</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Kumulatif duzensizlik kaymasi</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">0.04</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">0.04</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
         </div>
       </div>
       <!-- SI -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) 0;border-bottom:1px solid var(--border)">
         <div>
-          <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Speed Index (SI)</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Sayfa yukleme hiz endeksi</div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Speed Index (SI)</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Sayfa yukleme hiz endeksi</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">2.8s</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">2.8s</span>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
         </div>
       </div>
       <!-- TTI -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) 0">
         <div>
-          <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">Time to Interactive (TTI)</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Etkilesime hazir olma suresi</div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">Time to Interactive (TTI)</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Etkilesime hazir olma suresi</div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:0.875rem;font-weight:500;color:var(--text)">3.2s</span>
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">3.2s</span>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
         </div>
       </div>

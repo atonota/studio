@@ -1,0 +1,38 @@
+// ============================================
+// atonota Studio — Shared Functions
+// ============================================
+@use 'sass:math';
+@use 'sass:color';
+@use '../tokens/colors' as colors;
+
+/// Convert px to rem (base 16px).
+/// @param {Number} $px - Value in pixels
+/// @return {Length}
+@function rem($px) {
+  @if math.is-unitless($px) {
+    @return math.div($px, 16) * 1rem;
+  }
+  @if math.unit($px) == 'px' {
+    @return math.div(math.div($px, 1px), 16) * 1rem;
+  }
+  @error 'rem() expects a unitless number or px value, got #{$px}';
+}
+
+/// Create a semi-transparent background from a color.
+/// @param {Color} $color
+/// @param {Number} $opacity [0.1] - 0 to 1
+/// @return {Color}
+@function bg-alpha($color, $opacity: 0.1) {
+  @return color.change($color, $alpha: $opacity);
+}
+
+/// Return white or dark text depending on background lightness.
+/// @param {Color} $bg - Background color to test
+/// @return {Color}
+@function contrast-text($bg) {
+  $lightness: color.lightness($bg);
+  @if $lightness > 60% {
+    @return map-get(colors.$dark-palette, 'text');
+  }
+  @return map-get(colors.$light-palette, 'base');
+}

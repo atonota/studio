@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Performans — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -20,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="dashboard" x-data="{
   dateRange: '30gun',
   seriesConfigs: [
     {key:'lcp',base:1800,variance:400},
@@ -44,48 +45,48 @@
     });
   }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Performans</h1>
       <p class="page-sub">Core Web Vitals ve site hizi</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" class="tab-btn" :class="dateRange === d.v ? 'active' : ''" x-text="d.l"></button>
       </template>
     </div>
   </div>
 
   <!-- CWV Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <a href="performance-vitals.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#22c55e;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">LCP</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">LCP</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
         </div>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">1.8s</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 2.5s</div>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">1.8s</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Hedef: &lt; 2.5s</div>
       </div>
     </a>
     <a href="performance-vitals.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#eab308;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">INP</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">INP</span>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Iyilestir</span>
         </div>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">180ms</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 200ms</div>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">180ms</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Hedef: &lt; 200ms</div>
       </div>
     </a>
     <a href="performance-vitals.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#22c55e;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">CLS</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">CLS</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Iyi</span>
         </div>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">0.04</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Hedef: &lt; 0.10</div>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">0.04</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Hedef: &lt; 0.10</div>
       </div>
     </a>
   </div>
@@ -99,7 +100,7 @@
 
 <div id="footbar"></div>
 <script src="../js/shell.js"></script>
-<script>document.addEventListener('DOMContentLoaded', () => initShell('analytics'));</script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('performance'));</script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const txtColor = '#F2EDE5';

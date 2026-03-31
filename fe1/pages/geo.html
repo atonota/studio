@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>GEO Intelligence — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -20,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="dashboard" x-data="{
   platform:'tumu',
   range:'7gun',
   seriesConfigs: [
@@ -40,43 +41,43 @@
     }
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">GEO Intelligence</h1>
     <p class="page-sub">Generative Engine Optimization — AI platformlarinda gorunurluk analizi</p>
   </div>
   <!-- Filters -->
-  <div class="fade-in" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'chatgpt',l:'ChatGPT'},{v:'gemini',l:'Gemini'},{v:'claude',l:'Claude'},{v:'perplexity',l:'Perplexity'}]">
-      <button @click="platform=p.v" :style="platform===p.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="p.l"></button>
+      <button @click="platform=p.v" class="pill" :class="platform===p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
     <div style="flex:1"></div>
     <template x-for="r in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-      <button @click="range=r.v; updateCharts()" :style="range===r.v ? 'background:var(--accent);color:#fff' : 'background:var(--surface);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 14px;border-radius:20px;font-size:0.75rem;cursor:pointer;border:none;transition:all .2s" x-text="r.l"></button>
+      <button @click="range=r.v; updateCharts()" class="pill" :class="range===r.v ? 'active' : ''" x-text="r.l"></button>
     </template>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#C2410C">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">AI Gorunurluk Skoru</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--accent);margin-top:8px">72<span style="font-size:1rem;color:var(--muted);font-weight:300">/100</span></div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">AI Gorunurluk Skoru</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--accent);margin-top:var(--sp-2)">72<span style="font-size:var(--fs-lg);color:var(--muted);font-weight:300">/100</span></div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Platform</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">6</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Platform</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">6</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Mention</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">23</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Mention</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">23</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Citation</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">8</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Citation</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">8</div>
     </div>
   </div>
 
   <!-- Platform Mention Trend Chart -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Platform Mention Trendi (12 Hafta)</span>
     <div id="chart-trend" style="width:100%;height:360px"></div>
   </div>
@@ -84,7 +85,7 @@
 
 <div id="footbar"></div>
 <script src="../js/shell.js"></script>
-<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('geo'));</script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const txtColor = '#F2EDE5';

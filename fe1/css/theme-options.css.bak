@@ -1,0 +1,156 @@
+/* ═══════════════════════════════════════════
+   Theme Options Panel — Sayfa-ozel stiller
+   Vertical tabs, slider, toggle, preview
+═══════════════════════════════════════════ */
+
+/* Alpine.js x-cloak — FOUC onleme */
+[x-cloak]{display:none!important}
+
+/* ── Layout: vertical tabs left, content right ── */
+.to-layout{display:flex;gap:0;min-height:calc(100vh - var(--top-h) - var(--foot-h) - 64px)}
+
+.to-tabs{width:220px;flex-shrink:0;border-right:1px solid var(--border);padding:8px 0;position:sticky;top:0;align-self:flex-start}
+.to-tab{display:flex;align-items:center;gap:10px;padding:12px 16px;min-height:44px;cursor:pointer;color:var(--muted);font-size:var(--fs-sm);font-weight:500;border:none;background:transparent;width:100%;text-align:left;font-family:inherit;border-left:3px solid transparent;transition:all 0.15s}
+.to-tab:hover{color:var(--text);background:var(--surface-2)}
+.to-tab-active{color:var(--accent)!important;border-left-color:var(--accent);background:var(--accent-soft)!important;font-weight:600}
+.to-tab i{font-size:1.125rem;width:20px;text-align:center;flex-shrink:0}
+
+.to-content{flex:1;min-width:0;padding:0 0 0 28px;max-width:720px}
+
+/* Mobile: horizontal pills */
+@media(max-width:767px){
+  .to-layout{flex-direction:column}
+  .to-tabs{width:100%;flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--border);padding:8px 12px;gap:4px;display:flex;scrollbar-width:none;position:static}
+  .to-tabs::-webkit-scrollbar{display:none}
+  .to-tab{white-space:nowrap;border-left:none;border-bottom:2px solid transparent;border-radius:var(--r-sm);padding:10px 16px;font-size:var(--fs-sm);min-height:44px}
+  .to-tab-active{border-bottom-color:var(--accent);border-left-color:transparent}
+  .to-content{padding:20px 0 0}
+}
+
+/* ── Tab Section ── */
+.to-section{margin-bottom:32px}
+.to-section-label{font-size:0.6875rem;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+
+/* ── Control Card ── */
+.to-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:20px;margin-bottom:16px}
+.to-card-label{font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.to-card-desc{font-size:0.75rem;color:var(--muted);margin-bottom:12px}
+
+/* ── Labeled Slider ── */
+.to-slider-row{display:flex;align-items:center;gap:12px}
+.to-slider{flex:1;accent-color:var(--accent);cursor:pointer;height:6px}
+.to-slider-val{font-size:0.8125rem;font-weight:600;color:var(--text);min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ── Select Cards (radio group) ── */
+.to-select-grid{display:flex;flex-wrap:wrap;gap:8px}
+.to-select-card{padding:8px 16px;border-radius:8px;border:2px solid var(--border);cursor:pointer;font-size:0.75rem;font-weight:500;color:var(--text-soft);background:var(--surface);transition:all 0.15s;font-family:inherit;text-align:center}
+.to-select-card:hover{border-color:var(--text-soft)}
+.to-select-card.selected{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+/* ── Toggle Row ── */
+.to-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.to-toggle-row:last-child{border-bottom:none}
+.to-toggle-info{display:flex;flex-direction:column;gap:2px}
+.to-toggle-title{font-size:0.8125rem;font-weight:500;color:var(--text)}
+.to-toggle-desc{font-size:0.6875rem;color:var(--muted)}
+
+/* Toggle switch */
+.to-switch{position:relative;width:40px;height:22px;cursor:pointer;flex-shrink:0}
+.to-switch input{opacity:0;width:0;height:0;position:absolute}
+.to-switch-track{position:absolute;inset:0;background:var(--border);border-radius:11px;transition:background 0.2s}
+.to-switch-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.to-switch input:checked+.to-switch-track{background:var(--accent)}
+.to-switch input:checked+.to-switch-track+.to-switch-thumb{transform:translateX(18px)}
+
+/* ── Font Preview ── */
+.to-font-preview{padding:16px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border)}
+.to-font-preview-heading{font-weight:var(--font-weight-heading);margin-bottom:8px}
+.to-font-preview-body{color:var(--text-soft);font-size:var(--font-size-base)}
+
+/* ── Pill Grid (accent, tone) ── */
+.to-pill-grid{display:flex;flex-wrap:wrap;gap:8px}
+.to-pill{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform 0.15s,border-color 0.15s;flex-shrink:0;position:relative}
+.to-pill:hover{transform:scale(1.1)}
+.to-pill.selected{border-color:var(--text);box-shadow:0 0 0 2px var(--surface)}
+
+/* ── Tone Grid ── */
+.to-tone-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+@media(max-width:480px){.to-tone-grid{grid-template-columns:repeat(4,1fr)}}
+.to-tone{border-radius:8px;border:2.5px solid transparent;cursor:pointer;aspect-ratio:1;transition:transform 0.15s,border-color 0.15s}
+.to-tone:hover{transform:scale(1.08)}
+.to-tone.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
+
+/* ── Picker Row ── */
+.to-picker-row{display:flex;gap:8px;align-items:center;margin-top:10px}
+.to-picker-input{width:34px;height:30px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:2px;flex-shrink:0}
+.to-picker-hex{width:90px;padding:7px 10px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;font-size:0.75rem;color:var(--text);font-family:monospace}
+
+/* ── Mode Toggle ── */
+.to-mode-toggle{display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px}
+.to-mode-btn{flex:1;padding:10px 0;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--muted);background:transparent;font-family:inherit;font-size:0.8125rem;font-weight:500;transition:all 0.15s}
+.to-mode-btn:hover{color:var(--text)}
+.to-mode-btn.selected{background:var(--surface);color:var(--text);box-shadow:0 1px 5px rgba(0,0,0,0.13)}
+
+/* ── Preset Cards ── */
+.to-preset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.to-preset{padding:14px;border-radius:10px;border:2px solid var(--border);cursor:pointer;transition:all 0.15s;background:var(--surface)}
+.to-preset:hover{border-color:var(--text-soft)}
+.to-preset.selected{border-color:var(--accent);background:var(--accent-soft)}
+.to-preset-title{font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.to-preset-desc{font-size:0.6875rem;color:var(--muted)}
+
+/* ── Textarea ── */
+.to-textarea{width:100%;min-height:120px;padding:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-family-code);font-size:0.75rem;resize:vertical}
+
+/* ── Buttons ── */
+.to-btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.to-btn:hover{background:var(--surface);border-color:var(--text-soft)}
+.to-btn-primary{background:var(--accent);color:white;border-color:var(--accent)}
+.to-btn-primary:hover{background:var(--accent-h)}
+.to-btn-danger{color:var(--red);border-color:rgba(239,68,68,0.3)}
+.to-btn-danger:hover{background:rgba(239,68,68,0.1)}
+.to-btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── Mobile enhancements ── */
+@media(max-width:767px){
+  .to-tabs{scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .to-tab{scroll-snap-align:start}
+  .to-content{padding:var(--sp-4) 0 0}
+  .to-card{padding:var(--sp-4)}
+  .to-slider{height:8px}
+  .to-switch{width:48px;height:26px}
+  .to-switch-thumb{width:22px;height:22px}
+  .to-switch input:checked+.to-switch-track+.to-switch-thumb{transform:translateX(22px)}
+  .to-select-card{min-height:44px;display:flex;align-items:center;justify-content:center}
+  .to-pill{width:44px;height:44px}
+  .to-tone{min-height:44px}
+  .to-picker-input{width:44px;height:44px}
+  .to-btn{min-height:44px}
+  .to-preset{padding:var(--sp-4)}
+}
+
+/* ── Touch feedback ── */
+.to-tab:active{opacity:0.7;transform:scale(0.97)}
+.to-select-card:active{transform:scale(0.95)}
+.to-pill:active,.to-tone:active{transform:scale(0.9)}
+.to-btn:active{transform:scale(0.97)}
+.to-preset:active{transform:scale(0.98)}
+.to-switch:active .to-switch-thumb{width:22px}
+
+/* ── Mobile icon-only tabs (< 480px) ── */
+@media(max-width:479px){
+  .to-tab span,.to-tab-label{display:none}
+  .to-tab{padding:10px 14px;justify-content:center}
+  .to-tab i{font-size:1.25rem;margin:0}
+}
+
+/* ── iOS safe area ── */
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  @media(max-width:767px){
+    .to-content{padding-bottom:env(safe-area-inset-bottom)}
+  }
+}
+
+/* ── Focus visible for tab panels ── */
+[role="tabpanel"]:focus{outline:none}
+[role="tabpanel"]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-sm)}

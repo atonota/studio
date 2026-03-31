@@ -5,22 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Dashboard — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="css/primitives.css">
 <link rel="stylesheet" href="css/tokens.css">
+<script src="js/appearance-store.js"></script>
+<script src="js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
-<nav id="topmenu"></nav>
-<div id="tm-backdrop"></div>
 <div id="spotlight-backdrop"></div>
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
 <div id="main" x-data="{
   range: '30',
@@ -33,9 +32,9 @@
       <h1 class="page-title">Dashboard</h1>
       <p class="page-sub">Platform genel gorunumu</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="r in [{v:'7',l:'7 Gun'},{v:'30',l:'30 Gun'},{v:'90',l:'90 Gun'}]">
-        <button @click="range = r.v; updateCharts()" :style="range === r.v ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="r.l"></button>
+        <button @click="range = r.v; updateCharts()" class="tab-btn" :class="range === r.v ? 'active' : ''" x-text="r.l"></button>
       </template>
     </div>
   </div>

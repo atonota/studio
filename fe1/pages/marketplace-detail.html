@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Urun Detay — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,16 +17,16 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
+<div id="main" data-skeleton="dashboard">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-package" style="color:#ef4444;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-package" style="color:#ef4444;font-size:var(--fs-xl)"></i>
     </div>
     <div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <h1 class="page-title">Samsung Galaxy A54</h1>
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Trendyol</span>
       </div>
@@ -34,67 +35,67 @@
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Skor</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">78<span style="font-size:0.875rem;color:var(--muted)">/100</span></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Skor</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">78<span style="font-size:var(--fs-md);color:var(--muted)">/100</span></div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Siralama</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">#12</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Siralama</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">#12</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Yorum</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">342</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Yorum</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">342</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Fiyat</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;8,999</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Fiyat</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">&#8378;8,999</div>
     </div>
   </div>
 
   <!-- Optimization Checklist -->
   <div class="fade-in-d2 card">
     <span class="section-label">Optimizasyon Kontrol Listesi</span>
-    <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
       <!-- Done items -->
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="width:24px;height:24px;border-radius:6px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="width:24px;height:24px;border-radius:var(--r-sm);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
         </div>
-        <span style="font-size:0.875rem;color:var(--text-soft)">Urun basligi optimize edildi</span>
+        <span style="font-size:var(--fs-md);color:var(--text-soft)">Urun basligi optimize edildi</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="width:24px;height:24px;border-radius:6px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="width:24px;height:24px;border-radius:var(--r-sm);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
         </div>
-        <span style="font-size:0.875rem;color:var(--text-soft)">Anahtar kelimeler eklendi</span>
+        <span style="font-size:var(--fs-md);color:var(--text-soft)">Anahtar kelimeler eklendi</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="width:24px;height:24px;border-radius:6px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="width:24px;height:24px;border-radius:var(--r-sm);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
         </div>
-        <span style="font-size:0.875rem;color:var(--text-soft)">Kategori eslesmesi yapildi</span>
+        <span style="font-size:var(--fs-md);color:var(--text-soft)">Kategori eslesmesi yapildi</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="width:24px;height:24px;border-radius:6px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-check" style="color:#22c55e;font-size:0.875rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="width:24px;height:24px;border-radius:var(--r-sm);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-check" style="color:#22c55e;font-size:var(--fs-md)"></i>
         </div>
-        <span style="font-size:0.875rem;color:var(--text-soft)">Fiyat rekabet analizi tamamlandi</span>
+        <span style="font-size:var(--fs-md);color:var(--text-soft)">Fiyat rekabet analizi tamamlandi</span>
       </div>
       <!-- Pending items -->
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-        <div style="width:24px;height:24px;border-radius:6px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-circle" style="color:#eab308;font-size:0.875rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+        <div style="width:24px;height:24px;border-radius:var(--r-sm);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-circle" style="color:#eab308;font-size:var(--fs-md)"></i>
         </div>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Urun aciklamasini genislet</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Urun aciklamasini genislet</span>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;margin-left:auto">Bekliyor</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0">
-        <div style="width:24px;height:24px;border-radius:6px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-circle" style="color:#eab308;font-size:0.875rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0">
+        <div style="width:24px;height:24px;border-radius:var(--r-sm);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-circle" style="color:#eab308;font-size:var(--fs-md)"></i>
         </div>
-        <span style="font-size:0.875rem;font-weight:500;color:var(--text)">Ek gorseller ekle</span>
+        <span style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Ek gorseller ekle</span>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;margin-left:auto">Bekliyor</span>
       </div>
     </div>
@@ -102,6 +103,8 @@
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
 </body>

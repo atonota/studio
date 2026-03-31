@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Icerik Sayfa Listesi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,9 +17,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   searchQuery: '',
   scoreFilter: 'Tumu',
   scoreOptions: ['Tumu','Iyi 80+','Orta 50-79','Dusuk <50'],
@@ -55,35 +56,32 @@
     return rows;
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Icerik Sayfa Listesi</h1>
     <p class="page-sub">Tum sayfalarin icerik kalite analizi</p>
   </div>
 
   <!-- Search + Filter -->
-  <div class="fade-in-d1" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-3);flex-wrap:wrap;margin-bottom:var(--sp-4);align-items:center">
     <div style="position:relative;flex:1;min-width:240px;max-width:400px">
-      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem"></i>
-      <input type="text" placeholder="URL veya baslik ara..." x-model="searchQuery" style="width:100%;padding:10px 14px 10px 40px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;outline:none">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:var(--fs-lg)"></i>
+      <input type="text" placeholder="URL veya baslik ara..." x-model="searchQuery" style="width:100%;padding:var(--sp-3) var(--sp-4) var(--sp-3) 40px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);outline:none">
     </div>
   </div>
 
   <!-- Score Filter Pills -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
     <template x-for="opt in scoreOptions" :key="opt">
       <button @click="scoreFilter = opt"
-        :style="scoreFilter === opt
-          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
-          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
-        x-text="opt"></button>
+        class="pill" :class="scoreFilter === opt ? 'active' : ''" x-text="opt"></button>
     </template>
   </div>
 
   <!-- Pages Table -->
   <div class="fade-in-d2 card" data-paginate="20" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Sayfa Listesi</span>
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('icerik-sayfalar',['URL','Skor','Kelime','Guncelleme','Schema','AI Algilama'])">CSV Indir</button>
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('icerik-sayfalar',['URL','Skor','Kelime','Guncelleme','Schema','AI Algilama'])">CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>
@@ -101,15 +99,15 @@
           <tr style="cursor:pointer" @click="window.location.href='content-detail.html'">
             <td data-label="URL"><span style="font-weight:500;color:var(--text)" x-text="row.url"></span></td>
             <td data-label="Skor"><span class="badge" :style="'background:'+row.scoreBg+';color:'+row.scoreColor" x-text="row.score"></span></td>
-            <td data-label="Kelime" style="font-size:0.8125rem;color:var(--text-soft)" x-text="row.words"></td>
-            <td data-label="Guncelleme" style="font-size:0.8125rem;color:var(--muted)" x-text="row.updated"></td>
+            <td data-label="Kelime" style="font-size:var(--fs-sm);color:var(--text-soft)" x-text="row.words"></td>
+            <td data-label="Guncelleme" style="font-size:var(--fs-sm);color:var(--muted)" x-text="row.updated"></td>
             <td data-label="Schema"><span class="badge" :style="'background:'+row.schemaBg+';color:'+row.schemaColor" x-text="row.schema"></span></td>
-            <td data-label="AI Algilama" style="font-size:0.8125rem;color:var(--text-soft)" x-text="row.ai"></td>
+            <td data-label="AI Algilama" style="font-size:var(--fs-sm);color:var(--text-soft)" x-text="row.ai"></td>
           </tr>
         </template>
       </tbody>
     </table>
-    <div x-show="filtered.length === 0" style="padding:24px;text-align:center;color:var(--muted);font-size:0.875rem">
+    <div x-show="filtered.length === 0" style="padding:var(--sp-6);text-align:center;color:var(--muted);font-size:var(--fs-md)">
       Secili filtrelere uygun sayfa bulunamadi.
     </div>
   </div>

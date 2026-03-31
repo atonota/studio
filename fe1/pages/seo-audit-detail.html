@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>SEO Denetim Detay — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,81 +19,81 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ severityFilter: 'tumu', sections: { teknik: true, icerik: true, perf: true, guvenlik: true } }">
+<div id="main" data-skeleton="table" x-data="{ severityFilter: 'tumu', sections: { teknik: true, icerik: true, perf: true, guvenlik: true } }">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <a href="seo.html" style="width:36px;height:36px;border-radius:8px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;text-decoration:none">
-        <i class="ph ph-arrow-left" style="color:var(--muted);font-size:1rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <a href="seo.html" style="width:36px;height:36px;border-radius:var(--r-md);background:var(--surface-2);display:flex;align-items:center;justify-content:center;text-decoration:none">
+        <i class="ph ph-arrow-left" style="color:var(--muted);font-size:var(--fs-lg)"></i>
       </a>
       <div>
         <h1 class="page-title">SEO Denetim #1247</h1>
         <p class="page-sub">28 Mart 2026 — atonota.com</p>
       </div>
     </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('seo-denetim',['Kategori','Ciddiyet','Sorun','Sayfa','Oneri'])">CSV Indir</button>
+    <div style="display:flex;gap:var(--sp-2)">
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('seo-denetim',['Kategori','Ciddiyet','Sorun','Sayfa','Oneri'])">CSV Indir</button>
       <button class="btn-primary" @click="$store.toast.show('Rapor indiriliyor...','info')"><i class="ph ph-file-pdf"></i> Rapor Indir</button>
     </div>
   </div>
 
   <!-- Severity Filter -->
-  <div class="fade-in" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
     <template x-for="f in ['tumu','Kritik','Orta','Dusuk']">
-      <button @click="severityFilter = f" :style="severityFilter === f ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 14px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="f === 'tumu' ? 'Tumu' : f"></button>
+      <button @click="severityFilter = f" class="tab-btn" :class="severityFilter === f ? 'active' : ''" x-text="f === 'tumu' ? 'Tumu' : f"></button>
     </template>
   </div>
 
   <!-- Overall Score -->
-  <div class="fade-in-d1 card" style="text-align:center;margin-bottom:24px;padding:32px">
-    <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">Genel Skor</div>
+  <div class="fade-in-d1 card" style="text-align:center;margin-bottom:var(--sp-6);padding:var(--sp-8)">
+    <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Genel Skor</div>
     <div style="font-size:3.5rem;font-weight:700;color:#eab308;line-height:1">72</div>
-    <div style="font-size:0.875rem;color:var(--muted);margin-top:4px">/ 100</div>
-    <div style="width:100%;max-width:300px;height:6px;background:var(--surface-2);border-radius:3px;margin:16px auto 0;overflow:hidden">
-      <div style="width:72%;height:100%;background:#eab308;border-radius:3px"></div>
+    <div style="font-size:var(--fs-md);color:var(--muted);margin-top:var(--sp-1)">/ 100</div>
+    <div style="width:100%;max-width:300px;height:6px;background:var(--surface-2);border-radius:var(--r-xs);margin:var(--sp-4) auto 0;overflow:hidden">
+      <div style="width:72%;height:100%;background:#eab308;border-radius:var(--r-xs)"></div>
     </div>
   </div>
 
   <!-- Category Cards -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#ef4444">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Teknik SEO</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#ef4444">18</div>
-      <div style="font-size:0.75rem;color:var(--muted)">sorun</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Teknik SEO</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#ef4444">18</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted)">sorun</div>
     </div>
     <div class="stat-card" style="--stripe:#f97316">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Icerik</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#f97316">12</div>
-      <div style="font-size:0.75rem;color:var(--muted)">sorun</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Icerik</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#f97316">12</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted)">sorun</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Performans</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#eab308">8</div>
-      <div style="font-size:0.75rem;color:var(--muted)">sorun</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Performans</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#eab308">8</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted)">sorun</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Guvenlik</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#a855f7">9</div>
-      <div style="font-size:0.75rem;color:var(--muted)">sorun</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Guvenlik</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#a855f7">9</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted)">sorun</div>
     </div>
   </div>
 
   <!-- Teknik SEO Issues -->
-  <div class="fade-in-d3 card" data-paginate="10" style="margin-bottom:24px">
-    <div @click="sections.teknik = !sections.teknik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:12px">
+  <div class="fade-in-d3 card" data-paginate="10" style="margin-bottom:var(--sp-6)">
+    <div @click="sections.teknik = !sections.teknik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:var(--sp-3)">
       <span class="section-label" style="margin-bottom:0">Teknik SEO Sorunlari</span>
       <i class="ph" :class="sections.teknik ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
     </div>
-    <div x-show="sections.teknik" x-transition style="display:flex;flex-direction:column;gap:12px">
+    <div x-show="sections.teknik" x-transition style="display:flex;flex-direction:column;gap:var(--sp-3)">
       <template x-for="item in [{s:'Kritik',t:'Canonical tag eksik',p:'/blog/seo-rehberi',f:'Her sayfaya rel=canonical etiketi ekleyin'},{s:'Kritik',t:'Robots.txt engeli',p:'/api/*',f:'API yollarini robots.txt de izin verin veya noindex kullanin'},{s:'Orta',t:'Hreflang etiketi hatali',p:'/en/about',f:'hreflang=en yerine hreflang=en-US kullanin'},{s:'Orta',t:'Sitemap.xml guncel degil',p:'/sitemap.xml',f:'Sitemap i yeni eklenen 14 sayfayla guncelleyin'},{s:'Dusuk',t:'Structured data eksik',p:'/urunler',f:'Urun sayfalarinda Product schema markup i ekleyin'}].filter(i => severityFilter === 'tumu' || i.s === severityFilter)">
-        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
           <span class="badge" :style="'flex-shrink:0;background:rgba('+(item.s==='Kritik'?'239,68,68':item.s==='Orta'?'249,115,22':'234,179,8')+',0.1);color:'+(item.s==='Kritik'?'#ef4444':item.s==='Orta'?'#f97316':'#eab308')" x-text="item.s"></span>
           <div style="flex:1;min-width:0">
-            <div style="font-size:0.875rem;font-weight:500;color:var(--text)" x-text="item.t"></div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px" x-text="item.p"></div>
-            <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i><span x-text="item.f"></span></div>
+            <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)" x-text="item.t"></div>
+            <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)" x-text="item.p"></div>
+            <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i><span x-text="item.f"></span></div>
           </div>
         </div>
       </template>
@@ -100,100 +101,100 @@
   </div>
 
   <!-- Icerik Issues -->
-  <div class="fade-in-d4 card" style="margin-bottom:24px">
-    <div @click="sections.icerik = !sections.icerik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:12px">
+  <div class="fade-in-d4 card" style="margin-bottom:var(--sp-6)">
+    <div @click="sections.icerik = !sections.icerik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:var(--sp-3)">
       <span class="section-label" style="margin-bottom:0">Icerik Sorunlari</span>
       <i class="ph" :class="sections.icerik ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
     </div>
-    <div x-show="sections.icerik" x-transition style="display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px" x-show="severityFilter === 'tumu' || severityFilter === 'Kritik'">
+    <div x-show="sections.icerik" x-transition style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)" x-show="severityFilter === 'tumu' || severityFilter === 'Kritik'">
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;flex-shrink:0">Kritik</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Yinelenen meta description</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/hizmetler, /cozumler</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Her sayfa icin benzersiz meta description yazin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Yinelenen meta description</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/hizmetler, /cozumler</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Her sayfa icin benzersiz meta description yazin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316;flex-shrink:0">Orta</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Ince icerik (300 kelime alti)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/blog/kisa-posta-1, /blog/kisa-posta-2</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Icerik uzunlugunu en az 600 kelimeye cikarin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Ince icerik (300 kelime alti)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/blog/kisa-posta-1, /blog/kisa-posta-2</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Icerik uzunlugunu en az 600 kelimeye cikarin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316;flex-shrink:0">Orta</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Alt tag eksik gorseller</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/hakkimizda (7 gorsel)</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Tum gorsellere aciklayici alt text ekleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Alt tag eksik gorseller</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/hakkimizda (7 gorsel)</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Tum gorsellere aciklayici alt text ekleyin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Dusuk</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">H1 etiketi birden fazla</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/anasayfa</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Sayfa basina tek H1 etiketi kullanin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">H1 etiketi birden fazla</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/anasayfa</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Sayfa basina tek H1 etiketi kullanin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Dusuk</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Kirik ic linkler</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/blog/eski-makale (3 link)</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>404 veren linkleri guncel sayfalara yonlendirin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Kirik ic linkler</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/blog/eski-makale (3 link)</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>404 veren linkleri guncel sayfalara yonlendirin</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Performans Issues -->
-  <div class="fade-in-d5 card" style="margin-bottom:24px">
-    <div @click="sections.perf = !sections.perf" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:12px">
+  <div class="fade-in-d5 card" style="margin-bottom:var(--sp-6)">
+    <div @click="sections.perf = !sections.perf" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:var(--sp-3)">
       <span class="section-label" style="margin-bottom:0">Performans Sorunlari</span>
       <i class="ph" :class="sections.perf ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;flex-shrink:0">Kritik</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">LCP 4.2s (hedef: &lt;2.5s)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/anasayfa</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Hero gorselini WebP'ye donusturun ve preload ekleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">LCP 4.2s (hedef: &lt;2.5s)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/anasayfa</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Hero gorselini WebP'ye donusturun ve preload ekleyin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316;flex-shrink:0">Orta</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Render-blocking JS (3 dosya)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/tum-sayfalar</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Script'lere defer veya async ekleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Render-blocking JS (3 dosya)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/tum-sayfalar</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Script'lere defer veya async ekleyin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316;flex-shrink:0">Orta</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Sikistirilmamis gorseller (2.4 MB)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/urunler</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Gorselleri WebP formatina donusturup boyutlandirin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Sikistirilmamis gorseller (2.4 MB)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/urunler</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Gorselleri WebP formatina donusturup boyutlandirin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Dusuk</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">CLS 0.18 (hedef: &lt;0.1)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/blog</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Gorsel ve reklam alanlarina sabit boyut tanimlayin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">CLS 0.18 (hedef: &lt;0.1)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/blog</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Gorsel ve reklam alanlarina sabit boyut tanimlayin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Dusuk</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Kullanilmayan CSS (38 KB)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/tum-sayfalar</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>PurgeCSS ile kullanilmayan stilleri temizleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Kullanilmayan CSS (38 KB)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/tum-sayfalar</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>PurgeCSS ile kullanilmayan stilleri temizleyin</div>
         </div>
       </div>
     </div>
@@ -201,49 +202,49 @@
 
   <!-- Guvenlik Issues -->
   <div class="fade-in-d6 card">
-    <div @click="sections.guvenlik = !sections.guvenlik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:12px">
+    <div @click="sections.guvenlik = !sections.guvenlik" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:var(--sp-3)">
       <span class="section-label" style="margin-bottom:0">Guvenlik Sorunlari</span>
       <i class="ph" :class="sections.guvenlik ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;flex-shrink:0">Kritik</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Mixed content (HTTP kaynak)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/urunler (2 gorsel)</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Tum kaynaklari HTTPS uzerinden yukleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Mixed content (HTTP kaynak)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/urunler (2 gorsel)</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Tum kaynaklari HTTPS uzerinden yukleyin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316;flex-shrink:0">Orta</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">CSP header eksik</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/tum-sayfalar</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Content-Security-Policy header'i ekleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">CSP header eksik</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/tum-sayfalar</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Content-Security-Policy header'i ekleyin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316;flex-shrink:0">Orta</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">X-Frame-Options eksik</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/tum-sayfalar</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>X-Frame-Options: SAMEORIGIN header'i ekleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">X-Frame-Options eksik</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/tum-sayfalar</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>X-Frame-Options: SAMEORIGIN header'i ekleyin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Dusuk</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">HSTS suresi kisa (30 gun)</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/tum-sayfalar</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>max-age degerini en az 31536000 (1 yil) yapin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">HSTS suresi kisa (30 gun)</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/tum-sayfalar</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>max-age degerini en az 31536000 (1 yil) yapin</div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--surface-2);border-radius:10px">
+      <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Dusuk</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Referrer-Policy eksik</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">/tum-sayfalar</div>
-          <div style="font-size:0.75rem;color:var(--accent);margin-top:4px"><i class="ph ph-magic-wand" style="font-size:0.6875rem;margin-right:4px"></i>Referrer-Policy: strict-origin-when-cross-origin ekleyin</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Referrer-Policy eksik</div>
+          <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">/tum-sayfalar</div>
+          <div style="font-size:var(--fs-sm);color:var(--accent);margin-top:var(--sp-1)"><i class="ph ph-magic-wand" style="font-size:var(--fs-xs);margin-right:var(--sp-1)"></i>Referrer-Policy: strict-origin-when-cross-origin ekleyin</div>
         </div>
       </div>
     </div>

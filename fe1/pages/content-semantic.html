@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Semantik Icerik Haritasi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,16 +19,16 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ showCannibalization: true }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+<div id="main" data-skeleton="table" x-data="{ showCannibalization: true }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">Semantik Icerik Haritasi</h1>
       <p class="page-sub">Icerik kumeleri ve kannibalizasyon tespiti</p>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <span style="font-size:0.8125rem;color:var(--muted)">Kannibalizasyon</span>
+    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+      <span style="font-size:var(--fs-sm);color:var(--muted)">Kannibalizasyon</span>
       <button @click="showCannibalization = !showCannibalization" :style="showCannibalization ? 'background:var(--accent)' : 'background:var(--surface-2)'" style="width:40px;height:22px;border-radius:11px;border:1px solid var(--border);cursor:pointer;position:relative;transition:all .2s">
         <div :style="showCannibalization ? 'transform:translateX(18px);background:#fff' : 'transform:translateX(2px);background:var(--muted)'" style="width:16px;height:16px;border-radius:50%;transition:all .2s;position:absolute;top:2px"></div>
       </button>
@@ -35,71 +36,71 @@
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kume</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">12</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kume</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">12</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sayfa</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">142</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sayfa</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">142</div>
     </div>
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Overlap / Kannibalizasyon</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">4</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Overlap / Kannibalizasyon</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444;margin-top:var(--sp-2)">4</div>
     </div>
   </div>
 
   <!-- Scatter Plot Placeholder -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Semantik Harita (t-SNE)</span>
-    <div style="width:100%;height:360px;margin-top:12px;border-radius:8px;background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+    <div style="width:100%;height:360px;margin-top:var(--sp-3);border-radius:var(--r-md);background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-3)">
       <i class="ph ph-graph" style="font-size:3rem;color:var(--muted)"></i>
-      <div style="font-size:0.875rem;color:var(--text-soft);text-align:center">Semantik harita (t-SNE scatter plot)<br/>142 sayfa — 12 kume</div>
-      <div style="font-size:0.75rem;color:var(--muted)">pgvector embedding verileri yuklendikten sonra aktif olacak</div>
+      <div style="font-size:var(--fs-md);color:var(--text-soft);text-align:center">Semantik harita (t-SNE scatter plot)<br/>142 sayfa — 12 kume</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted)">pgvector embedding verileri yuklendikten sonra aktif olacak</div>
     </div>
   </div>
 
   <!-- Cannibalization Alerts -->
   <div x-show="showCannibalization" x-transition class="fade-in-d3 card">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-      <i class="ph ph-warning" style="color:#ef4444;font-size:1.125rem"></i>
+    <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+      <i class="ph ph-warning" style="color:#ef4444;font-size:var(--fs-lg)"></i>
       <span class="section-label" style="margin-bottom:0">Kannibalizasyon Uyarilari</span>
     </div>
-    <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
       <!-- Pair 1 -->
-      <div style="padding:16px;border-radius:8px;border:1px solid var(--border);background:var(--surface)">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="padding:var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
           <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Yuksek Overlap</span>
-          <span style="font-size:0.75rem;color:var(--muted)">Hedef keyword: "seo arac karsilastirma"</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Hedef keyword: "seo arac karsilastirma"</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;font-size:0.8125rem">
-          <div style="flex:1;padding:10px 14px;border-radius:6px;background:var(--surface-2)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-sm)">
+          <div style="flex:1;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-sm);background:var(--surface-2)">
             <span style="color:var(--text);font-weight:500">/blog/seo-araclari-2026</span>
-            <span style="color:var(--muted);margin-left:8px">#8</span>
+            <span style="color:var(--muted);margin-left:var(--sp-2)">#8</span>
           </div>
           <i class="ph ph-arrows-left-right" style="color:#ef4444;flex-shrink:0"></i>
-          <div style="flex:1;padding:10px 14px;border-radius:6px;background:var(--surface-2)">
+          <div style="flex:1;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-sm);background:var(--surface-2)">
             <span style="color:var(--text);font-weight:500">/blog/en-iyi-seo-araclari</span>
-            <span style="color:var(--muted);margin-left:8px">#14</span>
+            <span style="color:var(--muted);margin-left:var(--sp-2)">#14</span>
           </div>
         </div>
       </div>
       <!-- Pair 2 -->
-      <div style="padding:16px;border-radius:8px;border:1px solid var(--border);background:var(--surface)">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="padding:var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta Overlap</span>
-          <span style="font-size:0.75rem;color:var(--muted)">Hedef keyword: "icerik pazarlama stratejisi"</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Hedef keyword: "icerik pazarlama stratejisi"</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;font-size:0.8125rem">
-          <div style="flex:1;padding:10px 14px;border-radius:6px;background:var(--surface-2)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-sm)">
+          <div style="flex:1;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-sm);background:var(--surface-2)">
             <span style="color:var(--text);font-weight:500">/blog/icerik-pazarlama</span>
-            <span style="color:var(--muted);margin-left:8px">#12</span>
+            <span style="color:var(--muted);margin-left:var(--sp-2)">#12</span>
           </div>
           <i class="ph ph-arrows-left-right" style="color:#eab308;flex-shrink:0"></i>
-          <div style="flex:1;padding:10px 14px;border-radius:6px;background:var(--surface-2)">
+          <div style="flex:1;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-sm);background:var(--surface-2)">
             <span style="color:var(--text);font-weight:500">/rehber/icerik-stratejisi</span>
-            <span style="color:var(--muted);margin-left:8px">#19</span>
+            <span style="color:var(--muted);margin-left:var(--sp-2)">#19</span>
           </div>
         </div>
       </div>

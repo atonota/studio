@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════
+   KATMAN 1 — Primitive Tokens
+   Ham hex degerler. Insan yazar, makine tuketir.
+   Asla dogrudan bilesen CSS'inde kullanilmaz.
+   Semantic tokenlar bu degerlere referans verir.
+═══════════════════════════════════════════ */
+
+:root {
+  /* ── Brand ── */
+  --p-orange-600: #C2410C;
+  --p-orange-700: #9A3412;
+  --p-orange-800: #7C2D12;
+  --p-logo-orange: #C94B1A;
+
+  /* ── Status ── */
+  --p-green-500: #22c55e;
+  --p-green-600: #16a34a;
+  --p-blue-500: #3b82f6;
+  --p-blue-600: #2563eb;
+  --p-purple-500: #a855f7;
+  --p-purple-600: #9333ea;
+  --p-yellow-500: #eab308;
+  --p-yellow-600: #ca8a04;
+  --p-red-500: #ef4444;
+  --p-red-600: #dc2626;
+
+  /* ── Social platforms ── */
+  --p-meta: #1877f2;
+  --p-tiktok: #ff0050;
+  --p-linkedin: #0a66c2;
+  --p-whatsapp: #25d366;
+
+  /* ── Light surfaces (milk tone — default) ── */
+  --p-light-base: #F8F5EC;
+  --p-light-surface: #F0EDE3;
+  --p-light-surface-2: #E8E4D8;
+  --p-light-border: #D6D1C2;
+  --p-light-muted: #9B9485;
+  --p-light-text-soft: #5C5649;
+  --p-light-text: #1E1A14;
+
+  /* ── Dark surfaces (coal-warm — default) ── */
+  --p-dark-base: #161412;
+  --p-dark-surface: #201C18;
+  --p-dark-surface-2: #2A2420;
+  --p-dark-border: #3C342C;
+  --p-dark-muted: #7B7269;
+  --p-dark-text-soft: #BDB4A9;
+  --p-dark-text: #F2EDE5;
+
+  /* ── Glass ── */
+  --p-glass-light-bg: rgba(255,255,255,0.7);
+  --p-glass-light-border: rgba(0,0,0,0.08);
+  --p-glass-dark-bg: rgba(255,255,255,0.04);
+  --p-glass-dark-border: rgba(255,255,255,0.07);
+  --p-glass-blur: blur(18px) saturate(160%);
+
+  /* ── Accent presets (pastel palette) ── */
+  --p-accent-cyan: #67C4D4;
+  --p-accent-cyan-h: #4AABBD;
+  --p-accent-magenta: #D966A8;
+  --p-accent-magenta-h: #C2498E;
+  --p-accent-yellow: #D4C84A;
+  --p-accent-yellow-h: #BCB02C;
+  --p-accent-red: #E07070;
+  --p-accent-red-h: #C85555;
+  --p-accent-green: #6DC26D;
+  --p-accent-green-h: #52A852;
+  --p-accent-blue: #6A99D4;
+  --p-accent-blue-h: #4D80BE;
+  --p-accent-violet: #9B7ECC;
+  --p-accent-violet-h: #8264B8;
+  --p-accent-orange: #E0A05A;
+  --p-accent-orange-h: #C98740;
+
+  /* ── Neutral (white/black) ── */
+  --p-white: #FFFFFF;
+  --p-black: #000000;
+
+  /* ── Chart series ── */
+  --p-chart-1: #C2410C;
+  --p-chart-2: #3b82f6;
+  --p-chart-3: #22c55e;
+  --p-chart-4: #a855f7;
+  --p-chart-5: #eab308;
+}

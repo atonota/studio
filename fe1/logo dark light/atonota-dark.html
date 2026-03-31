@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AtonotA</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;}
+body{display:flex;align-items:center;justify-content:center;}
+svg{width:min(480px,90vw);height:auto;display:block;overflow:visible;}
+.jf{font-family:'Josefin Sans',sans-serif;}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 320 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="cc">
+      <rect id="cr" x="0" y="0" width="320" height="0"/>
+    </clipPath>
+  </defs>
+  <path class="cl" d="M160,12 L12,12 L12,92 L160,92" stroke="#C94B1A" stroke-width="1.1" fill="none" stroke-linejoin="miter" stroke-linecap="square" opacity="0.7"/>
+  <path class="cr" d="M160,12 L308,12 L308,92 L160,92" stroke="#C94B1A" stroke-width="1.1" fill="none" stroke-linejoin="miter" stroke-linecap="square" opacity="0.7"/>
+  <text class="jf" x="160" y="70" text-anchor="middle" font-weight="700" font-size="32" letter-spacing="7" fill="#FFFFFF">AtonotA</text>
+  <text class="jf" id="ct" x="160" y="70" text-anchor="middle" font-weight="700" font-size="32" letter-spacing="7" fill="#C94B1A" clip-path="url(#cc)">AtonotA</text>
+  <line id="dl" x1="0" y1="0" x2="320" y2="0" stroke="#000" stroke-width="2" opacity="0.7"/>
+</svg>
+<script>
+const P=['#C94B1A','#00FFFF','#FFF000','#FF00FF','#FF0000','#00CC00','#0044FF','#8800FF'];
+let i=0;
+const cr=document.getElementById('cr'),ct=document.getElementById('ct'),dl=document.getElementById('dl');
+function upd(y){cr.setAttribute('height',y);dl.setAttribute('y1',y);dl.setAttribute('y2',y);}
+function cycle(){
+  ct.setAttribute('fill',P[i]);i=(i+1)%P.length;
+  const s={y:0};
+  gsap.timeline({onComplete:cycle})
+    .to(s,{y:104,duration:5,ease:'power1.inOut',onUpdate(){upd(s.y);}})
+    .to(s,{y:0,duration:5,ease:'power1.inOut',onUpdate(){upd(s.y);}});
+}
+document.fonts.ready.then(()=>{
+  const svg=document.querySelector('svg');
+  const paths=[...svg.querySelectorAll('.cl,.cr')];
+  paths.forEach(p=>{const l=p.getTotalLength();gsap.set(p,{strokeDasharray:l,strokeDashoffset:l});gsap.to(p,{strokeDashoffset:0,duration:6,repeat:-1,yoyo:true,ease:'power1.inOut'});});
+  cycle();
+});
+</script>
+</body>
+</html>

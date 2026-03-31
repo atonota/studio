@@ -1,0 +1,44 @@
+// ============================================
+// atonota Studio — Motion Tokens
+// ============================================
+@use 'sass:map';
+
+$easings: (
+  'default':    cubic-bezier(0.4, 0, 0.2, 1),
+  'in':         cubic-bezier(0.4, 0, 1, 1),
+  'out':        cubic-bezier(0, 0, 0.2, 1),
+  'in-out':     cubic-bezier(0.4, 0, 0.2, 1),
+  'spring':     cubic-bezier(0.34, 1.56, 0.64, 1),
+  'bounce':     cubic-bezier(0.68, -0.55, 0.27, 1.55),
+) !default;
+
+$durations: (
+  'instant':  0ms,
+  'fast':     100ms,
+  'normal':   200ms,
+  'moderate': 300ms,
+  'slow':     400ms,
+  'slower':   600ms,
+) !default;
+
+/// Get an easing function.
+/// @param {String} $key
+/// @return {String}
+@function easing($key) {
+  $val: map.get($easings, $key);
+  @if not $val {
+    @error 'Unknown easing "#{$key}". Available: #{map.keys($easings)}';
+  }
+  @return $val;
+}
+
+/// Get a duration value.
+/// @param {String} $key
+/// @return {Time}
+@function duration($key) {
+  $val: map.get($durations, $key);
+  @if $val == null {
+    @error 'Unknown duration "#{$key}". Available: #{map.keys($durations)}';
+  }
+  @return $val;
+}

@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Performans Onerileri — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,93 +19,93 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ severityFilter: 'tumu' }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ severityFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Performans Onerileri</h1>
       <p class="page-sub">Onceliklendirilmis iyilestirme onerileri</p>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'kritik',l:'Kritik'},{v:'orta',l:'Orta'},{v:'dusuk',l:'Dusuk'}]">
-        <button @click="severityFilter = s.v" :style="severityFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+        <button @click="severityFilter = s.v" class="tab-btn" :class="severityFilter === s.v ? 'active' : ''" x-text="s.l"></button>
       </template>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kritik</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">2</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kritik</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444;margin-top:var(--sp-2)">2</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Orta</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#eab308;margin-top:8px">5</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Orta</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#eab308;margin-top:var(--sp-2)">5</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dusuk</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#3b82f6;margin-top:8px">8</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Dusuk</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#3b82f6;margin-top:var(--sp-2)">8</div>
     </div>
   </div>
 
   <!-- Prioritized List -->
   <div class="fade-in-d2 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
       <span class="section-label" style="margin-bottom:0">Oncelik Sirasi</span>
     </div>
 
     <!-- Item 1 -->
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600;flex-shrink:0;margin-top:2px">Kritik</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600;flex-shrink:0;margin-top:2px">Kritik</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Kullanilmayan CSS kaldir</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Etki: LCP -0.4s iyilesme bekleniyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Kullanilmayan CSS kaldir</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Etki: LCP -0.4s iyilesme bekleniyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600;flex-shrink:0;margin-top:2px">Kolay</span>
-      <button @click="$store.toast.show('Kullanilmayan CSS kaldirma basladi', 'success')" style="padding:4px 12px;border-radius:6px;background:var(--accent);color:#fff;border:none;font-size:0.6875rem;font-weight:500;cursor:pointer;flex-shrink:0;margin-top:2px;font-family:inherit">Uygula</button>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600;flex-shrink:0;margin-top:2px">Kolay</span>
+      <button @click="$store.toast.show('Kullanilmayan CSS kaldirma basladi', 'success')" style="padding:var(--sp-1) var(--sp-3);border-radius:var(--r-sm);background:var(--accent);color:#fff;border:none;font-size:var(--fs-xs);font-weight:500;cursor:pointer;flex-shrink:0;margin-top:2px;font-family:inherit">Uygula</button>
     </div>
 
     <!-- Item 2 -->
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600;flex-shrink:0;margin-top:2px">Kritik</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600;flex-shrink:0;margin-top:2px">Kritik</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Gorsel boyutlarini optimize et</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Etki: LCP -0.6s iyilesme bekleniyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Gorsel boyutlarini optimize et</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Etki: LCP -0.6s iyilesme bekleniyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600;flex-shrink:0;margin-top:2px">Orta</span>
-      <button @click="$store.toast.show('Gorsel optimizasyonu basladi', 'success')" style="padding:4px 12px;border-radius:6px;background:var(--accent);color:#fff;border:none;font-size:0.6875rem;font-weight:500;cursor:pointer;flex-shrink:0;margin-top:2px;font-family:inherit">Uygula</button>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600;flex-shrink:0;margin-top:2px">Orta</span>
+      <button @click="$store.toast.show('Gorsel optimizasyonu basladi', 'success')" style="padding:var(--sp-1) var(--sp-3);border-radius:var(--r-sm);background:var(--accent);color:#fff;border:none;font-size:var(--fs-xs);font-weight:500;cursor:pointer;flex-shrink:0;margin-top:2px;font-family:inherit">Uygula</button>
     </div>
 
     <!-- Item 3 -->
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600;flex-shrink:0;margin-top:2px">Orta</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600;flex-shrink:0;margin-top:2px">Orta</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Font preload ekle</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Etki: FCP -0.2s iyilesme bekleniyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Font preload ekle</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Etki: FCP -0.2s iyilesme bekleniyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600;flex-shrink:0;margin-top:2px">Kolay</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600;flex-shrink:0;margin-top:2px">Kolay</span>
     </div>
 
     <!-- Item 4 -->
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600;flex-shrink:0;margin-top:2px">Orta</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600;flex-shrink:0;margin-top:2px">Orta</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Lazy loading uygula</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Etki: LCP -0.3s iyilesme bekleniyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Lazy loading uygula</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Etki: LCP -0.3s iyilesme bekleniyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600;flex-shrink:0;margin-top:2px">Kolay</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600;flex-shrink:0;margin-top:2px">Kolay</span>
     </div>
 
     <!-- Item 5 -->
-    <div style="padding:16px 20px;display:flex;align-items:flex-start;gap:14px">
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600;flex-shrink:0;margin-top:2px">Dusuk</span>
+    <div style="padding:var(--sp-4) var(--sp-5);display:flex;align-items:flex-start;gap:var(--sp-4)">
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(59,130,246,0.1);color:#3b82f6;font-weight:600;flex-shrink:0;margin-top:2px">Dusuk</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">JS bundle boyutunu azalt</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Etki: TTI -0.5s iyilesme bekleniyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">JS bundle boyutunu azalt</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Etki: TTI -0.5s iyilesme bekleniyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600;flex-shrink:0;margin-top:2px">Zor</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600;flex-shrink:0;margin-top:2px">Zor</span>
     </div>
   </div>
 </div>

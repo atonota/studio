@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Yeni Otomasyon Kurali — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,39 +18,39 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="form({kural_adi:'', platform:'Tum Platformlar', metrik:'CPA', operator:'> Buyuk', esik:'', aksiyon:'Duraklat', bekleme:'15 dakika'})">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="form" x-data="form({kural_adi:'', platform:'Tum Platformlar', metrik:'CPA', operator:'> Buyuk', esik:'', aksiyon:'Duraklat', bekleme:'15 dakika'})">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Yeni Otomasyon Kurali</h1>
     <p class="page-sub">Otomatik kampanya yonetim kurali olustur</p>
   </div>
 
-  <div class="fade-in-d1 card" style="padding:24px;max-width:640px">
+  <div class="fade-in-d1 card" style="padding:var(--sp-6);max-width:640px">
     <form @submit.prevent="
       errors = {};
       if(!fields.kural_adi.trim()) errors.kural_adi = 'Kural adi zorunlu';
       if(!fields.esik || Number(fields.esik) <= 0) errors.esik = 'Esik degeri zorunlu';
       if(Object.keys(errors).length === 0) { submitting=true; setTimeout(()=>{ submitting=false; submitted=true; $store.toast.show('Kural basariyla kaydedildi!','success') }, 1200) }
-    " style="display:flex;flex-direction:column;gap:20px">
+    " style="display:flex;flex-direction:column;gap:var(--sp-5)">
       <!-- Kural Adi -->
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Kural Adi</label>
-        <input type="text" x-model="fields.kural_adi" placeholder="ornek: CPA Koruma" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.875rem;outline:none;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Kural Adi</label>
+        <input type="text" x-model="fields.kural_adi" placeholder="ornek: CPA Koruma" style="width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);outline:none;box-sizing:border-box"
                :style="hasError('kural_adi') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('kural_adi')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('kural_adi')"></span>
+        <span x-show="hasError('kural_adi')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('kural_adi')"></span>
       </div>
 
       <!-- IF Section -->
-      <div style="border:1px solid var(--border);border-radius:10px;padding:16px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-          <span style="font-size:0.6875rem;font-weight:700;color:var(--accent);text-transform:uppercase;background:rgba(194,65,12,0.1);padding:2px 8px;border-radius:4px">IF</span>
-          <span style="font-size:0.8125rem;color:var(--text-soft)">Kosul tanimla</span>
+      <div style="border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+          <span style="font-size:var(--fs-xs);font-weight:700;color:var(--accent);text-transform:uppercase;background:rgba(194,65,12,0.1);padding:2px var(--sp-2);border-radius:var(--r-sm)">IF</span>
+          <span style="font-size:var(--fs-sm);color:var(--text-soft)">Kosul tanimla</span>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)">
           <div>
-            <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);margin-bottom:4px">Platform</label>
-            <select x-model="fields.platform" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;box-sizing:border-box">
+            <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:var(--sp-1)">Platform</label>
+            <select x-model="fields.platform" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);box-sizing:border-box">
               <option>Tum Platformlar</option>
               <option>Meta Ads</option>
               <option>Google Ads</option>
@@ -59,8 +60,8 @@
             </select>
           </div>
           <div>
-            <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);margin-bottom:4px">Metrik</label>
-            <select x-model="fields.metrik" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;box-sizing:border-box">
+            <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:var(--sp-1)">Metrik</label>
+            <select x-model="fields.metrik" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);box-sizing:border-box">
               <option>CPA</option>
               <option>CTR</option>
               <option>ROAS</option>
@@ -68,32 +69,32 @@
             </select>
           </div>
           <div>
-            <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);margin-bottom:4px">Operator</label>
-            <select x-model="fields.operator" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;box-sizing:border-box">
+            <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:var(--sp-1)">Operator</label>
+            <select x-model="fields.operator" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);box-sizing:border-box">
               <option>&gt; Buyuk</option>
               <option>&lt; Kucuk</option>
               <option>= Esit</option>
             </select>
           </div>
           <div>
-            <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);margin-bottom:4px">Esik Deger</label>
-            <input type="number" x-model="fields.esik" placeholder="60" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;box-sizing:border-box"
+            <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:var(--sp-1)">Esik Deger</label>
+            <input type="number" x-model="fields.esik" placeholder="60" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;box-sizing:border-box"
                    :style="hasError('esik') ? 'border-color:#ef4444' : ''">
-            <span x-show="hasError('esik')" style="font-size:0.75rem;color:#ef4444;margin-top:2px;display:block" x-text="getError('esik')"></span>
+            <span x-show="hasError('esik')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:2px;display:block" x-text="getError('esik')"></span>
           </div>
         </div>
       </div>
 
       <!-- THEN Section -->
-      <div style="border:1px solid var(--border);border-radius:10px;padding:16px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-          <span style="font-size:0.6875rem;font-weight:700;color:#22c55e;text-transform:uppercase;background:rgba(34,197,94,0.1);padding:2px 8px;border-radius:4px">THEN</span>
-          <span style="font-size:0.8125rem;color:var(--text-soft)">Aksiyon sec</span>
+      <div style="border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+          <span style="font-size:var(--fs-xs);font-weight:700;color:#22c55e;text-transform:uppercase;background:rgba(34,197,94,0.1);padding:2px var(--sp-2);border-radius:var(--r-sm)">THEN</span>
+          <span style="font-size:var(--fs-sm);color:var(--text-soft)">Aksiyon sec</span>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)">
           <div>
-            <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);margin-bottom:4px">Aksiyon</label>
-            <select x-model="fields.aksiyon" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;box-sizing:border-box">
+            <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:var(--sp-1)">Aksiyon</label>
+            <select x-model="fields.aksiyon" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);box-sizing:border-box">
               <option>Duraklat</option>
               <option>Butce Artir</option>
               <option>Butce Azalt</option>
@@ -101,8 +102,8 @@
             </select>
           </div>
           <div>
-            <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);margin-bottom:4px">Bekleme Suresi</label>
-            <select x-model="fields.bekleme" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;box-sizing:border-box">
+            <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-bottom:var(--sp-1)">Bekleme Suresi</label>
+            <select x-model="fields.bekleme" style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);box-sizing:border-box">
               <option>15 dakika</option>
               <option>30 dakika</option>
               <option>1 saat</option>
@@ -112,10 +113,10 @@
       </div>
 
       <!-- Buttons -->
-      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:4px">
-        <button type="button" @click="reset()" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:0.875rem;cursor:pointer">Iptal</button>
+      <div style="display:flex;gap:var(--sp-3);justify-content:flex-end;margin-top:var(--sp-1)">
+        <button type="button" @click="reset()" style="padding:var(--sp-3) var(--sp-5);border-radius:var(--r-md);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-md);cursor:pointer">Iptal</button>
         <button type="submit" class="btn-primary" :disabled="submitting">
-          <template x-if="submitting"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner ph-spin"></i> Kaydediliyor...</span></template>
+          <template x-if="submitting"><span style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-spinner ph-spin"></i> Kaydediliyor...</span></template>
           <template x-if="!submitting">Kaydet</template>
         </button>
       </div>

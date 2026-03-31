@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Kural Detay — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,16 +17,16 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
+<div id="main" data-skeleton="dashboard">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-shield-warning" style="color:#ef4444;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-shield-warning" style="color:#ef4444;font-size:var(--fs-xl)"></i>
     </div>
     <div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <h1 class="page-title">Kural Detay — CPA Koruma</h1>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
       </div>
@@ -34,38 +35,38 @@
   </div>
 
   <!-- Rule Definition -->
-  <div class="fade-in-d1 card" style="margin-bottom:24px">
+  <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Kural Tanimi</span>
-    <div style="display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px">
-      <div style="display:flex;align-items:center;gap:10px;font-size:0.875rem">
-        <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.75rem;min-width:48px">IF</span>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3);padding:var(--sp-4);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-md)">
+        <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-sm);min-width:48px">IF</span>
         <span style="color:var(--text)">CPA &gt; &#8378;60</span>
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Meta Ads</span>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;font-size:0.875rem">
-        <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.75rem;min-width:48px">THEN</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-md)">
+        <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-sm);min-width:48px">THEN</span>
         <span style="color:var(--text)">Kampanya Duraklat</span>
       </div>
     </div>
   </div>
 
   <!-- Rule Stats -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#ef4444">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Toplam Tetikleme</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">12</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Toplam Tetikleme</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">12</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Son Tetikleme</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">2 saat once</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Son Tetikleme</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">2 saat once</div>
     </div>
   </div>
 
   <!-- Execution History -->
   <div class="fade-in-d3 card" data-paginate="10">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Calisma Gecmisi</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Tarih','Tetikleme Degeri','Alinan Aksiyon','Sonuc'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Tarih','Tetikleme Degeri','Alinan Aksiyon','Sonuc'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -78,31 +79,31 @@
       </thead>
       <tbody>
         <tr>
-          <td data-label="Tarih" style="font-size:0.8125rem;color:var(--text-soft)">28 Mar 2026, 14:22</td>
+          <td data-label="Tarih" style="font-size:var(--fs-sm);color:var(--text-soft)">28 Mar 2026, 14:22</td>
           <td data-label="Tetikleme Degeri" style="font-weight:500;color:var(--text)">CPA: &#8378;72.40</td>
           <td data-label="Alinan Aksiyon">Kampanya duraklatildi</td>
           <td data-label="Sonuc"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span></td>
         </tr>
         <tr>
-          <td data-label="Tarih" style="font-size:0.8125rem;color:var(--text-soft)">25 Mar 2026, 09:15</td>
+          <td data-label="Tarih" style="font-size:var(--fs-sm);color:var(--text-soft)">25 Mar 2026, 09:15</td>
           <td data-label="Tetikleme Degeri" style="font-weight:500;color:var(--text)">CPA: &#8378;64.90</td>
           <td data-label="Alinan Aksiyon">Kampanya duraklatildi</td>
           <td data-label="Sonuc"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span></td>
         </tr>
         <tr>
-          <td data-label="Tarih" style="font-size:0.8125rem;color:var(--text-soft)">22 Mar 2026, 17:48</td>
+          <td data-label="Tarih" style="font-size:var(--fs-sm);color:var(--text-soft)">22 Mar 2026, 17:48</td>
           <td data-label="Tetikleme Degeri" style="font-weight:500;color:var(--text)">CPA: &#8378;68.12</td>
           <td data-label="Alinan Aksiyon">Kampanya duraklatildi</td>
           <td data-label="Sonuc"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span></td>
         </tr>
         <tr>
-          <td data-label="Tarih" style="font-size:0.8125rem;color:var(--text-soft)">18 Mar 2026, 11:30</td>
+          <td data-label="Tarih" style="font-size:var(--fs-sm);color:var(--text-soft)">18 Mar 2026, 11:30</td>
           <td data-label="Tetikleme Degeri" style="font-weight:500;color:var(--text)">CPA: &#8378;61.55</td>
           <td data-label="Alinan Aksiyon">Kampanya duraklatildi</td>
           <td data-label="Sonuc"><span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Hata</span></td>
         </tr>
         <tr>
-          <td data-label="Tarih" style="font-size:0.8125rem;color:var(--text-soft)">15 Mar 2026, 08:05</td>
+          <td data-label="Tarih" style="font-size:var(--fs-sm);color:var(--text-soft)">15 Mar 2026, 08:05</td>
           <td data-label="Tetikleme Degeri" style="font-weight:500;color:var(--text)">CPA: &#8378;75.20</td>
           <td data-label="Alinan Aksiyon">Kampanya duraklatildi</td>
           <td data-label="Sonuc"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span></td>
@@ -114,6 +115,8 @@
 
 <div id="footbar"></div>
 <script src="../js/mock-data.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
 </body>

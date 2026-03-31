@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>WordPress Adaptor — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,67 +19,67 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="tabs('health')">
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="table" x-data="tabs('health')">
 
   <!-- Title -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap">
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6);flex-wrap:wrap">
     <h1 class="page-title" style="margin-bottom:0">WordPress Adaptor</h1>
     <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Bagli</span>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-7)">
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Uptime</div>
-      <div style="font-size:1.75rem;font-weight:600;color:var(--text)">99.97<span style="font-size:0.875rem;color:var(--muted);font-weight:400">%</span></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Uptime</div>
+      <div style="font-size:var(--fs-3xl);font-weight:600;color:var(--text)">99.97<span style="font-size:var(--fs-md);color:var(--muted);font-weight:400">%</span></div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Ort Latency</div>
-      <div style="font-size:1.75rem;font-weight:600;color:var(--text)">142<span style="font-size:0.875rem;color:var(--muted);font-weight:400">ms</span></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Ort Latency</div>
+      <div style="font-size:var(--fs-3xl);font-weight:600;color:var(--text)">142<span style="font-size:var(--fs-md);color:var(--muted);font-weight:400">ms</span></div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Son Check</div>
-      <div style="font-size:1.75rem;font-weight:600;color:var(--text)">2<span style="font-size:0.875rem;color:var(--muted);font-weight:400">dk once</span></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Son Check</div>
+      <div style="font-size:var(--fs-3xl);font-weight:600;color:var(--text)">2<span style="font-size:var(--fs-md);color:var(--muted);font-weight:400">dk once</span></div>
     </div>
   </div>
 
   <!-- Two Column Layout -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5)">
 
     <!-- Health Timeline -->
     <div class="fade-in-d2 card">
       <h3 class="section-label">Saglik Gecmisi</h3>
       <div style="display:flex;flex-direction:column;gap:0">
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
           <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
-          <span style="font-size:0.8125rem;color:var(--text);flex:1">Health check</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);flex:1">Health check</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span>
-          <span style="font-size:0.6875rem;color:var(--muted);min-width:80px;text-align:right">2dk once</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);min-width:80px;text-align:right">2dk once</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
           <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
-          <span style="font-size:0.8125rem;color:var(--text);flex:1">Health check</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);flex:1">Health check</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span>
-          <span style="font-size:0.6875rem;color:var(--muted);min-width:80px;text-align:right">7dk once</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);min-width:80px;text-align:right">7dk once</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
           <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
-          <span style="font-size:0.8125rem;color:var(--text);flex:1">Health check</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);flex:1">Health check</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span>
-          <span style="font-size:0.6875rem;color:var(--muted);min-width:80px;text-align:right">12dk once</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);min-width:80px;text-align:right">12dk once</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
           <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
-          <span style="font-size:0.8125rem;color:var(--text);flex:1">Health check</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);flex:1">Health check</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span>
-          <span style="font-size:0.6875rem;color:var(--muted);min-width:80px;text-align:right">17dk once</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);min-width:80px;text-align:right">17dk once</span>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0">
           <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></span>
-          <span style="font-size:0.8125rem;color:var(--text);flex:1">Health check</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);flex:1">Health check</span>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Basarili</span>
-          <span style="font-size:0.6875rem;color:var(--muted);min-width:80px;text-align:right">22dk once</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted);min-width:80px;text-align:right">22dk once</span>
         </div>
       </div>
     </div>
@@ -86,21 +87,21 @@
     <!-- Credential Info -->
     <div class="fade-in-d3 card">
       <h3 class="section-label">Baglanti Bilgileri</h3>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--muted)">API URL</span>
-          <span style="font-size:0.8125rem;color:var(--text);font-family:monospace;font-size:0.75rem">https://acme.com/wp-json/</span>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">API URL</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace;font-size:var(--fs-sm)">https://acme.com/wp-json/</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--muted)">Auth Type</span>
-          <span style="font-size:0.8125rem;color:var(--text);font-weight:500">OAuth 2.0</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Auth Type</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500">OAuth 2.0</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
-          <span style="font-size:0.8125rem;color:var(--muted)">Son Yenileme</span>
-          <span style="font-size:0.8125rem;color:var(--text)">28 Mar 2026, 09:15</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Son Yenileme</span>
+          <span style="font-size:var(--fs-sm);color:var(--text)">28 Mar 2026, 09:15</span>
         </div>
       </div>
-      <button class="btn-secondary" style="margin-top:16px"><i class="ph ph-arrows-clockwise"></i> Tokeni Yenile</button>
+      <button class="btn-secondary" style="margin-top:var(--sp-4)"><i class="ph ph-arrows-clockwise"></i> Tokeni Yenile</button>
     </div>
   </div>
 

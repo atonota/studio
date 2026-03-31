@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Tenant Yonetimi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,15 +17,15 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="dataTable([
+<div id="main" data-skeleton="cards" x-data="dataTable([
   { name:'Acme Corp', domain:'acme.com', plan:'Pro', planColor:'#a855f7', planBg:'rgba(168,85,247,0.1)', workspace:3, health:92, healthColor:'#22c55e', status:'Aktif', statusColor:'#22c55e', statusBg:'rgba(34,197,94,0.1)' },
   { name:'Beta Ltd', domain:'beta.com.tr', plan:'Enterprise', planColor:'#3b82f6', planBg:'rgba(59,130,246,0.1)', workspace:5, health:88, healthColor:'#22c55e', status:'Aktif', statusColor:'#22c55e', statusBg:'rgba(34,197,94,0.1)' },
   { name:'Gamma Inc', domain:'gamma.io', plan:'Free', planColor:'#7B7269', planBg:'rgba(123,114,105,0.15)', workspace:1, health:65, healthColor:'#eab308', status:'Onboarding', statusColor:'#3b82f6', statusBg:'rgba(59,130,246,0.1)' },
   { name:'Delta A.S.', domain:'delta.com.tr', plan:'Pro', planColor:'#a855f7', planBg:'rgba(168,85,247,0.1)', workspace:2, health:41, healthColor:'#ef4444', status:'Risk', statusColor:'#ef4444', statusBg:'rgba(239,68,68,0.1)' }
 ])">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Tenant Yonetimi</h1>
       <p class="page-sub">Tum tenant hesaplari ve durumlari</p>
@@ -33,16 +34,16 @@
   </div>
 
   <!-- Search -->
-  <div class="fade-in-d1" style="margin-bottom:16px">
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-4)">
     <div style="position:relative;max-width:400px">
-      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.125rem;color:var(--muted)"></i>
-      <input type="text" placeholder="Tenant ara..." @input="filter($event.target.value)" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 42px;color:var(--text);width:100%;font-family:inherit;font-size:0.875rem;outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:var(--fs-lg);color:var(--muted)"></i>
+      <input type="text" placeholder="Tenant ara..." @input="filter($event.target.value)" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4) var(--sp-3) 42px;color:var(--text);width:100%;font-family:inherit;font-size:var(--fs-md);outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
   </div>
 
   <div class="fade-in-d1 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
-      <button onclick="if(window.exportToCSV)exportToCSV(['Tenant','Plan','Workspace','Saglik','Durum'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+      <button onclick="if(window.exportToCSV)exportToCSV(['Tenant','Plan','Workspace','Saglik','Durum'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -60,13 +61,13 @@
             <td data-label="Tenant">
               <div style="display:flex;flex-direction:column;gap:2px">
                 <span style="font-weight:500;color:var(--text)" x-text="row.name"></span>
-                <span style="font-size:0.6875rem;color:var(--muted)" x-text="row.domain"></span>
+                <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="row.domain"></span>
               </div>
             </td>
             <td data-label="Plan"><span class="badge" :style="'background:'+row.planBg+';color:'+row.planColor" x-text="row.plan"></span></td>
             <td data-label="Workspace"><span style="color:var(--text)" x-text="row.workspace"></span></td>
             <td data-label="Saglik">
-              <div style="display:flex;align-items:center;gap:6px">
+              <div style="display:flex;align-items:center;gap:var(--sp-2)">
                 <span :style="'width:8px;height:8px;border-radius:50%;display:inline-block;background:'+row.healthColor"></span>
                 <span style="color:var(--text)" x-text="row.health+'/100'"></span>
               </div>
@@ -79,11 +80,11 @@
   </div>
 
   <!-- Pagination -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:0.8125rem;color:var(--muted)">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--sp-3);font-size:var(--fs-sm);color:var(--muted)">
     <span x-text="showing"></span>
-    <div style="display:flex;gap:8px">
-      <button class="btn-secondary" style="padding:6px 14px;font-size:0.75rem" @click="prevPage()" :disabled="page===1" :style="page===1?'opacity:0.4;cursor:default':''">Onceki</button>
-      <button class="btn-secondary" style="padding:6px 14px;font-size:0.75rem" @click="nextPage()" :disabled="page>=totalPages" :style="page>=totalPages?'opacity:0.4;cursor:default':''">Sonraki</button>
+    <div style="display:flex;gap:var(--sp-2)">
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)" @click="prevPage()" :disabled="page===1" :style="page===1?'opacity:0.4;cursor:default':''">Onceki</button>
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)" @click="nextPage()" :disabled="page>=totalPages" :style="page>=totalPages?'opacity:0.4;cursor:default':''">Sonraki</button>
     </div>
   </div>
 </div>

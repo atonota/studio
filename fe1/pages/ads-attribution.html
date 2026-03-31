@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Attribution Modelleri — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -20,26 +21,26 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ model: 'son-tiklama' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="dashboard" x-data="{ model: 'son-tiklama' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Attribution Modelleri</h1>
     <p class="page-sub">Kanal bazli donusum atfetme karsilastirmasi</p>
   </div>
 
   <!-- Model Pills -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-bottom:var(--sp-6)">
     <template x-for="m in [{v:'son-tiklama',l:'Son Tiklama'},{v:'ilk-tiklama',l:'Ilk Tiklama'},{v:'dogrusal',l:'Dogrusal'},{v:'zaman-azalan',l:'Zaman Azalan'},{v:'veri-tabanli',l:'Veri Tabanli'}]">
-      <button @click="model = m.v" :style="model === m.v ? 'background:var(--accent);color:#fff;border:none' : 'background:transparent;color:var(--text-soft);border:1px solid var(--border)'" style="padding:6px 16px;border-radius:6px;font-size:0.8125rem;cursor:pointer;font-family:inherit" x-text="m.l"></button>
+      <button @click="model = m.v" class="tab-btn" :class="model === m.v ? 'active' : ''" x-text="m.l"></button>
     </template>
   </div>
 
   <!-- Comparison Table -->
-  <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden;margin-bottom:24px">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+  <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Kanal Karsilastirmasi</span>
-      <button onclick="exportToCSV(['Kanal','Son Tiklama','Ilk Tiklama','Dogrusal','Zaman Azalan','Veri Tabanli'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'attribution-karsilastirma.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
+      <button onclick="exportToCSV(['Kanal','Son Tiklama','Ilk Tiklama','Dogrusal','Zaman Azalan','Veri Tabanli'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'attribution-karsilastirma.csv')" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-download-simple" style="font-size:var(--fs-md)"></i> CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>

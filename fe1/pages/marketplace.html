@@ -5,94 +5,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Marketplace SEO — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ platform:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="dashboard" x-data="{ platform:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Marketplace SEO</h1>
     <p class="page-sub">Trendyol ve Hepsiburada urun optimizasyonu</p>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Urun</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">124</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Urun</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">124</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Optimize</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">89</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Optimize</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)">89</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Skor Ort</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">74<span style="font-size:0.875rem;color:var(--muted)">/100</span></div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Skor Ort</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">74<span style="font-size:var(--fs-md);color:var(--muted)">/100</span></div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Platform</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">2</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Platform</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">2</div>
     </div>
   </div>
 
   <!-- Platform Cards -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)">
     <!-- Trendyol -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-        <div style="width:44px;height:44px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-storefront" style="font-size:1.5rem;color:#ef4444"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-storefront" style="font-size:var(--fs-2xl);color:#ef4444"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text);font-size:1.0625rem">Trendyol</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Marketplace entegrasyonu</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Marketplace entegrasyonu</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;margin-left:auto">Bagli</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Urun Sayisi</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Urun Sayisi</span>
         <span style="font-weight:500;color:var(--text)">78</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Ort. Skor</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Skor</span>
         <span style="font-weight:500;color:var(--text)">76/100</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Son Senkronizasyon</span>
-        <span style="font-size:0.75rem;color:var(--muted)">2 saat once</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Son Senkronizasyon</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">2 saat once</span>
       </div>
     </div>
 
     <!-- Hepsiburada -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-        <div style="width:44px;height:44px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-shopping-bag" style="font-size:1.5rem;color:#eab308"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:44px;height:44px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-shopping-bag" style="font-size:var(--fs-2xl);color:#eab308"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text);font-size:1.0625rem">Hepsiburada</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Marketplace entegrasyonu</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Marketplace entegrasyonu</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;margin-left:auto">Bagli</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Urun Sayisi</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Urun Sayisi</span>
         <span style="font-weight:500;color:var(--text)">46</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Ort. Skor</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Skor</span>
         <span style="font-weight:500;color:var(--text)">71/100</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Son Senkronizasyon</span>
-        <span style="font-size:0.75rem;color:var(--muted)">4 saat once</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Son Senkronizasyon</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">4 saat once</span>
       </div>
     </div>
   </div>

@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Content Explorer — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,9 +20,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="tool" x-data="{
   search: '',
   drMin: '',
   drMax: '',
@@ -122,44 +123,44 @@
   }
 }">
   <!-- Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Content Explorer</h1>
     <p class="page-sub">Yuksek performansli icerikleri arastin ve analiz et</p>
   </div>
 
   <!-- Search Bar -->
-  <div class="fade-in-d1" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-4);flex-wrap:wrap;align-items:center">
     <div style="position:relative;flex:1;min-width:260px">
       <i class="ph ph-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)"></i>
-      <input type="text" x-model="search" placeholder="Konu veya keyword girin..." style="width:100%;padding:10px 12px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.8125rem;outline:none;font-family:inherit">
+      <input type="text" x-model="search" placeholder="Konu veya keyword girin..." style="width:100%;padding:var(--sp-3) var(--sp-3) var(--sp-3) 36px;border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;font-family:inherit">
     </div>
     <button @click="currentPage=1" class="btn-primary"><i class="ph ph-magnifying-glass"></i> Ara</button>
   </div>
 
   <!-- Filter Bar -->
-  <div class="fade-in-d1 card" style="padding:12px 16px;margin-bottom:20px">
-    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">DR</span>
-        <input type="number" x-model="drMin" placeholder="Min" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
-        <span style="color:var(--muted);font-size:0.75rem">-</span>
-        <input type="number" x-model="drMax" placeholder="Max" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+  <div class="fade-in-d1 card" style="padding:var(--sp-3) var(--sp-4);margin-bottom:var(--sp-5)">
+    <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap;align-items:center">
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase">DR</span>
+        <input type="number" x-model="drMin" placeholder="Min" style="width:60px;padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit">
+        <span style="color:var(--muted);font-size:var(--fs-sm)">-</span>
+        <input type="number" x-model="drMax" placeholder="Max" style="width:60px;padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit">
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">Trafik</span>
-        <input type="number" x-model="trafficMin" placeholder="Min" style="width:70px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
-        <span style="color:var(--muted);font-size:0.75rem">-</span>
-        <input type="number" x-model="trafficMax" placeholder="Max" style="width:70px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase">Trafik</span>
+        <input type="number" x-model="trafficMin" placeholder="Min" style="width:70px;padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit">
+        <span style="color:var(--muted);font-size:var(--fs-sm)">-</span>
+        <input type="number" x-model="trafficMax" placeholder="Max" style="width:70px;padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit">
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">Kelime</span>
-        <input type="number" x-model="wordMin" placeholder="Min" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
-        <span style="color:var(--muted);font-size:0.75rem">-</span>
-        <input type="number" x-model="wordMax" placeholder="Max" style="width:60px;padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit">
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase">Kelime</span>
+        <input type="number" x-model="wordMin" placeholder="Min" style="width:60px;padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit">
+        <span style="color:var(--muted);font-size:var(--fs-sm)">-</span>
+        <input type="number" x-model="wordMax" placeholder="Max" style="width:60px;padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit">
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <span style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase">Tarih</span>
-        <select x-model="dateFilter" style="padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;font-family:inherit;cursor:pointer">
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase">Tarih</span>
+        <select x-model="dateFilter" style="padding:5px var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);font-family:inherit;cursor:pointer">
           <option>Tumu</option>
           <option>Son 30 Gun</option>
           <option>Son 90 Gun</option>
@@ -170,31 +171,31 @@
   </div>
 
   <!-- Top Topics Chart -->
-  <div class="fade-in-d2 card" style="padding:16px;margin-bottom:20px" x-init="$nextTick(() => initTopicsChart())" x-effect="refreshTopicsChart()">
-    <div style="font-size:0.8125rem;font-weight:600;color:var(--text);margin-bottom:12px">En Populer Konular</div>
+  <div class="fade-in-d2 card" style="padding:var(--sp-4);margin-bottom:var(--sp-5)" x-init="$nextTick(() => initTopicsChart())" x-effect="refreshTopicsChart()">
+    <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:var(--sp-3)">En Populer Konular</div>
     <div id="topics-chart" style="width:100%;height:220px"></div>
   </div>
 
   <!-- Results Table -->
   <div class="fade-in-d2 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Sonuclar</span>
-      <div style="display:flex;align-items:center;gap:12px">
-        <button onclick="if(window.exportToCSV)exportToCSV(['Baslik','DR','Trafik','Backlink','Kelime','Yayin','Paylasim'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
-        <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' icerik bulundu'"></span>
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <button onclick="if(window.exportToCSV)exportToCSV(['Baslik','DR','Trafik','Backlink','Kelime','Yayin','Paylasim'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
+        <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="filtered.length + ' icerik bulundu'"></span>
       </div>
     </div>
     <div style="overflow-x:auto">
       <table class="r-table">
         <thead>
           <tr>
-            <th @click="doSort('title')" style="cursor:pointer;min-width:200px">Baslik <i class="ph" :class="sortCol==='title' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-            <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-            <th @click="doSort('traffic')" style="cursor:pointer">Trafik <i class="ph" :class="sortCol==='traffic' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-            <th @click="doSort('backlinks')" style="cursor:pointer">Backlink <i class="ph" :class="sortCol==='backlinks' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-            <th @click="doSort('words')" style="cursor:pointer">Kelime <i class="ph" :class="sortCol==='words' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-            <th @click="doSort('published')" style="cursor:pointer">Yayin <i class="ph" :class="sortCol==='published' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
-            <th @click="doSort('shares')" style="cursor:pointer">Paylasim <i class="ph" :class="sortCol==='shares' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:0.625rem;opacity:0.5"></i></th>
+            <th @click="doSort('title')" style="cursor:pointer;min-width:200px">Baslik <i class="ph" :class="sortCol==='title' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+            <th @click="doSort('dr')" style="cursor:pointer">DR <i class="ph" :class="sortCol==='dr' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+            <th @click="doSort('traffic')" style="cursor:pointer">Trafik <i class="ph" :class="sortCol==='traffic' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+            <th @click="doSort('backlinks')" style="cursor:pointer">Backlink <i class="ph" :class="sortCol==='backlinks' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+            <th @click="doSort('words')" style="cursor:pointer">Kelime <i class="ph" :class="sortCol==='words' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+            <th @click="doSort('published')" style="cursor:pointer">Yayin <i class="ph" :class="sortCol==='published' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
+            <th @click="doSort('shares')" style="cursor:pointer">Paylasim <i class="ph" :class="sortCol==='shares' ? (sortDir==='asc' ? 'ph-caret-up' : 'ph-caret-down') : 'ph-caret-up-down'" style="font-size:var(--fs-2xs);opacity:0.5"></i></th>
           </tr>
         </thead>
         <tbody>
@@ -202,26 +203,26 @@
             <tr style="cursor:pointer" @click="expandedRow = expandedRow === row.url ? null : row.url">
               <td data-label="Baslik">
                 <div>
-                  <span style="font-weight:500;color:var(--accent);font-size:0.8125rem" x-text="row.title"></span>
-                  <div style="font-size:0.6875rem;color:var(--muted);margin-top:2px" x-text="row.url"></div>
+                  <span style="font-weight:500;color:var(--accent);font-size:var(--fs-sm)" x-text="row.title"></span>
+                  <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:2px" x-text="row.url"></div>
                 </div>
               </td>
               <td data-label="DR"><span style="font-weight:600;color:var(--text)" x-text="row.dr"></span></td>
               <td data-label="Trafik"><span style="color:var(--text)" x-text="formatNum(row.traffic)"></span></td>
               <td data-label="Backlink"><span style="color:var(--text)" x-text="row.backlinks"></span></td>
               <td data-label="Kelime"><span style="color:var(--muted)" x-text="formatNum(row.words)"></span></td>
-              <td data-label="Yayin"><span style="color:var(--muted);font-size:0.8125rem" x-text="row.published"></span></td>
+              <td data-label="Yayin"><span style="color:var(--muted);font-size:var(--fs-sm)" x-text="row.published"></span></td>
               <td data-label="Paylasim"><span style="color:var(--muted)" x-text="row.shares"></span></td>
             </tr>
           </template>
           <!-- Expanded Detail Row -->
           <template x-for="row in paginated.filter(r => r.url === expandedRow)" :key="'exp-'+row.url">
             <tr>
-              <td colspan="7" style="background:var(--surface-2);padding:16px 20px">
-                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-                  <span style="font-size:0.8125rem;color:var(--text);flex:1;min-width:200px">Bu icerik yuksek DR ve trafik potansiyeline sahip. Backlink firsati olarak degerlendirebilirsiniz.</span>
-                  <button class="btn-primary" style="font-size:0.75rem;padding:6px 14px"><i class="ph ph-chart-line-up"></i> Analiz Et</button>
-                  <button style="font-size:0.75rem;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--accent);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-link"></i> Backlink Firsati</button>
+              <td colspan="7" style="background:var(--surface-2);padding:var(--sp-4) var(--sp-5)">
+                <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:center">
+                  <span style="font-size:var(--fs-sm);color:var(--text);flex:1;min-width:200px">Bu icerik yuksek DR ve trafik potansiyeline sahip. Backlink firsati olarak degerlendirebilirsiniz.</span>
+                  <button class="btn-primary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-4)"><i class="ph ph-chart-line-up"></i> Analiz Et</button>
+                  <button style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-4);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--accent);cursor:pointer;font-family:inherit;font-weight:600"><i class="ph ph-link"></i> Backlink Firsati</button>
                 </div>
               </td>
             </tr>
@@ -231,11 +232,11 @@
     </div>
 
     <!-- Pagination -->
-    <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <span style="font-size:0.75rem;color:var(--muted)" x-text="'Sayfa ' + currentPage + ' / ' + totalPages"></span>
-      <div style="display:flex;gap:6px">
-        <button @click="if(currentPage>1) currentPage--" :disabled="currentPage<=1" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit;opacity:1" :style="currentPage<=1 && 'opacity:0.4;cursor:default'"><i class="ph ph-caret-left"></i> Onceki</button>
-        <button @click="if(currentPage<totalPages) currentPage++" :disabled="currentPage>=totalPages" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:0.75rem;cursor:pointer;font-family:inherit;opacity:1" :style="currentPage>=totalPages && 'opacity:0.4;cursor:default'">Sonraki <i class="ph ph-caret-right"></i></button>
+    <div style="padding:var(--sp-3) var(--sp-5);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="'Sayfa ' + currentPage + ' / ' + totalPages"></span>
+      <div style="display:flex;gap:var(--sp-2)">
+        <button @click="if(currentPage>1) currentPage--" :disabled="currentPage<=1" style="padding:5px var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);cursor:pointer;font-family:inherit;opacity:1" :style="currentPage<=1 && 'opacity:0.4;cursor:default'"><i class="ph ph-caret-left"></i> Onceki</button>
+        <button @click="if(currentPage<totalPages) currentPage++" :disabled="currentPage>=totalPages" style="padding:5px var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);cursor:pointer;font-family:inherit;opacity:1" :style="currentPage>=totalPages && 'opacity:0.4;cursor:default'">Sonraki <i class="ph ph-caret-right"></i></button>
       </div>
     </div>
   </div>

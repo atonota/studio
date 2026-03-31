@@ -1,0 +1,30 @@
+/* ═══════════════════════════════════════════
+   atonota Studio — Master SCSS Entry Point
+   Build output: css/tokens.css
+   Tum sayfalarda paylasilan stiller
+═══════════════════════════════════════════ */
+
+// 1. Core — reset, base typography, animations
+@use 'core';
+
+// 2. Appearance — CSS custom property definitions
+@use 'features/appearance';
+
+// 3. Shell — layout framework
+@use 'features/shell';
+
+// 4. Navigation — mega menu, mobile menu
+@use 'features/navigation/mega-menu';
+@use 'features/navigation/mobile-menu';
+
+// 5. Panels — spotlight, notifications, user
+@use 'features/spotlight/spotlight';
+@use 'features/notifications/notification-panel';
+@use 'features/user/user-dropdown';
+@use 'features/user/tenant-switcher';
+
+// 6. Charts
+@use 'features/charts/chart-skeleton';
+
+// 7. UI Components (from components.css)
+@use 'features/ui';

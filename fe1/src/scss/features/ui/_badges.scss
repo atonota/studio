@@ -1,0 +1,47 @@
+// ── Badge Base ──
+
+.badge {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--r-full);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+:root .badge {
+  border-color: rgba(0,0,0, 0.06);
+}
+
+.dark .badge {
+  border-color: transparent;
+}
+
+// ── Badge Variants ──
+// @each loop ile renk varyantlari uretilir
+
+$badge-colors: (
+  'green':  #22c55e,
+  'blue':   #3b82f6,
+  'purple': #a855f7,
+  'yellow': #eab308,
+  'red':    #ef4444,
+);
+
+@each $name, $color in $badge-colors {
+  .badge--#{$name} {
+    background: rgba($color, 0.1);
+    color: $color;
+  }
+}
+
+.badge--accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.badge--surface {
+  background: var(--surface-2);
+  color: var(--text-soft);
+}

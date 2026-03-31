@@ -5,116 +5,117 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Yorum Yonetimi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ starFilter:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ starFilter:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Yorum Yonetimi</h1>
     <p class="page-sub">Tum platformlardan gelen yorumlari yonet</p>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">128</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">128</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Puan</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">4.2<span style="font-size:0.875rem;color:var(--muted)">/5</span></div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort Puan</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">4.2<span style="font-size:var(--fs-md);color:var(--muted)">/5</span></div>
     </div>
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yanitsiz</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#ef4444;margin-top:8px">8</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Yanitsiz</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444;margin-top:var(--sp-2)">8</div>
     </div>
   </div>
 
   <!-- Review List -->
-  <div class="fade-in-d2" style="display:flex;flex-direction:column;gap:12px">
+  <div class="fade-in-d2" style="display:flex;flex-direction:column;gap:var(--sp-3)">
 
     <!-- Review 1 -->
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
           <div style="display:flex;gap:2px">
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
           </div>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Google</span>
         </div>
-        <span style="font-size:0.6875rem;color:var(--muted)">25 Mart 2026</span>
+        <span style="font-size:var(--fs-xs);color:var(--muted)">25 Mart 2026</span>
       </div>
-      <div style="font-size:0.875rem;color:var(--text);margin-bottom:12px">Harika bir deneyim yasadim. Ekip cok ilgili ve profesyonel. SEO calismalari 3 ayda ciddi sonuclar verdi.</div>
-      <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Yanitla</button>
+      <div style="font-size:var(--fs-md);color:var(--text);margin-bottom:var(--sp-3)">Harika bir deneyim yasadim. Ekip cok ilgili ve profesyonel. SEO calismalari 3 ayda ciddi sonuclar verdi.</div>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Yanitla</button>
     </div>
 
     <!-- Review 2 -->
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
           <div style="display:flex;gap:2px">
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph ph-star" style="color:#eab308;font-size:0.875rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
           </div>
           <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">Foursquare</span>
         </div>
-        <span style="font-size:0.6875rem;color:var(--muted)">20 Mart 2026</span>
+        <span style="font-size:var(--fs-xs);color:var(--muted)">20 Mart 2026</span>
       </div>
-      <div style="font-size:0.875rem;color:var(--text);margin-bottom:12px">Reklam butce optimizasyonu gercekten ise yariyor. ROAS degerlerimiz %40 artti.</div>
-      <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Yanitla</button>
+      <div style="font-size:var(--fs-md);color:var(--text);margin-bottom:var(--sp-3)">Reklam butce optimizasyonu gercekten ise yariyor. ROAS degerlerimiz %40 artti.</div>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Yanitla</button>
     </div>
 
     <!-- Review 3 -->
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
           <div style="display:flex;gap:2px">
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph ph-star" style="color:#eab308;font-size:0.875rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
           </div>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Google</span>
         </div>
-        <span style="font-size:0.6875rem;color:var(--muted)">15 Mart 2026</span>
+        <span style="font-size:var(--fs-xs);color:var(--muted)">15 Mart 2026</span>
       </div>
-      <div style="font-size:0.875rem;color:var(--text);margin-bottom:12px">Genel olarak memnunum ama raporlama surecleri biraz daha hizli olabilir.</div>
-      <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Yanitla</button>
+      <div style="font-size:var(--fs-md);color:var(--text);margin-bottom:var(--sp-3)">Genel olarak memnunum ama raporlama surecleri biraz daha hizli olabilir.</div>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Yanitla</button>
     </div>
 
     <!-- Review 4 -->
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <div style="display:flex;align-items:center;gap:var(--sp-2)">
           <div style="display:flex;gap:2px">
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
-            <i class="ph-fill ph-star" style="color:#eab308;font-size:0.875rem"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
+            <i class="ph-fill ph-star" style="color:#eab308;font-size:var(--fs-md)"></i>
           </div>
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Yandex</span>
         </div>
-        <span style="font-size:0.6875rem;color:var(--muted)">10 Mart 2026</span>
+        <span style="font-size:var(--fs-xs);color:var(--muted)">10 Mart 2026</span>
       </div>
-      <div style="font-size:0.875rem;color:var(--text);margin-bottom:12px">Turkiye pazarina ozel cozumleri cok basarili. Trendyol ve Hepsiburada entegrasyonu buyuk kolaylik.</div>
-      <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Yanitla</button>
+      <div style="font-size:var(--fs-md);color:var(--text);margin-bottom:var(--sp-3)">Turkiye pazarina ozel cozumleri cok basarili. Trendyol ve Hepsiburada entegrasyonu buyuk kolaylik.</div>
+      <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Yanitla</button>
     </div>
 
   </div>

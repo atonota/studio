@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>KVKK / GDPR Uyumluluk — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,89 +19,89 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ items: [true, true, true, false, true, true], get doneCount() { return this.items.filter(Boolean).length }, get total() { return this.items.length } }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ items: [true, true, true, false, true, true], get doneCount() { return this.items.filter(Boolean).length }, get total() { return this.items.length } }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">KVKK / GDPR Uyumluluk</h1>
     <p class="page-sub">Veri koruma mevzuati uyumluluk durumu</p>
   </div>
 
   <!-- Score -->
-  <div class="fade-in-d1" style="text-align:center;margin-bottom:32px;padding:24px 0">
+  <div class="fade-in-d1" style="text-align:center;margin-bottom:var(--sp-8);padding:var(--sp-6) 0">
     <div style="font-size:2.5rem;font-weight:300;letter-spacing:-0.02em" :style="doneCount === total ? 'color:#22c55e' : 'color:#eab308'"><span x-text="doneCount"></span> / <span x-text="total"></span></div>
-    <div style="font-size:0.8125rem;color:var(--muted);margin-top:4px">Uyumlu Madde</div>
+    <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Uyumlu Madde</div>
     <!-- Progress bar -->
-    <div style="max-width:300px;margin:12px auto 0;height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden">
-      <div :style="'width:' + Math.round((doneCount/total)*100) + '%;background:#22c55e;height:100%;border-radius:3px;transition:width 0.3s'"></div>
+    <div style="max-width:300px;margin:var(--sp-3) auto 0;height:6px;background:var(--surface-2);border-radius:var(--r-xs);overflow:hidden">
+      <div :style="'width:' + Math.round((doneCount/total)*100) + '%;background:#22c55e;height:100%;border-radius:var(--r-xs);transition:width 0.3s'"></div>
     </div>
   </div>
 
   <!-- Compliance Checklist -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:800px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4);max-width:800px">
     <!-- Cerez Onay -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:12px">
-      <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.25rem"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Cerez Onay Mekanizmasi</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">KVKK ve ePrivacy uyumlu cerez banner aktif</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Cerez Onay Mekanizmasi</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">KVKK ve ePrivacy uyumlu cerez banner aktif</div>
       </div>
     </div>
 
     <!-- Gizlilik Politikasi -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:12px">
-      <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.25rem"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Gizlilik Politikasi</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Guncel gizlilik politikasi sayfasi mevcut</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Gizlilik Politikasi</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">Guncel gizlilik politikasi sayfasi mevcut</div>
       </div>
     </div>
 
     <!-- VERBIS Kaydi -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:12px">
-      <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.25rem"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">VERBIS Kaydi</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Veri Sorumlulari Sicil Bilgi Sistemi kaydi tamamlandi</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">VERBIS Kaydi</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">Veri Sorumlulari Sicil Bilgi Sistemi kaydi tamamlandi</div>
       </div>
     </div>
 
     <!-- Veri Isleme Sozlesmesi -->
-    <div class="card" :style="items[3] ? '' : 'border-left:3px solid #eab308'" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer" @click="items[3] = !items[3]; $store.toast.show(items[3] ? 'Tamamlandi olarak isaretlendi' : 'Beklemede olarak isaretlendi', items[3] ? 'success' : 'warning')">
-      <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="items[3] ? 'background:rgba(34,197,94,0.1)' : 'background:rgba(234,179,8,0.1)'">
-        <i class="ph" :class="items[3] ? 'ph-check-circle' : 'ph-warning'" :style="items[3] ? 'color:#22c55e' : 'color:#eab308'" style="font-size:1.25rem"></i>
+    <div class="card" :style="items[3] ? '' : 'border-left:3px solid #eab308'" style="display:flex;align-items:flex-start;gap:var(--sp-3);cursor:pointer" @click="items[3] = !items[3]; $store.toast.show(items[3] ? 'Tamamlandi olarak isaretlendi' : 'Beklemede olarak isaretlendi', items[3] ? 'success' : 'warning')">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="items[3] ? 'background:rgba(34,197,94,0.1)' : 'background:rgba(234,179,8,0.1)'">
+        <i class="ph" :class="items[3] ? 'ph-check-circle' : 'ph-warning'" :style="items[3] ? 'color:#22c55e' : 'color:#eab308'" style="font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Veri Isleme Sozlesmesi</div>
-        <div style="font-size:0.75rem;margin-top:2px" :style="items[3] ? 'color:var(--muted)' : 'color:#eab308'" x-text="items[3] ? 'Tamamlandi' : 'Guncellenmeli — son revizyon 6 ay once'"></div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Veri Isleme Sozlesmesi</div>
+        <div style="font-size:var(--fs-sm);margin-top:2px" :style="items[3] ? 'color:var(--muted)' : 'color:#eab308'" x-text="items[3] ? 'Tamamlandi' : 'Guncellenmeli — son revizyon 6 ay once'"></div>
       </div>
     </div>
 
     <!-- Ihlal Bildirim Sureci -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:12px">
-      <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.25rem"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Ihlal Bildirim Sureci</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">72 saat icinde KVKK Kurulu'na bildirim proseduru tanimli</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Ihlal Bildirim Sureci</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">72 saat icinde KVKK Kurulu'na bildirim proseduru tanimli</div>
       </div>
     </div>
 
     <!-- Silme Hakki Formu -->
-    <div class="card" style="display:flex;align-items:flex-start;gap:12px">
-      <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1.25rem"></i>
+    <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
       </div>
       <div>
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Silme Hakki Formu</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Kullanici veri silme talebi formu aktif ve calisir durumda</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Silme Hakki Formu</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px">Kullanici veri silme talebi formu aktif ve calisir durumda</div>
       </div>
     </div>
   </div>

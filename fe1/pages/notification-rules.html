@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Bildirim Kurallari — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,10 +17,10 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="table">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Bildirim Kurallari</h1>
       <p class="page-sub">Otomatik uyari ve bildirim tetikleyicileri</p>
@@ -27,109 +28,109 @@
     <button class="btn-primary"><i class="ph ph-plus"></i> Yeni Kural</button>
   </div>
 
-  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:16px">
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-4)">
     <!-- Rule 1: Trafik Dususu -->
-    <div class="card" style="padding:20px 24px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-chart-line-down" style="color:#ef4444;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-chart-line-down" style="color:#ef4444;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">Trafik Dususu</div>
               <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
-            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
-              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:40px">IF</span>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-3)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm)">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-xs);width:40px">IF</span>
               <span style="color:var(--text-soft)">organic_traffic &lt; -20% (24h)</span>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
-              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:40px">THEN</span>
-              <div style="display:flex;gap:6px">
-                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:0.6875rem;color:var(--text-soft)">in-app</span>
-                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:0.6875rem;color:var(--text-soft)">email</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm)">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-xs);width:40px">THEN</span>
+              <div style="display:flex;gap:var(--sp-2)">
+                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px var(--sp-2);font-size:var(--fs-xs);color:var(--text-soft)">in-app</span>
+                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px var(--sp-2);font-size:var(--fs-xs);color:var(--text-soft)">email</span>
               </div>
             </div>
           </div>
-          <div style="font-size:0.6875rem;color:var(--muted)">
-            <i class="ph ph-lightning" style="margin-right:4px"></i>12 tetikleme
+          <div style="font-size:var(--fs-xs);color:var(--muted)">
+            <i class="ph ph-lightning" style="margin-right:var(--sp-1)"></i>12 tetikleme
           </div>
         </div>
-        <div style="width:44px;height:24px;border-radius:12px;background:var(--accent);position:relative;cursor:pointer;flex-shrink:0">
+        <div style="width:44px;height:24px;border-radius:var(--r-lg);background:var(--accent);position:relative;cursor:pointer;flex-shrink:0">
           <div style="width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;right:2px"></div>
         </div>
       </div>
     </div>
 
     <!-- Rule 2: Siralama Kaybi -->
-    <div class="card" style="padding:20px 24px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-sort-descending" style="color:#eab308;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-sort-descending" style="color:#eab308;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">Siralama Kaybi</div>
               <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
-            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
-              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:40px">IF</span>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-3)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm)">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-xs);width:40px">IF</span>
               <span style="color:var(--text-soft)">keyword_rank &gt; 10 (7d)</span>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
-              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:40px">THEN</span>
-              <div style="display:flex;gap:6px">
-                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:0.6875rem;color:var(--text-soft)">in-app</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm)">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-xs);width:40px">THEN</span>
+              <div style="display:flex;gap:var(--sp-2)">
+                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px var(--sp-2);font-size:var(--fs-xs);color:var(--text-soft)">in-app</span>
               </div>
             </div>
           </div>
-          <div style="font-size:0.6875rem;color:var(--muted)">
-            <i class="ph ph-lightning" style="margin-right:4px"></i>3 tetikleme
+          <div style="font-size:var(--fs-xs);color:var(--muted)">
+            <i class="ph ph-lightning" style="margin-right:var(--sp-1)"></i>3 tetikleme
           </div>
         </div>
-        <div style="width:44px;height:24px;border-radius:12px;background:var(--accent);position:relative;cursor:pointer;flex-shrink:0">
+        <div style="width:44px;height:24px;border-radius:var(--r-lg);background:var(--accent);position:relative;cursor:pointer;flex-shrink:0">
           <div style="width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:2px;right:2px"></div>
         </div>
       </div>
     </div>
 
     <!-- Rule 3: Site Cokme -->
-    <div class="card" style="padding:20px 24px;opacity:0.6">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);opacity:0.6">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <i class="ph ph-warning-octagon" style="color:#ef4444;font-size:1.125rem"></i>
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+            <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-warning-octagon" style="color:#ef4444;font-size:var(--fs-lg)"></i>
             </div>
             <div>
               <div style="font-weight:500;color:var(--text)">Site Cokme</div>
               <span class="badge" style="background:var(--surface-2);color:var(--muted)">Pasif</span>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
-            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
-              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:40px">IF</span>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-3)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm)">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-xs);width:40px">IF</span>
               <span style="color:var(--text-soft)">uptime_check = 0 (1h)</span>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;font-size:0.8125rem">
-              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:0.6875rem;width:40px">THEN</span>
-              <div style="display:flex;gap:6px">
-                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:0.6875rem;color:var(--text-soft)">email</span>
-                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:0.6875rem;color:var(--text-soft)">webhook</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm)">
+              <span style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:var(--fs-xs);width:40px">THEN</span>
+              <div style="display:flex;gap:var(--sp-2)">
+                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px var(--sp-2);font-size:var(--fs-xs);color:var(--text-soft)">email</span>
+                <span style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px var(--sp-2);font-size:var(--fs-xs);color:var(--text-soft)">webhook</span>
               </div>
             </div>
           </div>
-          <div style="font-size:0.6875rem;color:var(--muted)">
-            <i class="ph ph-lightning" style="margin-right:4px"></i>0 tetikleme
+          <div style="font-size:var(--fs-xs);color:var(--muted)">
+            <i class="ph ph-lightning" style="margin-right:var(--sp-1)"></i>0 tetikleme
           </div>
         </div>
-        <div style="width:44px;height:24px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);position:relative;cursor:pointer;flex-shrink:0">
+        <div style="width:44px;height:24px;border-radius:var(--r-lg);background:var(--surface-2);border:1px solid var(--border);position:relative;cursor:pointer;flex-shrink:0">
           <div style="width:20px;height:20px;border-radius:50%;background:var(--muted);position:absolute;top:1px;left:2px"></div>
         </div>
       </div>
@@ -138,6 +139,8 @@
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
 </body>

@@ -1,0 +1,118 @@
+// ============================================
+// atonota Studio — Color Tokens
+// Extracted from primitives.css
+// ============================================
+@use 'sass:map';
+
+// -- Brand --
+$brand: (
+  'orange-600': #C2410C,
+  'orange-700': #9A3412,
+  'orange-800': #7C2D12,
+  'logo-orange': #C94B1A,
+) !default;
+
+// -- Accent presets (pastel palette, base + hover) --
+$accents: (
+  'orange':  (base: #E0A05A, hover: #C98740),
+  'cyan':    (base: #67C4D4, hover: #4AABBD),
+  'magenta': (base: #D966A8, hover: #C2498E),
+  'yellow':  (base: #D4C84A, hover: #BCB02C),
+  'red':     (base: #E07070, hover: #C85555),
+  'green':   (base: #6DC26D, hover: #52A852),
+  'blue':    (base: #6A99D4, hover: #4D80BE),
+  'violet':  (base: #9B7ECC, hover: #8264B8),
+) !default;
+
+// -- Semantic (status) --
+$semantic: (
+  'success': #16a34a,
+  'success-muted': rgba(34, 197, 94, 0.1),
+  'success-fg': #065f46,
+  'warning': #ca8a04,
+  'warning-muted': rgba(234, 179, 8, 0.1),
+  'warning-fg': #78350f,
+  'danger': #dc2626,
+  'danger-muted': rgba(239, 68, 68, 0.1),
+  'danger-fg': #7f1d1d,
+  'info': #2563eb,
+  'info-muted': rgba(59, 130, 246, 0.1),
+  'info-fg': #1e3a5f,
+) !default;
+
+// -- Social platforms --
+$social: (
+  'meta':     #1877f2,
+  'tiktok':   #ff0050,
+  'linkedin': #0a66c2,
+  'whatsapp': #25d366,
+) !default;
+
+// -- Chart series --
+$chart-series: (
+  'chart-1': #C2410C,
+  'chart-2': #3b82f6,
+  'chart-3': #22c55e,
+  'chart-4': #a855f7,
+  'chart-5': #eab308,
+) !default;
+
+// -- Light palette (milk tone) --
+$light-palette: (
+  'base':      #F8F5EC,
+  'surface':   #F0EDE3,
+  'surface-2': #E8E4D8,
+  'border':    #D6D1C2,
+  'muted':     #9B9485,
+  'text-soft': #5C5649,
+  'text':      #1E1A14,
+) !default;
+
+// -- Dark palette (coal-warm) --
+$dark-palette: (
+  'base':      #161412,
+  'surface':   #201C18,
+  'surface-2': #2A2420,
+  'border':    #3C342C,
+  'muted':     #7B7269,
+  'text-soft': #BDB4A9,
+  'text':      #F2EDE5,
+) !default;
+
+// -- Glass --
+$glass: (
+  'light-bg':     rgba(255, 255, 255, 0.7),
+  'light-border': rgba(0, 0, 0, 0.08),
+  'dark-bg':      rgba(255, 255, 255, 0.04),
+  'dark-border':  rgba(255, 255, 255, 0.07),
+  'blur':         18px,
+) !default;
+
+// -- Neutral --
+$white: #FFFFFF;
+$black: #000000;
+
+// ---- Accessor functions ----
+
+/// Get an accent color value.
+/// @param {String} $name - Accent name (orange, cyan, etc.)
+/// @param {String} $variant ['base'] - 'base' or 'hover'
+/// @return {Color}
+@function accent($name, $variant: 'base') {
+  $pair: map.get($accents, $name);
+  @if not $pair {
+    @error 'Unknown accent "#{$name}". Available: #{map.keys($accents)}';
+  }
+  @return map.get($pair, $variant);
+}
+
+/// Get a semantic color value.
+/// @param {String} $key - e.g. 'success', 'danger-muted', 'info-fg'
+/// @return {Color}
+@function semantic($key) {
+  $val: map.get($semantic, $key);
+  @if not $val {
+    @error 'Unknown semantic key "#{$key}". Available: #{map.keys($semantic)}';
+  }
+  @return $val;
+}

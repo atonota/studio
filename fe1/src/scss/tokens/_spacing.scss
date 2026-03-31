@@ -1,0 +1,40 @@
+// ============================================
+// atonota Studio — Spacing Tokens
+// 4px base unit scale
+// ============================================
+@use 'sass:map';
+
+$scale: (
+  0:  0,
+  1:  4px,
+  2:  8px,
+  3:  12px,
+  4:  16px,
+  5:  20px,
+  6:  24px,
+  7:  28px,
+  8:  32px,
+  9:  36px,
+  10: 40px,
+  11: 44px,
+  12: 48px,
+  13: 52px,
+  14: 56px,
+  15: 60px,
+  16: 64px,
+  17: 68px,
+  18: 72px,
+  19: 76px,
+  20: 80px,
+) !default;
+
+/// Get a spacing value by scale key.
+/// @param {Number} $key - Scale step (0-20)
+/// @return {Length}
+@function space($key) {
+  $val: map.get($scale, $key);
+  @if $val == null {
+    @error 'Unknown spacing key "#{$key}". Available: 0-20';
+  }
+  @return $val;
+}

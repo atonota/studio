@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Analitik — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,115 +20,115 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="dashboard" x-data="{
   dateRange: '30gun',
   sourceFilter: 'tumu',
   seriesConfigs: [{key:'organic',base:500,variance:200},{key:'paid',base:220,variance:100},{key:'referral',base:140,variance:60},{key:'direct',base:90,variance:40}],
   updateCharts() { const days = this.dateRange.replace('gun',''); updateChartsForRange(days, window._chartInstances || {}, this.seriesConfigs); }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Analitik</h1>
       <p class="page-sub">Web analitigi ve kullanici davranisi</p>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
+    <div style="display:flex;gap:var(--sp-2);align-items:center">
       <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'organik',l:'Organik'},{v:'paid',l:'Paid'},{v:'referral',l:'Referral'},{v:'direct',l:'Direct'}]">
-        <button @click="sourceFilter = s.v" :style="sourceFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+        <button @click="sourceFilter = s.v" class="tab-btn" :class="sourceFilter === s.v ? 'active' : ''" x-text="s.l"></button>
       </template>
-      <div style="width:1px;height:20px;background:var(--border);margin:0 4px"></div>
+      <div style="width:1px;height:20px;background:var(--border);margin:0 var(--sp-1)"></div>
       <template x-for="d in [{v:'7gun',l:'7G'},{v:'30gun',l:'30G'},{v:'90gun',l:'90G'}]">
-        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 10px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" class="tab-btn" :class="dateRange === d.v ? 'active' : ''" x-text="d.l"></button>
       </template>
     </div>
   </div>
 
   <!-- KPI Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <a href="analytics-traffic.html" style="text-decoration:none">
       <div class="stat-card" style="--stripe:#3b82f6;cursor:pointer;transition:transform .15s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Oturumlar</span>
-          <i class="ph ph-trend-up" style="color:#22c55e;font-size:1.125rem"></i>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Oturumlar</span>
+          <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-lg)"></i>
         </div>
-        <div style="font-size:1.75rem;font-weight:300;color:var(--text)">34,218</div>
-        <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">+8.7%</div>
+        <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">34,218</div>
+        <div style="font-size:var(--fs-sm);color:#22c55e;margin-top:var(--sp-1)">+8.7%</div>
       </div>
     </a>
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sayfa/Oturum</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">3.4</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Sayfa/Oturum</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">3.4</div>
     </div>
     <div class="stat-card" style="--stripe:#eab308">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort. Sure</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">2:47</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort. Sure</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">2:47</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Donusum</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">2.8%</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Donusum</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">2.8%</div>
     </div>
   </div>
 
   <!-- Stacked Area -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
       <span class="section-label" style="margin-bottom:0">Trafik Kaynaklari (30 Gun)</span>
-      <div style="display:flex;gap:12px;font-size:0.6875rem;color:var(--muted)">
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:3px;background:#22c55e;border-radius:2px;display:inline-block"></span> Organik</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:3px;background:#a855f7;border-radius:2px;display:inline-block"></span> Paid</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:3px;background:#3b82f6;border-radius:2px;display:inline-block"></span> Referral</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:3px;background:#eab308;border-radius:2px;display:inline-block"></span> Direct</span>
+      <div style="display:flex;gap:var(--sp-3);font-size:var(--fs-xs);color:var(--muted)">
+        <span style="display:flex;align-items:center;gap:var(--sp-1)"><span style="width:8px;height:3px;background:#22c55e;border-radius:var(--r-xs);display:inline-block"></span> Organik</span>
+        <span style="display:flex;align-items:center;gap:var(--sp-1)"><span style="width:8px;height:3px;background:#a855f7;border-radius:var(--r-xs);display:inline-block"></span> Paid</span>
+        <span style="display:flex;align-items:center;gap:var(--sp-1)"><span style="width:8px;height:3px;background:#3b82f6;border-radius:var(--r-xs);display:inline-block"></span> Referral</span>
+        <span style="display:flex;align-items:center;gap:var(--sp-1)"><span style="width:8px;height:3px;background:#eab308;border-radius:var(--r-xs);display:inline-block"></span> Direct</span>
       </div>
     </div>
     <div id="chart-stacked" style="width:100%;height:280px"></div>
   </div>
 
   <!-- Bottom Row -->
-  <div class="fade-in-d3" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div class="fade-in-d3" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)">
     <!-- Top Pages -->
     <div class="card">
       <span class="section-label">En Cok Ziyaret Edilen</span>
       <div style="display:flex;flex-direction:column;gap:0">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">/</span>
-          <span style="font-size:0.75rem;color:var(--muted)">8,420 oturum</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">/</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">8,420 oturum</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">/blog/seo-rehberi</span>
-          <span style="font-size:0.75rem;color:var(--muted)">4,210 oturum</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">/blog/seo-rehberi</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">4,210 oturum</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">/urunler</span>
-          <span style="font-size:0.75rem;color:var(--muted)">3,180 oturum</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">/urunler</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">3,180 oturum</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">/fiyatlandirma</span>
-          <span style="font-size:0.75rem;color:var(--muted)">2,740 oturum</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">/fiyatlandirma</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">2,740 oturum</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0">
-          <span style="font-size:0.8125rem;color:var(--text)">/blog/icerik-pazarlama</span>
-          <span style="font-size:0.75rem;color:var(--muted)">1,890 oturum</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-3) 0">
+          <span style="font-size:var(--fs-sm);color:var(--text)">/blog/icerik-pazarlama</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">1,890 oturum</span>
         </div>
       </div>
     </div>
 
     <!-- AI NL Query -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-        <i class="ph ph-robot" style="font-size:1.125rem;color:var(--accent)"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+        <i class="ph ph-robot" style="font-size:var(--fs-lg);color:var(--accent)"></i>
         <span class="section-label" style="margin-bottom:0">AI Dogal Dil Sorgu</span>
       </div>
-      <p style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px">Verilerinizi dogal dilde sorgulayabilirsiniz:</p>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div class="card" style="padding:12px;cursor:pointer;border:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">"Son 7 gunde en cok trafik alan 3 sayfa hangisi?"</span>
+      <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Verilerinizi dogal dilde sorgulayabilirsiniz:</p>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+        <div class="card" style="padding:var(--sp-3);cursor:pointer;border:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">"Son 7 gunde en cok trafik alan 3 sayfa hangisi?"</span>
         </div>
-        <div class="card" style="padding:12px;cursor:pointer;border:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">"Organik trafik gecen aya gore nasil degisti?"</span>
+        <div class="card" style="padding:var(--sp-3);cursor:pointer;border:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">"Organik trafik gecen aya gore nasil degisti?"</span>
         </div>
-        <div class="card" style="padding:12px;cursor:pointer;border:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--text)">"Donusum orani en yuksek kampanya hangisi?"</span>
+        <div class="card" style="padding:var(--sp-3);cursor:pointer;border:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--text)">"Donusum orani en yuksek kampanya hangisi?"</span>
         </div>
       </div>
     </div>

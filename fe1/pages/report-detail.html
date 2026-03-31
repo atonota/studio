@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Haftalik SEO Raporu — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,128 +19,128 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="dashboard">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Haftalik SEO Raporu</h1>
     <p class="page-sub">21-28 Mart 2026</p>
   </div>
 
-  <div style="display:flex;flex-direction:column;gap:20px;max-width:720px">
+  <div style="display:flex;flex-direction:column;gap:var(--sp-5);max-width:720px">
 
     <!-- Report Metadata -->
-    <div class="fade-in-d1 card" style="padding:20px">
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px">
+    <div class="fade-in-d1 card" style="padding:var(--sp-5)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--sp-4)">
         <div>
-          <div style="font-size:0.6875rem;color:var(--muted);margin-bottom:4px">Format</div>
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px">
+          <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-1)">Format</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text);display:flex;align-items:center;gap:var(--sp-2)">
             <i class="ph ph-file-pdf" style="color:#ef4444"></i> PDF
           </div>
         </div>
         <div>
-          <div style="font-size:0.6875rem;color:var(--muted);margin-bottom:4px">Sayfa Sayisi</div>
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">8 sayfa</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-1)">Sayfa Sayisi</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">8 sayfa</div>
         </div>
         <div>
-          <div style="font-size:0.6875rem;color:var(--muted);margin-bottom:4px">Olusturma</div>
-          <div style="font-size:0.875rem;font-weight:500;color:var(--text)">28 Mar 09:00</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-1)">Olusturma</div>
+          <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">28 Mar 09:00</div>
         </div>
       </div>
     </div>
 
     <!-- Section Previews -->
-    <div class="fade-in-d1" x-data="{ expanded: null }" style="display:flex;flex-direction:column;gap:10px">
-      <span style="font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Rapor Bolumleri</span>
+    <div class="fade-in-d1" x-data="{ expanded: null }" style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <span style="font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">Rapor Bolumleri</span>
 
-      <div class="card" style="padding:14px 16px;cursor:pointer" @click="expanded = expanded===1 ? null : 1">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-list-bullets" style="color:#3b82f6;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-4);cursor:pointer" @click="expanded = expanded===1 ? null : 1">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-list-bullets" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
           </div>
           <div style="flex:1">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">1. Ozet</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Haftalik performans ozeti ve onemli degisiklikler</div>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">1. Ozet</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">Haftalik performans ozeti ve onemli degisiklikler</div>
           </div>
           <i class="ph" :class="expanded===1 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
         </div>
-        <div x-show="expanded===1" x-transition style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8125rem;color:var(--muted);line-height:1.6">
+        <div x-show="expanded===1" x-transition style="margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--muted);line-height:1.6">
           Organik trafik %8 artti. Top 10 keyword sayisi 342'ye yukseldi. Core Web Vitals tum metriklerde basarili.
         </div>
       </div>
 
-      <div class="card" style="padding:14px 16px;cursor:pointer" @click="expanded = expanded===2 ? null : 2">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-key" style="color:#22c55e;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-4);cursor:pointer" @click="expanded = expanded===2 ? null : 2">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-key" style="color:#22c55e;font-size:var(--fs-lg)"></i>
           </div>
           <div style="flex:1">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">2. Keyword Performansi</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Pozisyon degisimleri ve yeni firsatlar</div>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">2. Keyword Performansi</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">Pozisyon degisimleri ve yeni firsatlar</div>
           </div>
           <i class="ph" :class="expanded===2 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
         </div>
-        <div x-show="expanded===2" x-transition style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8125rem;color:var(--muted);line-height:1.6">
+        <div x-show="expanded===2" x-transition style="margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--muted);line-height:1.6">
           14 yeni keyword top 10'a girdi. 6 keyword pozisyon kaybetti. En buyuk kazanim: "seo analiz araci" 8 → 3.
         </div>
       </div>
 
-      <div class="card" style="padding:14px 16px;cursor:pointer" @click="expanded = expanded===3 ? null : 3">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-wrench" style="color:#ef4444;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-4);cursor:pointer" @click="expanded = expanded===3 ? null : 3">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-wrench" style="color:#ef4444;font-size:var(--fs-lg)"></i>
           </div>
           <div style="flex:1">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">3. Teknik Sorunlar</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Crawl hatalari, hiz ve Core Web Vitals</div>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">3. Teknik Sorunlar</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">Crawl hatalari, hiz ve Core Web Vitals</div>
           </div>
           <i class="ph" :class="expanded===3 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
         </div>
-        <div x-show="expanded===3" x-transition style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8125rem;color:var(--muted);line-height:1.6">
+        <div x-show="expanded===3" x-transition style="margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--muted);line-height:1.6">
           3 adet 404 hatasi tespit edildi. LCP: 1.2s (iyi). CLS: 0.05 (iyi). FID: 80ms (iyi).
         </div>
       </div>
 
-      <div class="card" style="padding:14px 16px;cursor:pointer" @click="expanded = expanded===4 ? null : 4">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-link" style="color:#a855f7;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-4);cursor:pointer" @click="expanded = expanded===4 ? null : 4">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-link" style="color:#a855f7;font-size:var(--fs-lg)"></i>
           </div>
           <div style="flex:1">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">4. Backlink Degisim</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Yeni kazanilan ve kaybedilen backlinkler</div>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">4. Backlink Degisim</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">Yeni kazanilan ve kaybedilen backlinkler</div>
           </div>
           <i class="ph" :class="expanded===4 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
         </div>
-        <div x-show="expanded===4" x-transition style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8125rem;color:var(--muted);line-height:1.6">
+        <div x-show="expanded===4" x-transition style="margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--muted);line-height:1.6">
           +12 yeni backlink kazanildi, -3 backlink kaybedildi. Net degisim: +9 referring domain.
         </div>
       </div>
 
-      <div class="card" style="padding:14px 16px;cursor:pointer" @click="expanded = expanded===5 ? null : 5">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-lightbulb" style="color:#eab308;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-4);cursor:pointer" @click="expanded = expanded===5 ? null : 5">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-lightbulb" style="color:#eab308;font-size:var(--fs-lg)"></i>
           </div>
           <div style="flex:1">
-            <div style="font-size:0.8125rem;font-weight:500;color:var(--text)">5. Oneriler</div>
-            <div style="font-size:0.75rem;color:var(--muted)">AI destekli aksiyon onerileri ve oncelikler</div>
+            <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">5. Oneriler</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">AI destekli aksiyon onerileri ve oncelikler</div>
           </div>
           <i class="ph" :class="expanded===5 ? 'ph-caret-up' : 'ph-caret-down'" style="color:var(--muted)"></i>
         </div>
-        <div x-show="expanded===5" x-transition style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8125rem;color:var(--muted);line-height:1.6">
+        <div x-show="expanded===5" x-transition style="margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--muted);line-height:1.6">
           404 hatalarini duzelt, uzun kuyruk keyword iceriklerini artir, internal linking stratejisini guclendir.
         </div>
       </div>
     </div>
 
     <!-- Action Buttons -->
-    <div class="fade-in-d2" x-data="{ downloading: false }" style="display:flex;gap:10px;flex-wrap:wrap">
-      <button @click="downloading=true; setTimeout(()=>{ downloading=false; $store.toast.show('PDF indirildi!','success'); }, 1500)" :disabled="downloading" class="btn-primary" style="display:flex;align-items:center;gap:6px">
+    <div class="fade-in-d2" x-data="{ downloading: false }" style="display:flex;gap:var(--sp-3);flex-wrap:wrap">
+      <button @click="downloading=true; setTimeout(()=>{ downloading=false; $store.toast.show('PDF indirildi!','success'); }, 1500)" :disabled="downloading" class="btn-primary" style="display:flex;align-items:center;gap:var(--sp-2)">
         <i class="ph" :class="downloading ? 'ph-circle-notch' : 'ph-file-arrow-down'" :style="downloading ? 'animation:spin 1s linear infinite' : ''"></i>
         <span x-text="downloading ? 'Indiriliyor...' : 'PDF Indir'"></span>
       </button>
-      <button class="btn-ghost" style="display:flex;align-items:center;gap:6px">
+      <button class="btn-ghost" style="display:flex;align-items:center;gap:var(--sp-2)">
         <i class="ph ph-browser"></i> HTML Goruntule
       </button>
     </div>

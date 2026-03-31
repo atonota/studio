@@ -1,0 +1,73 @@
+// ============================================
+// atonota Studio — Utility Classes
+// Generated from token maps
+// ============================================
+@use 'sass:map';
+@use '../tokens/spacing' as spacing;
+@use 'mixins' as mx;
+
+// ---- Spacing utilities ----
+// Generates .mb-{key} and .mt-{key} for named sizes.
+
+$_named-spaces: (
+  'xs': 1,
+  'sm': 2,
+  'md': 4,
+  'lg': 6,
+  'xl': 8,
+  '2xl': 12,
+);
+
+@each $name, $step in $_named-spaces {
+  .mb-#{$name} { margin-bottom: spacing.space($step); }
+  .mt-#{$name} { margin-top:    spacing.space($step); }
+  .ml-#{$name} { margin-left:   spacing.space($step); }
+  .mr-#{$name} { margin-right:  spacing.space($step); }
+  .px-#{$name} { padding-left:  spacing.space($step); padding-right: spacing.space($step); }
+  .py-#{$name} { padding-top:   spacing.space($step); padding-bottom: spacing.space($step); }
+  .p-#{$name}  { padding:       spacing.space($step); }
+  .gap-#{$name} { gap:          spacing.space($step); }
+}
+
+// ---- Display utilities ----
+
+.d-none    { display: none; }
+.d-block   { display: block; }
+.d-flex    { display: flex; }
+.d-grid    { display: grid; }
+.d-inline  { display: inline; }
+.d-inline-block { display: inline-block; }
+
+// ---- Responsive visibility ----
+
+.desktop-only {
+  @include mx.below('md') {
+    display: none !important;
+  }
+}
+
+.mobile-only {
+  @include mx.at('md') {
+    display: none !important;
+  }
+}
+
+// ---- Text alignment ----
+
+.text-left   { text-align: left; }
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+
+// ---- Visually hidden (class version) ----
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

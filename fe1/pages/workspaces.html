@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Workspace — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,31 +17,31 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="cards">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Workspace</h1>
     <p class="page-sub">Bagli siteler ve platformlar</p>
   </div>
 
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)">
     <!-- acme.com -->
     <div class="card" style="cursor:pointer">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-globe" style="font-size:1.25rem;color:#22c55e"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-globe" style="font-size:var(--fs-xl);color:#22c55e"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">acme.com</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Acme Corp</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Acme Corp</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3)">
         <i class="ph ph-wordpress-logo" style="color:var(--muted)"></i>
-        <span style="font-size:0.75rem;color:var(--muted)">WordPress 6.7</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">WordPress 6.7</span>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div style="display:flex;gap:var(--sp-2);flex-wrap:wrap">
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">SEO</span>
       </div>
@@ -48,33 +49,35 @@
 
     <!-- shop.beta.com -->
     <div class="card" style="cursor:pointer">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-globe" style="font-size:1.25rem;color:#3b82f6"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-globe" style="font-size:var(--fs-xl);color:#3b82f6"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">shop.beta.com</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Beta Ltd</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Beta Ltd</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3)">
         <i class="ph ph-shopping-bag" style="color:var(--muted)"></i>
-        <span style="font-size:0.75rem;color:var(--muted)">Shopify</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Shopify</span>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div style="display:flex;gap:var(--sp-2);flex-wrap:wrap">
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
       </div>
     </div>
 
     <!-- New Workspace -->
-    <div class="card" style="cursor:pointer;border:2px dashed var(--border);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;gap:8px">
-      <i class="ph ph-plus-circle" style="font-size:2rem;color:var(--muted)"></i>
-      <span style="font-size:0.8125rem;color:var(--muted);font-weight:500">Yeni Workspace</span>
+    <div class="card" style="cursor:pointer;border:2px dashed var(--border);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;gap:var(--sp-2)">
+      <i class="ph ph-plus-circle" style="font-size:var(--fs-4xl);color:var(--muted)"></i>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Yeni Workspace</span>
     </div>
   </div>
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('yonetim'));</script>
 </body>

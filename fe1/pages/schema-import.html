@@ -5,34 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Rakip Schema Import — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="form({url:''})">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="form({url:''})">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Rakip Schema Import</h1>
     <p class="page-sub">Rakip sitelerden yapilandirilmis veri kesfet ve import et</p>
   </div>
 
   <!-- URL Input -->
-  <div class="fade-in-d1 card" style="margin-bottom:24px">
+  <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Rakip URL Tara</span>
-    <div style="display:flex;gap:12px;align-items:flex-end">
+    <div style="display:flex;gap:var(--sp-3);align-items:flex-end">
       <div style="flex:1">
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Rakip Sayfa URL</label>
-        <input type="url" value="https://rakip1.com/urunler/akilli-saat" style="width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">Rakip Sayfa URL</label>
+        <input type="url" value="https://rakip1.com/urunler/akilli-saat" style="width:100%;padding:var(--sp-3) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-md);outline:none" />
       </div>
-      <button class="btn-primary" style="padding:10px 24px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;white-space:nowrap">
-        <i class="ph ph-magnifying-glass" style="margin-right:4px"></i>Tara
+      <button class="btn-primary" style="padding:var(--sp-3) var(--sp-6);border-radius:var(--r-md);font-size:var(--fs-md);font-weight:600;cursor:pointer;white-space:nowrap">
+        <i class="ph ph-magnifying-glass" style="margin-right:var(--sp-1)"></i>Tara
       </button>
     </div>
   </div>
@@ -40,48 +41,48 @@
   <!-- Detected Schemas -->
   <div class="fade-in-d2 card">
     <span class="section-label">Tespit Edilen Schema'lar</span>
-    <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
 
       <!-- Schema 1 -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-            <i class="ph ph-package" style="font-size:1rem;color:#a855f7"></i>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+            <i class="ph ph-package" style="font-size:var(--fs-lg);color:#a855f7"></i>
           </div>
           <div>
-            <div style="font-weight:500;color:var(--text);font-size:0.875rem">Product</div>
-            <div style="font-size:0.6875rem;color:var(--muted)">15 alan tespit edildi</div>
+            <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Product</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted)">15 alan tespit edildi</div>
           </div>
         </div>
-        <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Import Et</button>
+        <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Import Et</button>
       </div>
 
       <!-- Schema 2 -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
-            <i class="ph ph-breadcrumbs" style="font-size:1rem;color:#3b82f6"></i>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+            <i class="ph ph-breadcrumbs" style="font-size:var(--fs-lg);color:#3b82f6"></i>
           </div>
           <div>
-            <div style="font-weight:500;color:var(--text);font-size:0.875rem">BreadcrumbList</div>
-            <div style="font-size:0.6875rem;color:var(--muted)">4 alan tespit edildi</div>
+            <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">BreadcrumbList</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted)">4 alan tespit edildi</div>
           </div>
         </div>
-        <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Import Et</button>
+        <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Import Et</button>
       </div>
 
       <!-- Schema 3 -->
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
-            <i class="ph ph-buildings" style="font-size:1rem;color:#22c55e"></i>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+            <i class="ph ph-buildings" style="font-size:var(--fs-lg);color:#22c55e"></i>
           </div>
           <div>
-            <div style="font-weight:500;color:var(--text);font-size:0.875rem">Organization</div>
-            <div style="font-size:0.6875rem;color:var(--muted)">8 alan tespit edildi</div>
+            <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Organization</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted)">8 alan tespit edildi</div>
           </div>
         </div>
-        <button class="btn-primary" style="padding:6px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer">Import Et</button>
+        <button class="btn-primary" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">Import Et</button>
       </div>
 
     </div>

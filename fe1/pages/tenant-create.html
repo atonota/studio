@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Yeni Tenant Olustur — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,8 +18,8 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="{ ...wizard(4), ...selectCard(), tenantName:'', slug:'', domain:'', sektor:'', inviteEmail:'', creating: false, step1Errors: {},
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="form" x-data="{ ...wizard(4), ...selectCard(), tenantName:'', slug:'', domain:'', sektor:'', inviteEmail:'', creating: false, step1Errors: {},
   validateStep1() {
     this.step1Errors = {};
     if (!this.tenantName.trim()) this.step1Errors.tenantName = 'Tenant adi zorunlu';
@@ -27,23 +28,23 @@
   }
 }">
 
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Yeni Tenant Olustur</h1>
     <p class="page-sub">Yeni bir tenant hesabi olusturun</p>
   </div>
 
   <!-- Step Indicators -->
-  <div class="fade-in-d1" style="display:flex;align-items:center;gap:0;margin-bottom:32px;flex-wrap:wrap">
+  <div class="fade-in-d1" style="display:flex;align-items:center;gap:0;margin-bottom:var(--sp-8);flex-wrap:wrap">
     <template x-for="(label, idx) in ['Bilgi','Plan','Kullanicilar','Onay']" :key="idx">
       <div style="display:contents">
-        <div @click="if(isCompleted(idx+1) || isActive(idx+1)) goTo(idx+1)" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;cursor:pointer;transition:all 0.15s"
+        <div @click="if(isCompleted(idx+1) || isActive(idx+1)) goTo(idx+1)" style="display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);cursor:pointer;transition:all 0.15s"
              :style="isActive(idx+1) ? 'background:var(--accent-soft);border:1px solid var(--accent-muted)' : isCompleted(idx+1) ? 'background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3)' : 'background:var(--surface-2);border:1px solid var(--border)'">
-          <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700"
+          <span style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);font-weight:700"
                 :style="isActive(idx+1) ? 'background:var(--accent);color:white' : isCompleted(idx+1) ? 'background:#22c55e;color:white' : 'background:var(--surface);border:1px solid var(--border);color:var(--muted)'">
-            <template x-if="isCompleted(idx+1)"><i class="ph ph-check" style="font-size:0.75rem"></i></template>
+            <template x-if="isCompleted(idx+1)"><i class="ph ph-check" style="font-size:var(--fs-sm)"></i></template>
             <template x-if="!isCompleted(idx+1)"><span x-text="idx+1"></span></template>
           </span>
-          <span style="font-size:0.8125rem" :style="isActive(idx+1) ? 'color:var(--accent);font-weight:600' : isCompleted(idx+1) ? 'color:#22c55e;font-weight:600' : 'color:var(--muted);font-weight:500'" x-text="label"></span>
+          <span style="font-size:var(--fs-sm)" :style="isActive(idx+1) ? 'color:var(--accent);font-weight:600' : isCompleted(idx+1) ? 'color:#22c55e;font-weight:600' : 'color:var(--muted);font-weight:500'" x-text="label"></span>
         </div>
         <div x-show="idx < 3" style="width:24px;height:1px;background:var(--border);flex-shrink:0"></div>
       </div>
@@ -52,26 +53,26 @@
 
   <!-- Step 1: Bilgi -->
   <div x-show="isActive(1)" x-transition class="fade-in-d2 card" style="max-width:600px">
-    <h3 style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:20px">Tenant Bilgileri</h3>
-    <div style="display:flex;flex-direction:column;gap:16px">
+    <h3 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin-bottom:var(--sp-5)">Tenant Bilgileri</h3>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Tenant Adi</label>
-        <input type="text" x-model="tenantName" @input="slug = tenantName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')" placeholder="Acme Corp." style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box" :style="step1Errors.tenantName ? 'border-color:#ef4444' : ''">
-        <span x-show="step1Errors.tenantName" x-text="step1Errors.tenantName" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Tenant Adi</label>
+        <input type="text" x-model="tenantName" @input="slug = tenantName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')" placeholder="Acme Corp." style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box" :style="step1Errors.tenantName ? 'border-color:#ef4444' : ''">
+        <span x-show="step1Errors.tenantName" x-text="step1Errors.tenantName" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Slug</label>
-        <input type="text" x-model="slug" placeholder="acme-corp" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box" :style="step1Errors.slug ? 'border-color:#ef4444' : ''">
-        <span x-show="step1Errors.slug" x-text="step1Errors.slug" style="color:#ef4444;font-size:0.75rem;margin-top:4px;display:block"></span>
-        <span x-show="!step1Errors.slug" style="font-size:0.6875rem;color:var(--muted);margin-top:4px;display:block">URL'de kullanilacak benzersiz tanimlayici</span>
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Slug</label>
+        <input type="text" x-model="slug" placeholder="acme-corp" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box" :style="step1Errors.slug ? 'border-color:#ef4444' : ''">
+        <span x-show="step1Errors.slug" x-text="step1Errors.slug" style="color:#ef4444;font-size:var(--fs-sm);margin-top:var(--sp-1);display:block"></span>
+        <span x-show="!step1Errors.slug" style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1);display:block">URL'de kullanilacak benzersiz tanimlayici</span>
       </div>
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Domain</label>
-        <input type="text" x-model="domain" placeholder="acme.com" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;box-sizing:border-box">
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Domain</label>
+        <input type="text" x-model="domain" placeholder="acme.com" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);box-sizing:border-box">
       </div>
       <div>
-        <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Sektor</label>
-        <select x-model="sektor" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;width:100%;font-size:0.875rem;appearance:auto;box-sizing:border-box">
+        <label style="display:block;font-size:var(--fs-sm);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Sektor</label>
+        <select x-model="sektor" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;width:100%;font-size:var(--fs-md);appearance:auto;box-sizing:border-box">
           <option value="" disabled>Sektor secin...</option>
           <option>E-Ticaret</option>
           <option>SaaS / Teknoloji</option>
@@ -84,7 +85,7 @@
         </select>
       </div>
 
-      <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-2)">
         <button class="btn-primary" @click="if(validateStep1()) next()"><i class="ph ph-arrow-right"></i> Ileri</button>
         <button class="btn-secondary" onclick="history.back()">Iptal</button>
       </div>
@@ -93,31 +94,31 @@
 
   <!-- Step 2: Plan -->
   <div x-show="isActive(2)" x-transition class="card" style="max-width:600px">
-    <h3 style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:20px">Plan Secimi</h3>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
-      <div @click="select('free')" style="border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s"
+    <h3 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin-bottom:var(--sp-5)">Plan Secimi</h3>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+      <div @click="select('free')" style="border-radius:var(--r-lg);padding:var(--sp-6) var(--sp-4);display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);cursor:pointer;transition:all 0.15s"
            :style="isSelected('free') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border);background:var(--surface-2)'">
-        <i class="ph ph-package" style="font-size:1.5rem" :style="isSelected('free') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Free</span>
-        <span style="font-size:0.75rem;color:var(--muted)">1 workspace</span>
-        <span style="font-size:1.125rem;font-weight:700;color:var(--text)">$0<span style="font-size:0.75rem;font-weight:400;color:var(--muted)">/ay</span></span>
+        <i class="ph ph-package" style="font-size:var(--fs-2xl)" :style="isSelected('free') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+        <span style="font-size:var(--fs-base);font-weight:600;color:var(--text)">Free</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">1 workspace</span>
+        <span style="font-size:var(--fs-lg);font-weight:700;color:var(--text)">$0<span style="font-size:var(--fs-sm);font-weight:400;color:var(--muted)">/ay</span></span>
       </div>
-      <div @click="select('pro')" style="border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s"
+      <div @click="select('pro')" style="border-radius:var(--r-lg);padding:var(--sp-6) var(--sp-4);display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);cursor:pointer;transition:all 0.15s"
            :style="isSelected('pro') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border);background:var(--surface-2)'">
-        <i class="ph ph-rocket" style="font-size:1.5rem" :style="isSelected('pro') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Pro</span>
-        <span style="font-size:0.75rem;color:var(--muted)">10 workspace</span>
-        <span style="font-size:1.125rem;font-weight:700;color:var(--text)">$49<span style="font-size:0.75rem;font-weight:400;color:var(--muted)">/ay</span></span>
+        <i class="ph ph-rocket" style="font-size:var(--fs-2xl)" :style="isSelected('pro') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+        <span style="font-size:var(--fs-base);font-weight:600;color:var(--text)">Pro</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">10 workspace</span>
+        <span style="font-size:var(--fs-lg);font-weight:700;color:var(--text)">$49<span style="font-size:var(--fs-sm);font-weight:400;color:var(--muted)">/ay</span></span>
       </div>
-      <div @click="select('enterprise')" style="border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s"
+      <div @click="select('enterprise')" style="border-radius:var(--r-lg);padding:var(--sp-6) var(--sp-4);display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);cursor:pointer;transition:all 0.15s"
            :style="isSelected('enterprise') ? 'border:2px solid var(--accent);background:var(--accent-soft)' : 'border:2px solid var(--border);background:var(--surface-2)'">
-        <i class="ph ph-crown" style="font-size:1.5rem" :style="isSelected('enterprise') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
-        <span style="font-size:0.9375rem;font-weight:600;color:var(--text)">Enterprise</span>
-        <span style="font-size:0.75rem;color:var(--muted)">Sinirsiz</span>
-        <span style="font-size:1.125rem;font-weight:700;color:var(--text)">$199<span style="font-size:0.75rem;font-weight:400;color:var(--muted)">/ay</span></span>
+        <i class="ph ph-crown" style="font-size:var(--fs-2xl)" :style="isSelected('enterprise') ? 'color:var(--accent)' : 'color:var(--muted)'"></i>
+        <span style="font-size:var(--fs-base);font-weight:600;color:var(--text)">Enterprise</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Sinirsiz</span>
+        <span style="font-size:var(--fs-lg);font-weight:700;color:var(--text)">$199<span style="font-size:var(--fs-sm);font-weight:400;color:var(--muted)">/ay</span></span>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
       <button class="btn-secondary" @click="prev()"><i class="ph ph-arrow-left"></i> Geri</button>
       <button class="btn-primary" :disabled="!selected" :style="!selected ? 'opacity:0.5;cursor:not-allowed' : ''" @click="if(selected) next()"><i class="ph ph-arrow-right"></i> Ileri</button>
     </div>
@@ -125,13 +126,13 @@
 
   <!-- Step 3: Kullanicilar -->
   <div x-show="isActive(3)" x-transition class="card" style="max-width:600px">
-    <h3 style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:20px">Kullanici Davet</h3>
-    <p style="font-size:0.875rem;color:var(--text-soft);margin-bottom:16px">Tenant'a ekip uyelerini davet edin. Bu adimi atlayabilirsiniz.</p>
-    <div style="display:flex;gap:8px;margin-bottom:20px">
-      <input type="email" x-model="inviteEmail" placeholder="ornek@sirket.com" style="flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box">
-      <button class="btn-primary" style="padding:10px 16px" @click="if(inviteEmail) { $store.toast.show('Davet gonderildi: ' + inviteEmail, 'success'); inviteEmail='' }"><i class="ph ph-paper-plane-tilt"></i> Davet Gonder</button>
+    <h3 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin-bottom:var(--sp-5)">Kullanici Davet</h3>
+    <p style="font-size:var(--fs-md);color:var(--text-soft);margin-bottom:var(--sp-4)">Tenant'a ekip uyelerini davet edin. Bu adimi atlayabilirsiniz.</p>
+    <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5)">
+      <input type="email" x-model="inviteEmail" placeholder="ornek@sirket.com" style="flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box">
+      <button class="btn-primary" style="padding:var(--sp-3) var(--sp-4)" @click="if(inviteEmail) { $store.toast.show('Davet gonderildi: ' + inviteEmail, 'success'); inviteEmail='' }"><i class="ph ph-paper-plane-tilt"></i> Davet Gonder</button>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
       <button class="btn-secondary" @click="prev()"><i class="ph ph-arrow-left"></i> Geri</button>
       <button class="btn-primary" @click="next()"><i class="ph ph-arrow-right"></i> Ileri</button>
     </div>
@@ -139,19 +140,19 @@
 
   <!-- Step 4: Ozet -->
   <div x-show="isActive(4)" x-transition class="card" style="max-width:600px">
-    <h3 style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:20px">Ozet</h3>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;padding:16px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Tenant Adi</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="tenantName"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Slug</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="slug"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Domain</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="domain || '—'"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Sektor</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="sektor || '—'"></span></div>
-      <div style="display:flex;justify-content:space-between"><span style="font-size:0.8125rem;color:var(--muted)">Plan</span><span style="font-size:0.8125rem;color:var(--text);font-weight:500;text-transform:capitalize" x-text="selected || '—'"></span></div>
+    <h3 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin-bottom:var(--sp-5)">Ozet</h3>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3);margin-bottom:var(--sp-6);padding:var(--sp-4);background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Tenant Adi</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="tenantName"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Slug</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="slug"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Domain</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="domain || '—'"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Sektor</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="sektor || '—'"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:var(--fs-sm);color:var(--muted)">Plan</span><span style="font-size:var(--fs-sm);color:var(--text);font-weight:500;text-transform:capitalize" x-text="selected || '—'"></span></div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
       <button class="btn-secondary" @click="prev()"><i class="ph ph-arrow-left"></i> Geri</button>
       <button class="btn-primary" :disabled="creating" @click="creating=true; setTimeout(()=>{ creating=false; $store.toast.show('Tenant basariyla olusturuldu!','success'); setTimeout(()=>{ window.location.href='tenants.html' }, 1500) }, 1200)">
-        <template x-if="creating"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner ph-spin"></i> Olusturuluyor...</span></template>
-        <template x-if="!creating"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-check"></i> Olustur</span></template>
+        <template x-if="creating"><span style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-spinner ph-spin"></i> Olusturuluyor...</span></template>
+        <template x-if="!creating"><span style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-check"></i> Olustur</span></template>
       </button>
     </div>
   </div>

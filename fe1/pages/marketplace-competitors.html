@@ -5,49 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Marketplace Rakip Analizi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ sortBy:'score', expanded:null }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ sortBy:'score', expanded:null }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Marketplace Rakip Analizi</h1>
     <p class="page-sub">Marketplace rakiplerinin performans karsilastirmasi</p>
   </div>
 
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)">
     <!-- Competitor 1 -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-storefront" style="font-size:1.25rem;color:#ef4444"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-storefront" style="font-size:var(--fs-xl);color:#ef4444"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">TeknoShop</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Elektronik magazasi</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Elektronik magazasi</div>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Platform</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Platform</span>
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Trendyol</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Urun Sayisi</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Urun Sayisi</span>
         <span style="font-weight:500;color:var(--text)">234</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Ort. Skor</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Skor</span>
         <span style="font-weight:500;color:#22c55e">81/100</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Trend</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Trend</span>
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">
           <i class="ph ph-arrow-up" style="margin-right:2px"></i>Yukseliyor
         </span>
@@ -56,58 +57,58 @@
 
     <!-- Competitor 2 -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-storefront" style="font-size:1.25rem;color:#eab308"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-storefront" style="font-size:var(--fs-xl);color:#eab308"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">GuzellikDunyasi</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Kozmetik magazasi</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Kozmetik magazasi</div>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Platform</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Platform</span>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Hepsiburada</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Urun Sayisi</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Urun Sayisi</span>
         <span style="font-weight:500;color:var(--text)">156</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Ort. Skor</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Skor</span>
         <span style="font-weight:500;color:#eab308">72/100</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Trend</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Trend</span>
         <span class="badge" style="background:rgba(123,114,105,0.15);color:#7B7269">Stabil</span>
       </div>
     </div>
 
     <!-- Competitor 3 -->
     <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
-          <i class="ph ph-storefront" style="font-size:1.25rem;color:#22c55e"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-storefront" style="font-size:var(--fs-xl);color:#22c55e"></i>
         </div>
         <div>
           <div style="font-weight:500;color:var(--text)">EvDekor</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">Ev ve yasam urunleri</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">Ev ve yasam urunleri</div>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Platform</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Platform</span>
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Trendyol</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Urun Sayisi</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Urun Sayisi</span>
         <span style="font-weight:500;color:var(--text)">89</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Ort. Skor</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Skor</span>
         <span style="font-weight:500;color:#ef4444">58/100</span>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--border)">
-        <span style="font-size:0.75rem;color:var(--muted)">Trend</span>
+      <div style="display:flex;justify-content:space-between;padding:var(--sp-2) 0;border-top:1px solid var(--border)">
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Trend</span>
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">
           <i class="ph ph-arrow-down" style="margin-right:2px"></i>Dususte
         </span>

@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Butce Yonetimi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -20,9 +21,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   platformFilter: 'tumu',
   pacingFilter: 'tumu',
   dateRange: '7gun',
@@ -38,54 +39,54 @@
     }
   }
 }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Butce Yonetimi</h1>
       <p class="page-sub">Cross-channel reklam butce takibi ve dagilimi</p>
-      <div style="margin-top:8px">
-        <a href="ads-budget-optimizer.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
-          <i class="ph ph-robot" style="font-size:0.875rem"></i> AI Butce Optimizer <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      <div style="margin-top:var(--sp-2)">
+        <a href="ads-budget-optimizer.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);">
+          <i class="ph ph-robot" style="font-size:var(--fs-md)"></i> AI Butce Optimizer <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
         </a>
       </div>
     </div>
-    <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-1)">
       <template x-for="d in [{v:'7gun',l:'7 Gun'},{v:'30gun',l:'30 Gun'},{v:'90gun',l:'90 Gun'}]">
-        <button @click="dateRange = d.v; updateCharts()" :style="dateRange === d.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="d.l"></button>
+        <button @click="dateRange = d.v; updateCharts()" class="tab-btn" :class="dateRange === d.v ? 'active' : ''" x-text="d.l"></button>
       </template>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Butce</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">&#8378;48,720</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Butce</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">&#8378;48,720</div>
     </div>
     <div class="stat-card" style="--stripe:#C2410C">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Harcanan</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">&#8378;38,240</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">%78</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Harcanan</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">&#8378;38,240</div>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">%78</div>
     </div>
     <div class="stat-card" style="--stripe:#22c55e">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kalan</span>
-      <div style="font-size:1.75rem;font-weight:300;color:#22c55e;margin-top:8px">&#8378;10,480</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Kalan</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#22c55e;margin-top:var(--sp-2)">&#8378;10,480</div>
     </div>
   </div>
 
   <!-- Daily Spend Chart -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Gunluk Harcama — Son 7 Gun</span>
-    <div id="spendChart" style="width:100%;height:320px;margin-top:12px"></div>
+    <div id="spendChart" style="width:100%;height:320px;margin-top:var(--sp-3)"></div>
   </div>
 
   <!-- Budget Allocation Table -->
   <div class="fade-in-d3 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Platform Butce Dagilimi</span>
-      <button onclick="exportToCSV(['Platform','Gunluk Butce','Harcanan','Kalan','Pacing'], Array.from(document.querySelectorAll('[data-paginate=&quot;10&quot;] .r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'butce-dagilimi.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
-      <div style="display:flex;gap:4px">
+      <button onclick="exportToCSV(['Platform','Gunluk Butce','Harcanan','Kalan','Pacing'], Array.from(document.querySelectorAll('[data-paginate=&quot;10&quot;] .r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'butce-dagilimi.csv')" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-download-simple" style="font-size:var(--fs-md)"></i> CSV Indir</button>
+      <div style="display:flex;gap:var(--sp-1)">
         <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'On Track',l:'On Track'},{v:'Over',l:'Over'},{v:'Under',l:'Under'}]">
-          <button @click="pacingFilter = p.v" :style="pacingFilter === p.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:4px 10px;border-radius:6px;font-size:0.6875rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="p.l"></button>
+          <button @click="pacingFilter = p.v" class="tab-btn" :class="pacingFilter === p.v ? 'active' : ''" x-text="p.l"></button>
         </template>
       </div>
     </div>
@@ -102,7 +103,7 @@
       <tbody>
         <tr>
           <td data-label="Platform">
-            <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
               <i class="ph ph-meta-logo" style="color:#3b82f6"></i>
               <span style="font-weight:500;color:var(--text)">Meta Ads</span>
             </div>
@@ -114,7 +115,7 @@
         </tr>
         <tr>
           <td data-label="Platform">
-            <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
               <i class="ph ph-tiktok-logo" style="color:#ef4444"></i>
               <span style="font-weight:500;color:var(--text)">TikTok Ads</span>
             </div>
@@ -126,7 +127,7 @@
         </tr>
         <tr>
           <td data-label="Platform">
-            <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
               <i class="ph ph-linkedin-logo" style="color:#14b8a6"></i>
               <span style="font-weight:500;color:var(--text)">LinkedIn Ads</span>
             </div>
@@ -171,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
       textStyle: { color: text, fontSize: 12 },
       formatter: params => {
         let s = params[0].name + '<br/>';
-        params.forEach(p => { s += `<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${p.color};margin-right:6px"></span>${p.seriesName}: ₺${p.value.toLocaleString('tr-TR')}<br/>`; });
+        params.forEach(p => { s += `<span style="display:inline-block;width:10px;height:10px;border-radius:var(--r-xs);background:${p.color};margin-right:var(--sp-2)"></span>${p.seriesName}: ₺${p.value.toLocaleString('tr-TR')}<br/>`; });
         return s;
       }
     },

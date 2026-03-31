@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>AI Mention Takibi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +19,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ platformFilter: 'tumu', sentimentFilter: 'tumu', platforms: [
+<div id="main" data-skeleton="table" x-data="{ platformFilter: 'tumu', sentimentFilter: 'tumu', platforms: [
   {name:'ChatGPT',icon:'ph-openai-logo',iconColor:'#22c55e',iconBg:'rgba(34,197,94,0.1)',mention:8,citation:3,sentiment:'Pozitif'},
   {name:'Gemini',icon:'ph-google-logo',iconColor:'#3b82f6',iconBg:'rgba(59,130,246,0.1)',mention:6,citation:2,sentiment:'Notr'},
   {name:'Perplexity',icon:'ph-compass',iconColor:'#a855f7',iconBg:'rgba(168,85,247,0.1)',mention:5,citation:2,sentiment:'Pozitif'},
@@ -28,142 +29,142 @@
   {name:'Copilot',icon:'ph-microsoft-teams-logo',iconColor:'#7B7269',iconBg:'rgba(123,114,105,0.1)',mention:1,citation:0,sentiment:'Yok'},
   {name:'Grok',icon:'ph-x-logo',iconColor:'#7B7269',iconBg:'rgba(123,114,105,0.1)',mention:0,citation:0,sentiment:'Yok'}
 ] }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3)">
     <div>
       <h1 class="page-title">AI Mention Takibi</h1>
       <p class="page-sub">Yapay zeka platformlarinda marka gorunurlugu</p>
     </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <div style="display:flex;gap:4px">
+    <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap">
+      <div style="display:flex;gap:var(--sp-1)">
         <template x-for="p in ['tumu','ChatGPT','Gemini','Perplexity','Claude']">
-          <button @click="platformFilter = p" :style="platformFilter === p ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="p === 'tumu' ? 'Tumu' : p"></button>
+          <button @click="platformFilter = p" class="tab-btn" :class="platformFilter === p ? 'active' : ''" x-text="p === 'tumu' ? 'Tumu' : p"></button>
         </template>
       </div>
-      <div style="display:flex;gap:4px">
+      <div style="display:flex;gap:var(--sp-1)">
         <template x-for="s in ['tumu','Pozitif','Notr']">
-          <button @click="sentimentFilter = s" :style="sentimentFilter === s ? 'background:var(--accent);color:#fff;border-color:var(--accent)' : 'background:var(--surface-2);color:var(--muted)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:600;cursor:pointer;border:1px solid var(--border);font-family:inherit;transition:all .15s" x-text="s === 'tumu' ? 'Tum Duygu' : s"></button>
+          <button @click="sentimentFilter = s" class="tab-btn" :class="sentimentFilter === s ? 'active' : ''" x-text="s === 'tumu' ? 'Tum Duygu' : s"></button>
         </template>
       </div>
     </div>
   </div>
 
   <div class="fade-in-d1 card" data-paginate="10" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Platform Bazli Mention</span>
-      <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('ai-mention',['Platform','Mention','Citation','Sentiment'])">CSV Indir</button>
+      <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('ai-mention',['Platform','Mention','Citation','Sentiment'])">CSV Indir</button>
     </div>
 
     <div style="display:flex;flex-direction:column">
       <!-- ChatGPT -->
-      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-openai-logo" style="font-size:1.125rem;color:#22c55e"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-openai-logo" style="font-size:var(--fs-lg);color:#22c55e"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">ChatGPT</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">ChatGPT</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">8</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">mention</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">8</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">mention</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">3</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">citation</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">3</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">citation</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;min-width:64px;text-align:center">Pozitif</span>
       </div>
 
       <!-- Gemini -->
-      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-google-logo" style="font-size:1.125rem;color:#3b82f6"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-google-logo" style="font-size:var(--fs-lg);color:#3b82f6"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Gemini</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Gemini</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">6</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">mention</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">6</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">mention</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">2</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">citation</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">2</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">citation</div>
         </div>
         <span class="badge" style="background:rgba(123,114,105,0.15);color:#7B7269;min-width:64px;text-align:center">Notr</span>
       </div>
 
       <!-- Perplexity -->
-      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-compass" style="font-size:1.125rem;color:#a855f7"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-compass" style="font-size:var(--fs-lg);color:#a855f7"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Perplexity</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Perplexity</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">5</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">mention</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">5</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">mention</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">2</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">citation</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">2</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">citation</div>
         </div>
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;min-width:64px;text-align:center">Pozitif</span>
       </div>
 
       <!-- Claude -->
-      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-robot" style="font-size:1.125rem;color:#C2410C"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-robot" style="font-size:var(--fs-lg);color:#C2410C"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Claude</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Claude</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">3</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">mention</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">3</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">mention</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">1</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">citation</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">1</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">citation</div>
         </div>
         <span class="badge" style="background:rgba(123,114,105,0.15);color:#7B7269;min-width:64px;text-align:center">Notr</span>
       </div>
 
       <!-- Copilot -->
-      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-microsoft-teams-logo" style="font-size:1.125rem;color:#7B7269"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-microsoft-teams-logo" style="font-size:var(--fs-lg);color:#7B7269"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Copilot</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Copilot</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">1</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">mention</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">1</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">mention</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">0</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">citation</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">0</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">citation</div>
         </div>
         <span class="badge" style="background:var(--surface-2);color:var(--muted);min-width:64px;text-align:center">Yok</span>
       </div>
 
       <!-- Grok -->
-      <div style="display:flex;align-items:center;gap:14px;padding:16px 20px">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-x-logo" style="font-size:1.125rem;color:#7B7269"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5)">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(123,114,105,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-x-logo" style="font-size:var(--fs-lg);color:#7B7269"></i>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem">Grok</div>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Grok</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">0</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">mention</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">0</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">mention</div>
         </div>
         <div style="text-align:center;min-width:64px">
-          <div style="font-size:1.125rem;font-weight:500;color:var(--text)">0</div>
-          <div style="font-size:0.6875rem;color:var(--muted)">citation</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">0</div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)">citation</div>
         </div>
         <span class="badge" style="background:var(--surface-2);color:var(--muted);min-width:64px;text-align:center">Yok</span>
       </div>

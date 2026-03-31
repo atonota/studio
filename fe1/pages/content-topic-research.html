@@ -5,18 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Konu Arastirma — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="tool" x-data="{
   topic: '',
   loading: false,
   searched: false,
@@ -75,7 +76,7 @@
   engagementColor(e) { return e >= 80 ? '#22c55e' : e >= 60 ? '#eab308' : '#ef4444' },
 
   createContent(title) {
-    Alpine.store('toast').show('\"' + title + '\" icin icerik olusturma baslatiliyor...', 'success');
+    Alpine.store('toast').show(title + ' icin icerik olusturma baslatiliyor...', 'success');
   },
 
   initMindMap() {
@@ -142,63 +143,61 @@
 }">
 
   <!-- Page Header -->
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Konu Arastirma</h1>
     <p class="page-sub">Zihin haritasi gorunumunde konu kesfet ve icerik firsatlari bul</p>
   </div>
 
   <!-- Search Input -->
-  <div class="fade-in-d1 card" style="padding:20px;margin-bottom:20px">
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+  <div class="fade-in-d1 card" style="padding:var(--sp-5);margin-bottom:var(--sp-5)">
+    <div style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
       <div style="flex:1;min-width:280px;position:relative">
-        <i class="ph ph-brain" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.25rem;color:var(--muted)"></i>
+        <i class="ph ph-brain" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:var(--fs-xl);color:var(--muted)"></i>
         <input type="text" x-model="topic" @keydown.enter="doSearch()" placeholder="Konu girin... (ornek: dijital pazarlama, seo, e-ticaret)"
-          style="width:100%;padding:12px 14px 12px 44px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.9375rem;font-family:inherit;outline:none"
+          style="width:100%;padding:var(--sp-3) var(--sp-4) var(--sp-3) 44px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-md);font-family:inherit;outline:none"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
-      <button @click="doSearch()" style="padding:12px 28px;border-radius:10px;font-size:0.875rem;font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:inherit;white-space:nowrap">
-        <span x-show="!loading"><i class="ph ph-compass" style="font-size:1rem"></i> Kesfet</span>
-        <span x-show="loading" style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:1rem"></i> Arastiriliyor...</span>
+      <button @click="doSearch()" style="padding:var(--sp-3) var(--sp-7);border-radius:var(--r-md);font-size:var(--fs-md);font-weight:600;background:var(--accent);color:white;border:none;cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit;white-space:nowrap">
+        <span x-show="!loading"><i class="ph ph-compass" style="font-size:var(--fs-lg)"></i> Kesfet</span>
+        <span x-show="loading" style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-spinner" style="animation:spin 1s linear infinite;font-size:var(--fs-lg)"></i> Arastiriliyor...</span>
       </button>
     </div>
   </div>
 
   <!-- Loading -->
-  <div x-show="loading" style="text-align:center;padding:60px 20px">
+  <div x-show="loading" style="text-align:center;padding:60px var(--sp-5)">
     <i class="ph ph-circle-notch" style="font-size:2.5rem;color:var(--accent);animation:spin 1s linear infinite"></i>
-    <p style="color:var(--muted);margin-top:12px;font-size:0.875rem">Konu agaci olusturuluyor...</p>
+    <p style="color:var(--muted);margin-top:var(--sp-3);font-size:var(--fs-md)">Konu agaci olusturuluyor...</p>
   </div>
 
   <!-- Empty State -->
-  <div x-show="!searched && !loading" class="fade-in-d2 card" style="text-align:center;padding:80px 20px">
-    <i class="ph ph-tree-structure" style="font-size:3rem;color:var(--muted);margin-bottom:12px"></i>
-    <p style="color:var(--text);font-weight:600;margin-bottom:4px">Konu arastirmasina baslayin</p>
-    <p style="color:var(--muted);font-size:0.8125rem">Bir konu girerek iliskili alt konular, sorular ve baslik fikirleri kesfet</p>
+  <div x-show="!searched && !loading" class="fade-in-d2 card" style="text-align:center;padding:80px var(--sp-5)">
+    <i class="ph ph-tree-structure" style="font-size:3rem;color:var(--muted);margin-bottom:var(--sp-3)"></i>
+    <p style="color:var(--text);font-weight:600;margin-bottom:var(--sp-1)">Konu arastirmasina baslayin</p>
+    <p style="color:var(--muted);font-size:var(--fs-sm)">Bir konu girerek iliskili alt konular, sorular ve baslik fikirleri kesfet</p>
   </div>
 
   <!-- Results -->
   <div x-show="searched && !loading" x-cloak>
 
     <!-- Mind Map -->
-    <div class="fade-in-d1 card" style="padding:16px;margin-bottom:20px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:0.8125rem;font-weight:600;color:var(--text)">Konu Haritasi</div>
-        <span style="font-size:0.6875rem;color:var(--muted)">Fare ile zoom / surukle</span>
+    <div class="fade-in-d1 card" style="padding:var(--sp-4);margin-bottom:var(--sp-5)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">Konu Haritasi</div>
+        <span style="font-size:var(--fs-xs);color:var(--muted)">Fare ile zoom / surukle</span>
       </div>
       <div id="mind-map" style="width:100%;height:380px"></div>
     </div>
 
     <!-- Tabs -->
-    <div class="fade-in-d2" style="margin-bottom:16px">
-      <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:10px;padding:3px;border:1px solid var(--border);width:fit-content;margin-bottom:16px">
+    <div class="fade-in-d2" style="margin-bottom:var(--sp-4)">
+      <div style="display:flex;gap:var(--sp-1);background:var(--surface-2);border-radius:var(--r-md);padding:3px;border:1px solid var(--border);width:fit-content;margin-bottom:var(--sp-4)">
         <template x-for="tab in [{id:'subtopics',label:'Alt Konular',icon:'ph-tree-structure',count:subtopics.length},{id:'questions',label:'Sorular',icon:'ph-question',count:questions.length},{id:'headlines',label:'Basliklar',icon:'ph-text-h-one',count:headlines.length}]" :key="tab.id">
           <button @click="activeTab = tab.id"
-            :style="activeTab === tab.id
-              ? 'padding:7px 16px;border-radius:8px;font-size:0.75rem;font-weight:600;border:none;background:var(--accent);color:white;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px'
-              : 'padding:7px 16px;border-radius:8px;font-size:0.75rem;font-weight:500;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px'">
-            <i class="ph" :class="tab.icon" style="font-size:0.875rem"></i>
+            class="tab-btn" :class="activeTab === tab.id ? 'active' : ''" >
+            <i class="ph" :class="tab.icon" style="font-size:var(--fs-md)"></i>
             <span x-text="tab.label"></span>
-            <span style="padding:1px 6px;border-radius:8px;font-size:0.625rem;font-weight:600"
+            <span style="padding:1px var(--sp-2);border-radius:var(--r-md);font-size:var(--fs-2xs);font-weight:600"
               :style="activeTab === tab.id ? 'background:rgba(255,255,255,0.2);color:white' : 'background:var(--surface);color:var(--muted)'"
               x-text="tab.count"></span>
           </button>
@@ -206,23 +205,23 @@
       </div>
 
       <!-- Subtopics Grid -->
-      <div x-show="activeTab === 'subtopics'" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+      <div x-show="activeTab === 'subtopics'" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--sp-3)">
         <template x-for="(st, si) in subtopics" :key="si">
-          <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div class="card" style="padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3)">
             <div style="display:flex;align-items:flex-start;justify-content:space-between">
               <div>
-                <div style="font-size:0.9375rem;font-weight:600;color:var(--text);margin-bottom:4px" x-text="st.name"></div>
-                <div style="font-size:0.6875rem;color:var(--muted);line-height:1.4" x-text="st.desc"></div>
+                <div style="font-size:var(--fs-md);font-weight:600;color:var(--text);margin-bottom:var(--sp-1)" x-text="st.name"></div>
+                <div style="font-size:var(--fs-xs);color:var(--muted);line-height:1.4" x-text="st.desc"></div>
               </div>
             </div>
-            <div style="display:flex;gap:12px;flex-wrap:wrap">
-              <div style="font-size:0.6875rem;color:var(--muted)">Hacim: <span style="color:var(--text);font-weight:600" x-text="st.volume.toLocaleString('tr-TR')"></span></div>
-              <div style="font-size:0.6875rem;color:var(--muted)">KD: <span :style="'font-weight:600;color:'+kdColor(st.kd)" x-text="st.kd"></span></div>
-              <div style="font-size:0.6875rem;color:var(--muted)">Makale: <span style="color:var(--text);font-weight:500" x-text="st.articles.toLocaleString('tr-TR')"></span></div>
+            <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap">
+              <div style="font-size:var(--fs-xs);color:var(--muted)">Hacim: <span style="color:var(--text);font-weight:600" x-text="st.volume.toLocaleString('tr-TR')"></span></div>
+              <div style="font-size:var(--fs-xs);color:var(--muted)">KD: <span :style="'font-weight:600;color:'+kdColor(st.kd)" x-text="st.kd"></span></div>
+              <div style="font-size:var(--fs-xs);color:var(--muted)">Makale: <span style="color:var(--text);font-weight:500" x-text="st.articles.toLocaleString('tr-TR')"></span></div>
             </div>
             <button @click="createContent(st.name)"
-              style="margin-top:auto;padding:7px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;justify-content:center">
-              <i class="ph ph-pencil-simple-line" style="font-size:0.875rem"></i> Icerik Olustur
+              style="margin-top:auto;padding:7px var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:var(--sp-2);justify-content:center">
+              <i class="ph ph-pencil-simple-line" style="font-size:var(--fs-md)"></i> Icerik Olustur
             </button>
           </div>
         </template>
@@ -230,8 +229,8 @@
 
       <!-- Questions List -->
       <div x-show="activeTab === 'questions'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
-        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
-          <button onclick="if(window.exportToCSV)exportToCSV(['#','Soru','Hacim','Kaynak'], document.querySelectorAll('#main [x-show*=questions] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['#','Soru','Hacim','Kaynak'], document.querySelectorAll('#main [x-show*=questions] table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
         </div>
         <div style="overflow-x:auto">
           <table class="r-table">
@@ -241,21 +240,21 @@
             <tbody>
               <template x-for="(q, qi) in questions" :key="qi">
                 <tr>
-                  <td data-label="#" style="font-size:0.75rem;color:var(--muted)" x-text="qi+1"></td>
+                  <td data-label="#" style="font-size:var(--fs-sm);color:var(--muted)" x-text="qi+1"></td>
                   <td data-label="Soru">
-                    <div style="display:flex;align-items:center;gap:8px">
-                      <i class="ph ph-question" style="font-size:0.875rem;color:var(--accent);flex-shrink:0"></i>
-                      <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="q.q"></span>
+                    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                      <i class="ph ph-question" style="font-size:var(--fs-md);color:var(--accent);flex-shrink:0"></i>
+                      <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="q.q"></span>
                     </div>
                   </td>
-                  <td data-label="Hacim" style="font-size:0.8125rem;color:var(--text);font-weight:600" x-text="q.volume.toLocaleString('tr-TR')"></td>
+                  <td data-label="Hacim" style="font-size:var(--fs-sm);color:var(--text);font-weight:600" x-text="q.volume.toLocaleString('tr-TR')"></td>
                   <td data-label="Kaynak">
-                    <span style="padding:3px 10px;border-radius:6px;font-size:0.625rem;font-weight:600;background:var(--surface-2);color:var(--muted)" x-text="q.source"></span>
+                    <span style="padding:3px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-2xs);font-weight:600;background:var(--surface-2);color:var(--muted)" x-text="q.source"></span>
                   </td>
                   <td data-label="Aksiyon">
                     <button @click="createContent(q.q)"
-                      style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;white-space:nowrap">
-                      <i class="ph ph-pencil-simple-line" style="font-size:0.75rem"></i> Icerik Olustur
+                      style="padding:5px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:var(--sp-1);white-space:nowrap">
+                      <i class="ph ph-pencil-simple-line" style="font-size:var(--fs-sm)"></i> Icerik Olustur
                     </button>
                   </td>
                 </tr>
@@ -267,8 +266,8 @@
 
       <!-- Headlines -->
       <div x-show="activeTab === 'headlines'" class="card" data-paginate="10" style="padding:0;overflow:hidden">
-        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
-          <button onclick="if(window.exportToCSV)exportToCSV(['#','Baslik Onerisi','Etkilesim Skoru'], document.querySelectorAll('#main [x-show*=headlines] table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:end">
+          <button onclick="if(window.exportToCSV)exportToCSV(['#','Baslik Onerisi','Etkilesim Skoru'], document.querySelectorAll('#main [x-show*=headlines] table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
         </div>
         <div style="overflow-x:auto">
           <table class="r-table">
@@ -278,25 +277,25 @@
             <tbody>
               <template x-for="(h, hi) in headlines" :key="hi">
                 <tr>
-                  <td data-label="#" style="font-size:0.75rem;color:var(--muted)" x-text="hi+1"></td>
+                  <td data-label="#" style="font-size:var(--fs-sm);color:var(--muted)" x-text="hi+1"></td>
                   <td data-label="Baslik Onerisi">
-                    <div style="display:flex;align-items:center;gap:8px">
-                      <i class="ph ph-text-h-one" style="font-size:0.875rem;color:var(--accent);flex-shrink:0"></i>
-                      <span style="font-size:0.8125rem;color:var(--text);font-weight:500" x-text="h.title"></span>
+                    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                      <i class="ph ph-text-h-one" style="font-size:var(--fs-md);color:var(--accent);flex-shrink:0"></i>
+                      <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="h.title"></span>
                     </div>
                   </td>
                   <td data-label="Etkilesim Skoru">
-                    <div style="display:flex;align-items:center;gap:8px">
-                      <div style="width:60px;height:4px;background:var(--border);border-radius:2px">
-                        <div :style="'width:'+h.engagement+'%;height:100%;border-radius:2px;background:'+engagementColor(h.engagement)"></div>
+                    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                      <div style="width:60px;height:4px;background:var(--border);border-radius:var(--r-xs)">
+                        <div :style="'width:'+h.engagement+'%;height:100%;border-radius:var(--r-xs);background:'+engagementColor(h.engagement)"></div>
                       </div>
-                      <span style="font-size:0.75rem;font-weight:700;min-width:24px" :style="'color:'+engagementColor(h.engagement)" x-text="h.engagement"></span>
+                      <span style="font-size:var(--fs-sm);font-weight:700;min-width:24px" :style="'color:'+engagementColor(h.engagement)" x-text="h.engagement"></span>
                     </div>
                   </td>
                   <td data-label="Aksiyon">
                     <button @click="createContent(h.title)"
-                      style="padding:5px 12px;border-radius:6px;font-size:0.6875rem;font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;white-space:nowrap">
-                      <i class="ph ph-pencil-simple-line" style="font-size:0.75rem"></i> Icerik Olustur
+                      style="padding:5px var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:600;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:var(--sp-1);white-space:nowrap">
+                      <i class="ph ph-pencil-simple-line" style="font-size:var(--fs-sm)"></i> Icerik Olustur
                     </button>
                   </td>
                 </tr>

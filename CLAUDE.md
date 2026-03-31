@@ -58,7 +58,7 @@ Türkiye pazarı için Trendyol/Hepsiburada marketplace reklam entegrasyonu suna
 │                                                                  │
 │  WordPress (öncelik)          Shopify / Drupal / diğerleri       │
 │  PHP 8.1+ OOP plugin    <-->  SaaS API adaptörü                  │
-│  Client Panel (Vanilla JS                                        │
+│  Client Panel (TypeScript                                        │
 │  + Flowbite Pro CDN)                                             │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -119,18 +119,18 @@ Template       : Jinja2 >= 3.1
 Interaktivite  : HTMX >= 2.0  (form, list, partial refresh)
 Reaktivite     : Alpine.js  (local state, toggle, dropdown)
 UI Kit         : Flowbite Pro  (lisanslı, CDN üzerinden)
-CSS            : Tailwind CDN  (Flowbite içinde)
+CSS            : SCSS (Dart Sass) → CSS  (token sistemi, modüler)
+                 Tailwind CDN  (utility sınıfları)
 Grafikler      : ECharts 5 CDN  (radar, heatmap, funnel, treemap)
 Icons          : Phosphor Icons CDN  (SVG, birinci öncelik)
-Bundler        : YOK  (build tool yasak — vibecoding prensibi)
+JS             : TypeScript → esbuild IIFE  (strict mode, 39 modül)
 Routing        : Server-side (FastAPI route'ları)
 ```
 
 ### 4.3 Client Panel (WordPress Admin Embed)
 
 ```
-Stack          : Vanilla JS (ES6 modül pattern) + Flowbite Pro CDN
-Bundler        : YOK
+Stack          : TypeScript (tsc) + Flowbite Pro CDN
 Routing        : History API
 Theme          : Dark shell  (default)
 Icons          : Phosphor Icons CDN
@@ -567,6 +567,8 @@ atonota/
 |   +-- API_CONTRACT.md           <- tüm endpoint kontratları
 |   +-- NEVER_BUILD.md            <- kapsam dışı anayasa
 |   +-- glossary.md               <- domain sözlüğü (ubiquitous language)
+|   +-- NAVIGATION_SPEC.md       <- navigasyon anayasası (8 rail, sidebar, content-area)
+|   +-- SITEMAP.md               <- 174 sayfa kataloğu (key, erişim yöntemi, parent)
 |
 +-- studio/                       <- Developer Studio (FastAPI + HTMX)
 |   +-- app/
@@ -603,7 +605,8 @@ atonota/
 |
 +-- client-panel/                 <- WordPress Admin Embed UI
 |   +-- src/
-|   |   +-- js/                   <- ES6 modül pattern, bundlersız
+|   |   +-- ts/                   <- TypeScript kaynaklar (tsc ile derlenir)
+|   |   +-- js/                   <- tsc çıktısı (ES2020 modüller)
 |   +-- assets/
 |       +-- css/                  <- CSS custom properties (token sistemi)
 |
@@ -686,6 +689,13 @@ cd core-plugin
 composer install
 wp server --host=localhost --port=8080
 
+# Studio Frontend (fe1)
+cd studio/fe1
+npm install
+npm run build              # SCSS + TypeScript → css/ + js/
+npm run css:watch          # SCSS değişiklik izle
+npm run watch              # TypeScript değişiklik izle
+
 # Testler
 cd studio      && uv run pytest --cov=app
 cd core-plugin && ./vendor/bin/phpunit
@@ -720,3 +730,4 @@ Bu dosyayı değiştiren her geliştirici aşağıya satır ekler:
 |---|---|---|
 | 2026-03 | İlk sürüm — claude.md + CLAUDE2.md birleştirme + Flowbite Pro, HTMX 2, pgvector, multi-platform kapsam | karaca |
 | 2026-03 | Kapsam genişletme — reklam orkestrasyon katmanı eklendi, NEVER_BUILD güncellendi, platform tanımı revize | karaca + claude |
+| 2026-03 | Frontend build pipeline — Studio fe1: Pure JS → TypeScript (esbuild IIFE, 39 modül, strict), CSS → SCSS (Dart Sass, 45 modül), Client Panel: JS → TS (tsc). §4.2 ve §4.3 güncellendi | karaca + claude |

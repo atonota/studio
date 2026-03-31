@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Tum Kampanyalar — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,9 +17,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   platformFilter: 'Tumu',
   statusFilter: 'Tumu',
   platforms: ['Tumu','Meta','TikTok','LinkedIn'],
@@ -40,10 +41,10 @@
   }
 }">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-megaphone" style="color:#a855f7;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-megaphone" style="color:#a855f7;font-size:var(--fs-xl)"></i>
       </div>
       <div>
         <h1 class="page-title">Tum Kampanyalar</h1>
@@ -54,31 +55,25 @@
   </div>
 
   <!-- Platform Filter Pills -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-3);flex-wrap:wrap">
     <template x-for="p in platforms" :key="p">
       <button @click="platformFilter = p"
-        :style="platformFilter === p
-          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
-          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
-        x-text="p"></button>
+        class="pill" :class="platformFilter === p ? 'active' : ''" x-text="p"></button>
     </template>
   </div>
 
   <!-- Status Filter Pills -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
     <template x-for="s in statuses" :key="s">
       <button @click="statusFilter = s"
-        :style="statusFilter === s
-          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
-          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
-        x-text="s"></button>
+        class="pill" :class="statusFilter === s ? 'active' : ''" x-text="s"></button>
     </template>
   </div>
 
   <!-- Campaigns Table -->
   <div class="fade-in-d2 card" data-paginate="10">
-    <div style="display:flex;align-items:center;justify-content:end;margin-bottom:8px">
-      <button onclick="if(window.exportToCSV)exportToCSV(['Kampanya','Platform','Hedef','Durum','Gunluk Butce','Harcama','ROAS'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+    <div style="display:flex;align-items:center;justify-content:end;margin-bottom:var(--sp-2)">
+      <button onclick="if(window.exportToCSV)exportToCSV(['Kampanya','Platform','Hedef','Durum','Gunluk Butce','Harcama','ROAS'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
     <table class="r-table">
       <thead>
@@ -97,8 +92,8 @@
           <tr>
             <td data-label="Kampanya" style="font-weight:500;color:var(--text)" x-text="row.name"></td>
             <td data-label="Platform">
-              <div style="display:flex;align-items:center;gap:6px">
-                <i class="ph" :class="row.icon" :style="'color:'+row.iconColor+';font-size:1rem'"></i>
+              <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                <i class="ph" :class="row.icon" :style="'color:'+row.iconColor+';font-size:var(--fs-lg)'"></i>
                 <span x-text="row.platform"></span>
               </div>
             </td>
@@ -111,7 +106,7 @@
         </template>
       </tbody>
     </table>
-    <div x-show="filtered.length === 0" style="padding:24px;text-align:center;color:var(--muted);font-size:0.875rem">
+    <div x-show="filtered.length === 0" style="padding:var(--sp-6);text-align:center;color:var(--muted);font-size:var(--fs-md)">
       Secili filtrelere uygun kampanya bulunamadi.
     </div>
   </div>

@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>AI Sentiment Analizi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,38 +20,38 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ range:'30gun', sentimentType:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ range:'30gun', sentimentType:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">AI Sentiment Analizi</h1>
     <p class="page-sub">AI platformlarindaki marka bahislerinin duygu analizi</p>
   </div>
 
   <!-- Chart + Stats -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="card">
       <span class="section-label">Sentiment Dagilimi</span>
       <div id="chart-sentiment" style="width:100%;height:280px"></div>
     </div>
-    <div class="card" style="display:flex;flex-direction:column;justify-content:center;gap:16px;padding:24px">
-      <div style="display:flex;align-items:center;gap:12px">
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center;gap:var(--sp-4);padding:var(--sp-6)">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <div style="width:12px;height:12px;border-radius:50%;background:#22c55e"></div>
-        <span style="font-size:0.875rem;color:var(--text);flex:1">Pozitif</span>
-        <span style="font-size:1.25rem;font-weight:300;color:var(--text)">65%</span>
-        <span style="font-size:0.75rem;color:var(--muted)">15 bahis</span>
+        <span style="font-size:var(--fs-md);color:var(--text);flex:1">Pozitif</span>
+        <span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">65%</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">15 bahis</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <div style="width:12px;height:12px;border-radius:50%;background:#eab308"></div>
-        <span style="font-size:0.875rem;color:var(--text);flex:1">Notr</span>
-        <span style="font-size:1.25rem;font-weight:300;color:var(--text)">28%</span>
-        <span style="font-size:0.75rem;color:var(--muted)">6 bahis</span>
+        <span style="font-size:var(--fs-md);color:var(--text);flex:1">Notr</span>
+        <span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">28%</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">6 bahis</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
         <div style="width:12px;height:12px;border-radius:50%;background:#ef4444"></div>
-        <span style="font-size:0.875rem;color:var(--text);flex:1">Negatif</span>
-        <span style="font-size:1.25rem;font-weight:300;color:var(--text)">7%</span>
-        <span style="font-size:0.75rem;color:var(--muted)">2 bahis</span>
+        <span style="font-size:var(--fs-md);color:var(--text);flex:1">Negatif</span>
+        <span style="font-size:var(--fs-xl);font-weight:300;color:var(--text)">7%</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">2 bahis</span>
       </div>
     </div>
   </div>
@@ -58,45 +59,45 @@
   <!-- Recent Mentions -->
   <div class="fade-in-d2">
     <span class="section-label">Son Bahisler</span>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="card" style="display:flex;align-items:flex-start;gap:14px;padding:16px">
-        <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;margin-top:6px;flex-shrink:0"></div>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4);padding:var(--sp-4)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;margin-top:var(--sp-2);flex-shrink:0"></div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-weight:500;color:var(--text);font-size:0.875rem">ChatGPT</span>
-            <span style="font-size:0.75rem;color:var(--muted)">27 Mar 2026</span>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+            <span style="font-weight:500;color:var(--text);font-size:var(--fs-md)">ChatGPT</span>
+            <span style="font-size:var(--fs-sm);color:var(--muted)">27 Mar 2026</span>
           </div>
-          <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5">"atonota ozellikle Turkiye pazarinda guclenen bir SEO ve reklam orkestrasyon platformudur."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5">"atonota ozellikle Turkiye pazarinda guclenen bir SEO ve reklam orkestrasyon platformudur."</p>
         </div>
       </div>
-      <div class="card" style="display:flex;align-items:flex-start;gap:14px;padding:16px">
-        <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;margin-top:6px;flex-shrink:0"></div>
+      <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4);padding:var(--sp-4)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;margin-top:var(--sp-2);flex-shrink:0"></div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-weight:500;color:var(--text);font-size:0.875rem">Gemini</span>
-            <span style="font-size:0.75rem;color:var(--muted)">25 Mar 2026</span>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+            <span style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Gemini</span>
+            <span style="font-size:var(--fs-sm);color:var(--muted)">25 Mar 2026</span>
           </div>
-          <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5">"Web analitigi ve reklam yonetimi konusunda atonota cok kanalli bir yaklasim sunmaktadir."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5">"Web analitigi ve reklam yonetimi konusunda atonota cok kanalli bir yaklasim sunmaktadir."</p>
         </div>
       </div>
-      <div class="card" style="display:flex;align-items:flex-start;gap:14px;padding:16px">
-        <div style="width:8px;height:8px;border-radius:50%;background:#eab308;margin-top:6px;flex-shrink:0"></div>
+      <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4);padding:var(--sp-4)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#eab308;margin-top:var(--sp-2);flex-shrink:0"></div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-weight:500;color:var(--text);font-size:0.875rem">Perplexity</span>
-            <span style="font-size:0.75rem;color:var(--muted)">22 Mar 2026</span>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+            <span style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Perplexity</span>
+            <span style="font-size:var(--fs-sm);color:var(--muted)">22 Mar 2026</span>
           </div>
-          <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5">"SEO araclari arasinda Semrush, Ahrefs ve atonota gibi platformlar tercih edilmektedir."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5">"SEO araclari arasinda Semrush, Ahrefs ve atonota gibi platformlar tercih edilmektedir."</p>
         </div>
       </div>
-      <div class="card" style="display:flex;align-items:flex-start;gap:14px;padding:16px">
-        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:6px;flex-shrink:0"></div>
+      <div class="card" style="display:flex;align-items:flex-start;gap:var(--sp-4);padding:var(--sp-4)">
+        <div style="width:8px;height:8px;border-radius:50%;background:#ef4444;margin-top:var(--sp-2);flex-shrink:0"></div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-weight:500;color:var(--text);font-size:0.875rem">Copilot</span>
-            <span style="font-size:0.75rem;color:var(--muted)">15 Mar 2026</span>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+            <span style="font-weight:500;color:var(--text);font-size:var(--fs-md)">Copilot</span>
+            <span style="font-size:var(--fs-sm);color:var(--muted)">15 Mar 2026</span>
           </div>
-          <p style="font-size:0.8125rem;color:var(--muted);line-height:1.5">"atonota henuz kucuk bir platform olup global olcekte sinirli bir kullanici tabanina sahiptir."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5">"atonota henuz kucuk bir platform olup global olcekte sinirli bir kullanici tabanina sahiptir."</p>
         </div>
       </div>
     </div>

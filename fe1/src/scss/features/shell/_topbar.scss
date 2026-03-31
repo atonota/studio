@@ -1,0 +1,209 @@
+// ═══ TOPBAR ═══
+// Mobile-first: topbar rail'in saginda
+
+#topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--top-h);
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--chrome-bg);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  z-index: 200;
+}
+
+// Logo — absolute center, above menu items
+.tb-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  z-index: 2;
+  height: var(--top-h);
+  pointer-events: auto;
+}
+
+// Right section — always far right
+.tb-right {
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  flex-shrink: 0;
+}
+
+// Generic topbar button
+.tb-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  position: relative;
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+}
+
+// Favorites bar in topbar (desktop only, right of logo)
+.tb-menu {
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+  min-width: 0;
+  margin-left: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Tenant switcher — ud-trigger stili
+.tb-tenant-wrap {
+  align-items: center;
+  padding: 0 12px;
+  flex-shrink: 0;
+  height: var(--top-h);
+}
+
+.tb-tenant-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+  position: relative;
+
+  &:hover {
+    background: var(--surface);
+  }
+}
+
+.tb-tenant-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 9-dot grid hamburger button
+.hbtn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  flex-shrink: 0;
+  transition: box-shadow 0.22s ease, transform 0.1s ease;
+
+  &:hover .dot {
+    background: var(--text);
+  }
+
+  &:active {
+    transform: scale(0.93);
+  }
+
+  &:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  &[aria-expanded="true"] {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-soft);
+
+    .grid {
+      transform: rotate(180deg);
+    }
+
+    .dot {
+      background: var(--accent);
+
+      &:nth-child(2) { left: 4px; top: 4px; }
+      &:nth-child(4) { left: 4px; top: 12px; }
+      &:nth-child(6) { right: 4px; top: 4px; }
+      &:nth-child(8) { left: 12px; bottom: 4px; }
+    }
+  }
+
+  .grid {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    transition: transform 0.2s cubic-bezier(0.8, 0.5, 0.2, 1.4);
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    background: var(--muted);
+    border-radius: 50%;
+    position: absolute;
+    transition: all 0.4s cubic-bezier(0.8, 0.5, 0.2, 1.4);
+
+    &:nth-child(1) { left: 0; top: 0; }
+    &:nth-child(2) { left: 8px; top: 0; }
+    &:nth-child(3) { right: 0; top: 0; }
+    &:nth-child(4) { left: 0; top: 8px; }
+    &:nth-child(5) { left: 8px; top: 8px; }
+    &:nth-child(6) { right: 0; top: 8px; }
+    &:nth-child(7) { left: 0; bottom: 0; }
+    &:nth-child(8) { left: 8px; bottom: 0; }
+    &:nth-child(9) { right: 0; bottom: 0; }
+  }
+}
+
+// hbtn-dot alias (same as .hbtn .dot — kept for backward compat)
+
+// Responsive helpers
+.desktop-only {
+  display: none;
+}
+
+.mobile-only {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .desktop-only { display: flex; }
+  .mobile-only { display: none !important; }
+}
+
+// Layout variable overrides
+@media (max-width: 767px) {
+  :root {
+    --top-h: 72px;
+    --rail-w: 72px;
+  }
+}

@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Keyword Arastirma — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,9 +18,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="table" x-data="{
   searchQuery: '',
   intentFilter: 'Tumu',
   intents: ['Tumu','Ticari','Bilgi','Nav','Islem'],
@@ -41,40 +42,37 @@
     });
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Keyword Arastirma</h1>
     <p class="page-sub">Anahtar kelime analizi ve takibi</p>
   </div>
 
   <!-- Search -->
-  <div class="fade-in-d1" style="margin-bottom:16px">
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-4)">
     <div style="position:relative;max-width:560px">
-      <i class="ph ph-magnifying-glass" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1.125rem;color:var(--muted)"></i>
-      <input type="text" placeholder="Anahtar kelime ara..." x-model="searchQuery" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 42px;color:var(--text);width:100%;font-family:inherit;font-size:0.875rem;outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:var(--sp-4);top:50%;transform:translateY(-50%);font-size:var(--fs-lg);color:var(--muted)"></i>
+      <input type="text" placeholder="Anahtar kelime ara..." x-model="searchQuery" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4) var(--sp-3) 42px;color:var(--text);width:100%;font-family:inherit;font-size:var(--fs-md);outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
   </div>
 
   <!-- Intent Filter Pills -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
     <template x-for="intent in intents" :key="intent">
       <button @click="intentFilter = intent"
-        :style="intentFilter === intent
-          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
-          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
-        x-text="intent"></button>
+        class="pill" :class="intentFilter === intent ? 'active' : ''" x-text="intent"></button>
     </template>
   </div>
 
   <!-- Keyword Table -->
   <div class="fade-in-d2 card" data-paginate="20" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Anahtar Kelimeler</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <a href="seo-position-tracker.html" style="color:var(--accent);font-size:0.75rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid var(--accent);border-radius:6px;background:var(--accent-soft)">
-          <i class="ph ph-crosshair" style="font-size:0.75rem"></i> Takibe Al <i class="ph ph-arrow-right" style="font-size:0.625rem"></i>
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <a href="seo-position-tracker.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm);background:var(--accent-soft)">
+          <i class="ph ph-crosshair" style="font-size:var(--fs-sm)"></i> Takibe Al <i class="ph ph-arrow-right" style="font-size:var(--fs-2xs)"></i>
         </a>
-        <button class="btn-secondary" style="font-size:0.75rem;padding:6px 12px" onclick="exportToCSV('keyword-arastirma',['Keyword','Intent','Hacim','Pozisyon','Zorluk'])">CSV Indir</button>
-        <span style="font-size:0.75rem;color:var(--muted)" x-text="filtered.length + ' sonuc'"></span>
+        <button class="btn-secondary" style="font-size:var(--fs-sm);padding:var(--sp-2) var(--sp-3)" onclick="exportToCSV('keyword-arastirma',['Keyword','Intent','Hacim','Pozisyon','Zorluk'])">CSV Indir</button>
+        <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="filtered.length + ' sonuc'"></span>
       </div>
     </div>
     <table class="r-table">
@@ -95,29 +93,29 @@
             <td data-label="Intent"><span class="badge" :style="'background:'+row.intentBg+';color:'+row.intentColor" x-text="row.intent"></span></td>
             <td data-label="Hacim"><span style="color:var(--text)" x-text="row.volume"></span></td>
             <td data-label="Pozisyon">
-              <div style="display:flex;align-items:center;gap:4px">
+              <div style="display:flex;align-items:center;gap:var(--sp-1)">
                 <span style="color:var(--text)" x-text="row.pos"></span>
                 <template x-if="row.posUp === true">
-                  <span style="display:flex;align-items:center;gap:2px">
-                    <i class="ph ph-arrow-up" style="color:#22c55e;font-size:0.75rem"></i>
-                    <span style="font-size:0.6875rem;color:#22c55e" x-text="'+'+row.posChange"></span>
+                  <span style="display:flex;align-items:center;gap:var(--sp-1)">
+                    <i class="ph ph-arrow-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+                    <span style="font-size:var(--fs-xs);color:#22c55e" x-text="'+'+row.posChange"></span>
                   </span>
                 </template>
                 <template x-if="row.posUp === false">
-                  <span style="display:flex;align-items:center;gap:2px">
-                    <i class="ph ph-arrow-down" style="color:#ef4444;font-size:0.75rem"></i>
-                    <span style="font-size:0.6875rem;color:#ef4444" x-text="row.posChange"></span>
+                  <span style="display:flex;align-items:center;gap:var(--sp-1)">
+                    <i class="ph ph-arrow-down" style="color:#ef4444;font-size:var(--fs-sm)"></i>
+                    <span style="font-size:var(--fs-xs);color:#ef4444" x-text="row.posChange"></span>
                   </span>
                 </template>
                 <template x-if="row.posUp === null">
-                  <span style="font-size:0.6875rem;color:var(--muted)">—</span>
+                  <span style="font-size:var(--fs-xs);color:var(--muted)">—</span>
                 </template>
               </div>
             </td>
             <td data-label="Zorluk">
-              <div style="display:flex;align-items:center;gap:8px">
-                <div style="flex:1;height:4px;background:var(--border);border-radius:2px;max-width:80px"><div :style="'width:'+row.diff+'%;height:100%;background:'+row.diffColor+';border-radius:2px'"></div></div>
-                <span style="font-size:0.6875rem;color:var(--muted)" x-text="row.diff"></span>
+              <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                <div style="flex:1;height:4px;background:var(--border);border-radius:var(--r-xs);max-width:80px"><div :style="'width:'+row.diff+'%;height:100%;background:'+row.diffColor+';border-radius:var(--r-xs)'"></div></div>
+                <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="row.diff"></span>
               </div>
             </td>
             <td data-label="Trend"><div class="sparkline" :id="'spark-'+row.sparkId" style="width:60px;height:24px"></div></td>

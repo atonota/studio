@@ -1,0 +1,86 @@
+// ═══ USER DROPDOWN ═══
+
+#ud-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 201;
+  backdrop-filter: blur(var(--blur-level)) brightness(0.75);
+  -webkit-backdrop-filter: blur(var(--blur-level)) brightness(0.75);
+  background: rgba(0, 0, 0, var(--backdrop-opacity));
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding-bottom: calc(var(--foot-h) + 12px);
+  padding-left: calc(var(--rail-w) + 12px);
+
+  &.show {
+    display: flex;
+  }
+}
+
+@keyframes dropUp {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#user-dropdown {
+  background: var(--color-glass-panel);
+  backdrop-filter: blur(var(--blur-level)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-level)) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  width: calc(var(--wide-w) - 24px);
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 4px 0;
+  box-shadow: 0 -16px 48px rgba(0, 0, 0, calc(0.3 * var(--shadow-scale)));
+  animation: dropUp 0.18s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.ud-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s, color 0.1s;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text);
+
+    i {
+      color: var(--accent);
+    }
+  }
+
+  i {
+    font-size: 1rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+}
+
+.ud-divider {
+  height: 1px;
+  background: var(--border);
+  opacity: 0.5;
+  margin: 3px 12px;
+}
+
+// Mobile responsive
+@media (max-width: 767px) {
+  #ud-backdrop {
+    padding-left: 12px;
+    padding-bottom: 68px;
+  }
+}

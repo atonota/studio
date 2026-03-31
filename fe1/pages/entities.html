@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Entity SEO Hub — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -19,32 +20,32 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ search:'', typeFilter:'tumu' }">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="dashboard" x-data="{ search:'', typeFilter:'tumu' }">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Entity SEO Hub</h1>
     <p class="page-sub">Entity tabanli arama motoru optimizasyonu</p>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#a855f7">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Entity</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">42</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Entity</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">42</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Iliski</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">128</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Iliski</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">128</div>
     </div>
     <div class="stat-card" style="--stripe:#ef4444">
-      <span style="font-size:0.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Gap</span>
-      <div style="font-size:1.75rem;font-weight:300;color:var(--text);margin-top:8px">7</div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Gap</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">7</div>
     </div>
   </div>
 
   <!-- Chart + Recent List -->
-  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <!-- Pie Chart -->
     <div class="card">
       <span class="section-label">Entity Tur Dagilimi</span>
@@ -53,34 +54,34 @@
 
     <!-- Recent Entities -->
     <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
         <span class="section-label" style="margin-bottom:0">Son Eklenen Entityler</span>
       </div>
       <div style="padding:0">
-        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+        <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-3)">
           <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;min-width:60px;text-align:center">Kurum</span>
-          <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">atonota</span>
-          <span style="font-size:0.6875rem;color:var(--muted)">2 gun once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">atonota</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">2 gun once</span>
         </div>
-        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+        <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-3)">
           <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;min-width:60px;text-align:center">Kavram</span>
-          <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">SEO Analitigi</span>
-          <span style="font-size:0.6875rem;color:var(--muted)">3 gun once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">SEO Analitigi</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">3 gun once</span>
         </div>
-        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+        <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-3)">
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;min-width:60px;text-align:center">Kisi</span>
-          <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">Dijital Pazarlama Uzmani</span>
-          <span style="font-size:0.6875rem;color:var(--muted)">5 gun once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">Dijital Pazarlama Uzmani</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">5 gun once</span>
         </div>
-        <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+        <div style="padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-3)">
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;min-width:60px;text-align:center">Urun</span>
-          <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">Reklam Orkestrasyon</span>
-          <span style="font-size:0.6875rem;color:var(--muted)">1 hafta once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">Reklam Orkestrasyon</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">1 hafta once</span>
         </div>
-        <div style="padding:12px 20px;display:flex;align-items:center;gap:10px">
+        <div style="padding:var(--sp-3) var(--sp-5);display:flex;align-items:center;gap:var(--sp-3)">
           <span class="badge" style="background:rgba(194,65,12,0.1);color:#C2410C;min-width:60px;text-align:center">Yer</span>
-          <span style="font-weight:500;color:var(--text);font-size:0.875rem;flex:1">Turkiye</span>
-          <span style="font-size:0.6875rem;color:var(--muted)">1 hafta once</span>
+          <span style="font-weight:500;color:var(--text);font-size:var(--fs-md);flex:1">Turkiye</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">1 hafta once</span>
         </div>
       </div>
     </div>

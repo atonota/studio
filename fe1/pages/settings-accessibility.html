@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Erisilebilirlik — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<style>
+/* ── Page-scoped styles ── */
+.a11y-section { max-width: 720px; margin-bottom: var(--sp-8); }
+.a11y-section-label {
+  font-size: var(--fs-2xs); font-weight: 700; color: var(--muted);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: var(--sp-4); display: flex; align-items: center; gap: var(--sp-2);
+}
+.a11y-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--r-lg); padding: var(--sp-5) var(--sp-6);
+  margin-bottom: var(--sp-3);
+}
+.a11y-row {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: var(--sp-4); padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--border);
+}
+.a11y-row:last-child { border-bottom: none; padding-bottom: 0; }
+.a11y-row-info { flex: 1; min-width: 0; }
+.a11y-row-title {
+  font-size: var(--fs-sm); font-weight: 500; color: var(--text);
+  margin-bottom: 2px;
+}
+.a11y-row-desc { font-size: var(--fs-xs); color: var(--muted); line-height: 1.5; }
+.a11y-row-ctrl { flex-shrink: 0; }
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative; display: inline-flex; width: 40px; height: 22px;
+  cursor: pointer;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-track {
+  position: absolute; inset: 0; border-radius: 11px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  transition: background 0.2s, border-color 0.2s;
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--muted);
+  transition: transform 0.2s, background 0.2s;
+}
+.toggle-switch input:checked ~ .toggle-track {
+  background: var(--accent); border-color: var(--accent);
+}
+.toggle-switch input:checked ~ .toggle-thumb {
+  transform: translateX(18px); background: #fff;
+}
+.toggle-switch input:focus-visible ~ .toggle-track {
+  box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--accent-soft);
+}
+
+/* Segment control */
+.seg-ctrl {
+  display: inline-flex; gap: 2px; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: var(--r-md); padding: 3px;
+}
+.seg-btn {
+  padding: var(--sp-1) var(--sp-3); border-radius: calc(var(--r-md) - 2px);
+  border: none; background: transparent; color: var(--muted);
+  font-family: inherit; font-size: var(--fs-xs); font-weight: 500; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.seg-btn:hover { color: var(--text); }
+.seg-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* Slider */
+.a11y-slider-row { display: flex; align-items: center; gap: var(--sp-3); }
+.a11y-slider {
+  flex: 1; accent-color: var(--accent); height: 4px; cursor: pointer;
+}
+.a11y-slider-val {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text);
+  min-width: 40px; text-align: right;
+}
+
+/* Preview panel */
+.a11y-preview {
+  margin-top: var(--sp-4); padding: var(--sp-5);
+  background: var(--surface-2); border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+.a11y-preview-heading { font-size: var(--fs-lg); font-weight: 600; color: var(--text); margin-bottom: var(--sp-2); }
+.a11y-preview-body { font-size: var(--fs-sm); color: var(--text-soft); line-height: 1.6; }
+
+/* Focus demo */
+.focus-demo-btn {
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-md);
+  background: var(--accent); color: #fff; border: none;
+  font-family: inherit; font-size: var(--fs-sm); font-weight: 600; cursor: pointer;
+}
+
+/* Contrast badge */
+.contrast-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: var(--r-sm); font-size: var(--fs-2xs); font-weight: 700;
+}
+.contrast-badge.pass { background: rgba(34,197,94,0.1); color: #16a34a; }
+.contrast-badge.fail { background: rgba(239,68,68,0.1); color: #dc2626; }
+</style>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="form">
+
+  <div class="fade-in" style="margin-bottom:var(--sp-7)">
+    <h1 class="page-title">Erisilebilirlik</h1>
+    <p class="page-sub">Gorunurluk, okunabilirlik ve motor kontrol tercihleri</p>
+  </div>
+
+  <!-- ═══ GORUNURLUK ═══ -->
+  <div class="a11y-section fade-in-d1">
+    <div class="a11y-section-label">
+      <i class="ph ph-eye"></i> Gorunurluk ve Kontrast
+    </div>
+
+    <div class="a11y-card">
+      <!-- High Contrast -->
+      <div class="a11y-row">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Yuksek Kontrast</div>
+          <div class="a11y-row-desc">Metin ve kenar renk kontrastini arttirir. Dusuk gorme hassasiyeti icin uygundur.</div>
+        </div>
+        <div class="a11y-row-ctrl">
+          <div class="seg-ctrl" role="group" aria-label="Kontrast seviyesi" id="contrastSeg">
+            <button class="seg-btn active" data-val="off"     onclick="setContrastMode(this)" aria-pressed="true">Kapali</button>
+            <button class="seg-btn"        data-val="soft"    onclick="setContrastMode(this)" aria-pressed="false">Hafif</button>
+            <button class="seg-btn"        data-val="hard"    onclick="setContrastMode(this)" aria-pressed="false">Guclu</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reduced transparency -->
+      <div class="a11y-row">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Seffafligi Azalt</div>
+          <div class="a11y-row-desc">Cam ve blur efektlerini kaldirarak arayuzu daha net hale getirir.</div>
+        </div>
+        <div class="a11y-row-ctrl">
+          <label class="toggle-switch" aria-label="Seffafligi azalt">
+            <input type="checkbox" id="toggleReducedTransp" onchange="setA11yToggle('a11y_reduced_transparency','data-reduced-transparency',this.checked)">
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Contrast audit -->
+      <div style="margin-top:var(--sp-4);padding-top:var(--sp-4);border-top:1px solid var(--border)">
+        <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-3)">Mevcut tema — kontrast denetimi</div>
+        <div id="contrastAudit" style="display:flex;flex-wrap:wrap;gap:var(--sp-2)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ OKUNABİLİRLİK ═══ -->
+  <div class="a11y-section fade-in-d2">
+    <div class="a11y-section-label">
+      <i class="ph ph-text-t"></i> Okunabilirlik
+    </div>
+
+    <div class="a11y-card">
+      <!-- Font scale -->
+      <div class="a11y-row">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Yazi Boyutu Carpani</div>
+          <div class="a11y-row-desc">Tema font boyutunun uzerine ek bir olcek uygular. 1x = tema varsayilani.</div>
+        </div>
+        <div class="a11y-row-ctrl" style="min-width:160px">
+          <div class="a11y-slider-row">
+            <input type="range" class="a11y-slider" id="fontScaleSlider"
+              min="1" max="1.5" step="0.05" value="1"
+              oninput="setFontScale(this.value)"
+              aria-label="Yazi boyutu carpani">
+            <span class="a11y-slider-val" id="fontScaleVal">1.0×</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dyslexia mode -->
+      <div class="a11y-row">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Disleksi Dostu Mod</div>
+          <div class="a11y-row-desc">Atkinson Hyperlegible fontuna gecer, harf ve kelime araliklari artar, satirlar genis tutulur.</div>
+        </div>
+        <div class="a11y-row-ctrl">
+          <label class="toggle-switch" aria-label="Disleksi dostu mod">
+            <input type="checkbox" id="toggleDyslexia" onchange="setA11yToggle('a11y_dyslexia','data-dyslexia',this.checked)">
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Text preview -->
+      <div class="a11y-preview" id="textPreview">
+        <div class="a11y-preview-heading">Ornek Baslik — Heading</div>
+        <div class="a11y-preview-body">
+          Bu paragraf, sectiginiz okunabilirlik ayarlarinin metin uzerindeki etkisini gostermektedir.
+          Harf araligi, satir yuksekligi ve font ailesi gercek zamanli guncellenir.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ KLAVYE & ODAK ═══ -->
+  <div class="a11y-section fade-in-d2">
+    <div class="a11y-section-label">
+      <i class="ph ph-keyboard"></i> Klavye ve Odak
+    </div>
+
+    <div class="a11y-card">
+      <!-- Focus size -->
+      <div class="a11y-row">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Odak Gostergesi Boyutu</div>
+          <div class="a11y-row-desc">Klavye ile gezinirken gosterilen odak halkasinin kalinligini arttirir.</div>
+        </div>
+        <div class="a11y-row-ctrl">
+          <div class="seg-ctrl" role="group" aria-label="Odak boyutu" id="focusSeg">
+            <button class="seg-btn active" data-val="default" onclick="setFocusSize(this)" aria-pressed="true">Standart</button>
+            <button class="seg-btn"        data-val="large"   onclick="setFocusSize(this)" aria-pressed="false">Buyuk</button>
+            <button class="seg-btn"        data-val="xl"      onclick="setFocusSize(this)" aria-pressed="false">Cok Buyuk</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Focus demo -->
+      <div style="padding:var(--sp-4) 0 var(--sp-2);display:flex;align-items:center;gap:var(--sp-3)">
+        <span style="font-size:var(--fs-xs);color:var(--muted)">Odak demosu — Tab tusu ile test edin:</span>
+        <button class="focus-demo-btn">Birinci Dugme</button>
+        <button class="focus-demo-btn" style="background:var(--surface);color:var(--text);border:1px solid var(--border)">Ikinci Dugme</button>
+        <a href="#" style="font-size:var(--fs-sm);color:var(--accent)" onclick="return false">Ornek Baglanti</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HAREKET ═══ -->
+  <div class="a11y-section fade-in-d3">
+    <div class="a11y-section-label">
+      <i class="ph ph-arrows-out"></i> Hareket ve Animasyon
+    </div>
+
+    <div class="a11y-card">
+      <!-- Reduced motion -->
+      <div class="a11y-row">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Hareketi Azalt</div>
+          <div class="a11y-row-desc">Tum animasyon ve gecis surelerini minimuma indirir. Migren ve vestibuler bozukluklar icin onerilir.</div>
+        </div>
+        <div class="a11y-row-ctrl">
+          <label class="toggle-switch" aria-label="Hareketi azalt">
+            <input type="checkbox" id="toggleReducedMotion" onchange="setReducedMotion(this.checked)">
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- OS preference notice -->
+      <div id="osMotionNotice" style="display:none;margin-top:var(--sp-3);padding:var(--sp-3) var(--sp-4);background:var(--accent-soft);border-radius:var(--r-md);font-size:var(--fs-xs);color:var(--text-soft)">
+        <i class="ph ph-info" style="color:var(--accent)"></i>
+        İşletim sisteminizde "Hareketi Azalt" aktif — bu ayar otomatik uygulanıyor.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SİFIRLA ═══ -->
+  <div class="a11y-section fade-in-d4" style="max-width:720px">
+    <div class="a11y-card" style="padding:var(--sp-4) var(--sp-6)">
+      <div class="a11y-row" style="padding:0;border:none">
+        <div class="a11y-row-info">
+          <div class="a11y-row-title">Erisilebilirlik Ayarlarini Sifirla</div>
+          <div class="a11y-row-desc">Tum erisilebilirlik tercihlerini varsayilana dondurur.</div>
+        </div>
+        <div class="a11y-row-ctrl">
+          <button onclick="resetA11y()"
+            style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-size:var(--fs-sm);font-weight:500;cursor:pointer;font-family:inherit">
+            Sifirla
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- #main -->
+
+<div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('settings'));</script>
+
+<script>
+/* ─────────────────────────────────────────
+   Erisilebilirlik Ayarlari — Page Logic
+   Storage prefix: ap_a11y_*
+   DOM effects: data-* attributes on <html>
+───────────────────────────────────────── */
+
+const P = 'ap_';
+const R = document.documentElement;
+
+// ── Helpers ──
+
+function g(k, d) { return localStorage.getItem(P + k) || d; }
+function s(k, v) { localStorage.setItem(P + k, v); }
+function rm(k) { localStorage.removeItem(P + k); }
+
+function showToastSafe(msg) {
+  if (typeof window.showToast === 'function') window.showToast(msg);
+}
+
+// ── Contrast mode ──
+
+function setContrastMode(btn) {
+  const val = btn.dataset.val;
+  document.querySelectorAll('#contrastSeg .seg-btn').forEach(b => {
+    b.classList.toggle('active', b === btn);
+    b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+  });
+  s('a11y_high_contrast', val);
+  if (val === 'off') {
+    R.removeAttribute('data-high-contrast');
+  } else {
+    R.setAttribute('data-high-contrast', val);
+  }
+  renderContrastAudit();
+  showToastSafe('Kontrast ayari guncellendi');
+}
+
+// ── Generic toggle ──
+
+function setA11yToggle(storageKey, dataAttr, enabled) {
+  s(storageKey, String(enabled));
+  if (enabled) {
+    R.setAttribute(dataAttr, '');
+  } else {
+    R.removeAttribute(dataAttr);
+  }
+  showToastSafe('Ayar guncellendi');
+}
+
+// ── Font scale ──
+
+function setFontScale(val) {
+  const v = parseFloat(val);
+  document.getElementById('fontScaleVal').textContent = v.toFixed(2) + '\u00D7';
+  s('a11y_font_scale', String(v));
+  R.style.setProperty('--a11y-font-scale', String(v));
+  // Combined effective scale = theme font_scale * a11y_font_scale
+  const themeBase = parseFloat(g('font_size', '15'));
+  const effective = themeBase * v;
+  R.style.setProperty('--font-size-base', effective + 'px');
+  R.style.setProperty('--font-scale', String(effective / 15));
+}
+
+// ── Focus size ──
+
+function setFocusSize(btn) {
+  const val = btn.dataset.val;
+  document.querySelectorAll('#focusSeg .seg-btn').forEach(b => {
+    b.classList.toggle('active', b === btn);
+    b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+  });
+  s('a11y_focus_size', val);
+  if (val === 'default') {
+    R.removeAttribute('data-focus-size');
+  } else {
+    R.setAttribute('data-focus-size', val);
+  }
+  showToastSafe('Odak boyutu guncellendi');
+}
+
+// ── Reduced motion ──
+
+function setReducedMotion(enabled) {
+  s('a11y_reduced_motion', String(enabled));
+  if (enabled) {
+    const style = document.getElementById('ap-reduced-motion') || document.createElement('style');
+    style.id = 'ap-reduced-motion';
+    style.textContent = '*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}';
+    document.head.appendChild(style);
+  } else {
+    document.getElementById('ap-reduced-motion')?.remove();
+  }
+  showToastSafe('Hareket tercihi guncellendi');
+}
+
+// ── Contrast audit ──
+
+function getContrastRatio(fg, bg) {
+  function toLum(hex) {
+    const rgb = [1,3,5].map(i => parseInt(hex.slice(i,i+2),16) / 255);
+    return rgb.map(c => c <= 0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4))
+      .reduce((acc,c,i) => acc + c * [0.2126,0.7152,0.0722][i], 0);
+  }
+  const l1 = toLum(fg), l2 = toLum(bg);
+  const lighter = Math.max(l1,l2), darker = Math.min(l1,l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function badge(label, ratio) {
+  const aa = ratio >= 4.5, aaa = ratio >= 7;
+  const cls = aa ? 'pass' : 'fail';
+  const tier = aaa ? 'AAA' : aa ? 'AA' : 'Fail';
+  return `<span class="contrast-badge ${cls}" title="${label}: ${ratio.toFixed(1)}:1">
+    ${label} · ${ratio.toFixed(1)} · ${tier}
+  </span>`;
+}
+
+function renderContrastAudit() {
+  const el = document.getElementById('contrastAudit');
+  if (!el) return;
+  const cs = getComputedStyle(R);
+  const get = (v) => cs.getPropertyValue(v).trim();
+
+  // Use CSS variable values directly
+  const pairs = [
+    { label: 'Text / BG',         fg: get('--text')   || '#edf2f7', bg: get('--base')      || '#0a0a0f' },
+    { label: 'Muted / BG',        fg: get('--muted')  || '#a0aec0', bg: get('--base')      || '#0a0a0f' },
+    { label: 'Accent / BG',       fg: get('--accent') || '#9B7ECC', bg: get('--base')      || '#0a0a0f' },
+    { label: 'Text / Surface',    fg: get('--text')   || '#edf2f7', bg: get('--surface')   || '#1a1a2e' },
+    { label: 'Accent / Surface',  fg: get('--accent') || '#9B7ECC', bg: get('--surface')   || '#1a1a2e' },
+  ];
+
+  el.innerHTML = pairs.map(p => {
+    try {
+      // Convert rgb(...) to hex if needed
+      function toHex(val) {
+        if (val.startsWith('#')) return val;
+        const m = val.match(/\d+/g);
+        if (!m) return '#888888';
+        return '#' + m.slice(0,3).map(n => parseInt(n).toString(16).padStart(2,'0')).join('');
+      }
+      const r = getContrastRatio(toHex(p.fg), toHex(p.bg));
+      return badge(p.label, r);
+    } catch { return ''; }
+  }).join('');
+}
+
+// ── Init ──
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Restore contrast mode
+  const hc = g('a11y_high_contrast', 'off');
+  document.querySelectorAll('#contrastSeg .seg-btn').forEach(b => {
+    const active = b.dataset.val === hc;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  // Restore reduced transparency
+  document.getElementById('toggleReducedTransp').checked = g('a11y_reduced_transparency','false') === 'true';
+
+  // Restore dyslexia
+  document.getElementById('toggleDyslexia').checked = g('a11y_dyslexia','false') === 'true';
+
+  // Restore font scale
+  const fs = parseFloat(g('a11y_font_scale','1'));
+  const slider = document.getElementById('fontScaleSlider');
+  slider.value = fs;
+  document.getElementById('fontScaleVal').textContent = fs.toFixed(2) + '\u00D7';
+
+  // Restore focus size
+  const focusSize = g('a11y_focus_size','default');
+  document.querySelectorAll('#focusSeg .seg-btn').forEach(b => {
+    const active = b.dataset.val === focusSize;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  // Restore reduced motion
+  document.getElementById('toggleReducedMotion').checked = g('a11y_reduced_motion','false') === 'true';
+
+  // OS motion preference notice
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.getElementById('osMotionNotice').style.display = 'block';
+  }
+
+  // Initial contrast audit
+  renderContrastAudit();
+
+  // Re-render audit on theme change
+  if (window.AppearanceStore) {
+    window.AppearanceStore.on('any-change', renderContrastAudit);
+  }
+});
+
+// ── Reset ──
+
+function resetA11y() {
+  if (!confirm('Tum erisilebilirlik ayarlari sifirlanacak. Devam edilsin mi?')) return;
+  ['a11y_high_contrast','a11y_reduced_transparency','a11y_dyslexia',
+   'a11y_font_scale','a11y_focus_size','a11y_reduced_motion','a11y_cursor'].forEach(k => rm(k));
+
+  R.removeAttribute('data-high-contrast');
+  R.removeAttribute('data-reduced-transparency');
+  R.removeAttribute('data-dyslexia');
+  R.removeAttribute('data-focus-size');
+  R.removeAttribute('data-cursor');
+  R.style.removeProperty('--a11y-font-scale');
+  document.getElementById('ap-reduced-motion')?.remove();
+
+  // Reset theme font to user's theme preference
+  if (window.AppearanceStore) window.AppearanceStore.apply();
+
+  // Refresh UI
+  location.reload();
+}
+</script>
+</body>
+</html>

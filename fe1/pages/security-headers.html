@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>HTTP Guvenlik Header Analizi — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,20 +19,20 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ scanning: false, statusFilter: 'tumu' }">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="{ scanning: false, statusFilter: 'tumu' }">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">HTTP Guvenlik Header Analizi</h1>
       <p class="page-sub">Guvenlik basliklarinin durumu</p>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
+    <div style="display:flex;gap:var(--sp-2);align-items:center">
       <template x-for="s in [{v:'tumu',l:'Tumu'},{v:'ok',l:'OK'},{v:'eksik',l:'Eksik'},{v:'uyari',l:'Uyari'}]">
-        <button @click="statusFilter = s.v" :style="statusFilter === s.v ? 'background:var(--accent);color:#fff;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:6px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="s.l"></button>
+        <button @click="statusFilter = s.v" class="tab-btn" :class="statusFilter === s.v ? 'active' : ''" x-text="s.l"></button>
       </template>
-      <button @click="scanning = true; setTimeout(() => { scanning = false; $store.toast.show('Header taramasi tamamlandi', 'success') }, 2000)" :disabled="scanning" style="background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit" :style="scanning && 'opacity:0.7'">
-        <i class="ph" :class="scanning ? 'ph-spinner' : 'ph-arrows-clockwise'" :style="scanning && 'animation:spin 1s linear infinite'" style="font-size:0.875rem"></i>
+      <button @click="scanning = true; setTimeout(() => { scanning = false; $store.toast.show('Header taramasi tamamlandi', 'success') }, 2000)" :disabled="scanning" style="background:var(--accent);color:#fff;border:none;padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:var(--sp-2);font-family:inherit" :style="scanning && 'opacity:0.7'">
+        <i class="ph" :class="scanning ? 'ph-spinner' : 'ph-arrows-clockwise'" :style="scanning && 'animation:spin 1s linear infinite'" style="font-size:var(--fs-md)"></i>
         <span x-text="scanning ? 'Taraniyor...' : 'Yeniden Tara'"></span>
       </button>
     </div>
@@ -39,105 +40,105 @@
 
   <!-- Header Checklist -->
   <div class="fade-in-d1 card" style="padding:0;overflow:hidden">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
       <span class="section-label" style="margin-bottom:0">Header Kontrol Listesi</span>
-      <span style="font-size:0.75rem;color:var(--muted)">5 OK / 2 Eksik / 1 Uyari</span>
+      <span style="font-size:var(--fs-sm);color:var(--muted)">5 OK / 2 Eksik / 1 Uyari</span>
     </div>
 
     <!-- X-Frame-Options -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">X-Frame-Options</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace">DENY</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">X-Frame-Options</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px;font-family:monospace">DENY</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
     </div>
 
     <!-- CSP -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Content-Security-Policy</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace">default-src 'self'; script-src 'self' ...</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Content-Security-Policy</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px;font-family:monospace">default-src 'self'; script-src 'self' ...</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
     </div>
 
     <!-- X-Content-Type-Options -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">X-Content-Type-Options</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace">nosniff</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">X-Content-Type-Options</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px;font-family:monospace">nosniff</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
     </div>
 
     <!-- Strict-Transport-Security -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-check-circle" style="color:#22c55e;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4)">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Strict-Transport-Security</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace">max-age=31536000; includeSubDomains</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Strict-Transport-Security</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:2px;font-family:monospace">max-age=31536000; includeSubDomains</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(34,197,94,0.1);color:#22c55e;font-weight:600">OK</span>
     </div>
 
     <!-- Referrer-Policy — Eksik -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;border-left:3px solid #ef4444">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-x-circle" style="color:#ef4444;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4);border-left:3px solid #ef4444">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-x-circle" style="color:#ef4444;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Referrer-Policy</div>
-        <div style="font-size:0.75rem;color:#ef4444;margin-top:2px">Eksik — strict-origin-when-cross-origin oneriliyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Referrer-Policy</div>
+        <div style="font-size:var(--fs-sm);color:#ef4444;margin-top:2px">Eksik — strict-origin-when-cross-origin oneriliyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600">Eksik</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600">Eksik</span>
     </div>
 
     <!-- Permissions-Policy — Eksik -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;border-left:3px solid #ef4444">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-x-circle" style="color:#ef4444;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4);border-left:3px solid #ef4444">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-x-circle" style="color:#ef4444;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Permissions-Policy</div>
-        <div style="font-size:0.75rem;color:#ef4444;margin-top:2px">Eksik — kamera, mikrofon, geolocation kisitlanmali</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Permissions-Policy</div>
+        <div style="font-size:var(--fs-sm);color:#ef4444;margin-top:2px">Eksik — kamera, mikrofon, geolocation kisitlanmali</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600">Eksik</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(239,68,68,0.1);color:#ef4444;font-weight:600">Eksik</span>
     </div>
 
     <!-- X-XSS-Protection — Uyari -->
-    <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;border-left:3px solid #eab308">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-warning" style="color:#eab308;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-4);border-left:3px solid #eab308">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-warning" style="color:#eab308;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">X-XSS-Protection</div>
-        <div style="font-size:0.75rem;color:#eab308;margin-top:2px;font-family:monospace">1; mode=block <span style="font-family:inherit;color:#eab308"> — deprecated, CSP tercih edilmeli</span></div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">X-XSS-Protection</div>
+        <div style="font-size:var(--fs-sm);color:#eab308;margin-top:2px;font-family:monospace">1; mode=block <span style="font-family:inherit;color:#eab308"> — deprecated, CSP tercih edilmeli</span></div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Uyari</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Uyari</span>
     </div>
 
     <!-- Cross-Origin-Opener-Policy — Eksik (yellow) -->
-    <div style="padding:14px 20px;display:flex;align-items:center;gap:14px;border-left:3px solid #eab308">
-      <div style="width:32px;height:32px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-        <i class="ph ph-warning" style="color:#eab308;font-size:1rem"></i>
+    <div style="padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;gap:var(--sp-4);border-left:3px solid #eab308">
+      <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-warning" style="color:#eab308;font-size:var(--fs-lg)"></i>
       </div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:0.875rem;font-weight:500;color:var(--text)">Cross-Origin-Opener-Policy</div>
-        <div style="font-size:0.75rem;color:#eab308;margin-top:2px">Eksik — same-origin oneriliyor</div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text)">Cross-Origin-Opener-Policy</div>
+        <div style="font-size:var(--fs-sm);color:#eab308;margin-top:2px">Eksik — same-origin oneriliyor</div>
       </div>
-      <span style="font-size:0.6875rem;padding:2px 10px;border-radius:9999px;background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Eksik</span>
+      <span style="font-size:var(--fs-xs);padding:2px var(--sp-3);border-radius:var(--r-full);background:rgba(234,179,8,0.1);color:#eab308;font-weight:600">Eksik</span>
     </div>
   </div>
 </div>

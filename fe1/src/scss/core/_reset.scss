@@ -1,0 +1,273 @@
+// ============================================
+// atonota Studio — Base Reset
+// Extracted from tokens.css reset block
+// ============================================
+
+// -- Universal box-sizing --
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// -- Root element --
+html {
+  font-size: 1rem;
+  min-width: 320px;
+  overflow: hidden;
+}
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+// -- Body defaults (custom properties applied) --
+body {
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-body);
+  font-size: var(--font-size-base);
+  letter-spacing: var(--letter-spacing-base);
+  line-height: var(--line-height-base);
+  background: var(--base);
+  color: var(--text);
+  overflow-y: hidden;
+}
+
+// -- Scrollbar --
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// -- Selection --
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+// -- Alpine.js FOUC prevention --
+[x-cloak] {
+  display: none !important;
+}
+
+// -- Focus / A11y --
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent), 0 0 0 4px var(--accent-soft);
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  background: var(--accent);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+
+  &:focus {
+    top: 0;
+  }
+}
+
+// -- Reduced motion --
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ════════════════════════════════════════════
+// ACCESSIBILITY LAYER
+// Tüm a11y override'ları burada — WCAG 2.2 AAA+
+// Öncelik sırası (düşükten yükseğe):
+//   1. :root defaults
+//   2. @media (prefers-*) — OS/browser tercihleri
+//   3. [data-*] attribute overrides — kullanıcı tercihleri (her zaman kazanır)
+// ════════════════════════════════════════════
+
+// ── Dyslexia-friendly font loading ──
+// Atkinson Hyperlegible: optimized for letterform distinction
+// Loaded via CDN when [data-dyslexia] is activated by JS (appearance-init.ts)
+// @font-face declarations not needed — CDN <link> is injected dynamically
+
+// ── OS-level high contrast ──
+@media (prefers-contrast: more) {
+  :root {
+    --color-border-default: currentColor;
+    --color-border-subtle: currentColor;
+    --color-text-secondary: var(--color-text-primary);
+    --color-text-tertiary: var(--color-text-primary);
+    --color-text-disabled: var(--color-text-secondary);
+  }
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-text-primary), 0 0 0 5px var(--color-bg-base) !important;
+  }
+}
+
+// ── Windows Forced Colors (High Contrast Mode) ──
+@media (forced-colors: active) {
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  button, [role="button"], a {
+    forced-color-adjust: none;
+    border: 1px solid ButtonText;
+  }
+  *:focus-visible {
+    outline: 3px solid Highlight !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
+}
+
+// ── User: Soft high contrast ──
+[data-high-contrast="soft"] {
+  --color-text-secondary: color-mix(in srgb, var(--color-text-primary) 85%, var(--color-bg-base));
+  --color-text-tertiary:  color-mix(in srgb, var(--color-text-primary) 65%, var(--color-bg-base));
+  --color-border-default: color-mix(in srgb, var(--color-text-primary) 35%, transparent);
+  --color-border-subtle:  color-mix(in srgb, var(--color-text-primary) 20%, transparent);
+
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 5px var(--accent-soft) !important;
+  }
+}
+
+// ── User: Hard high contrast ──
+[data-high-contrast="hard"] {
+  --color-text-secondary: var(--color-text-primary);
+  --color-text-tertiary:  var(--color-text-primary);
+  --color-text-disabled:  color-mix(in srgb, var(--color-text-primary) 70%, var(--color-bg-base));
+  --color-border-default: var(--color-text-primary);
+  --color-border-subtle:  color-mix(in srgb, var(--color-text-primary) 60%, transparent);
+
+  .card, [class*="card"] {
+    border-color: var(--color-border-default) !important;
+  }
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-bg-base), 0 0 0 6px var(--color-text-primary) !important;
+  }
+}
+
+// ── User: Reduced transparency ──
+[data-reduced-transparency] {
+  --color-bg-overlay:    var(--color-bg-elevated);
+  --color-glass-panel:   var(--color-bg-elevated);
+
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+// ── User: Dyslexia-friendly ──
+// Font loaded via Google Fonts CDN in appearance-init.ts
+[data-dyslexia] {
+  --font-family-body: 'Atkinson Hyperlegible', system-ui, sans-serif !important;
+  --letter-spacing-base: 0.05em !important;
+  --line-height-base: 1.8 !important;
+  --font-weight-body: 400 !important;
+  word-spacing: 0.12em;
+
+  p, li { text-align: left !important; max-width: 75ch; }
+
+  input, textarea, select {
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+
+  // Improved readability: avoid italic in dyslexia mode
+  em, i:not([class*="ph"]) {
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+}
+
+// ── User: Large focus indicator ──
+[data-focus-size="large"] {
+  *:focus-visible {
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 6px var(--accent-soft) !important;
+  }
+}
+
+[data-focus-size="xl"] {
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 6px;
+    box-shadow: 0 0 0 4px var(--color-bg-base), 0 0 0 8px var(--accent) !important;
+  }
+}
+
+// ── User: Cursor size ──
+[data-cursor="large"] {
+  cursor: default;
+
+  *, *::before, *::after {
+    cursor: inherit;
+  }
+
+  // Large cursor: 1.5× scale via SVG data URI
+  --_cursor-size: 32;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 4l16 14h-10l6 10-3 1.5-6-10-3 6z' fill='%23000' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, default;
+}
+
+[data-cursor="xl"] {
+  cursor: default;
+
+  *, *::before, *::after {
+    cursor: inherit;
+  }
+
+  // XL cursor: 2× scale
+  --_cursor-size: 48;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M12 6l24 21h-15l9 15-4.5 2.25-9-15-4.5 9z' fill='%23000' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 6 6, default;
+}
+
+// Dark mode cursor inversion
+.dark[data-cursor="large"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M8 4l16 14h-10l6 10-3 1.5-6-10-3 6z' fill='%23fff' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, default;
+}
+
+.dark[data-cursor="xl"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M12 6l24 21h-15l9 15-4.5 2.25-9-15-4.5 9z' fill='%23fff' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 6 6, default;
+}
+
+// ── A11y font scale multiplier ──
+:root {
+  --a11y-font-scale: 1;
+}

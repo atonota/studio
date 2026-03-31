@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Entity Cikarma — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
@@ -19,126 +20,126 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="form({url:''})" style="position:relative">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="form({url:''})" style="position:relative">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Entity Cikarma</h1>
     <p class="page-sub">URL'den otomatik entity tespit ve cikarma</p>
   </div>
 
   <!-- URL Input -->
-  <div class="fade-in-d1 card" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <i class="ph ph-link" style="font-size:1.25rem;color:var(--muted)"></i>
-    <input type="text" placeholder="https://ornek.com/sayfa-adi" value="https://atonota.com/blog/seo-rehberi" style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:0.875rem">
-    <button class="btn-primary" style="padding:10px 20px;font-size:0.8125rem"><i class="ph ph-scan" style="margin-right:6px"></i>Tara</button>
+  <div class="fade-in-d1 card" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <i class="ph ph-link" style="font-size:var(--fs-xl);color:var(--muted)"></i>
+    <input type="text" placeholder="https://ornek.com/sayfa-adi" value="https://atonota.com/blog/seo-rehberi" style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:var(--fs-md)">
+    <button class="btn-primary" style="padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm)"><i class="ph ph-scan" style="margin-right:var(--sp-2)"></i>Tara</button>
   </div>
 
   <!-- Extracted Entities -->
   <div class="fade-in-d2">
     <span class="section-label">Cikarilan Entityler (8)</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7;flex-shrink:0">Kurum</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">atonota</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:96%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#22c55e">96%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">atonota</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:96%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#22c55e">96%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...atonota platformu ile SEO analitigi..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...atonota platformu ile SEO analitigi..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;flex-shrink:0">Kavram</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">SEO Analitigi</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:94%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#22c55e">94%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">SEO Analitigi</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:94%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#22c55e">94%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...arama motoru optimizasyonu analitigi..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...arama motoru optimizasyonu analitigi..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;flex-shrink:0">Kavram</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Anahtar Kelime Arastirmasi</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:91%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#22c55e">91%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Anahtar Kelime Arastirmasi</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:91%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#22c55e">91%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...anahtar kelime arastirmasi yaparak..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...anahtar kelime arastirmasi yaparak..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;flex-shrink:0">Kavram</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Backlink Analizi</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:88%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#22c55e">88%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Backlink Analizi</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:88%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#22c55e">88%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...backlink profilini analiz ederek..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...backlink profilini analiz ederek..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;flex-shrink:0">Urun</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Reklam Orkestrasyon</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:85%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#22c55e">85%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Reklam Orkestrasyon</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:85%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#22c55e">85%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...cok kanalli reklam orkestrasyon..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...cok kanalli reklam orkestrasyon..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(194,65,12,0.1);color:#C2410C;flex-shrink:0">Yer</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">Turkiye</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:82%;height:100%;background:#22c55e;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#22c55e">82%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">Turkiye</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:82%;height:100%;background:#22c55e;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#22c55e">82%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...Turkiye pazarinda ozellestirilmis..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...Turkiye pazarinda ozellestirilmis..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308;flex-shrink:0">Kisi</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">SEO Uzmani</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:75%;height:100%;background:#eab308;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#eab308">75%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">SEO Uzmani</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:75%;height:100%;background:#eab308;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#eab308">75%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...deneyimli SEO uzmanlari tarafindan..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...deneyimli SEO uzmanlari tarafindan..."</p>
         </div>
       </div>
 
-      <div class="card" style="padding:16px;display:flex;align-items:flex-start;gap:12px">
+      <div class="card" style="padding:var(--sp-4);display:flex;align-items:flex-start;gap:var(--sp-3)">
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6;flex-shrink:0">Kavram</span>
         <div style="flex:1">
-          <div style="font-weight:500;color:var(--text);font-size:0.875rem;margin-bottom:4px">WordPress Entegrasyonu</div>
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-            <span style="font-size:0.6875rem;color:var(--muted)">Guven:</span>
-            <div style="width:60px;height:3px;background:var(--border);border-radius:2px"><div style="width:72%;height:100%;background:#eab308;border-radius:2px"></div></div>
-            <span style="font-size:0.6875rem;color:#eab308">72%</span>
+          <div style="font-weight:500;color:var(--text);font-size:var(--fs-md);margin-bottom:var(--sp-1)">WordPress Entegrasyonu</div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Guven:</span>
+            <div style="width:60px;height:3px;background:var(--border);border-radius:var(--r-xs)"><div style="width:72%;height:100%;background:#eab308;border-radius:var(--r-xs)"></div></div>
+            <span style="font-size:var(--fs-xs);color:#eab308">72%</span>
           </div>
-          <p style="font-size:0.75rem;color:var(--muted);line-height:1.4">"...WordPress ile entegre calisan..."</p>
+          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.4">"...WordPress ile entegre calisan..."</p>
         </div>
       </div>
     </div>

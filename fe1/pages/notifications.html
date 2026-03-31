@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Bildirimler — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script src="../js/components.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </head>
@@ -18,56 +19,53 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="notificationsPage()">
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+<div id="main" data-skeleton="cards" x-data="notificationsPage()">
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
     <div>
       <h1 class="page-title">Bildirimler</h1>
       <p class="page-sub">Platform uyarilari ve bilgilendirmeler</p>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <a href="notification-rules.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft)">
-        <i class="ph ph-gear" style="font-size:0.875rem"></i> Kural Yonet <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+    <div style="display:flex;gap:var(--sp-2);align-items:center">
+      <a href="notification-rules.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-md);background:var(--accent-soft)">
+        <i class="ph ph-gear" style="font-size:var(--fs-md)"></i> Kural Yonet <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
       <button class="btn-secondary" @click="markAllRead()"><i class="ph ph-checks"></i> Tumunu Okundu</button>
     </div>
   </div>
 
   <!-- Filter Pills -->
-  <div class="fade-in-d1" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
     <template x-for="f in filters" :key="f">
       <button @click="filter = f"
-        :style="filter === f
-          ? 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:600;border:none;cursor:pointer;background:var(--accent);color:white;font-family:inherit'
-          : 'padding:6px 16px;border-radius:20px;font-size:0.8125rem;font-weight:500;border:1px solid var(--border);cursor:pointer;background:var(--surface-2);color:var(--muted);font-family:inherit'"
-        x-text="f"></button>
+        class="pill" :class="filter === f ? 'active' : ''" x-text="f"></button>
     </template>
   </div>
 
-  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:12px">
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-3)">
     <template x-for="n in getFiltered()" :key="n.id">
-      <div class="card" :style="'border-left:3px solid '+n.borderColor+';padding:16px 20px;'+(n.read ? 'opacity:0.6' : '')">
-        <div style="display:flex;align-items:flex-start;gap:12px">
-          <div :style="'width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:'+n.iconBg">
-            <i class="ph" :class="n.icon" :style="'color:'+n.iconColor+';font-size:1.125rem'"></i>
+      <div class="card" :style="'border-left:3px solid '+n.borderColor+';padding:var(--sp-4) var(--sp-5);'+(n.read ? 'opacity:0.6' : '')">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+          <div :style="'width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:'+n.iconBg">
+            <i class="ph" :class="n.icon" :style="'color:'+n.iconColor+';font-size:var(--fs-lg)'"></i>
           </div>
           <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1);flex-wrap:wrap">
               <span style="font-weight:500;color:var(--text)" x-text="n.title"></span>
               <span class="badge" :style="'background:'+n.badgeBg+';color:'+n.badgeColor" x-text="n.badge"></span>
             </div>
-            <p style="font-size:0.8125rem;color:var(--text-soft);margin-bottom:8px;line-height:1.6" x-text="n.desc"></p>
-            <div style="display:flex;align-items:center;gap:12px">
-              <span style="font-size:0.6875rem;color:var(--muted)" x-text="n.time + (n.read ? ' — Okundu' : '')"></span>
-              <button x-show="!n.read" @click="n.read = true; showToast && showToast('Okundu olarak isaretlendi')" style="font-size:0.6875rem;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Okundu Isaretle</button>
-              <button @click="dismiss(n.id)" style="font-size:0.6875rem;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Kaldir</button>
+            <p style="font-size:var(--fs-sm);color:var(--text-soft);margin-bottom:var(--sp-2);line-height:1.6" x-text="n.desc"></p>
+            <div style="display:flex;align-items:center;gap:var(--sp-3)">
+              <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="n.time + (n.read ? ' — Okundu' : '')"></span>
+              <button x-show="!n.read" @click="n.read = true; showToast && showToast('Okundu olarak isaretlendi')" style="font-size:var(--fs-xs);color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Okundu Isaretle</button>
+              <button @click="dismiss(n.id)" style="font-size:var(--fs-xs);color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Kaldir</button>
             </div>
           </div>
         </div>
       </div>
     </template>
-    <div x-show="getFiltered().length === 0" style="text-align:center;padding:32px;color:var(--muted);font-size:0.875rem">
+    <div x-show="getFiltered().length === 0" style="text-align:center;padding:var(--sp-8);color:var(--muted);font-size:var(--fs-md)">
       Bildirim bulunamadi.
     </div>
   </div>

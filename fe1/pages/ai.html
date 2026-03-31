@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>AI Asistan — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}} @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
@@ -19,9 +20,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="chat" x-data="{
   input: '',
   typing: false,
   messages: [
@@ -41,45 +42,45 @@
   }
 }" style="display:flex;flex-direction:column;padding-bottom:0">
   <!-- Chat Area -->
-  <div style="flex:1;overflow-y:auto;padding-bottom:16px">
-    <div class="fade-in" style="margin-bottom:24px">
+  <div style="flex:1;overflow-y:auto;padding-bottom:var(--sp-4)">
+    <div class="fade-in" style="margin-bottom:var(--sp-6)">
       <h1 class="page-title">AI Asistan</h1>
       <p class="page-sub">Platformunuz hakkinda sorular sorun</p>
-      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-        <a href="seo-audit.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft)">
-          <i class="ph ph-magnifying-glass-plus" style="font-size:0.875rem"></i> SEO Denetimi <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+      <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-3);flex-wrap:wrap">
+        <a href="seo-audit.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-md);background:var(--accent-soft)">
+          <i class="ph ph-magnifying-glass-plus" style="font-size:var(--fs-md)"></i> SEO Denetimi <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
         </a>
-        <a href="content.html" style="color:var(--muted);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2)">
-          <i class="ph ph-article" style="font-size:0.875rem"></i> Icerik Analizi <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+        <a href="content.html" style="color:var(--muted);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2)">
+          <i class="ph ph-article" style="font-size:var(--fs-md)"></i> Icerik Analizi <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
         </a>
       </div>
     </div>
 
     <!-- Messages -->
-    <div style="display:flex;flex-direction:column;gap:16px;max-width:720px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4);max-width:720px">
       <template x-for="(msg, i) in messages" :key="i">
         <div :style="msg.role==='user' ? 'display:flex;justify-content:flex-end' : 'display:flex;justify-content:flex-start'">
           <div x-show="msg.role==='user'" class="card" style="max-width:80%;background:var(--accent-soft);border:1px solid var(--accent-muted)">
-            <p style="font-size:0.8125rem;color:var(--text);line-height:1.6" x-text="msg.text"></p>
+            <p style="font-size:var(--fs-sm);color:var(--text);line-height:1.6" x-text="msg.text"></p>
           </div>
           <div x-show="msg.role==='ai'" class="card" style="max-width:85%;border-left:3px solid var(--accent)">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
-              <i class="ph ph-robot" style="font-size:1rem;color:var(--accent)"></i>
-              <span style="font-size:0.6875rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em">AI Asistan</span>
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3)">
+              <i class="ph ph-robot" style="font-size:var(--fs-lg);color:var(--accent)"></i>
+              <span style="font-size:var(--fs-xs);font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em">AI Asistan</span>
             </div>
-            <p style="font-size:0.8125rem;color:var(--text);line-height:1.7" x-text="msg.text"></p>
+            <p style="font-size:var(--fs-sm);color:var(--text);line-height:1.7" x-text="msg.text"></p>
           </div>
         </div>
       </template>
 
       <!-- Typing Indicator -->
       <div x-show="typing" x-transition style="display:flex;justify-content:flex-start">
-        <div class="card" style="border-left:3px solid var(--accent);padding:16px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <i class="ph ph-robot" style="font-size:1rem;color:var(--accent)"></i>
-            <span style="font-size:0.6875rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em">AI Asistan</span>
+        <div class="card" style="border-left:3px solid var(--accent);padding:var(--sp-4)">
+          <div style="display:flex;align-items:center;gap:var(--sp-2)">
+            <i class="ph ph-robot" style="font-size:var(--fs-lg);color:var(--accent)"></i>
+            <span style="font-size:var(--fs-xs);font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.06em">AI Asistan</span>
           </div>
-          <div style="display:flex;gap:4px;margin-top:8px">
+          <div style="display:flex;gap:var(--sp-1);margin-top:var(--sp-2)">
             <span style="width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.4s infinite 0s"></span>
             <span style="width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.4s infinite 0.2s"></span>
             <span style="width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.4s infinite 0.4s"></span>
@@ -90,11 +91,11 @@
   </div>
 
   <!-- Input Bar -->
-  <div style="position:sticky;bottom:0;background:var(--base);border-top:1px solid var(--border);padding:16px 0">
-    <div style="display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:8px 12px;max-width:720px">
-      <input type="text" x-model="input" @keydown.enter="send()" placeholder="Bir soru sorun..." style="flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:0.875rem;color:var(--text);padding:4px 0" />
-      <button @click="send()" :disabled="typing" style="width:36px;height:36px;border-radius:8px;background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
-        <i class="ph ph-paper-plane-tilt" style="color:white;font-size:1rem"></i>
+  <div style="position:sticky;bottom:0;background:var(--base);border-top:1px solid var(--border);padding:var(--sp-4) 0">
+    <div style="display:flex;align-items:center;gap:var(--sp-2);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-2) var(--sp-3);max-width:720px">
+      <input type="text" x-model="input" @keydown.enter="send()" placeholder="Bir soru sorun..." style="flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:var(--fs-md);color:var(--text);padding:var(--sp-1) 0" />
+      <button @click="send()" :disabled="typing" style="width:36px;height:36px;border-radius:var(--r-md);background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+        <i class="ph ph-paper-plane-tilt" style="color:white;font-size:var(--fs-lg)"></i>
       </button>
     </div>
   </div>

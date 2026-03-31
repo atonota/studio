@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Guvenlik — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,9 +18,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="form" x-data="{
   ...form({current_pass:'', new_pass:'', confirm_pass:''}),
   twoFA: true,
   sessions: [
@@ -28,32 +29,32 @@
     {browser:'Firefox Windows', icon:'ph-browser', ip:'176.42.xx.xx', location:'Ankara', lastActive:'1 gun once', isCurrent:false}
   ]
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Guvenlik</h1>
     <p class="page-sub">Sifre, 2FA ve oturum yonetimi</p>
   </div>
 
   <!-- Password Change -->
-  <div class="fade-in-d1 card" style="max-width:560px;margin-bottom:20px">
+  <div class="fade-in-d1 card" style="max-width:560px;margin-bottom:var(--sp-5)">
     <span class="section-label">Sifre Degistir</span>
-    <div style="display:flex;flex-direction:column;gap:16px;margin-top:12px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4);margin-top:var(--sp-3)">
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Mevcut Sifre</label>
-        <input type="password" x-model="fields.current_pass" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Mevcut Sifre</label>
+        <input type="password" x-model="fields.current_pass" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('current_pass') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('current_pass')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('current_pass')"></span>
+        <span x-show="hasError('current_pass')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('current_pass')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Yeni Sifre</label>
-        <input type="password" x-model="fields.new_pass" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Yeni Sifre</label>
+        <input type="password" x-model="fields.new_pass" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('new_pass') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('new_pass')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('new_pass')"></span>
+        <span x-show="hasError('new_pass')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('new_pass')"></span>
       </div>
       <div>
-        <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Yeni Sifre Tekrar</label>
-        <input type="password" x-model="fields.confirm_pass" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box"
+        <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Yeni Sifre Tekrar</label>
+        <input type="password" x-model="fields.confirm_pass" placeholder="••••••••" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box"
                :style="hasError('confirm_pass') ? 'border-color:#ef4444' : ''">
-        <span x-show="hasError('confirm_pass')" style="font-size:0.75rem;color:#ef4444;margin-top:4px;display:block" x-text="getError('confirm_pass')"></span>
+        <span x-show="hasError('confirm_pass')" style="font-size:var(--fs-sm);color:#ef4444;margin-top:var(--sp-1);display:block" x-text="getError('confirm_pass')"></span>
       </div>
       <div>
         <button class="btn-primary" :disabled="submitting" @click="
@@ -63,7 +64,7 @@
           if(fields.new_pass !== fields.confirm_pass) errors.confirm_pass = 'Sifreler eslesmiyor';
           if(Object.keys(errors).length === 0) { submitting=true; setTimeout(()=>{ submitting=false; submitted=true; fields.current_pass=''; fields.new_pass=''; fields.confirm_pass=''; $store.toast.show('Sifre guncellendi!','success') }, 1200) }
         ">
-          <template x-if="submitting"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner ph-spin"></i> Guncelleniyor...</span></template>
+          <template x-if="submitting"><span style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-spinner ph-spin"></i> Guncelleniyor...</span></template>
           <template x-if="!submitting"><span><i class="ph ph-lock-key"></i> Guncelle</span></template>
         </button>
       </div>
@@ -71,15 +72,15 @@
   </div>
 
   <!-- 2FA Section -->
-  <div class="fade-in-d2 card" style="max-width:560px;margin-bottom:20px">
+  <div class="fade-in-d2 card" style="max-width:560px;margin-bottom:var(--sp-5)">
     <span class="section-label">Iki Faktorlu Kimlik Dogrulama</span>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:12px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:10px">
-        <i class="ph" :class="twoFA ? 'ph-shield-check' : 'ph-shield-slash'" :style="twoFA ? 'font-size:1.25rem;color:#22c55e' : 'font-size:1.25rem;color:var(--muted)'"></i>
-        <span style="font-size:0.875rem;color:var(--text)">TOTP Authenticator</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--sp-3);gap:var(--sp-3);flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph" :class="twoFA ? 'ph-shield-check' : 'ph-shield-slash'" :style="twoFA ? 'font-size:var(--fs-xl);color:#22c55e' : 'font-size:var(--fs-xl);color:var(--muted)'"></i>
+        <span style="font-size:var(--fs-md);color:var(--text)">TOTP Authenticator</span>
         <span class="badge" :style="twoFA ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(239,68,68,0.1);color:#ef4444'" x-text="twoFA ? 'Aktif' : 'Pasif'"></span>
       </div>
-      <button class="btn-secondary" style="padding:8px 14px;font-size:0.8125rem" @click="
+      <button class="btn-secondary" style="padding:var(--sp-2) var(--sp-4);font-size:var(--fs-sm)" @click="
         if(twoFA) { $store.confirm.ask('2FA devre disi birakilacak, emin misiniz?', () => { twoFA=false; $store.toast.show('2FA devre disi birakildi','warning') }) }
         else { twoFA=true; $store.toast.show('2FA etkinlestirildi!','success') }
       " x-text="twoFA ? 'Devre Disi Birak' : 'Etkinlestir'"></button>
@@ -88,11 +89,11 @@
 
   <!-- Active Sessions -->
   <div class="fade-in-d3 card" data-paginate="10" style="max-width:720px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
       <span class="section-label" style="margin-bottom:0">Aktif Oturumlar</span>
-      <button onclick="if(window.exportToCSV)exportToCSV(['Tarayici','IP Adresi','Konum','Son Aktivite'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+      <button onclick="if(window.exportToCSV)exportToCSV(['Tarayici','IP Adresi','Konum','Son Aktivite'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
     </div>
-    <table class="r-table" style="margin-top:8px">
+    <table class="r-table" style="margin-top:var(--sp-2)">
       <thead>
         <tr>
           <th>Tarayici</th>
@@ -106,18 +107,18 @@
         <template x-for="(s, idx) in sessions" :key="idx">
           <tr>
             <td data-label="Tarayici" style="font-weight:500;color:var(--text)">
-              <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:var(--sp-2)">
                 <i class="ph" :class="s.icon" style="color:var(--muted)"></i> <span x-text="s.browser"></span>
               </div>
             </td>
-            <td data-label="IP Adresi" style="font-family:monospace;font-size:0.75rem" x-text="s.ip"></td>
+            <td data-label="IP Adresi" style="font-family:monospace;font-size:var(--fs-sm)" x-text="s.ip"></td>
             <td data-label="Konum" x-text="s.location"></td>
             <td data-label="Son Aktivite">
               <template x-if="s.isCurrent"><span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Simdi</span></template>
               <template x-if="!s.isCurrent"><span style="color:var(--text-soft)" x-text="s.lastActive"></span></template>
             </td>
             <td>
-              <button x-show="!s.isCurrent" @click="$store.confirm.ask('Bu oturumu sonlandirmak istediginize emin misiniz?', () => { sessions.splice(idx,1); $store.toast.show('Oturum sonlandirildi','success') })" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:#ef4444;font-size:0.75rem;cursor:pointer;font-family:inherit">Sonlandir</button>
+              <button x-show="!s.isCurrent" @click="$store.confirm.ask('Bu oturumu sonlandirmak istediginize emin misiniz?', () => { sessions.splice(idx,1); $store.toast.show('Oturum sonlandirildi','success') })" style="padding:var(--sp-1) var(--sp-3);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:#ef4444;font-size:var(--fs-sm);cursor:pointer;font-family:inherit">Sonlandir</button>
             </td>
           </tr>
         </template>

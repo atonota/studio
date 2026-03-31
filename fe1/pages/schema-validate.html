@@ -5,34 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Schema Dogrulama — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
 <body>
 <div id="topbar"></div><div id="spotlight-backdrop"></div><div id="ud-backdrop"></div>
-<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide" class="open"></div>
+<nav id="rail" role="navigation"></nav><div id="wide-overlay"></div><div id="sidebar-wide"></div>
 
-<div id="main" x-data="form({url:''})">
-  <div class="fade-in" style="margin-bottom:24px">
+<div id="main" data-skeleton="table" x-data="form({url:''})">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Schema Dogrulama</h1>
     <p class="page-sub">Yapilandirilmis veri hatalarini tespit et</p>
   </div>
 
   <!-- URL Input -->
-  <div class="fade-in-d1 card" style="margin-bottom:24px">
+  <div class="fade-in-d1 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">URL Dogrula</span>
-    <div style="display:flex;gap:12px;align-items:flex-end">
+    <div style="display:flex;gap:var(--sp-3);align-items:flex-end">
       <div style="flex:1">
-        <label style="font-size:0.75rem;color:var(--muted);font-weight:600;display:block;margin-bottom:6px">Sayfa URL</label>
-        <input type="url" value="https://ornek.com/blog/seo-rehberi" style="width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.875rem;outline:none" />
+        <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">Sayfa URL</label>
+        <input type="url" value="https://ornek.com/blog/seo-rehberi" style="width:100%;padding:var(--sp-3) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);color:var(--text);font-size:var(--fs-md);outline:none" />
       </div>
-      <button class="btn-primary" style="padding:10px 24px;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;white-space:nowrap">
-        <i class="ph ph-check-circle" style="margin-right:4px"></i>Dogrula
+      <button class="btn-primary" style="padding:var(--sp-3) var(--sp-6);border-radius:var(--r-md);font-size:var(--fs-md);font-weight:600;cursor:pointer;white-space:nowrap">
+        <i class="ph ph-check-circle" style="margin-right:var(--sp-1)"></i>Dogrula
       </button>
     </div>
   </div>
@@ -40,49 +41,49 @@
   <!-- Validation Results -->
   <div class="fade-in-d2 card">
     <span class="section-label">Dogrulama Sonuclari — 3 schema bulundu</span>
-    <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
 
       <!-- Valid 1 -->
-      <div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <i class="ph ph-article" style="font-size:1.25rem;color:#3b82f6"></i>
+      <div style="padding:var(--sp-4) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <i class="ph ph-article" style="font-size:var(--fs-xl);color:#3b82f6"></i>
             <span style="font-weight:500;color:var(--text)">Article</span>
           </div>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">
             <i class="ph ph-check" style="margin-right:2px"></i>Valid
           </span>
         </div>
-        <div style="font-size:0.75rem;color:var(--muted)">12 alan dogrulandi — headline, author, datePublished, image, publisher dahil</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">12 alan dogrulandi — headline, author, datePublished, image, publisher dahil</div>
       </div>
 
       <!-- Valid 2 -->
-      <div style="padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <i class="ph ph-breadcrumbs" style="font-size:1.25rem;color:#a855f7"></i>
+      <div style="padding:var(--sp-4) var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <i class="ph ph-breadcrumbs" style="font-size:var(--fs-xl);color:#a855f7"></i>
             <span style="font-weight:500;color:var(--text)">BreadcrumbList</span>
           </div>
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">
             <i class="ph ph-check" style="margin-right:2px"></i>Valid
           </span>
         </div>
-        <div style="font-size:0.75rem;color:var(--muted)">3 alan dogrulandi — itemListElement, position, name</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">3 alan dogrulandi — itemListElement, position, name</div>
       </div>
 
       <!-- Error -->
-      <div style="padding:14px 16px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.2);border-radius:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <i class="ph ph-question" style="font-size:1.25rem;color:#eab308"></i>
+      <div style="padding:var(--sp-4) var(--sp-4);background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.2);border-radius:var(--r-md)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <i class="ph ph-question" style="font-size:var(--fs-xl);color:#eab308"></i>
             <span style="font-weight:500;color:var(--text)">FAQPage</span>
           </div>
           <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">
             <i class="ph ph-x" style="margin-right:2px"></i>Hata
           </span>
         </div>
-        <div style="font-size:0.75rem;color:#ef4444;margin-bottom:4px">acceptedAnswer alani eksik — her Question icin acceptedAnswer zorunludur</div>
-        <div style="font-size:0.6875rem;color:var(--muted)">Satir 42: "acceptedAnswer" property bulunamadi. Google Rich Results icin bu alan gereklidir.</div>
+        <div style="font-size:var(--fs-sm);color:#ef4444;margin-bottom:var(--sp-1)">acceptedAnswer alani eksik — her Question icin acceptedAnswer zorunludur</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted)">Satir 42: "acceptedAnswer" property bulunamadi. Google Rich Results icin bu alan gereklidir.</div>
       </div>
 
     </div>

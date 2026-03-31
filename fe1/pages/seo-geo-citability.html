@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>AI Citability Skoru — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +19,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ selectedDim: null, dims: [
+<div id="main" data-skeleton="table" x-data="{ selectedDim: null, dims: [
   {name:'Guncellik',score:90,color:'#22c55e',detail:'Icerik son 30 gun icinde guncellenmis. AI platformlari guncel kaynaklari tercih eder.'},
   {name:'Kaynak Otoritesi',score:82,color:'#22c55e',detail:'Domain authority ve backlink profili guclu. Akademik ve endüstri referanslari artirici etki yapar.'},
   {name:'Icerik Kalitesi',score:78,color:'#3b82f6',detail:'Icerik derinligi ve kapsamliligi iyi. Orijinal veri ve gorsel zenginlestirme onerilir.'},
@@ -28,31 +29,31 @@
   {name:'Yapisal Veri',score:65,color:'#eab308',detail:'Schema markup kapsamini genisletin. FAQ ve HowTo schemalari ekleyin.'},
   {name:'Teknik Uyum',score:54,color:'#ef4444',detail:'Core Web Vitals skorlarini yukseltin. LCP ve CLS degerlerini optimize edin.'}
 ] }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">AI Citability Skoru</h1>
     <p class="page-sub">Icerik alintilanabilirlik analizi</p>
   </div>
 
   <!-- Large Score Display -->
-  <div class="fade-in-d1 card" style="text-align:center;padding:32px;margin-bottom:24px">
-    <div style="font-size:4rem;font-weight:200;color:var(--accent);line-height:1">72<span style="font-size:1.5rem;color:var(--muted);font-weight:300">/100</span></div>
-    <div style="font-size:0.8125rem;color:var(--muted);margin-top:8px">Genel Citability Skoru</div>
+  <div class="fade-in-d1 card" style="text-align:center;padding:var(--sp-8);margin-bottom:var(--sp-6)">
+    <div style="font-size:4rem;font-weight:200;color:var(--accent);line-height:1">72<span style="font-size:var(--fs-2xl);color:var(--muted);font-weight:300">/100</span></div>
+    <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-2)">Genel Citability Skoru</div>
   </div>
 
   <!-- Dimension Breakdown -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Boyut Analizi</span>
-    <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
       <template x-for="(dim, idx) in dims" :key="idx">
         <div @click="selectedDim = selectedDim === idx ? null : idx" style="cursor:pointer">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:0.8125rem;color:var(--text)" x-text="dim.name"></span>
-            <span style="font-size:0.8125rem;font-weight:600" :style="'color:'+dim.color" x-text="dim.score"></span>
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-1)">
+            <span style="font-size:var(--fs-sm);color:var(--text)" x-text="dim.name"></span>
+            <span style="font-size:var(--fs-sm);font-weight:600" :style="'color:'+dim.color" x-text="dim.score"></span>
           </div>
-          <div style="height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden">
-            <div :style="'width:'+dim.score+'%;height:100%;background:'+dim.color+';border-radius:3px;transition:width .3s'"></div>
+          <div style="height:6px;background:var(--surface-2);border-radius:var(--r-xs);overflow:hidden">
+            <div :style="'width:'+dim.score+'%;height:100%;background:'+dim.color+';border-radius:var(--r-xs);transition:width .3s'"></div>
           </div>
-          <div x-show="selectedDim === idx" x-transition style="margin-top:8px;padding:10px 14px;background:var(--surface-2);border-radius:8px;font-size:0.8125rem;color:var(--text-soft);line-height:1.5" x-text="dim.detail"></div>
+          <div x-show="selectedDim === idx" x-transition style="margin-top:var(--sp-2);padding:var(--sp-3) var(--sp-4);background:var(--surface-2);border-radius:var(--r-md);font-size:var(--fs-sm);color:var(--text-soft);line-height:1.5" x-text="dim.detail"></div>
         </div>
       </template>
     </div>
@@ -61,37 +62,37 @@
   <!-- AI Suggestions -->
   <div class="fade-in-d3">
     <span class="section-label">AI Iyilestirme Onerileri</span>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="card" style="padding:16px 20px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-code" style="color:#ef4444;font-size:1rem"></i>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <div class="card" style="padding:var(--sp-4) var(--sp-5)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-code" style="color:#ef4444;font-size:var(--fs-lg)"></i>
           </div>
           <div>
-            <div style="font-weight:500;color:var(--text);font-size:0.8125rem">Teknik SEO iyilestirmesi gerekli</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Core Web Vitals skorlarini yukseltin. LCP ve CLS degerlerini optimize edin.</div>
+            <div style="font-weight:500;color:var(--text);font-size:var(--fs-sm)">Teknik SEO iyilestirmesi gerekli</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Core Web Vitals skorlarini yukseltin. LCP ve CLS degerlerini optimize edin.</div>
           </div>
         </div>
       </div>
-      <div class="card" style="padding:16px 20px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-brackets-curly" style="color:#eab308;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-5)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-brackets-curly" style="color:#eab308;font-size:var(--fs-lg)"></i>
           </div>
           <div>
-            <div style="font-weight:500;color:var(--text);font-size:0.8125rem">Schema markup kapsamini genisletin</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">FAQ ve HowTo schema'lari ekleyerek yapisal veri skorunu artirin.</div>
+            <div style="font-weight:500;color:var(--text);font-size:var(--fs-sm)">Schema markup kapsamini genisletin</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">FAQ ve HowTo schema'lari ekleyerek yapisal veri skorunu artirin.</div>
           </div>
         </div>
       </div>
-      <div class="card" style="padding:16px 20px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ph ph-article" style="color:#3b82f6;font-size:1rem"></i>
+      <div class="card" style="padding:var(--sp-4) var(--sp-5)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3)">
+          <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-article" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
           </div>
           <div>
-            <div style="font-weight:500;color:var(--text);font-size:0.8125rem">Icerik benzersizligini artirin</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">Orijinal arastirma verileri ve vaka calismalari ekleyerek benzersizlik skorunu yukseltin.</div>
+            <div style="font-weight:500;color:var(--text);font-size:var(--fs-sm)">Icerik benzersizligini artirin</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-1)">Orijinal arastirma verileri ve vaka calismalari ekleyerek benzersizlik skorunu yukseltin.</div>
           </div>
         </div>
       </div>

@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Reklam Raporlari — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/mock-data.js"></script>
@@ -19,50 +20,50 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{ attrModel: 'son-tiklama', platformFilter: 'tumu' }">
+<div id="main" data-skeleton="table" x-data="{ attrModel: 'son-tiklama', platformFilter: 'tumu' }">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-        <i class="ph ph-chart-bar" style="color:#a855f7;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-chart-bar" style="color:#a855f7;font-size:var(--fs-xl)"></i>
       </div>
       <div>
         <h1 class="page-title">Reklam Raporlari</h1>
         <p class="page-sub">Cross-channel performans analizi</p>
       </div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <a href="report-create.html" style="color:var(--accent);font-size:0.8125rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-soft)">
-        <i class="ph ph-plus" style="font-size:0.875rem"></i> Yeni Rapor <i class="ph ph-arrow-right" style="font-size:0.75rem"></i>
+    <div style="display:flex;gap:var(--sp-2);align-items:center">
+      <a href="report-create.html" style="color:var(--accent);font-size:var(--fs-sm);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1);padding:var(--sp-2) var(--sp-4);border:1px solid var(--accent);border-radius:var(--r-md);background:var(--accent-soft)">
+        <i class="ph ph-plus" style="font-size:var(--fs-md)"></i> Yeni Rapor <i class="ph ph-arrow-right" style="font-size:var(--fs-sm)"></i>
       </a>
       <button class="btn-primary"><i class="ph ph-file-pdf"></i> Rapor Indir</button>
     </div>
   </div>
 
   <!-- Stat Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
     <div class="stat-card" style="--stripe:#22c55e">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Cross-channel ROAS</div>
-      <div style="font-size:1.5rem;font-weight:500;color:#22c55e">2.7x</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Cross-channel ROAS</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:#22c55e">2.7x</div>
     </div>
     <div class="stat-card" style="--stripe:#a855f7">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Toplam Harcama</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">&#8378;48,720</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Toplam Harcama</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">&#8378;48,720</div>
     </div>
     <div class="stat-card" style="--stripe:#3b82f6">
-      <div style="font-size:0.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Donusum</div>
-      <div style="font-size:1.5rem;font-weight:500;color:var(--text)">892</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Donusum</div>
+      <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)">892</div>
     </div>
   </div>
 
   <!-- Attribution Model Selector -->
-  <div class="fade-in-d2 card" style="margin-bottom:24px">
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
     <span class="section-label">Attribution Modeli</span>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:var(--sp-2);flex-wrap:wrap">
       <template x-for="m in [{v:'son-tiklama',l:'Son Tiklama'},{v:'ilk-tiklama',l:'Ilk Tiklama'},{v:'dogrusal',l:'Dogrusal'},{v:'zaman-azalan',l:'Zaman Azalan'},{v:'veri-tabanli',l:'Veri Tabanli'}]">
-        <button @click="attrModel = m.v; $store.toast.show(m.l + ' modeli secildi', 'info')" :style="attrModel === m.v ? 'background:var(--accent);color:white;border:none' : 'background:var(--surface-2);color:var(--muted);border:1px solid var(--border)'" style="padding:8px 16px;border-radius:8px;font-size:0.8125rem;font-weight:500;cursor:pointer;font-family:inherit" x-text="m.l"></button>
+        <button @click="attrModel = m.v; $store.toast.show(m.l + ' modeli secildi', 'info')" class="tab-btn" :class="attrModel === m.v ? 'active' : ''" x-text="m.l"></button>
       </template>
     </div>
   </div>
@@ -71,7 +72,7 @@
   <div class="fade-in-d3 card" data-paginate="10">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
       <span class="section-label">Platform Bazli Performans</span>
-      <button onclick="exportToCSV(['Platform','Harcama','Gosterim','Tiklama','CTR','Donusum','CPA','ROAS'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'reklam-raporlari.csv')" style="padding:6px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px"><i class="ph ph-download-simple" style="font-size:0.875rem"></i> CSV Indir</button>
+      <button onclick="exportToCSV(['Platform','Harcama','Gosterim','Tiklama','CTR','Donusum','CPA','ROAS'], Array.from(this.closest('[data-paginate]').querySelectorAll('.r-table tbody tr')).map(r=>[...r.querySelectorAll('td')].map(c=>c.textContent.trim())), 'reklam-raporlari.csv')" style="padding:var(--sp-2) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:500;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-download-simple" style="font-size:var(--fs-md)"></i> CSV Indir</button>
     </div>
     <table class="r-table">
       <thead>
@@ -89,8 +90,8 @@
       <tbody>
         <tr>
           <td data-label="Platform">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:1.125rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-meta-logo" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
               <span style="font-weight:500;color:var(--text)">Meta Ads</span>
             </div>
           </td>
@@ -104,8 +105,8 @@
         </tr>
         <tr>
           <td data-label="Platform">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-tiktok-logo" style="color:var(--text);font-size:1.125rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-tiktok-logo" style="color:var(--text);font-size:var(--fs-lg)"></i>
               <span style="font-weight:500;color:var(--text)">TikTok Ads</span>
             </div>
           </td>
@@ -119,8 +120,8 @@
         </tr>
         <tr>
           <td data-label="Platform">
-            <div style="display:flex;align-items:center;gap:8px">
-              <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:1.125rem"></i>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-linkedin-logo" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
               <span style="font-weight:500;color:var(--text)">LinkedIn Ads</span>
             </div>
           </td>

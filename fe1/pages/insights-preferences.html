@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Insight Tercihleri — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 <script src="../js/components.js"></script>
 </head>
@@ -18,9 +19,9 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main" x-data="{
+<div id="main" data-skeleton="cards" x-data="{
   prefs: { seo:true, icerik:true, reklam:true, performans:false, guvenlik:false },
   freq: 'Gunluk',
   toggle(key) {
@@ -28,78 +29,78 @@
     $store.toast.show(this.prefs[key] ? 'Aktif edildi' : 'Pasif edildi', this.prefs[key] ? 'success' : 'info');
   }
 }">
-  <div class="fade-in" style="margin-bottom:24px">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">Insight Tercihleri</h1>
     <p class="page-sub">Hangi insight turlerini almak istediginizi yapilandirin</p>
   </div>
 
   <!-- Toggle List -->
-  <div class="fade-in-d1 card" style="padding:0;overflow:hidden;margin-bottom:24px">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+  <div class="fade-in-d1 card" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border)">
       <span class="section-label" style="margin-bottom:0">Insight Kategorileri</span>
     </div>
 
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:12px">
-        <i class="ph ph-magnifying-glass" style="font-size:1.125rem;color:#3b82f6"></i>
-        <span style="font-size:0.875rem;color:var(--text)">SEO Insight</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-magnifying-glass" style="font-size:var(--fs-lg);color:#3b82f6"></i>
+        <span style="font-size:var(--fs-md);color:var(--text)">SEO Insight</span>
       </div>
-      <div @click="toggle('seo')" :style="prefs.seo ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s">
+      <div @click="toggle('seo')" :style="prefs.seo ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:var(--r-lg);position:relative;cursor:pointer;transition:background .2s">
         <div :style="prefs.seo ? 'right:2px;background:white' : 'left:2px;background:#7B7269'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:all .2s"></div>
       </div>
     </div>
 
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:12px">
-        <i class="ph ph-article" style="font-size:1.125rem;color:#C2410C"></i>
-        <span style="font-size:0.875rem;color:var(--text)">Icerik</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-article" style="font-size:var(--fs-lg);color:#C2410C"></i>
+        <span style="font-size:var(--fs-md);color:var(--text)">Icerik</span>
       </div>
-      <div @click="toggle('icerik')" :style="prefs.icerik ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s">
+      <div @click="toggle('icerik')" :style="prefs.icerik ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:var(--r-lg);position:relative;cursor:pointer;transition:background .2s">
         <div :style="prefs.icerik ? 'right:2px;background:white' : 'left:2px;background:#7B7269'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:all .2s"></div>
       </div>
     </div>
 
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:12px">
-        <i class="ph ph-megaphone" style="font-size:1.125rem;color:#a855f7"></i>
-        <span style="font-size:0.875rem;color:var(--text)">Reklam</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-megaphone" style="font-size:var(--fs-lg);color:#a855f7"></i>
+        <span style="font-size:var(--fs-md);color:var(--text)">Reklam</span>
       </div>
-      <div @click="toggle('reklam')" :style="prefs.reklam ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s">
+      <div @click="toggle('reklam')" :style="prefs.reklam ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:var(--r-lg);position:relative;cursor:pointer;transition:background .2s">
         <div :style="prefs.reklam ? 'right:2px;background:white' : 'left:2px;background:#7B7269'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:all .2s"></div>
       </div>
     </div>
 
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:12px">
-        <i class="ph ph-lightning" style="font-size:1.125rem;color:#eab308"></i>
-        <span style="font-size:0.875rem;color:var(--text)">Performans</span>
+    <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-lightning" style="font-size:var(--fs-lg);color:#eab308"></i>
+        <span style="font-size:var(--fs-md);color:var(--text)">Performans</span>
       </div>
-      <div @click="toggle('performans')" :style="prefs.performans ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s">
+      <div @click="toggle('performans')" :style="prefs.performans ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:var(--r-lg);position:relative;cursor:pointer;transition:background .2s">
         <div :style="prefs.performans ? 'right:2px;background:white' : 'left:2px;background:#7B7269'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:all .2s"></div>
       </div>
     </div>
 
-    <div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:12px">
-        <i class="ph ph-shield" style="font-size:1.125rem;color:#ef4444"></i>
-        <span style="font-size:0.875rem;color:var(--text)">Guvenlik</span>
+    <div style="padding:var(--sp-4) var(--sp-5);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:var(--sp-3)">
+        <i class="ph ph-shield" style="font-size:var(--fs-lg);color:#ef4444"></i>
+        <span style="font-size:var(--fs-md);color:var(--text)">Guvenlik</span>
       </div>
-      <div @click="toggle('guvenlik')" :style="prefs.guvenlik ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s">
+      <div @click="toggle('guvenlik')" :style="prefs.guvenlik ? 'background:#22c55e' : 'background:var(--border)'" style="width:44px;height:24px;border-radius:var(--r-lg);position:relative;cursor:pointer;transition:background .2s">
         <div :style="prefs.guvenlik ? 'right:2px;background:white' : 'left:2px;background:#7B7269'" style="width:20px;height:20px;border-radius:50%;position:absolute;top:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:all .2s"></div>
       </div>
     </div>
   </div>
 
   <!-- Frequency -->
-  <div class="fade-in-d2 card" style="padding:20px">
+  <div class="fade-in-d2 card" style="padding:var(--sp-5)">
     <span class="section-label">Bildirim Sikligi</span>
-    <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-      <select x-model="freq" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;color:var(--text);font-size:0.875rem;outline:none;min-width:200px">
+    <div style="display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-2)">
+      <select x-model="freq" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);font-size:var(--fs-md);outline:none;min-width:200px">
         <option>Gunluk</option>
         <option>Haftalik</option>
         <option>Aylik</option>
       </select>
-      <button @click="$store.toast.show('Tercihler kaydedildi','success')" class="btn-primary" style="padding:10px 20px;font-size:0.8125rem">Kaydet</button>
+      <button @click="$store.toast.show('Tercihler kaydedildi','success')" class="btn-primary" style="padding:var(--sp-3) var(--sp-5);font-size:var(--fs-sm)">Kaydet</button>
     </div>
   </div>
 </div>

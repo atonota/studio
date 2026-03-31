@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Reklam Rapor Sablonlari — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -16,13 +17,13 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
+<div id="sidebar-wide"></div>
 
-<div id="main">
+<div id="main" data-skeleton="dashboard">
   <!-- Header -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
-    <div style="width:40px;height:40px;border-radius:10px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
-      <i class="ph ph-file-text" style="color:#eab308;font-size:1.25rem"></i>
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center">
+      <i class="ph ph-file-text" style="color:#eab308;font-size:var(--fs-xl)"></i>
     </div>
     <div>
       <h1 class="page-title">Reklam Rapor Sablonlari</h1>
@@ -31,74 +32,76 @@
   </div>
 
   <!-- Template Cards -->
-  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4)">
     <!-- Template 1 -->
-    <div class="card" style="padding:20px 24px;display:flex;flex-direction:column">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-chart-line" style="color:#3b82f6;font-size:1.125rem"></i>
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-chart-line" style="color:#3b82f6;font-size:var(--fs-lg)"></i>
         </div>
         <div style="font-weight:500;color:var(--text)">Cross-Channel Performans</div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">PDF</span>
         <span class="badge" style="background:var(--surface-2);color:var(--muted)">8 sayfa</span>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px;flex:1">Tum platformlar arasi performans karsilastirmasi, harcama dagilimi ve ROAS analizi.</div>
-      <button class="btn-primary" style="width:100%;padding:8px;font-size:0.8125rem">Kullan</button>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4);flex:1">Tum platformlar arasi performans karsilastirmasi, harcama dagilimi ve ROAS analizi.</div>
+      <button class="btn-primary" style="width:100%;padding:var(--sp-2);font-size:var(--fs-sm)">Kullan</button>
     </div>
 
     <!-- Template 2 -->
-    <div class="card" style="padding:20px 24px;display:flex;flex-direction:column">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-scales" style="color:#a855f7;font-size:1.125rem"></i>
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-scales" style="color:#a855f7;font-size:var(--fs-lg)"></i>
         </div>
         <div style="font-weight:500;color:var(--text)">Platform Karsilastirma</div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
         <span class="badge" style="background:rgba(59,130,246,0.1);color:#3b82f6">HTML</span>
         <span class="badge" style="background:var(--surface-2);color:var(--muted)">6 sayfa</span>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px;flex:1">Meta, TikTok ve LinkedIn performans metriklerini yan yana karsilastiran interaktif rapor.</div>
-      <button class="btn-primary" style="width:100%;padding:8px;font-size:0.8125rem">Kullan</button>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4);flex:1">Meta, TikTok ve LinkedIn performans metriklerini yan yana karsilastiran interaktif rapor.</div>
+      <button class="btn-primary" style="width:100%;padding:var(--sp-2);font-size:var(--fs-sm)">Kullan</button>
     </div>
 
     <!-- Template 3 -->
-    <div class="card" style="padding:20px 24px;display:flex;flex-direction:column">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-currency-circle-dollar" style="color:#22c55e;font-size:1.125rem"></i>
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-currency-circle-dollar" style="color:#22c55e;font-size:var(--fs-lg)"></i>
         </div>
         <div style="font-weight:500;color:var(--text)">ROAS Analizi</div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">PDF</span>
         <span class="badge" style="background:var(--surface-2);color:var(--muted)">4 sayfa</span>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px;flex:1">Kampanya bazli ROAS performansi, trend grafikleri ve optimizasyon onerileri.</div>
-      <button class="btn-primary" style="width:100%;padding:8px;font-size:0.8125rem">Kullan</button>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4);flex:1">Kampanya bazli ROAS performansi, trend grafikleri ve optimizasyon onerileri.</div>
+      <button class="btn-primary" style="width:100%;padding:var(--sp-2);font-size:var(--fs-sm)">Kullan</button>
     </div>
 
     <!-- Template 4 -->
-    <div class="card" style="padding:20px 24px;display:flex;flex-direction:column">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="width:36px;height:36px;border-radius:8px;background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-paint-brush" style="color:#eab308;font-size:1.125rem"></i>
+    <div class="card" style="padding:var(--sp-5) var(--sp-6);display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-paint-brush" style="color:#eab308;font-size:var(--fs-lg)"></i>
         </div>
         <div style="font-weight:500;color:var(--text)">White-label Musteri</div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
+      <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
         <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">PDF</span>
         <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Ozel</span>
       </div>
-      <div style="font-size:0.8125rem;color:var(--muted);margin-bottom:16px;flex:1">Musteri logolu, ozellestirilmis rapor sablonu. Marka renkleri ve bilgileri uyarlanabilir.</div>
-      <button class="btn-primary" style="width:100%;padding:8px;font-size:0.8125rem">Kullan</button>
+      <div style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4);flex:1">Musteri logolu, ozellestirilmis rapor sablonu. Marka renkleri ve bilgileri uyarlanabilir.</div>
+      <button class="btn-primary" style="width:100%;padding:var(--sp-2);font-size:var(--fs-sm)">Kullan</button>
     </div>
   </div>
 </div>
 
 <div id="footbar"></div>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
 <script src="../js/shell.js"></script>
 <script>document.addEventListener('DOMContentLoaded', () => initShell('ads'));</script>
 </body>

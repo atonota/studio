@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Acme Corp. — atonota Studio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={darkMode:'class'}</script>
 <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
 <link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
 </head>
 <body>
 <div id="topbar"></div>
@@ -17,71 +18,71 @@
 <div id="ud-backdrop"></div>
 <nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
 <div id="wide-overlay"></div>
-<div id="sidebar-wide" class="open"></div>
-<div id="main" x-data="tabs('genel')">
+<div id="sidebar-wide"></div>
+<div id="main" data-skeleton="table" x-data="tabs('genel')">
 
   <!-- Breadcrumb -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:6px;margin-bottom:16px;font-size:0.75rem">
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4);font-size:var(--fs-sm)">
     <a href="tenants.html" style="color:var(--muted);text-decoration:none">Tenantlar</a>
-    <i class="ph ph-caret-right" style="color:var(--border);font-size:0.625rem"></i>
+    <i class="ph ph-caret-right" style="color:var(--border);font-size:var(--fs-2xs)"></i>
     <span style="color:var(--text-soft)">Acme Corp.</span>
   </div>
 
   <!-- Title -->
-  <div class="fade-in" style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+  <div class="fade-in" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-6);flex-wrap:wrap">
     <h1 class="page-title" style="margin-bottom:0">Acme Corp.</h1>
     <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Pro</span>
   </div>
 
   <!-- Tabs -->
-  <div class="fade-in-d1" style="display:flex;gap:4px;margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:0;flex-wrap:wrap">
-    <button @click="select('genel')" style="padding:10px 18px;font-size:0.8125rem;border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-1);margin-bottom:var(--sp-6);border-bottom:1px solid var(--border);padding-bottom:0;flex-wrap:wrap">
+    <button @click="select('genel')" style="padding:var(--sp-3) 18px;font-size:var(--fs-sm);border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
             :style="isActive('genel') ? 'font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent)' : 'font-weight:500;color:var(--muted);border-bottom:2px solid transparent'">Genel</button>
-    <button @click="select('kullanicilar')" style="padding:10px 18px;font-size:0.8125rem;border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
+    <button @click="select('kullanicilar')" style="padding:var(--sp-3) 18px;font-size:var(--fs-sm);border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
             :style="isActive('kullanicilar') ? 'font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent)' : 'font-weight:500;color:var(--muted);border-bottom:2px solid transparent'">Kullanicilar</button>
-    <button @click="select('workspace')" style="padding:10px 18px;font-size:0.8125rem;border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
+    <button @click="select('workspace')" style="padding:var(--sp-3) 18px;font-size:var(--fs-sm);border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
             :style="isActive('workspace') ? 'font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent)' : 'font-weight:500;color:var(--muted);border-bottom:2px solid transparent'">Workspace</button>
-    <button @click="select('ayarlar')" style="padding:10px 18px;font-size:0.8125rem;border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
+    <button @click="select('ayarlar')" style="padding:var(--sp-3) 18px;font-size:var(--fs-sm);border:none;background:transparent;cursor:pointer;font-family:inherit;transition:all 0.15s"
             :style="isActive('ayarlar') ? 'font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent)' : 'font-weight:500;color:var(--muted);border-bottom:2px solid transparent'">Ayarlar</button>
   </div>
 
   <!-- Tab: Genel -->
   <div x-show="isActive('genel')" x-transition>
     <!-- Stat Cards -->
-    <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px">
+    <div class="fade-in-d2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-7)">
       <div class="stat-card" style="--stripe:#22c55e">
-        <div style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Saglik</div>
-        <div style="font-size:1.75rem;font-weight:600;color:var(--text)">92<span style="font-size:0.875rem;color:var(--muted);font-weight:400">/100</span></div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Saglik</div>
+        <div style="font-size:var(--fs-3xl);font-weight:600;color:var(--text)">92<span style="font-size:var(--fs-md);color:var(--muted);font-weight:400">/100</span></div>
       </div>
       <div class="stat-card" style="--stripe:#3b82f6">
-        <div style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Workspace</div>
-        <div style="font-size:1.75rem;font-weight:600;color:var(--text)">3</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Workspace</div>
+        <div style="font-size:var(--fs-3xl);font-weight:600;color:var(--text)">3</div>
       </div>
       <div class="stat-card" style="--stripe:#a855f7">
-        <div style="font-size:0.6875rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Kullanici</div>
-        <div style="font-size:1.75rem;font-weight:600;color:var(--text)">8</div>
+        <div style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Kullanici</div>
+        <div style="font-size:var(--fs-3xl);font-weight:600;color:var(--text)">8</div>
       </div>
     </div>
 
     <!-- Info Card -->
     <div class="fade-in-d3 card">
       <h3 class="section-label">Tenant Bilgileri</h3>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--muted)">Domain</span>
-          <span style="font-size:0.8125rem;color:var(--text);font-weight:500">acme.com</span>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Domain</span>
+          <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500">acme.com</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--muted)">Plan</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Plan</span>
           <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Pro</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:0.8125rem;color:var(--muted)">Olusturma</span>
-          <span style="font-size:0.8125rem;color:var(--text)">15 Oca 2026</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Olusturma</span>
+          <span style="font-size:var(--fs-sm);color:var(--text)">15 Oca 2026</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
-          <span style="font-size:0.8125rem;color:var(--muted)">Son Giris</span>
-          <span style="font-size:0.8125rem;color:var(--text)">Bugun 14:32</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Son Giris</span>
+          <span style="font-size:var(--fs-sm);color:var(--text)">Bugun 14:32</span>
         </div>
       </div>
     </div>
@@ -92,9 +93,9 @@
     <div class="card" data-paginate="10">
       <div style="display:flex;align-items:center;justify-content:space-between">
         <h3 class="section-label">Kullanicilar</h3>
-        <button onclick="if(window.exportToCSV)exportToCSV(['Ad Soyad','E-posta','Rol','Son Giris'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:0.75rem;gap:4px;padding:6px 12px;"><i class="ph ph-download-simple"></i>CSV</button>
+        <button onclick="if(window.exportToCSV)exportToCSV(['Ad Soyad','E-posta','Rol','Son Giris'], document.querySelectorAll('#main table tbody tr'))" class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-2) var(--sp-3);"><i class="ph ph-download-simple"></i>CSV</button>
       </div>
-      <table class="r-table" style="margin-top:8px">
+      <table class="r-table" style="margin-top:var(--sp-2)">
         <thead>
           <tr>
             <th>Ad Soyad</th>
@@ -129,35 +130,35 @@
 
   <!-- Tab: Workspace -->
   <div x-show="isActive('workspace')" x-transition>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-4)">
       <div class="card">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
-            <i class="ph ph-globe" style="font-size:1.25rem;color:#3b82f6"></i>
+        <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+            <i class="ph ph-globe" style="font-size:var(--fs-xl);color:#3b82f6"></i>
           </div>
           <div>
-            <div style="font-size:0.9375rem;font-weight:600;color:var(--text)">acme.com</div>
-            <div style="font-size:0.75rem;color:var(--muted)">WordPress</div>
+            <div style="font-size:var(--fs-base);font-weight:600;color:var(--text)">acme.com</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">WordPress</div>
           </div>
         </div>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:var(--sp-2)">
           <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Aktif</span>
-          <span style="font-size:0.75rem;color:var(--muted)">SEO Skoru: 87</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">SEO Skoru: 87</span>
         </div>
       </div>
       <div class="card">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
-            <i class="ph ph-shopping-bag" style="font-size:1.25rem;color:#a855f7"></i>
+        <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+            <i class="ph ph-shopping-bag" style="font-size:var(--fs-xl);color:#a855f7"></i>
           </div>
           <div>
-            <div style="font-size:0.9375rem;font-weight:600;color:var(--text)">shop.acme.com</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Shopify</div>
+            <div style="font-size:var(--fs-base);font-weight:600;color:var(--text)">shop.acme.com</div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)">Shopify</div>
           </div>
         </div>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:var(--sp-2)">
           <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Kurulum</span>
-          <span style="font-size:0.75rem;color:var(--muted)">Bekliyor</span>
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Bekliyor</span>
         </div>
       </div>
     </div>
@@ -167,27 +168,27 @@
   <div x-show="isActive('ayarlar')" x-transition x-data="form({tenant_name:'Acme Corp.', domain:'acme.com', plan:'Pro', timezone:'Europe/Istanbul'})">
     <div class="card" style="max-width:560px">
       <h3 class="section-label">Tenant Ayarlari</h3>
-      <div style="display:flex;flex-direction:column;gap:16px;margin-top:12px">
+      <div style="display:flex;flex-direction:column;gap:var(--sp-4);margin-top:var(--sp-3)">
         <div>
-          <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Tenant Adi</label>
-          <input type="text" x-model="fields.tenant_name" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box">
+          <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Tenant Adi</label>
+          <input type="text" x-model="fields.tenant_name" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box">
         </div>
         <div>
-          <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Domain</label>
-          <input type="text" x-model="fields.domain" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box">
+          <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Domain</label>
+          <input type="text" x-model="fields.domain" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box">
         </div>
         <div>
-          <label style="display:block;font-size:0.6875rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Zaman Dilimi</label>
-          <select x-model="fields.timezone" style="background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);width:100%;font-family:inherit;outline:none;font-size:0.875rem;box-sizing:border-box;appearance:auto">
+          <label style="display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Zaman Dilimi</label>
+          <select x-model="fields.timezone" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4);color:var(--text);width:100%;font-family:inherit;outline:none;font-size:var(--fs-md);box-sizing:border-box;appearance:auto">
             <option>Europe/Istanbul</option>
             <option>Europe/London</option>
             <option>America/New_York</option>
             <option>Asia/Tokyo</option>
           </select>
         </div>
-        <div style="margin-top:4px">
+        <div style="margin-top:var(--sp-1)">
           <button class="btn-primary" :disabled="submitting" @click="submit(); if(submitted) $store.toast.show('Ayarlar kaydedildi!','success')">
-            <template x-if="submitting"><span style="display:flex;align-items:center;gap:6px"><i class="ph ph-spinner ph-spin"></i> Kaydediliyor...</span></template>
+            <template x-if="submitting"><span style="display:flex;align-items:center;gap:var(--sp-2)"><i class="ph ph-spinner ph-spin"></i> Kaydediliyor...</span></template>
             <template x-if="!submitting"><span><i class="ph ph-floppy-disk"></i> Kaydet</span></template>
           </button>
         </div>

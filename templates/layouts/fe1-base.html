@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{#
+  ═══════════════════════════════════════════════════════
+  atonota Studio — FE1 Jinja2 Base Layout
+  -------------------------------------------------------
+  Tum fe1 sayfalari icin ortak <head>, shell, script
+  yukleme sirasini tek dosyadan yonetir.
+
+  Kullanim:
+    {% extends "layouts/fe1-base.html" %}
+    {% set page_title = "SEO Dashboard" %}
+    {% set page_desc = "Anahtar kelime ve SERP analizi" %}
+    {% set page_key = "seo" %}
+    {% set skeleton_type = "dashboard" %}
+
+    {% block content %}
+      ...sayfa icerigi...
+    {% endblock %}
+  ═══════════════════════════════════════════════════════
+#}
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>{{ page_title | default('atonota Studio') }} — atonota Studio</title>
+
+{# Phosphor Icons — CDN #}
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+{# CSS: primitives (raw tokens) → tokens (semantic + a11y layer) #}
+<link rel="stylesheet" href="{{ url_for('static', path='fe1/css/primitives.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', path='fe1/css/tokens.css') }}">
+
+{# Theme: FOUC prevention — loaded synchronously, no defer #}
+<script src="{{ url_for('static', path='fe1/js/appearance-store.js') }}"></script>
+<script src="{{ url_for('static', path='fe1/js/appearance-init.js') }}"></script>
+
+{% block head_extra %}{% endblock %}
+</head>
+<body>
+
+{# ── SHELL — rendered by shell.js ── #}
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide" role="navigation" aria-label="Alt navigasyon"></div>
+
+{# ── MAIN CONTENT ── #}
+<div id="main" role="main" aria-label="Sayfa icerigi" data-skeleton="{{ skeleton_type | default('dashboard') }}">
+  <div class="fade-in" style="margin-bottom:var(--sp-7)">
+    <h1 class="page-title">{{ page_title | default('') }}</h1>
+    {% if page_desc %}<p class="page-sub">{{ page_desc }}</p>{% endif %}
+  </div>
+
+  {% block content %}{% endblock %}
+</div>
+
+{# ── FOOTER ── #}
+<div id="footbar" role="contentinfo" aria-label="Sistem durumu"></div>
+
+{# ── BOTTOM NAV (mobile) ── #}
+<div id="bottom-nav"></div>
+
+{# ── SCRIPTS ── #}
+{# Alpine.js — deferred to load after DOM #}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+
+{# Feature modules #}
+<script src="{{ url_for('static', path='fe1/js/components.js') }}"></script>
+<script src="{{ url_for('static', path='fe1/js/shell.js') }}"></script>
+
+{% block scripts_extra %}{% endblock %}
+
+{# Shell init — always last #}
+<script>document.addEventListener('DOMContentLoaded', () => initShell('{{ page_key | default("") }}'));</script>
+
+</body>
+</html>

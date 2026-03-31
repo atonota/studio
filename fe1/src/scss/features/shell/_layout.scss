@@ -1,0 +1,31 @@
+// ═══ SHELL LAYOUT — #main, #footbar, #rail base rules ═══
+// Orijinal tokens.css'den extract edildi
+
+// ── MAIN CONTENT AREA ──
+#main {
+  position: fixed;
+  top: var(--sidebartop);
+  bottom: var(--bnav-h);
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--base);
+  padding: 24px 16px;
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: var(--content-max-w);
+}
+
+@media (min-width: 768px) {
+  #main {
+    left: var(--rail-w);
+    bottom: var(--foot-h);
+    padding: 32px 28px;
+  }
+}
+
+@media (max-width: 374px) {
+  #main {
+    padding: 16px 12px;
+  }
+}

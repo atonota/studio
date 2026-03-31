@@ -1,0 +1,139 @@
+// ============================================
+// atonota Studio — Theme Variables
+// Root-level CSS custom properties from tokens.css
+// ============================================
+
+:root {
+  // ── Layout ──
+  --rail-w: 96px;
+  --wide-w: 260px;
+  --top-h: 96px;
+  --foot-h: 48px;
+  --bnav-h: 72px;
+
+  // ── Brand ──
+  --color-primary: var(--p-orange-600, #C2410C);
+  --color-primary-hover: var(--p-orange-700, #9A3412);
+  --color-primary-foreground: #FFFFFF;
+  // primary-soft/muted are mode-aware — defined in _semantic-tokens.scss
+  // --_primary-rgb is set by JS (AppearanceStore.applyAccentVars)
+
+  // ── Typography ──
+  --font-family-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-code: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-size-base: 15px;
+  --font-weight-body: 300;
+  --font-weight-heading: 600;
+  --letter-spacing-base: 0.01em;
+  --line-height-base: 1.5;
+  --font-scale: 1;
+
+  // ── Font Size Scale (font-scale multiplied) ──
+  --fs-2xs: calc(9px * var(--font-scale));
+  --fs-xs: calc(11px * var(--font-scale));
+  --fs-sm: calc(13px * var(--font-scale));
+  --fs-base: var(--font-size-base);
+  --fs-md: calc(14px * var(--font-scale));
+  --fs-lg: calc(16px * var(--font-scale));
+  --fs-xl: calc(20px * var(--font-scale));
+  --fs-2xl: calc(24px * var(--font-scale));
+  --fs-3xl: calc(28px * var(--font-scale));
+  --fs-4xl: calc(36px * var(--font-scale));
+
+  // ── Spacing Scale ──
+  --spacing-scale: 1;
+  --sp-0: 0px;
+  --sp-1: calc(4px * var(--spacing-scale));
+  --sp-2: calc(8px * var(--spacing-scale));
+  --sp-3: calc(12px * var(--spacing-scale));
+  --sp-4: calc(16px * var(--spacing-scale));
+  --sp-5: calc(20px * var(--spacing-scale));
+  --sp-6: calc(24px * var(--spacing-scale));
+  --sp-7: calc(28px * var(--spacing-scale));
+  --sp-8: calc(32px * var(--spacing-scale));
+
+  // ── Layout (content) ──
+  --content-padding-scale: 1;
+  --content-max-w: none;
+
+  // ── Radius Scale ──
+  --radius-base: 10px;
+  --r-xs: calc(var(--radius-base) * 0.2);
+  --r-sm: calc(var(--radius-base) * 0.4);
+  --r-md: var(--radius-base);
+  --r-lg: calc(var(--radius-base) * 1.2);
+  --r-xl: calc(var(--radius-base) * 1.4);
+  --r-2xl: calc(var(--radius-base) * 1.6);
+  --r-full: 9999px;
+  // backward compat
+  --radius-sm: var(--r-sm);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+
+  // ── Shadow ──
+  --shadow-scale: 1;
+
+  // ── Motion ──
+  --motion-scale: 1;
+  --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  // ── Blur ──
+  --blur-level: 16px;
+
+  // ── Glass tuning ──
+  --glass-opacity: 0.04;
+  --backdrop-opacity: 0.5;
+
+  // ═══ Backward Compatibility Aliases ═══
+  --base: var(--color-bg-base);
+  --surface: var(--color-bg-elevated);
+  --surface-2: var(--color-bg-sunken);
+  --border: var(--color-border-default);
+  --muted: var(--color-text-tertiary);
+  --text-soft: var(--color-text-secondary);
+  --text: var(--color-text-primary);
+  --shadow: var(--color-shadow);
+  --accent: var(--color-primary);
+  --accent-h: var(--color-primary-hover);
+  --accent-soft: var(--color-primary-soft);
+  --accent-muted: var(--color-primary-muted);
+  --glass-bg: var(--color-glass-bg);
+  --glass-blur: var(--color-glass-blur);
+  --glass-border: var(--color-glass-border);
+  --green: var(--p-green-500, #22c55e);
+  --blue: var(--p-blue-500, #3b82f6);
+  --purple: var(--p-purple-500, #a855f7);
+  --yellow: var(--p-yellow-500, #eab308);
+  --red: var(--p-red-500, #ef4444);
+  --card-bg: var(--color-bg-elevated);
+  --card-border: var(--color-border-default);
+
+  // ═══ Dual Sidebar ═══
+  --rail-bg: var(--color-bg-elevated);
+  --rail-accent: var(--color-primary);
+  --rail-accent-soft: var(--color-primary-soft);
+  --wide-bg: var(--color-bg-elevated);
+  --wide-accent: var(--color-primary);
+  --wide-accent-soft: var(--color-primary-soft);
+
+  // ═══ Shell Chrome ═══
+  --chrome-bg: var(--color-bg-elevated);
+  --sidebartop: var(--top-h);
+}
+
+// ── Tablet layout overrides (768–1023px) ──
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --rail-w: 80px;
+    --wide-w: 220px;
+    --top-h: 80px;
+  }
+}
+
+// ── Mobile layout overrides (<768px) ──
+@media (max-width: 767px) {
+  :root {
+    --top-h: 72px;
+    --rail-w: 72px;
+  }
+}
