@@ -99,6 +99,242 @@
       </div>
     </template>
   </div>
+
+  <!-- ── YENİ WİDGET'LAR ─────────────────────────────────────── -->
+
+  <!-- Widget Grid: 2 kolon -->
+  <div class="fade-in-d3" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-5);margin-top:var(--sp-6)">
+
+    <!-- 1a. URL & Redirect Sağlığı -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-2)">
+        <i class="ph ph-arrow-bend-right-up" style="color:var(--accent);font-size:var(--fs-lg)"></i>
+        <span class="section-label" style="margin-bottom:0">URL &amp; Redirect Sağlığı</span>
+      </div>
+      <div style="padding:var(--sp-5)">
+        <!-- Redirect Health Score -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
+          <span style="font-size:var(--fs-sm);color:var(--muted)">Redirect Health Score</span>
+          <div style="display:flex;align-items:center;gap:var(--sp-2)">
+            <span style="font-size:var(--fs-xl);font-weight:300;color:#22c55e">74</span>
+            <span style="font-size:var(--fs-xs);color:var(--muted)">/100</span>
+          </div>
+        </div>
+        <div style="height:6px;background:var(--surface-2);border-radius:var(--r-xs);margin-bottom:var(--sp-5);overflow:hidden">
+          <div style="height:100%;width:74%;background:#22c55e;border-radius:var(--r-xs)"></div>
+        </div>
+        <!-- Metrikler -->
+        <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-link-break" style="color:#eab308"></i>
+              <span style="font-size:var(--fs-sm);color:var(--text)">301 Zincir Uzunluğu</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">Max: 3</span>
+              <span class="badge" style="background:rgba(234,179,8,0.12);color:#eab308">⚠ Uzun</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-x-circle" style="color:#ef4444"></i>
+              <span style="font-size:var(--fs-sm);color:var(--text)">404 Sayısı</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);font-weight:600;color:#ef4444">8</span>
+              <span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">Çözülmedi</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-path" style="color:#3b82f6"></i>
+              <span style="font-size:var(--fs-sm);color:var(--text)">URL Pattern Uyumu</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">%91</span>
+              <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ İyi</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph ph-arrows-clockwise" style="color:#22c55e"></i>
+              <span style="font-size:var(--fs-sm);color:var(--text)">Redirect Döngüsü</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">0 tespit</span>
+              <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Temiz</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1b. Bot Erişimi -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-2)">
+        <i class="ph ph-robot" style="color:var(--accent);font-size:var(--fs-lg)"></i>
+        <span class="section-label" style="margin-bottom:0">Bot Erişimi (robots.txt)</span>
+      </div>
+      <div style="padding:var(--sp-5)">
+        <!-- Sitemap direktifi -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4);padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+          <div style="display:flex;align-items:center;gap:var(--sp-2)">
+            <i class="ph ph-file-text" style="color:#3b82f6"></i>
+            <span style="font-size:var(--fs-sm);color:var(--text)">Sitemap Direktifi</span>
+          </div>
+          <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Mevcut</span>
+        </div>
+        <!-- AI Tarayıcılar -->
+        <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:var(--sp-2)">AI Tarayıcılar</div>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace">GPTBot</span>
+            <span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">❌ Engelli</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace">Google-Extended</span>
+            <span class="badge" style="background:rgba(234,179,8,0.12);color:#eab308">⚠ Belirsiz</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace">Anthropic-AI</span>
+            <span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">❌ Engelli</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace">CCBot</span>
+            <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ İzinli</span>
+          </div>
+        </div>
+        <!-- Geleneksel Botlar -->
+        <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:var(--sp-2)">Geleneksel Botlar</div>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace">Googlebot</span>
+            <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ İzinli</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) var(--sp-3);background:var(--surface-2);border-radius:var(--r-md)">
+            <span style="font-size:var(--fs-sm);color:var(--text);font-family:monospace">Bingbot</span>
+            <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ İzinli</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1c. XML Sitemap Sağlık -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-2)">
+        <i class="ph ph-tree-structure" style="color:var(--accent);font-size:var(--fs-lg)"></i>
+        <span class="section-label" style="margin-bottom:0">XML Sitemap Sağlık</span>
+      </div>
+      <div style="padding:var(--sp-5)">
+        <!-- Erişilebilirlik durumu -->
+        <div style="display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-4);background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:var(--r-md);margin-bottom:var(--sp-4)">
+          <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl);flex-shrink:0"></i>
+          <div>
+            <div style="font-size:var(--fs-sm);font-weight:600;color:#22c55e">Sitemap Erişilebilir</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:2px">sitemap.xml başarıyla yüklendi</div>
+          </div>
+        </div>
+        <!-- Detay satırları -->
+        <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">Son Güncelleme</span>
+            <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">31 Mar 2026</span>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">Toplam URL Sayısı</span>
+            <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text)">1.247</span>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">XML Geçerliliği</span>
+            <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Geçerli</span>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">robots.txt Referansı</span>
+            <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Var</span>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">Index Sitemap</span>
+            <span class="badge" style="background:rgba(59,130,246,0.12);color:#3b82f6">3 alt sitemap</span>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">Engellenmiş URL</span>
+            <span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">14 tespit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1d. Meta Tag Bulk Rapor -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-2)">
+        <i class="ph ph-tag" style="color:var(--accent);font-size:var(--fs-lg)"></i>
+        <span class="section-label" style="margin-bottom:0">Meta Tag Bulk Rapor</span>
+      </div>
+      <div style="padding:var(--sp-5)">
+        <!-- 4 büyük metrik -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+          <div style="padding:var(--sp-4);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--r-md);text-align:center">
+            <div style="font-size:var(--fs-2xl);font-weight:300;color:#ef4444">12</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Eksik Title</div>
+          </div>
+          <div style="padding:var(--sp-4);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--r-md);text-align:center">
+            <div style="font-size:var(--fs-2xl);font-weight:300;color:#ef4444">19</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Eksik Description</div>
+          </div>
+          <div style="padding:var(--sp-4);background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--r-md);text-align:center">
+            <div style="font-size:var(--fs-2xl);font-weight:300;color:#eab308">4</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Duplicate Title</div>
+          </div>
+          <div style="padding:var(--sp-4);background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.2);border-radius:var(--r-md);text-align:center">
+            <div style="font-size:var(--fs-2xl);font-weight:300;color:#eab308">7</div>
+            <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Duplicate Description</div>
+          </div>
+        </div>
+        <!-- Uzunluk ortalamaları -->
+        <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-1)">
+              <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Title Uzunluğu</span>
+              <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">52 karakter</span>
+            </div>
+            <div style="height:5px;background:var(--surface-2);border-radius:var(--r-xs);overflow:hidden">
+              <div style="height:100%;width:80%;background:#22c55e;border-radius:var(--r-xs)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:var(--fs-xs);color:var(--muted)">0</span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">İdeal: 50-60</span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">70+</span>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-1)">
+              <span style="font-size:var(--fs-sm);color:var(--muted)">Ort. Description Uzunluğu</span>
+              <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">128 karakter</span>
+            </div>
+            <div style="height:5px;background:var(--surface-2);border-radius:var(--r-xs);overflow:hidden">
+              <div style="height:100%;width:82%;background:#22c55e;border-radius:var(--r-xs)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:var(--fs-xs);color:var(--muted)">0</span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">İdeal: 120-158</span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)">160+</span>
+            </div>
+          </div>
+          <!-- Tarama özeti -->
+          <div style="padding:var(--sp-3);background:var(--surface-2);border-radius:var(--r-md);display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-1)">
+            <i class="ph ph-info" style="color:var(--accent);flex-shrink:0"></i>
+            <span style="font-size:var(--fs-xs);color:var(--muted)">Toplam 247 sayfadan 42'sinde meta tag sorunu tespit edildi.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /widget grid -->
 </div>
 
 <div id="footbar"></div>

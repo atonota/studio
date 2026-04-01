@@ -5,6 +5,38 @@
   border-radius: var(--r-lg);
 }
 
+// ── Chart-in-Card: full-bleed layout ──
+// Cards with charts remove horizontal padding; chart fills edge to edge.
+// Title/legend get their own padding via .section-label.
+// All future charts inside .card inherit this rule automatically.
+.card:has([id^="chart-"]),
+.card:has([id$="-chart"]),
+.card:has(.chart-container) {
+  padding-left: var(--chart-clear-space, 0.25rem) !important;
+  padding-right: var(--chart-clear-space, 0.25rem) !important;
+
+  // Re-add padding to non-chart children
+  > .section-label,
+  > span,
+  > div:not([id^="chart-"]):not([id$="-chart"]):not(.chart-container) {
+    padding-left: var(--sp-5);
+    padding-right: var(--sp-5);
+  }
+}
+
+@media (max-width: 374px) {
+  .card:has([id^="chart-"]),
+  .card:has([id$="-chart"]),
+  .card:has(.chart-container) {
+    > .section-label,
+    > span,
+    > div:not([id^="chart-"]):not([id$="-chart"]):not(.chart-container) {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+}
+
 // Chart container responsive heights (override inline style)
 [id^="chart-"] {
   min-height: 180px;
@@ -45,4 +77,26 @@
 
   @media (max-width: 767px) { grid-template-columns: repeat(2, 1fr); }
   @media (max-width: 374px) { grid-template-columns: 1fr; }
+}
+
+// ── Mobile: stack multi-column grids to prevent squishing ──
+// Inline style override — pages use inline grid-template-columns
+// that squish charts and cards at narrow viewports.
+@media (max-width: 640px) {
+  // All inline grids inside #main → single column
+  #main [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  // Exception: stat-card grids (repeat(4,...)) → 2 columns on mobile
+  #main [style*="repeat(4"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+// Ultra-small: even stat grids go single column
+@media (max-width: 374px) {
+  #main [style*="repeat(4"] {
+    grid-template-columns: 1fr !important;
+  }
 }

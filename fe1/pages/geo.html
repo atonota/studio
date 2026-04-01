@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cTrend.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
     legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:12,itemHeight:3},
-    grid:{left:40,right:16,top:16,bottom:60},
+    grid:chartGrid({bottom:'3.75rem'}),
     xAxis:{type:'category',data:initData.labels,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     series: trendConfigs.map((cfg, i) => ({

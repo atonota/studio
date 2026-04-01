@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   trend.setOption({
     tooltip: { ...t.tooltip, trigger: 'axis' },
     legend: { data: ['ChatGPT','Gemini','Perplexity','Claude','Copilot','Grok'], textStyle: { color: t.muted, fontSize: 10 }, top: 0 },
-    grid: { left: 48, right: 16, top: 40, bottom: 32 },
+    grid: chartGrid({left:'3rem',top:'2.5rem',bottom:'2rem'}),
     xAxis: { type: 'category', data: weeks, axisLine: { lineStyle: { color: t.border } }, axisLabel: { color: t.muted, fontSize: 10 } },
     yAxis: { type: 'value', splitLine: { lineStyle: { color: t.border, type: 'dashed' } }, axisLabel: { color: t.muted, fontSize: 10 } },
     series: [

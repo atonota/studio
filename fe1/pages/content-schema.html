@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const c = echarts.init(document.getElementById('chart-schema-dist'));
   c.setOption({
     tooltip:{backgroundColor:tooltipBg,borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
-    grid:{left:120,right:40,top:8,bottom:8},
+    grid:chartGrid({left:'7.5rem',right:'2.5rem',bottom:'0.5rem'}),
     xAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     yAxis:{type:'category',data:['BreadcrumbList','Organization','FAQ','Product','Article'],axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
     series:[{

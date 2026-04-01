@@ -26,5 +26,8 @@
 // 6. Charts
 @use 'features/charts/chart-skeleton';
 
-// 7. UI Components (from components.css)
+// 7. AI Chat Modal
+@use 'features/chat/ai-modal';
+
+// 8. UI Components (from components.css)
 @use 'features/ui';

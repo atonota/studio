@@ -10,14 +10,16 @@ import type { MenuGroup, SidebarSection } from '../../shared/types';
 // ── Rail + Topbar menu groups ──────────────────────────
 
 export const MENU: readonly MenuGroup[] = [
-  { group: 'ANALIZ', items: [
+  { group: 'SEO & GEO', items: [
     { key: 'seo',         icon: 'ph-trend-up',              title: 'SEO',        href: 'pages/seo.html' },
+    { key: 'geo',         icon: 'ph-globe-hemisphere-west', title: 'GEO / AI',   href: 'pages/geo.html' },
+  ]},
+  { group: 'ANALIZ', items: [
     { key: 'content',     icon: 'ph-article',               title: 'Icerik',     href: 'pages/content.html' },
     { key: 'ads',         icon: 'ph-broadcast',             title: 'Reklamlar',  href: 'pages/ads.html' },
     { key: 'analytics',   icon: 'ph-chart-line',            title: 'Analitik',   href: 'pages/analytics.html' },
   ]},
   { group: 'KESIF', items: [
-    { key: 'geo',         icon: 'ph-globe-hemisphere-west', title: 'GEO / AI',   href: 'pages/geo.html' },
     { key: 'competitor',  icon: 'ph-binoculars',            title: 'Rakip',      href: 'pages/competitors.html' },
     { key: 'local',       icon: 'ph-map-pin',               title: 'Local',      href: 'pages/local.html' },
     { key: 'performance', icon: 'ph-gauge',                 title: 'Performans', href: 'pages/performance.html' },
@@ -35,7 +37,7 @@ export const SIDEBAR_DATA: Readonly<Record<string, readonly SidebarSection[]>> =
   seo: [
     { l: 'Anahtar Kelime', ch: ['Keyword Magic||seo-keyword-magic.html','Arastirma||seo-keywords.html','Cluster||seo-cluster.html','Organik Arastirma||seo-organic-research.html'] },
     { l: 'Siralama', ch: ['Pozisyon Takibi||seo-position-tracker.html','SERP Ozellikleri||seo-serp.html','Rankings||seo-rankings.html'] },
-    { l: 'Teknik SEO', ch: ['Site Denetimi||seo-audit.html','On-Page Checker||seo-onpage-checker.html','Toplu Analiz||seo-batch-analysis.html'] },
+    { l: 'Teknik SEO', ch: ['Site Denetimi||seo-audit.html','On-Page Checker||seo-onpage-checker.html','Toplu Analiz||seo-batch-analysis.html','SEO Checklist||seo-checklist-manager.html'] },
     { l: 'Baglanti', ch: ['Backlink|47|seo-backlinks.html','Backlink Denetimi||seo-backlink-audit.html','Backlink Gap||seo-backlink-gap.html','Link Kesisim||seo-link-intersect.html'] },
     { l: 'Entity SEO', ch: ['Entity Hub||seo-entities.html','Entity Graph||seo-entities-graph.html','Entity Extract||entities-extract.html','Entity Gaps||entities-gaps.html','Knowledge Panel||entities-knowledge-panel.html'] },
     { l: 'Marketplace SEO', ch: ['Marketplace Hub||marketplace.html','Urunler||marketplace-products.html','Keyword||marketplace-keywords.html','Rakipler||marketplace-competitors.html','Optimizasyon||marketplace-optimization.html'] },
@@ -59,7 +61,9 @@ export const SIDEBAR_DATA: Readonly<Record<string, readonly SidebarSection[]>> =
     { l: 'Analiz', ch: ['Huni Analizi||analytics-funnels.html','Segmentler||analytics-segments.html','AI Sorgu||analytics-query.html'] },
   ],
   geo: [
-    { l: 'GEO', ch: ['GEO Dashboard||seo-geo.html','AI Mention||seo-geo-mentions.html','Prompt Arastirma||seo-geo-prompts.html','Citability||seo-geo-citability.html','Sorgular||geo-queries.html','Sentiment||geo-sentiment.html','Rakipler||geo-competitors.html','Platformlar||geo-platforms.html','Oneriler||geo-recommendations.html','Citation Widget||geo-citation-widget.html'] },
+    { l: 'GEO', ch: ['GEO Dashboard||seo-geo.html','AI Mention||seo-geo-mentions.html','Prompt Arastirma||seo-geo-prompts.html','Citability||seo-geo-citability.html','Sorgular||geo-queries.html','Sentiment||geo-sentiment.html','Rakipler||geo-competitors.html','Platformlar||geo-platforms.html','Oneriler||geo-recommendations.html','Citation Widget||geo-citation-widget.html','AI Checklist||geo-ai-checklist.html'] },
+    { l: 'GEO Araclar', ch: ['AI Yanit Simulatoru||geo-response-simulator.html','llms.txt Yonetici||geo-llmstxt.html','Schema Olusturucu||geo-schema-generator.html','FAQ Optimizatoru||geo-faq-optimizer.html','GEO A/B Test||geo-ab-testing.html'] },
+    { l: 'GEO Analitik', ch: ['Bot Crawl Analitik||geo-bot-analytics.html','E-E-A-T Analizor||geo-eeat-score.html','Earned Media||geo-earned-media.html'] },
     { l: 'AI', ch: ['AI Chat||ai.html','Brand Radar||ai-brand-radar.html','AI Digests||ai-digests.html'] },
   ],
   competitor: [

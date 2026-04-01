@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>GEO / AI Checklist — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="geoChecklist()">
+
+  <!-- Baslik -->
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <h1 class="page-title">GEO / AI Checklist</h1>
+    <p class="page-sub">AI gorunurluk hazirlik denetimi — 10 madde</p>
+  </div>
+
+  <!-- Skor + Platform Ozeti -->
+  <div class="fade-in" style="display:grid;grid-template-columns:1fr 2fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+
+    <!-- AI Readiness Skoru -->
+    <div class="card" style="padding:var(--sp-6);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">AI Readiness Skoru</span>
+      <div style="position:relative;width:120px;height:120px;margin-bottom:var(--sp-4)">
+        <svg viewBox="0 0 120 120" style="width:120px;height:120px;transform:rotate(-90deg)">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#C2410C" stroke-width="10"
+            stroke-dasharray="314" stroke-dashoffset="220" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span style="font-size:var(--fs-3xl);font-weight:300;color:var(--accent);line-height:1">30</span>
+          <span style="font-size:var(--fs-xs);color:var(--muted)">/100</span>
+        </div>
+      </div>
+      <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444;font-size:var(--fs-sm)">Dusuk Hazirlik</span>
+      <p style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-3);line-height:1.5">5 kritik eksiklik giderilirse skor 70+ seviyesine ulasir</p>
+    </div>
+
+    <!-- Platform Bazinda Hazirlik -->
+    <div class="card" style="padding:var(--sp-5)">
+      <span class="section-label">Platform Bazinda Hazirlik</span>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+        <template x-for="p in platforms" :key="p.name">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <div style="width:32px;height:32px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="`background:${p.color}18`">
+              <i :class="'ph ' + p.icon" :style="`font-size:var(--fs-base);color:${p.color}`"></i>
+            </div>
+            <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500;min-width:90px" x-text="p.name"></span>
+            <div style="flex:1;height:6px;background:var(--border);border-radius:var(--r-full);overflow:hidden">
+              <div :style="`height:100%;width:${p.pct}%;background:${p.color};border-radius:var(--r-full);transition:width .5s`"></div>
+            </div>
+            <span style="font-size:var(--fs-sm);font-weight:600;min-width:36px;text-align:right" :style="`color:${p.color}`" x-text="p.pct + '%'"></span>
+          </div>
+        </template>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Filtre -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
+    <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'ok',l:'Tamamlandi'},{v:'warn',l:'Eksik'},{v:'error',l:'Hata'}]">
+      <button @click="filter=f.v" class="pill" :class="filter===f.v ? 'active' : ''" x-text="f.l"></button>
+    </template>
+  </div>
+
+  <!-- Checklist Maddeleri -->
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-3)">
+    <template x-for="(item, idx) in filteredItems()" :key="item.id">
+      <div class="card" style="padding:var(--sp-5)">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+
+          <!-- Sira numarasi + durum -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);flex-shrink:0">
+            <div style="width:36px;height:36px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;font-size:var(--fs-xs);font-weight:700;color:var(--muted);background:var(--border)" x-text="item.id"></div>
+            <span style="font-size:var(--fs-xl)" x-text="item.status==='ok' ? '✅' : item.status==='warn' ? '⚠️' : '❌'"></span>
+          </div>
+
+          <!-- Icerik -->
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span style="font-weight:600;color:var(--text);font-size:var(--fs-base)" x-text="item.title"></span>
+              <span class="badge" :style="item.priority==='kritik' ? 'background:rgba(239,68,68,0.1);color:#ef4444' : item.priority==='yuksek' ? 'background:rgba(249,115,22,0.1);color:#f97316' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="item.priority === 'kritik' ? 'Kritik' : item.priority === 'yuksek' ? 'Yuksek' : 'Orta'"></span>
+              <span class="badge" :style="item.auto ? 'background:rgba(59,130,246,0.1);color:#3b82f6' : 'background:rgba(168,85,247,0.1);color:#a855f7'" x-text="item.auto ? 'Otomatik' : 'Manuel'"></span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)" x-text="item.desc"></p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap">
+                <span style="font-size:var(--fs-xs);color:var(--muted)">Etki: <strong x-text="item.impact" style="color:var(--text)"></strong></span>
+                <span style="font-size:var(--fs-xs);color:var(--muted)">Son kontrol: <strong x-text="item.checked" style="color:var(--text)"></strong></span>
+              </div>
+              <a :href="item.href" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)" x-show="item.status !== 'ok'">Duzelt <i class="ph ph-arrow-right"></i></a>
+              <span style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:#22c55e;font-weight:600" x-show="item.status === 'ok'"><i class="ph ph-check-circle"></i> Tamamlandi</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </template>
+  </div>
+
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>
+function geoChecklist() {
+  return {
+    filter: 'tumu',
+
+    platforms: [
+      { name:'ChatGPT',    icon:'ph-openai-logo',         color:'#22c55e', pct:45 },
+      { name:'Gemini',     icon:'ph-google-logo',         color:'#3b82f6', pct:38 },
+      { name:'Perplexity', icon:'ph-compass',             color:'#a855f7', pct:52 },
+      { name:'Claude',     icon:'ph-robot',               color:'#C2410C', pct:28 },
+      { name:'Copilot',    icon:'ph-microsoft-teams-logo',color:'#7B7269', pct:22 },
+    ],
+
+    items: [
+      {
+        id:1, status:'error', priority:'kritik', auto:true,
+        title:'llms.txt Dosyasi Olusturun',
+        desc:'AI tarayicilari icin llms.txt dosyasi eksik. Bu dosya marka kimligini, urun aciklamalarini ve referans URL\'lerini AI modellerine iletir. Eksik oldugunda modeller sitenizi eksik veya yanlis kategorize edebilir.',
+        impact:'+10 citation/ay', checked:'2026-03-28', href:'content-llmstxt.html'
+      },
+      {
+        id:2, status:'warn', priority:'yuksek', auto:true,
+        title:'robots.txt AI Crawler Izni',
+        desc:'robots.txt dosyasinda GPTBot ve ClaudeBot icin kısıtlayıcı kurallar tespit edildi. Bu tarayicilara tam erisim izni verilerek indexleme kapsamı genisletilebilir.',
+        impact:'+12 mention/ay', checked:'2026-03-29', href:'seo-audit.html'
+      },
+      {
+        id:3, status:'error', priority:'kritik', auto:true,
+        title:'Organization Schema Markup',
+        desc:'Ana sayfada JSON-LD Organization schema eksik. Marka adi, adres, iletisim ve faaliyet alani bilgilerinin yapilandirilmis formatta sunulmasi AI alinti dogrulugunu arttirir.',
+        impact:'+15 mention/ay', checked:'2026-03-28', href:'content-schema.html'
+      },
+      {
+        id:4, status:'error', priority:'yuksek', auto:true,
+        title:'FAQ Schema Eklenmesi',
+        desc:'Sık sorulan sorular ve yardim sayfalarinda FAQ schema markup bulunmuyor. FAQ schema AI asistanlarinin sorulara dogrudan siteye atifta bulunarak yanit vermesini saglar.',
+        impact:'+9 citation/ay', checked:'2026-03-28', href:'schema-generator.html'
+      },
+      {
+        id:5, status:'error', priority:'orta', auto:true,
+        title:'Author / Person Schema',
+        desc:'Icerik yazarları icin Person schema tanimlamasi eksik. Yazar otoritesi E-E-A-T sinyali olarak AI platformlari tarafindan degerlendirilen onemli bir citability faktorudur.',
+        impact:'+6 citation/ay', checked:'2026-03-28', href:'schema-generator.html'
+      },
+      {
+        id:6, status:'warn', priority:'orta', auto:false,
+        title:'Wikipedia / Wikidata Entity Baglantisi',
+        desc:'Markanizin Wikidata kaydı eksik veya guncel degil. Buyuk dil modelleri Wikipedia ve Wikidata\'yi egitim kaynagi olarak kullanir; kayitli markalar daha guvenilir referans olarak gosterilir.',
+        impact:'+7 mention/ay', checked:'2026-03-25', href:'seo-entities.html'
+      },
+      {
+        id:7, status:'warn', priority:'yuksek', auto:true,
+        title:'Structured Data Dogrulama',
+        desc:'Mevcut JSON-LD markup\'larinda dogrulama hatalari tespit edildi. Hatali schema veri kalitesini dusureceginden AI platformlari bu veriyi gormezden gelebilir.',
+        impact:'Dogruluk +20%', checked:'2026-03-29', href:'schema-validate.html'
+      },
+      {
+        id:8, status:'warn', priority:'yuksek', auto:true,
+        title:'Citability Skoru 60 Uzerinde Olmali',
+        desc:'Mevcut citability skoru 48/100 — hedef esiginin altinda. Iceriklerinize istatistik, karsilastirma tablosu ve net tanim bolumu ekleyerek AI kaynak gosterim olasiligini artirin.',
+        impact:'+8 citation/ay', checked:'2026-03-29', href:'seo-geo-citability.html'
+      },
+      {
+        id:9, status:'ok', priority:'yuksek', auto:true,
+        title:'AI Platform Mention Izleme Aktif',
+        desc:'ChatGPT, Gemini, Perplexity ve Claude platformlarinda marka bahis takibi aktif olarak calisiyor. Toplam 23 mention izleniyor.',
+        impact:'Izleme aktif', checked:'2026-03-30', href:'seo-geo-mentions.html'
+      },
+      {
+        id:10, status:'error', priority:'orta', auto:true,
+        title:'Knowledge Graph Varligi',
+        desc:'Google Knowledge Graph\'ta marka entity kaydı bulunamadi. Knowledge Graph kaydı olmayan markalar AI asistanlarinin onerilerinde daha az yer alir.',
+        impact:'+5 mention/ay', checked:'2026-03-28', href:'entities-knowledge-panel.html'
+      },
+    ],
+
+    filteredItems() {
+      if (this.filter === 'tumu') return this.items;
+      if (this.filter === 'ok')    return this.items.filter(i => i.status === 'ok');
+      if (this.filter === 'warn')  return this.items.filter(i => i.status === 'warn');
+      if (this.filter === 'error') return this.items.filter(i => i.status === 'error');
+      return this.items;
+    },
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => initShell('seo'));
+</script>
+</body>
+</html>

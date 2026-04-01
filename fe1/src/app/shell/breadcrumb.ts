@@ -18,14 +18,9 @@ export function renderBreadcrumb(base: string, key: string): void {
   if (!mainEl) return;
 
   const secInfo = findSectionInfo(key);
-  const pageTitle = document.querySelector('.page-title');
-  const titleText = pageTitle
-    ? (pageTitle.textContent ?? '')
-    : (secInfo ? secInfo.title : 'Dashboard');
-
   const currentPageFile = getCurrentFile();
   const isFav = isFavorite(currentPageFile);
-  const starIcon = isFav ? 'ph-star-fill' : 'ph-star';
+  const starClass = isFav ? 'ph-fill ph-star' : 'ph ph-star';
   const starActiveClass = isFav ? ' bc-star-active' : '';
 
   let crumbs =
@@ -37,20 +32,20 @@ export function renderBreadcrumb(base: string, key: string): void {
       `<a href="${base}${secInfo ? secInfo.href : 'index.html'}" style="color:var(--muted);text-decoration:none;font-size:0.75rem">${secInfo ? secInfo.title : ''}</a>`;
   }
 
-  const sectionTitle = secInfo ? secInfo.title : 'Dashboard';
-  if (titleText !== sectionTitle) {
-    crumbs +=
-      `<i class="ph ph-caret-right" style="font-size:0.5rem;color:var(--border);margin:0 6px"></i>` +
-      `<span style="color:var(--text);font-size:0.75rem;font-weight:500">${titleText}</span>`;
-  }
-
   const bcHTML =
     `<div class="bc-row">` +
     `<nav class="breadcrumb" aria-label="Breadcrumb">${crumbs}</nav>` +
+    `<div class="bc-fav-group">` +
     `<button class="bc-star${starActiveClass}" id="bc-star-btn" ` +
     `title="${isFav ? 'Kisayollardan kaldir' : 'Kisayollara ekle'}" ` +
     `onclick="togglePageFav()">` +
-    `<i class="ph ${starIcon}"></i></button></div>`;
+    `<i class="${starClass}"></i></button>` +
+    `<span class="bc-fav-divider"></span>` +
+    `<button class="bc-fav-toggle" id="bc-fav-toggle-btn" ` +
+    `title="Favorileri goster" onclick="toggleFavDropdown()" ` +
+    `aria-expanded="false" aria-haspopup="true">` +
+    `<span>Favoriler</span><i class="ph ph-caret-down"></i></button>` +
+    `</div></div>`;
 
   mainEl.insertAdjacentHTML('afterbegin', bcHTML);
 }

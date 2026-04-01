@@ -119,6 +119,9 @@ function applyThemeTokens(): void {
     ? `rgba(30,26,20,${panelOp.toFixed(2)})`
     : `rgba(255,255,255,${panelOp.toFixed(2)})`);
 
+  // Charts
+  R.style.setProperty('--chart-clear-space', gf('chart_clear_space', 0.25) + 'rem');
+
   // Component style data attributes
   R.setAttribute('data-card-style', g('card_style', 'elevated'));
   R.setAttribute('data-button-style', g('button_style', 'rounded'));
@@ -149,9 +152,10 @@ function applyThemeTokens(): void {
   const a11yCursor = g('a11y_cursor', 'default');
   if (a11yCursor !== 'default') R.setAttribute('data-cursor', a11yCursor);
 
-  // Sidebar default state
+  // Sidebar default state — also respect pin/lock
   const sidebarPref = g('sidebar_default', 'collapsed');
-  if (sidebarPref === 'open') {
+  const sidebarLocked = localStorage.getItem('sidebar_locked') === '1';
+  if (sidebarPref === 'open' || sidebarLocked) {
     if (document.body) {
       document.body.classList.add('wide-open');
     } else {

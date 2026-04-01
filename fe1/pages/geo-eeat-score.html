@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>E-E-A-T Skor Analizoru — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="eeatScore()">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <h1 class="page-title">E-E-A-T Skor Analizoru</h1>
+    <p class="page-sub">Sayfa bazli Deneyim, Uzmanlik, Otorite ve Guvenilirlik skorlari — AI/GEO baglaminda</p>
+  </div>
+
+  <!-- Overall Score + Gauge -->
+  <div class="fade-in" style="display:grid;grid-template-columns:1fr 2fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sp-6)">
+      <span style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-2)">Genel E-E-A-T Skoru</span>
+      <div id="chart-gauge" style="width:200px;height:200px"></div>
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-2)">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-md)"></i>
+        <span style="font-size:var(--fs-sm);color:#22c55e">+5 puan son 4 hafta</span>
+      </div>
+    </div>
+
+    <!-- 4 Dimension Score Cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)">
+      <template x-for="(dim, idx) in dimensions" :key="dim.id">
+        <div class="card" style="padding:var(--sp-5);cursor:pointer" @click="expandedDim = expandedDim === idx ? null : idx">
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+            <div style="width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="'background:'+dim.bgColor">
+              <i :class="'ph ph-'+dim.icon" style="font-size:var(--fs-xl)" :style="'color:'+dim.color"></i>
+            </div>
+            <div style="flex:1">
+              <div style="font-weight:500;color:var(--text);font-size:var(--fs-base)" x-text="dim.name"></div>
+              <div style="font-size:var(--fs-xs);color:var(--muted)" x-text="dim.subtitle"></div>
+            </div>
+            <i class="ph ph-caret-down" style="font-size:var(--fs-md);color:var(--muted);transition:transform 0.2s" :style="expandedDim===idx ? 'transform:rotate(180deg)' : ''"></i>
+          </div>
+
+          <!-- Score Bar -->
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+            <div style="flex:1;height:6px;background:var(--border);border-radius:var(--r-xs)">
+              <div style="height:100%;border-radius:var(--r-xs);transition:width 0.5s" :style="'width:'+dim.score+'%;background:'+dim.color"></div>
+            </div>
+            <span style="font-size:var(--fs-lg);font-weight:600;min-width:40px;text-align:right" :style="'color:'+dim.color" x-text="dim.score+'/100'"></span>
+          </div>
+
+          <!-- Expanded Sub-Criteria -->
+          <div x-show="expandedDim === idx" x-transition style="margin-top:var(--sp-3);padding-top:var(--sp-3);border-top:1px solid var(--border)">
+            <template x-for="sub in dim.subCriteria" :key="sub.label">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-2) 0;font-size:var(--fs-sm)">
+                <span style="color:var(--muted)" x-text="sub.label"></span>
+                <template x-if="typeof sub.value === 'boolean'">
+                  <span>
+                    <i x-show="sub.value" class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-md)"></i>
+                    <i x-show="!sub.value" class="ph ph-x-circle" style="color:#ef4444;font-size:var(--fs-md)"></i>
+                  </span>
+                </template>
+                <template x-if="typeof sub.value !== 'boolean'">
+                  <span style="font-weight:500;color:var(--text)" x-text="sub.value"></span>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Page Selector -->
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-3)">
+    <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Sayfa Sec</label>
+    <select x-model="selectedPage" style="width:100%;max-width:480px;padding:var(--sp-2) var(--sp-3);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-sm);font-size:var(--fs-sm)">
+      <template x-for="pg in pages" :key="pg.url">
+        <option :value="pg.url" x-text="pg.url + ' (' + pg.overall + '/100)'"></option>
+      </template>
+    </select>
+  </div>
+
+  <!-- Page-Level E-E-A-T Table -->
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Sayfa Bazli E-E-A-T Skorlari</span>
+    <div class="card" data-paginate="10" style="padding:0;overflow:hidden">
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th>Sayfa URL</th>
+            <th style="text-align:center">Genel</th>
+            <th style="text-align:center">Deneyim</th>
+            <th style="text-align:center">Uzmanlik</th>
+            <th style="text-align:center">Otorite</th>
+            <th style="text-align:center">Guvenilirlik</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="pg in pages" :key="pg.url">
+            <tr :style="selectedPage===pg.url ? 'background:var(--accent-soft)' : ''" @click="selectedPage=pg.url" style="cursor:pointer">
+              <td :data-label="'Sayfa URL'">
+                <span style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="pg.url"></span>
+              </td>
+              <td :data-label="'Genel'" style="text-align:center">
+                <span style="font-weight:600;font-size:var(--fs-md)" :style="pg.overall>=75 ? 'color:#22c55e' : pg.overall>=50 ? 'color:#eab308' : 'color:#ef4444'" x-text="pg.overall"></span>
+              </td>
+              <td :data-label="'Deneyim'" style="text-align:center">
+                <span style="font-size:var(--fs-sm);color:var(--text)" x-text="pg.experience"></span>
+              </td>
+              <td :data-label="'Uzmanlik'" style="text-align:center">
+                <span style="font-size:var(--fs-sm);color:var(--text)" x-text="pg.expertise"></span>
+              </td>
+              <td :data-label="'Otorite'" style="text-align:center">
+                <span style="font-size:var(--fs-sm);color:var(--text)" x-text="pg.authority"></span>
+              </td>
+              <td :data-label="'Guvenilirlik'" style="text-align:center">
+                <span style="font-size:var(--fs-sm);color:var(--text)" x-text="pg.trust"></span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <!-- Radar Chart -->
+    <div class="card">
+      <span class="section-label">Rakip Karsilastirma (Radar)</span>
+      <p style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-2)" x-text="'Secili sayfa: '+selectedPage"></p>
+      <div id="chart-radar" style="width:100%;height:320px"></div>
+    </div>
+
+    <!-- Trend Line Chart -->
+    <div class="card">
+      <span class="section-label">E-E-A-T Skor Trendi (12 Hafta)</span>
+      <div id="chart-trend" style="width:100%;height:320px"></div>
+    </div>
+  </div>
+
+  <!-- Improvement Recommendations per Dimension -->
+  <div class="fade-in-d3" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Iyilestirme Onerileri</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)">
+      <template x-for="dim in dimensions" :key="dim.id">
+        <div class="card" style="padding:var(--sp-5)">
+          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+            <div style="width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center" :style="'background:'+dim.bgColor">
+              <i :class="'ph ph-'+dim.icon" style="font-size:var(--fs-md)" :style="'color:'+dim.color"></i>
+            </div>
+            <span style="font-weight:500;color:var(--text)" x-text="dim.name"></span>
+            <span style="font-size:var(--fs-sm);font-weight:600;margin-left:auto" :style="'color:'+dim.color" x-text="dim.score+'/100'"></span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <template x-for="rec in dim.recommendations" :key="rec">
+              <div style="display:flex;align-items:flex-start;gap:var(--sp-2)">
+                <i class="ph ph-arrow-right" style="font-size:var(--fs-sm);color:var(--accent);margin-top:2px;flex-shrink:0"></i>
+                <span style="font-size:var(--fs-sm);color:var(--muted);line-height:1.5" x-text="rec"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+function eeatScore() {
+  return {
+    selectedPage: '/',
+    overallScore: 72,
+    expandedDim: null,
+    dimensions: [
+      {
+        id:'experience', name:'Deneyim (Experience)', subtitle:'Gercek kullanici deneyimi, vaka calismalari', icon:'eye', color:'#3b82f6', bgColor:'rgba(59,130,246,0.1)', score:68,
+        subCriteria:[
+          {label:'Vaka Calismalari', value:true},
+          {label:'Kullanici Yorumlari', value:true},
+          {label:'Orijinal Arastirma', value:false},
+          {label:'Gorsel Kanit', value:false}
+        ],
+        recommendations:[
+          'Urun kullanimina dair orijinal vaka calismalari yayinlayin (en az 3 detayli case study)',
+          'Musteri yorumlari ve basari hikayelerini yapilandirilmis veriyle isaretleyin',
+          'Orijinal arastirma ve anket sonuclari iceren icerikler uretim — AI motorlari birincil kaynaklari tercih eder',
+          'Ekran goruntuleri, infografikler ve video kanit icerikleri ekleyin'
+        ]
+      },
+      {
+        id:'expertise', name:'Uzmanlik (Expertise)', subtitle:'Yazar bilgisi, sertifikalar, teknik derinlik', icon:'graduation-cap', color:'#22c55e', bgColor:'rgba(34,197,94,0.1)', score:82,
+        subCriteria:[
+          {label:'Yazar Biyografisi', value:true},
+          {label:'Person Schema', value:false},
+          {label:'Sertifikalar', value:true},
+          {label:'Teknik Derinlik', value:true}
+        ],
+        recommendations:[
+          'Tum yazarlar icin Person schema markup ekleyerek AI motorlarinin yazar otoritesini tanimlamasini saglayin',
+          'Yazar profillerine sertifika ve kimlik bilgisi ekleyin (Google Analytics, HubSpot vb.)',
+          'Teknik iceriklerinize kaynak referanslari ve akademik alinti formati uyglayin'
+        ]
+      },
+      {
+        id:'authority', name:'Otorite (Authority)', subtitle:'Backlink profili, marka bahisleri, medya kapsamasi', icon:'crown', color:'#f97316', bgColor:'rgba(249,115,22,0.1)', score:75,
+        subCriteria:[
+          {label:'Domain Authority', value:'54'},
+          {label:'Brand Mention', value:'23'},
+          {label:'Basin Kapsamasi', value:'4'},
+          {label:'.edu Referanslari', value:'0'}
+        ],
+        recommendations:[
+          'Sektordeki .edu ve .gov uzantili sitelerden backlink stratejisi olusturun',
+          'Basin bultenleri ve medya iliskileriyle marka bahislerini artirin (hedef: 40+)',
+          'Konuk yazar programi ile yuksek otorite sitelerde icerik yayinlayin',
+          'Sektorel etkinliklerde konusmaci olarak yer alarak dijital iz birakin'
+        ]
+      },
+      {
+        id:'trust', name:'Guvenilirlik (Trust)', subtitle:'HTTPS, gizlilik, iletisim, lisanslar', icon:'shield-check', color:'#a855f7', bgColor:'rgba(168,85,247,0.1)', score:64,
+        subCriteria:[
+          {label:'HTTPS', value:true},
+          {label:'Gizlilik Politikasi', value:true},
+          {label:'Iletisim Sayfasi', value:true},
+          {label:'SSL Sertifikasi', value:true},
+          {label:'Lisans / Garanti', value:false}
+        ],
+        recommendations:[
+          'Hizmet sartlari, iade politikasi ve garanti bilgilerini detayli sekilde yayinlayin',
+          'Iletisim sayfasinda fiziksel adres, telefon ve e-posta bilgilerini schema markup ile isaretleyin',
+          'Musteri destek sureci ve SLA bilgilerini seffaf sekilde paylasim',
+          'Ucuncu parti guvenlik rozetleri ve sertifikalari (SOC 2, ISO 27001) alin ve gosterin'
+        ]
+      }
+    ],
+    pages: [
+      {url:'/', overall:72, experience:68, expertise:82, authority:75, trust:64},
+      {url:'/urunler', overall:78, experience:74, expertise:85, authority:78, trust:76},
+      {url:'/blog/seo-rehberi', overall:85, experience:82, expertise:90, authority:80, trust:88},
+      {url:'/hakkimizda', overall:70, experience:60, expertise:75, authority:72, trust:74},
+      {url:'/blog/ai-trendleri-2026', overall:81, experience:78, expertise:88, authority:76, trust:82},
+      {url:'/fiyatlandirma', overall:65, experience:55, expertise:70, authority:68, trust:66},
+      {url:'/entegrasyonlar', overall:74, experience:70, expertise:80, authority:72, trust:73},
+      {url:'/blog/geo-optimizasyon', overall:88, experience:85, expertise:92, authority:84, trust:90},
+      {url:'/iletisim', overall:58, experience:45, expertise:55, authority:62, trust:70},
+      {url:'/destek/dokumantasyon', overall:76, experience:72, expertise:84, authority:70, trust:78}
+    ],
+    competitors: [
+      {name:'atonota', experience:68, expertise:82, authority:75, trust:64, color:'var(--accent)'},
+      {name:'Rakip A (Semrush)', experience:85, expertise:90, authority:92, trust:88, color:'#3b82f6'},
+      {name:'Rakip B (Ahrefs)', experience:80, expertise:88, authority:88, trust:85, color:'#22c55e'},
+      {name:'Rakip C (Moz)', experience:75, expertise:82, authority:80, trust:82, color:'#a855f7'}
+    ]
+  }
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tooltipStyle = {backgroundColor:'#201C18',borderColor:'#3C342C',textStyle:{color:'#F2EDE5',fontSize:12}};
+
+  // Gauge Chart
+  const cGauge = echarts.init(document.getElementById('chart-gauge'));
+  cGauge.setOption({
+    series:[{
+      type:'gauge',
+      startAngle:220,
+      endAngle:-40,
+      min:0,
+      max:100,
+      pointer:{show:true,length:'60%',width:4,itemStyle:{color:'#F2EDE5'}},
+      progress:{show:true,width:14,roundCap:true,itemStyle:{color:{type:'linear',x:0,y:0,x2:1,y2:0,colorStops:[{offset:0,color:'#ef4444'},{offset:0.5,color:'#eab308'},{offset:1,color:'#22c55e'}]}}},
+      axisLine:{lineStyle:{width:14,color:[[1,'rgba(123,114,105,0.2)']]}},
+      axisTick:{show:false},
+      splitLine:{show:false},
+      axisLabel:{show:false},
+      detail:{valueAnimation:true,formatter:'{value}',fontSize:36,fontWeight:300,color:'#F2EDE5',offsetCenter:[0,'20%']},
+      title:{show:true,offsetCenter:[0,'45%'],fontSize:12,color:'#7B7269',text:'/ 100'},
+      data:[{value:72}]
+    }]
+  });
+
+  // Radar Chart
+  const cRadar = echarts.init(document.getElementById('chart-radar'));
+  cRadar.setOption({
+    tooltip:{...tooltipStyle},
+    legend:{data:['atonota','Rakip A (Semrush)','Rakip B (Ahrefs)','Rakip C (Moz)'],bottom:0,textStyle:{color:'#7B7269',fontSize:11},itemWidth:12,itemHeight:8},
+    radar:{
+      indicator:[
+        {name:'Deneyim',max:100},
+        {name:'Uzmanlik',max:100},
+        {name:'Otorite',max:100},
+        {name:'Guvenilirlik',max:100}
+      ],
+      shape:'circle',
+      splitNumber:4,
+      axisName:{color:'#7B7269',fontSize:12},
+      splitLine:{lineStyle:{color:'rgba(123,114,105,0.2)'}},
+      splitArea:{show:false},
+      axisLine:{lineStyle:{color:'rgba(123,114,105,0.2)'}}
+    },
+    series:[{
+      type:'radar',
+      data:[
+        {value:[68,82,75,64],name:'atonota',lineStyle:{color:'#f97316',width:2},areaStyle:{color:'rgba(249,115,22,0.15)'},itemStyle:{color:'#f97316'}},
+        {value:[85,90,92,88],name:'Rakip A (Semrush)',lineStyle:{color:'#3b82f6',width:2},areaStyle:{color:'rgba(59,130,246,0.08)'},itemStyle:{color:'#3b82f6'}},
+        {value:[80,88,88,85],name:'Rakip B (Ahrefs)',lineStyle:{color:'#22c55e',width:2},areaStyle:{color:'rgba(34,197,94,0.08)'},itemStyle:{color:'#22c55e'}},
+        {value:[75,82,80,82],name:'Rakip C (Moz)',lineStyle:{color:'#a855f7',width:2},areaStyle:{color:'rgba(168,85,247,0.08)'},itemStyle:{color:'#a855f7'}}
+      ]
+    }]
+  });
+
+  // Trend Line Chart (12 weeks)
+  const cTrend = echarts.init(document.getElementById('chart-trend'));
+  const weeks = ['H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12'];
+  cTrend.setOption({
+    tooltip:{trigger:'axis',...tooltipStyle},
+    legend:{data:['Genel','Deneyim','Uzmanlik','Otorite','Guvenilirlik'],bottom:0,textStyle:{color:'#7B7269',fontSize:11},itemWidth:12,itemHeight:8},
+    grid:chartGrid({bottom:'3.125rem'}),
+    xAxis:{type:'category',data:weeks,axisLabel:{color:'#7B7269',fontSize:11},axisLine:{lineStyle:{color:'rgba(123,114,105,0.3)'}},axisTick:{show:false}},
+    yAxis:{type:'value',min:40,max:100,axisLabel:{color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
+    series:[
+      {name:'Genel',type:'line',data:[58,60,61,63,64,65,66,67,68,69,71,72],lineStyle:{width:3,color:'#f97316'},itemStyle:{color:'#f97316'},symbol:'circle',symbolSize:6,smooth:true},
+      {name:'Deneyim',type:'line',data:[52,54,55,57,58,60,61,63,64,65,67,68],lineStyle:{width:1.5,color:'#3b82f6',type:'dashed'},itemStyle:{color:'#3b82f6'},symbol:'none',smooth:true},
+      {name:'Uzmanlik',type:'line',data:[70,71,72,73,74,75,76,77,78,79,81,82],lineStyle:{width:1.5,color:'#22c55e',type:'dashed'},itemStyle:{color:'#22c55e'},symbol:'none',smooth:true},
+      {name:'Otorite',type:'line',data:[60,62,63,64,65,66,67,68,70,71,73,75],lineStyle:{width:1.5,color:'#f97316',type:'dashed'},itemStyle:{color:'#f97316'},symbol:'none',smooth:true},
+      {name:'Guvenilirlik',type:'line',data:[50,51,52,53,54,55,56,57,58,60,62,64],lineStyle:{width:1.5,color:'#a855f7',type:'dashed'},itemStyle:{color:'#a855f7'},symbol:'none',smooth:true}
+    ]
+  });
+
+  window.addEventListener('resize', () => { cGauge.resize(); cRadar.resize(); cTrend.resize(); });
+});
+</script>
+</body>
+</html>

@@ -17,7 +17,7 @@ export function renderBottomNav(base: string, key: string): void {
   bnav.innerHTML =
     `<div class="bn-item" id="bn-search-btn"><i class="ph ph-magnifying-glass"></i><span>Ara</span></div>` +
     `<div class="bn-item" id="bn-tenant-btn"><i class="ph ph-buildings"></i><span>Tenant</span></div>` +
-    `<a class="bn-item bn-center${key === 'ai' ? ' bn-active' : ''}" href="${base}pages/ai.html"><i class="ph ph-robot"></i><span>AI</span></a>` +
+    `<button class="bn-item bn-center${key === 'ai' ? ' bn-active' : ''}" onclick="toggleAiModal()"><i class="ph ph-robot"></i><span>AI Chat</span></button>` +
     `<div class="bn-item bn-notif" onclick="toggleNotifPanel()"><i class="ph ph-bell"></i><span class="bn-badge" id="bn-notif-badge"></span><span>Bildirim</span></div>` +
     `<button class="bn-item bn-menu-btn" id="bn-menu-popup-btn" aria-expanded="false" aria-label="Menuyu ac">` +
     `<span class="grid" aria-hidden="true"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>` +

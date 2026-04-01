@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cDaily.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
     legend:{data:['Harcama','Tiklanma'],textStyle:{color:mutedColor,fontSize:11},top:0,right:0},
-    grid:{top:40,right:60,bottom:30,left:60,containLabel:false},
+    grid:chartGrid({left:'3.75rem',right:'3.75rem',top:'2.5rem',bottom:'1.875rem'}),
     xAxis:{type:'category',data:initData.labels,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
     yAxis:[
       {type:'value',name:'Harcama (₺)',nameTextStyle:{color:mutedColor,fontSize:10},axisLine:{lineStyle:{color:borderColor}},splitLine:{lineStyle:{color:borderColor,opacity:0.3}},axisLabel:{color:mutedColor,fontSize:11,formatter:'₺{value}'}},

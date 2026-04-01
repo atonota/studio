@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const weeks = ['1 Mar','8 Mar','15 Mar','22 Mar','29 Mar'];
   cInsights.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
-    grid:{left:36,right:12,top:12,bottom:28},
+    grid:chartGrid({top:'0.75rem'}),
     xAxis:{type:'category',data:weeks,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     series:[

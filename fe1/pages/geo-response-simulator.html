@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Yanit Simulatoru — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<style>
+.sim-bubble{position:relative;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-5);margin-bottom:var(--sp-4);transition:all .3s}
+.sim-bubble:hover{border-color:var(--accent)}
+.sim-bubble .platform-avatar{width:44px;height:44px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sim-bubble .response-text{font-size:var(--fs-sm);color:var(--text-soft);line-height:1.7;margin:var(--sp-3) 0}
+.sim-bubble .brand-highlight{background:rgba(194,65,12,0.15);color:var(--accent);padding:1px 4px;border-radius:var(--r-sm);font-weight:600}
+.sim-bubble .brand-missing{background:rgba(239,68,68,0.1);color:#ef4444;padding:1px 4px;border-radius:var(--r-sm);font-weight:600;text-decoration:line-through}
+.confidence-bar{height:8px;border-radius:var(--r-full);background:var(--border);overflow:hidden}
+.confidence-fill{height:100%;border-radius:var(--r-full);transition:width .8s ease}
+.sim-loading .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);animation:simDot 1.4s infinite both}
+.sim-loading .dot:nth-child(2){animation-delay:.2s}
+.sim-loading .dot:nth-child(3){animation-delay:.4s}
+@keyframes simDot{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.competitor-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border)}
+.competitor-row:last-child{border-bottom:none}
+.query-template{padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);cursor:pointer;font-size:var(--fs-sm);color:var(--text-soft);transition:all .2s;text-align:left;width:100%}
+.query-template:hover{border-color:var(--accent);color:var(--text)}
+</style>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="responseSimulator()">
+
+  <!-- Baslik -->
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <h1 class="page-title">AI Yanit Simulatoru</h1>
+    <p class="page-sub">AI platformlarinin markaniz hakkinda ne soyledigini simule edin — gorunurluk ve rekabet analizi</p>
+  </div>
+
+  <!-- Sorgu Alani -->
+  <div class="fade-in card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+      <div style="flex:1;position:relative">
+        <i class="ph ph-magnifying-glass" style="position:absolute;left:var(--sp-4);top:50%;transform:translateY(-50%);color:var(--muted);font-size:var(--fs-lg)"></i>
+        <input type="text" x-model="query" @keydown.enter="simulate()" placeholder="Bir soru yazin... orn: en iyi SEO analiz araci hangisi?" style="width:100%;padding:var(--sp-4) var(--sp-4) var(--sp-4) calc(var(--sp-4) + var(--sp-6) + var(--sp-1));border-radius:var(--r-lg);border:2px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);outline:none;box-sizing:border-box;transition:border-color .2s" @focus="$el.style.borderColor='var(--accent)'" @blur="$el.style.borderColor='var(--border)'">
+      </div>
+      <button class="btn-primary" style="white-space:nowrap;padding:var(--sp-4) var(--sp-6);font-size:var(--fs-md)" @click="simulate()" :disabled="isSimulating">
+        <template x-if="!isSimulating"><span><i class="ph ph-play" style="margin-right:var(--sp-1)"></i>Simule Et</span></template>
+        <template x-if="isSimulating"><span class="sim-loading"><span class="dot"></span> <span class="dot"></span> <span class="dot"></span></span></template>
+      </button>
+    </div>
+
+    <!-- Platform Filtresi -->
+    <div style="display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap">
+      <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-right:var(--sp-1)">Platform:</span>
+      <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'chatgpt',l:'ChatGPT'},{v:'gemini',l:'Gemini'},{v:'perplexity',l:'Perplexity'},{v:'claude',l:'Claude'}]">
+        <button @click="platform=p.v" class="pill" :class="platform===p.v ? 'active' : ''" x-text="p.l"></button>
+      </template>
+    </div>
+
+    <!-- Sorgu Sablonlari -->
+    <div style="margin-top:var(--sp-4)">
+      <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:var(--sp-2)">Hazir Sablonlar</span>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-2)">
+        <template x-for="t in templates" :key="t">
+          <button class="query-template" @click="query=t; simulate()" x-text="t"></button>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sonuclar -->
+  <template x-if="results.length > 0 && !isSimulating">
+    <div class="fade-in-d1" style="margin-bottom:var(--sp-6)">
+
+      <!-- Ozet Stat Kartlari -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+        <div class="stat-card" style="--stripe:#C2410C">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Bahseden Platform</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--accent);margin-top:var(--sp-2)" x-text="results.filter(r => r.mentioned).length"><span style="font-size:var(--fs-lg);color:var(--muted);font-weight:300" x-text="'/' + results.length"></span></div>
+        </div>
+        <div class="stat-card" style="--stripe:#3b82f6">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort. Guven Skoru</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)" x-text="Math.round(results.reduce((a,r)=>a+r.confidence,0)/results.length) + '%'"></div>
+        </div>
+        <div class="stat-card" style="--stripe:#22c55e">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">En Iyi Sira</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)" x-text="bestPosition()"></div>
+        </div>
+        <div class="stat-card" style="--stripe:#a855f7">
+          <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Genel Duygu</span>
+          <div style="font-size:var(--fs-3xl);font-weight:300;margin-top:var(--sp-2)" :style="overallSentiment() === 'Pozitif' ? 'color:#22c55e' : overallSentiment() === 'Negatif' ? 'color:#ef4444' : 'color:#eab308'" x-text="overallSentiment()"></div>
+        </div>
+      </div>
+
+      <!-- Platform Yanitlari -->
+      <span class="section-label">Platform Yanitlari</span>
+      <template x-for="r in filteredResults()" :key="r.platform">
+        <div class="sim-bubble">
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+            <div class="platform-avatar" :style="`background:${r.color}18`">
+              <i class="ph" :class="r.icon" :style="`font-size:var(--fs-xl);color:${r.color}`"></i>
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                <span style="font-weight:600;color:var(--text);font-size:var(--fs-md)" x-text="r.platformLabel"></span>
+                <span class="badge" :style="r.sentiment === 'Pozitif' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : r.sentiment === 'Negatif' ? 'background:rgba(239,68,68,0.1);color:#ef4444' : r.sentiment === 'Notr' ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(123,114,105,0.15);color:#7B7269'" x-text="r.sentiment"></span>
+                <template x-if="r.mentioned">
+                  <span class="badge" style="background:rgba(194,65,12,0.1);color:var(--accent)" x-text="r.position + '. sirada bahsedildi'"></span>
+                </template>
+                <template x-if="!r.mentioned">
+                  <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Bahsedilmedi</span>
+                </template>
+              </div>
+              <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:2px">Simule edilen yanit</div>
+            </div>
+          </div>
+
+          <!-- Yanit Metni -->
+          <div class="response-text" x-html="r.responseHtml"></div>
+
+          <!-- Guven Skoru -->
+          <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+            <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;min-width:100px">Guven Skoru</span>
+            <div class="confidence-bar" style="flex:1">
+              <div class="confidence-fill" :style="`width:${r.confidence}%;background:${r.confidence >= 70 ? '#22c55e' : r.confidence >= 40 ? '#eab308' : '#ef4444'}`"></div>
+            </div>
+            <span style="font-size:var(--fs-sm);font-weight:700;min-width:40px;text-align:right" :style="`color:${r.confidence >= 70 ? '#22c55e' : r.confidence >= 40 ? '#eab308' : '#ef4444'}`" x-text="r.confidence + '%'"></span>
+          </div>
+
+          <!-- Kaynak Analizi -->
+          <div style="border-top:1px solid var(--border);padding-top:var(--sp-3)">
+            <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-2)">Tahmini Kaynaklar</span>
+            <div style="display:flex;gap:var(--sp-2);flex-wrap:wrap">
+              <template x-for="src in r.sources" :key="src">
+                <span style="font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);color:var(--text-soft);background:var(--surface)" x-text="src"></span>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Rakip Karsilastirma -->
+      <div class="fade-in-d2 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+        <span class="section-label">Rakip Karsilastirma</span>
+        <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Ayni sorgu icin hangi markalar AI yanitlarinda yer aliyor?</p>
+        <div>
+          <template x-for="c in competitors" :key="c.name">
+            <div class="competitor-row">
+              <div style="min-width:120px">
+                <span style="font-weight:600;font-size:var(--fs-sm)" :style="c.name === 'atonota' ? 'color:var(--accent)' : 'color:var(--text)'" x-text="c.name"></span>
+              </div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+                  <div class="confidence-bar" style="flex:1;height:6px">
+                    <div class="confidence-fill" :style="`width:${c.avgConfidence}%;background:${c.name === 'atonota' ? 'var(--accent)' : c.avgConfidence >= 80 ? '#22c55e' : c.avgConfidence >= 50 ? '#eab308' : '#ef4444'}`" style="height:100%"></div>
+                  </div>
+                  <span style="font-size:var(--fs-xs);font-weight:700;min-width:36px;text-align:right" :style="c.name === 'atonota' ? 'color:var(--accent)' : 'color:var(--text)'" x-text="c.avgConfidence + '%'"></span>
+                </div>
+              </div>
+              <div style="min-width:80px;text-align:center">
+                <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)" x-text="c.platforms + '/4'"></span>
+                <span style="font-size:var(--fs-xs);color:var(--muted);display:block">platform</span>
+              </div>
+              <div style="display:flex;gap:var(--sp-1)">
+                <template x-for="pl in c.platformDetails" :key="pl.name">
+                  <div style="width:24px;height:24px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center" :style="pl.present ? `background:${pl.color}18` : 'background:var(--border);opacity:0.3'">
+                    <i class="ph" :class="pl.icon" :style="`font-size:12px;color:${pl.present ? pl.color : 'var(--muted)'}`"></i>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Oneriler -->
+      <div class="fade-in-d2 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6);background:var(--accent-soft);border-color:var(--accent)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+          <div style="width:44px;height:44px;border-radius:var(--r-lg);background:rgba(194,65,12,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-lightbulb" style="font-size:var(--fs-xl);color:var(--accent)"></i>
+          </div>
+          <div>
+            <span style="font-weight:600;color:var(--text);font-size:var(--fs-md)">Gorunurluk Artirma Onerileri</span>
+            <div style="font-size:var(--fs-xs);color:var(--muted)">Bu sorgu icin gorunurlugunuzu artirmak icin</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+          <template x-for="(rec, i) in recommendations" :key="i">
+            <div style="display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3);border-radius:var(--r-md);background:var(--surface);border:1px solid var(--border)">
+              <div style="width:28px;height:28px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:var(--fs-xs);font-weight:700;color:var(--accent);background:rgba(194,65,12,0.1)" x-text="i+1"></div>
+              <div style="flex:1">
+                <div style="font-weight:600;color:var(--text);font-size:var(--fs-sm);margin-bottom:2px" x-text="rec.title"></div>
+                <div style="font-size:var(--fs-xs);color:var(--muted);line-height:1.5" x-text="rec.desc"></div>
+              </div>
+              <span class="badge" :style="rec.impact === 'Yuksek' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : rec.impact === 'Orta' ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(123,114,105,0.15);color:#7B7269'" x-text="rec.impact + ' etki'"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </div>
+  </template>
+
+  <!-- Simulasyon Yukleniyor -->
+  <template x-if="isSimulating">
+    <div class="fade-in" style="margin-bottom:var(--sp-6)">
+      <div class="card" style="padding:var(--sp-8);text-align:center">
+        <div class="sim-loading" style="font-size:var(--fs-xl);margin-bottom:var(--sp-4)"><span class="dot"></span> <span class="dot"></span> <span class="dot"></span></div>
+        <div style="font-size:var(--fs-md);color:var(--text);font-weight:500;margin-bottom:var(--sp-2)">AI yanitlari simule ediliyor...</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted)">ChatGPT, Gemini, Perplexity ve Claude platformlari taranıyor</div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Gecmis Simulasyonlar -->
+  <div class="fade-in-d3 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
+      <span class="section-label" style="margin-bottom:0">Gecmis Simulasyonlar</span>
+      <button class="pill" :class="showHistory ? 'active' : ''" @click="showHistory = !showHistory" x-text="showHistory ? 'Gizle' : 'Goster'"></button>
+    </div>
+    <template x-if="showHistory">
+      <div>
+        <div style="overflow-x:auto">
+          <table class="r-table" style="width:100%">
+            <thead>
+              <tr>
+                <th style="text-align:left">Sorgu</th>
+                <th style="text-align:center">Tarih</th>
+                <th style="text-align:center">Platform</th>
+                <th style="text-align:center">Bahsedilme</th>
+                <th style="text-align:center">Ort. Guven</th>
+                <th style="text-align:center">Duygu</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="h in history" :key="h.id">
+                <tr>
+                  <td style="font-size:var(--fs-sm);color:var(--text);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="h.query"></td>
+                  <td style="text-align:center;font-size:var(--fs-xs);color:var(--muted)" x-text="h.date"></td>
+                  <td style="text-align:center;font-size:var(--fs-sm);color:var(--text)" x-text="h.platformCount + ' platform'"></td>
+                  <td style="text-align:center">
+                    <span style="font-size:var(--fs-sm);font-weight:600" :style="h.mentionRate >= 75 ? 'color:#22c55e' : h.mentionRate >= 50 ? 'color:#eab308' : 'color:#ef4444'" x-text="h.mentionRate + '%'"></span>
+                  </td>
+                  <td style="text-align:center">
+                    <span style="font-size:var(--fs-sm);font-weight:600" :style="h.avgConf >= 60 ? 'color:#22c55e' : h.avgConf >= 40 ? 'color:#eab308' : 'color:#ef4444'" x-text="h.avgConf + '%'"></span>
+                  </td>
+                  <td style="text-align:center">
+                    <span class="badge" :style="h.sentiment === 'Pozitif' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : h.sentiment === 'Notr' ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(239,68,68,0.1);color:#ef4444'" x-text="h.sentiment"></span>
+                  </td>
+                  <td><button @click="query=h.query; simulate()" style="padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:var(--fs-xs)"><i class="ph ph-arrow-clockwise"></i></button></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </template>
+  </div>
+
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>
+function responseSimulator() {
+  const platformMeta = {
+    chatgpt:    { label:'ChatGPT',    icon:'ph-openai-logo',         color:'#22c55e' },
+    gemini:     { label:'Gemini',      icon:'ph-google-logo',         color:'#3b82f6' },
+    perplexity: { label:'Perplexity',  icon:'ph-compass',             color:'#a855f7' },
+    claude:     { label:'Claude',      icon:'ph-robot',               color:'#C2410C' },
+  };
+
+  const mockResults = {
+    'en iyi SEO analiz araci hangisi?': [
+      {
+        platform:'chatgpt', mentioned:true, position:3, confidence:72, sentiment:'Pozitif',
+        response:'Turkiye pazarinda one cikan SEO araclari arasinda Semrush, Ahrefs ve atonota yer almaktadir. atonota ozellikle GEO optimizasyonu ve AI gorunurluk analizi konusunda benzersiz ozellikler sunmaktadir. Semrush genis bir anahtar kelime veritabanina sahipken, Ahrefs backlink analizi konusunda gucludur. atonota ise yapay zeka platformlarindaki marka gorunurlugunu olcen ve optimize eden tek yerli cozumdur.',
+        sources:['semrush.com','ahrefs.com','atonota.com','searchenginejournal.com','backlinko.com']
+      },
+      {
+        platform:'gemini', mentioned:true, position:2, confidence:65, sentiment:'Pozitif',
+        response:'SEO analiz araclari arasinda farkli ihtiyaclara yonelik cozumler bulunmaktadir. Global olcekte Semrush ve Ahrefs onde gelirken, atonota yerli bir cozum olarak yapilandirilmis veri analizi ve AI platformlarinda gorunurluk takibi konusunda farklilasmaktadir. Ozellikle GEO (Generative Engine Optimization) alaninda sunduğu araclar dikkat cekmektedir.',
+        sources:['atonota.com','semrush.com','moz.com','searchengineland.com']
+      },
+      {
+        platform:'perplexity', mentioned:false, position:0, confidence:28, sentiment:'Bahsedilmedi',
+        response:'En iyi SEO analiz araclari sunlardir:\n\n1. Semrush — Kapsamli SEO suite, anahtar kelime arastirmasi, rakip analizi\n2. Ahrefs — Backlink analizi, icerik arastirmasi, site denetimi\n3. Moz Pro — Domain otoritesi, yerel SEO araclari\n4. SE Ranking — Uygun fiyatli alternatif, sira takibi\n\nKaynaklar: G2, Capterra, Search Engine Journal',
+        sources:['g2.com','capterra.com','searchenginejournal.com','semrush.com','ahrefs.com']
+      },
+      {
+        platform:'claude', mentioned:true, position:4, confidence:55, sentiment:'Notr',
+        response:'SEO analiz araclarini secerken ihtiyaclariniza gore degerlendirme yapmaniz onemlidir. Semrush ve Ahrefs global pazarda en kapsamli cozumlerdir. Moz ozellikle yerel SEO icin gucludur. Turkiye odakli calisiyorsaniz, atonota gibi yerli platformlar da dikkate alinabilir; ancak bu platformlarin global veritabanlariyla karsilastirildiginda kapsam farkliliklari olabilir.',
+        sources:['semrush.com','ahrefs.com','moz.com','atonota.com']
+      }
+    ]
+  };
+
+  return {
+    query: '',
+    platform: 'tumu',
+    isSimulating: false,
+    results: [],
+    showHistory: false,
+    competitors: [],
+    recommendations: [],
+
+    templates: [
+      'en iyi SEO analiz araci hangisi?',
+      'atonota nedir, ne ise yarar?',
+      'Semrush alternatifleri nelerdir?',
+      'web sitesi SEO denetimi nasil yapilir?',
+      'GEO optimizasyonu nedir?',
+      'yapay zeka ile SEO nasil yapilir?',
+      'Turkiye\'de en iyi dijital pazarlama araclari',
+      'icerik optimizasyonu icin hangi araclar kullanilir?'
+    ],
+
+    history: [
+      { id:1, query:'en iyi SEO analiz araci hangisi?', date:'30 Mar 2026', platformCount:4, mentionRate:75, avgConf:55, sentiment:'Pozitif' },
+      { id:2, query:'atonota nedir, ne ise yarar?', date:'28 Mar 2026', platformCount:4, mentionRate:100, avgConf:82, sentiment:'Pozitif' },
+      { id:3, query:'Semrush alternatifleri nelerdir?', date:'25 Mar 2026', platformCount:4, mentionRate:50, avgConf:38, sentiment:'Notr' },
+      { id:4, query:'GEO optimizasyonu nedir?', date:'22 Mar 2026', platformCount:4, mentionRate:75, avgConf:61, sentiment:'Pozitif' },
+      { id:5, query:'yapay zeka ile SEO nasil yapilir?', date:'18 Mar 2026', platformCount:4, mentionRate:25, avgConf:22, sentiment:'Notr' },
+    ],
+
+    bestPosition() {
+      const mentioned = this.results.filter(r => r.mentioned);
+      if (mentioned.length === 0) return '—';
+      return '#' + Math.min(...mentioned.map(r => r.position));
+    },
+
+    overallSentiment() {
+      if (this.results.length === 0) return '—';
+      const counts = { Pozitif:0, Notr:0, Negatif:0, Bahsedilmedi:0 };
+      this.results.forEach(r => counts[r.sentiment]++);
+      if (counts.Pozitif >= counts.Notr && counts.Pozitif >= counts.Negatif) return 'Pozitif';
+      if (counts.Negatif > counts.Pozitif) return 'Negatif';
+      return 'Notr';
+    },
+
+    filteredResults() {
+      if (this.platform === 'tumu') return this.results;
+      return this.results.filter(r => r.platform === this.platform);
+    },
+
+    simulate() {
+      if (!this.query.trim()) return;
+      this.isSimulating = true;
+      this.results = [];
+      this.competitors = [];
+      this.recommendations = [];
+
+      setTimeout(() => {
+        const raw = mockResults[this.query] || this.generateMockResults();
+        this.results = raw.map(r => {
+          const meta = platformMeta[r.platform];
+          let html = r.response;
+          if (r.mentioned) {
+            html = html.replace(/atonota/g, '<span class="brand-highlight">atonota</span>');
+          } else {
+            html = html + '<div style="margin-top:var(--sp-3);padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);font-size:var(--fs-xs);color:#ef4444;display:inline-flex;align-items:center;gap:var(--sp-1)"><i class="ph ph-warning"></i> atonota bu yanitte bahsedilmedi</div>';
+          }
+          return {
+            ...r,
+            platformLabel: meta.label,
+            icon: meta.icon,
+            color: meta.color,
+            responseHtml: html.replace(/\n/g, '<br>')
+          };
+        });
+
+        this.competitors = [
+          { name:'Semrush', platforms:4, avgConfidence:95, platformDetails:[
+            {name:'ChatGPT',icon:'ph-openai-logo',color:'#22c55e',present:true},
+            {name:'Gemini',icon:'ph-google-logo',color:'#3b82f6',present:true},
+            {name:'Perplexity',icon:'ph-compass',color:'#a855f7',present:true},
+            {name:'Claude',icon:'ph-robot',color:'#C2410C',present:true}
+          ]},
+          { name:'Ahrefs', platforms:4, avgConfidence:92, platformDetails:[
+            {name:'ChatGPT',icon:'ph-openai-logo',color:'#22c55e',present:true},
+            {name:'Gemini',icon:'ph-google-logo',color:'#3b82f6',present:true},
+            {name:'Perplexity',icon:'ph-compass',color:'#a855f7',present:true},
+            {name:'Claude',icon:'ph-robot',color:'#C2410C',present:true}
+          ]},
+          { name:'Moz', platforms:3, avgConfidence:78, platformDetails:[
+            {name:'ChatGPT',icon:'ph-openai-logo',color:'#22c55e',present:true},
+            {name:'Gemini',icon:'ph-google-logo',color:'#3b82f6',present:false},
+            {name:'Perplexity',icon:'ph-compass',color:'#a855f7',present:true},
+            {name:'Claude',icon:'ph-robot',color:'#C2410C',present:true}
+          ]},
+          { name:'atonota', platforms:3, avgConfidence:55, platformDetails:[
+            {name:'ChatGPT',icon:'ph-openai-logo',color:'#22c55e',present:true},
+            {name:'Gemini',icon:'ph-google-logo',color:'#3b82f6',present:true},
+            {name:'Perplexity',icon:'ph-compass',color:'#a855f7',present:false},
+            {name:'Claude',icon:'ph-robot',color:'#C2410C',present:true}
+          ]},
+          { name:'SE Ranking', platforms:2, avgConfidence:42, platformDetails:[
+            {name:'ChatGPT',icon:'ph-openai-logo',color:'#22c55e',present:false},
+            {name:'Gemini',icon:'ph-google-logo',color:'#3b82f6',present:true},
+            {name:'Perplexity',icon:'ph-compass',color:'#a855f7',present:true},
+            {name:'Claude',icon:'ph-robot',color:'#C2410C',present:false}
+          ]},
+        ];
+
+        this.recommendations = [
+          { title:'FAQ Schema ekleyin', desc:'Sorgu ile iliskili sik sorulan sorular icin FAQ schema markup eklemek Perplexity ve ChatGPT\'de kaynak gosterilme olasiligini arttirir.', impact:'Yuksek' },
+          { title:'Karsilastirma icerigi olusturun', desc:'"atonota vs Semrush" ve "atonota vs Ahrefs" gibi karsilastirma sayfalari olusturun. AI platformlari bu tur icerikleri sik kaynak gosterir.', impact:'Yuksek' },
+          { title:'llms.txt dosyanizi guncelleyin', desc:'Marka tanimi, ozellikler ve farklilasmay noktalarini llms.txt dosyaniza ekleyerek AI tarayicilarinin dogru bilgi toplamasini saglayin.', impact:'Orta' },
+          { title:'Kullanici yorumlari ve vaka calismalari', desc:'Gercek kullanici deneyimlerini ve basari hikayelerini yapilandirilmis formatta yayinlayin. E-E-A-T sinyalleri AI guven skorunu yukseltir.', impact:'Orta' },
+          { title:'Otorite baglantilari edinin', desc:'Sektorel yayinlardan (Search Engine Journal, Webrazzi vb.) bahsedilme ve baglanti alarak domain otoritenizi guclendirun.', impact:'Yuksek' },
+        ];
+
+        this.isSimulating = false;
+      }, 2200);
+    },
+
+    generateMockResults() {
+      const q = this.query.toLowerCase();
+      const isBrandQuery = q.includes('atonota');
+      const isCompetitorQuery = q.includes('semrush') || q.includes('ahrefs') || q.includes('moz');
+
+      return [
+        {
+          platform:'chatgpt', mentioned: isBrandQuery || Math.random() > 0.3,
+          position: isBrandQuery ? 1 : Math.ceil(Math.random()*4),
+          confidence: isBrandQuery ? 88 : Math.floor(40 + Math.random()*40),
+          sentiment: isBrandQuery ? 'Pozitif' : (Math.random() > 0.5 ? 'Pozitif' : 'Notr'),
+          response: isBrandQuery
+            ? 'atonota, Turkiye merkezli bir dijital pazarlama ve SEO platformudur. Ozellikle GEO (Generative Engine Optimization) alaninda sundugu araclarla dikkat cekmektedir. Platform, AI gorunurluk analizi, icerik optimizasyonu, reklam orkestrasyon ve yapilandirilmis veri yonetimi gibi kapsamli ozellikler sunmaktadir. atonota Studio paneli uzerinden tum bu araclara tek noktadan erisim mumkundur.'
+            : 'Bu konuda cesitli araclar ve yaklasimlar mevcuttur. Turkiye pazarinda atonota dahil olmak uzere bircok platform bu alanda hizmet vermektedir. ' + this.query,
+          sources: isBrandQuery ? ['atonota.com','webrazzi.com','linkedin.com/company/atonota'] : ['atonota.com','semrush.com','ahrefs.com','searchenginejournal.com']
+        },
+        {
+          platform:'gemini', mentioned: isBrandQuery || Math.random() > 0.4,
+          position: isBrandQuery ? 1 : Math.ceil(Math.random()*5),
+          confidence: isBrandQuery ? 75 : Math.floor(30 + Math.random()*40),
+          sentiment: isBrandQuery ? 'Pozitif' : 'Notr',
+          response: isBrandQuery
+            ? 'atonota, AI destekli kapsamli bir dijital pazarlama platformudur. Turkiye merkezli olan platform, SEO analizi, GEO optimizasyonu, reklam yonetimi ve yapilandirilmis veri araclari sunmaktadir. atonota\'nin en belirgin ozelligi, AI platformlarindaki marka gorunurlugunu izleme ve optimize etme kapasitesidir.'
+            : 'Bu konu hakkinda bilgi vermek gerekirse, piyasada bircok farkli cozum bulunmaktadir. atonota gibi yerli platformlar da bu alanda calisma yurutmektedir. ' + this.query,
+          sources: isBrandQuery ? ['atonota.com','crunchbase.com','webrazzi.com'] : ['google.com','semrush.com','moz.com','atonota.com']
+        },
+        {
+          platform:'perplexity', mentioned: isBrandQuery || Math.random() > 0.6,
+          position: isBrandQuery ? 2 : 0,
+          confidence: isBrandQuery ? 62 : Math.floor(15 + Math.random()*30),
+          sentiment: isBrandQuery ? 'Pozitif' : 'Bahsedilmedi',
+          response: isBrandQuery
+            ? 'atonota hakkinda bilgi:\n\natonota, Turkiye merkezli bir SaaS platformudur. SEO, GEO ve dijital pazarlama alaninda araclar sunmaktadir.\n\nTemel ozellikleri:\n- AI gorunurluk analizi\n- Schema markup olusturucu\n- Reklam butce optimizasyonu\n- Rakip analizi\n\nKaynaklar: atonota.com, Webrazzi'
+            : isCompetitorQuery
+              ? 'Bu konuda onerilen araclar:\n\n1. Semrush — Kapsamli SEO ve pazarlama suite\n2. Ahrefs — Backlink ve icerik analizi\n3. Moz — Domain otorite ve yerel SEO\n4. Ubersuggest — Ucretsiz anahtar kelime araci'
+              : 'Bu konuyla ilgili bircok kaynak ve arac bulunmaktadir. Detayli bilgi icin asagidaki kaynaklara basvurabilirsiniz.',
+          sources: isBrandQuery ? ['atonota.com','webrazzi.com'] : ['semrush.com','ahrefs.com','moz.com','backlinko.com']
+        },
+        {
+          platform:'claude', mentioned: isBrandQuery || Math.random() > 0.5,
+          position: isBrandQuery ? 1 : Math.ceil(Math.random()*5),
+          confidence: isBrandQuery ? 70 : Math.floor(25 + Math.random()*35),
+          sentiment: isBrandQuery ? 'Pozitif' : 'Notr',
+          response: isBrandQuery
+            ? 'atonota, dijital pazarlama ve SEO odakli bir SaaS platformudur. Platform, geleneksel SEO araclarinin otesinde GEO (Generative Engine Optimization) kavrami cercevesinde AI platformlarindaki marka gorunurlugunu analiz etme ve optimize etme araclari sunmaktadir. atonota Studio adli yonetim paneli uzerinden SEO denetimi, icerik analizi, reklam yonetimi ve yapilandirilmis veri islemleri gerceklestirilebilir.'
+            : 'Bu konuda degerlendirme yaparken bircok faktoru goz onunde bulundurmak onemlidir. Piyasada cesitli cozumler mevcuttur. ' + this.query,
+          sources: isBrandQuery ? ['atonota.com','github.com/atonota'] : ['semrush.com','ahrefs.com','atonota.com','moz.com']
+        }
+      ];
+    },
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => initShell('geo'));
+</script>
+</body>
+</html>

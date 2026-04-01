@@ -175,6 +175,145 @@
         </template>
       </div>
 
+      <!-- Hreflang Audit -->
+      <div class="fade-in-d3 card" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)">
+        <div style="padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3)">
+          <div style="display:flex;align-items:center;gap:var(--sp-2)">
+            <i class="ph ph-translate" style="color:var(--accent);font-size:var(--fs-lg)"></i>
+            <span class="section-label" style="margin-bottom:0">Hreflang Audit</span>
+          </div>
+          <div style="display:flex;gap:var(--sp-2)">
+            <span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">3 Doğru</span>
+            <span class="badge" style="background:rgba(234,179,8,0.12);color:#eab308">2 Eksik</span>
+            <span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">1 Hatalı</span>
+          </div>
+        </div>
+
+        <!-- Özet Bilgi -->
+        <div style="padding:var(--sp-4) var(--sp-5);background:rgba(59,130,246,0.06);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--sp-2)">
+          <i class="ph ph-info" style="color:#3b82f6;flex-shrink:0"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text-soft)">Hreflang etiketleri arama motorlarına sayfanın hangi dil/bölge için hedeflendiğini bildirir. Eksik veya hatalı etiketler çok dilli sitelerde sıralama kaybına neden olur.</span>
+        </div>
+
+        <!-- Tablo -->
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:var(--fs-sm)">
+            <thead>
+              <tr style="background:var(--surface-2)">
+                <th style="padding:var(--sp-3) var(--sp-4);text-align:left;font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);white-space:nowrap">Dil / Bölge</th>
+                <th style="padding:var(--sp-3) var(--sp-4);text-align:left;font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);white-space:nowrap">Hreflang Değeri</th>
+                <th style="padding:var(--sp-3) var(--sp-4);text-align:left;font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);white-space:nowrap">Hedef URL</th>
+                <th style="padding:var(--sp-3) var(--sp-4);text-align:left;font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);white-space:nowrap">Karşılıklı Ref.</th>
+                <th style="padding:var(--sp-3) var(--sp-4);text-align:left;font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);white-space:nowrap">Durum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Doğru -->
+              <tr style="border-top:1px solid var(--border)">
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                    <span style="font-size:var(--fs-lg)">🇹🇷</span>
+                    <span style="color:var(--text);font-weight:500">Türkçe</span>
+                  </div>
+                </td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><code style="font-size:var(--fs-xs);background:var(--surface-2);padding:2px 6px;border-radius:var(--r-xs);color:var(--text)">tr-TR</code></td>
+                <td style="padding:var(--sp-3) var(--sp-4);color:var(--muted);font-family:monospace;font-size:var(--fs-xs)">/tr/anasayfa</td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Var</span></td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">Doğru</span></td>
+              </tr>
+              <tr style="border-top:1px solid var(--border)">
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                    <span style="font-size:var(--fs-lg)">🇬🇧</span>
+                    <span style="color:var(--text);font-weight:500">İngilizce</span>
+                  </div>
+                </td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><code style="font-size:var(--fs-xs);background:var(--surface-2);padding:2px 6px;border-radius:var(--r-xs);color:var(--text)">en-GB</code></td>
+                <td style="padding:var(--sp-3) var(--sp-4);color:var(--muted);font-family:monospace;font-size:var(--fs-xs)">/en/home</td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Var</span></td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">Doğru</span></td>
+              </tr>
+              <tr style="border-top:1px solid var(--border)">
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                    <span style="font-size:var(--fs-lg)">🌍</span>
+                    <span style="color:var(--text);font-weight:500">x-default</span>
+                  </div>
+                </td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><code style="font-size:var(--fs-xs);background:var(--surface-2);padding:2px 6px;border-radius:var(--r-xs);color:var(--text)">x-default</code></td>
+                <td style="padding:var(--sp-3) var(--sp-4);color:var(--muted);font-family:monospace;font-size:var(--fs-xs)">/home</td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">✅ Var</span></td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(34,197,94,0.12);color:#22c55e">Doğru</span></td>
+              </tr>
+              <!-- Eksik -->
+              <tr style="border-top:1px solid var(--border);background:rgba(234,179,8,0.04)">
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                    <span style="font-size:var(--fs-lg)">🇩🇪</span>
+                    <span style="color:var(--text);font-weight:500">Almanca</span>
+                  </div>
+                </td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><code style="font-size:var(--fs-xs);background:var(--surface-2);padding:2px 6px;border-radius:var(--r-xs);color:var(--text)">de-DE</code></td>
+                <td style="padding:var(--sp-3) var(--sp-4);color:var(--muted);font-family:monospace;font-size:var(--fs-xs)">/de/startseite</td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(234,179,8,0.12);color:#eab308">⚠ Eksik</span></td>
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <span class="badge" style="background:rgba(234,179,8,0.12);color:#eab308">Eksik</span>
+                  <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Karşılıklı referans yok</div>
+                </td>
+              </tr>
+              <tr style="border-top:1px solid var(--border);background:rgba(234,179,8,0.04)">
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                    <span style="font-size:var(--fs-lg)">🇫🇷</span>
+                    <span style="color:var(--text);font-weight:500">Fransızca</span>
+                  </div>
+                </td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><code style="font-size:var(--fs-xs);background:var(--surface-2);padding:2px 6px;border-radius:var(--r-xs);color:var(--text)">fr</code></td>
+                <td style="padding:var(--sp-3) var(--sp-4);color:var(--muted);font-family:monospace;font-size:var(--fs-xs)">—</td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">❌ Yok</span></td>
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <span class="badge" style="background:rgba(234,179,8,0.12);color:#eab308">Eksik</span>
+                  <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">URL tanımlanmamış</div>
+                </td>
+              </tr>
+              <!-- Hatalı -->
+              <tr style="border-top:1px solid var(--border);background:rgba(239,68,68,0.04)">
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                    <span style="font-size:var(--fs-lg)">🇪🇸</span>
+                    <span style="color:var(--text);font-weight:500">İspanyolca</span>
+                  </div>
+                </td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><code style="font-size:var(--fs-xs);background:rgba(239,68,68,0.1);padding:2px 6px;border-radius:var(--r-xs);color:#ef4444">esp</code></td>
+                <td style="padding:var(--sp-3) var(--sp-4);color:var(--muted);font-family:monospace;font-size:var(--fs-xs)">/es/inicio</td>
+                <td style="padding:var(--sp-3) var(--sp-4)"><span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">❌ Yok</span></td>
+                <td style="padding:var(--sp-3) var(--sp-4)">
+                  <span class="badge" style="background:rgba(239,68,68,0.12);color:#ef4444">Hatalı</span>
+                  <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Geçersiz dil kodu — <code style="color:#ef4444">es-ES</code> kullanın</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Öneriler -->
+        <div style="padding:var(--sp-4) var(--sp-5);border-top:1px solid var(--border);display:flex;flex-direction:column;gap:var(--sp-2)">
+          <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:var(--sp-1)">Öneriler</div>
+          <div style="display:flex;align-items:flex-start;gap:var(--sp-2)">
+            <i class="ph ph-lightbulb" style="color:var(--accent);flex-shrink:0;margin-top:1px"></i>
+            <span style="font-size:var(--fs-sm);color:var(--text-soft)"><strong style="color:var(--text)">de-DE:</strong> /de/startseite sayfasına da <code style="font-size:var(--fs-xs);background:var(--surface-2);padding:1px 5px;border-radius:3px">hreflang="tr-TR"</code> etiketi ekleyin.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:var(--sp-2)">
+            <i class="ph ph-lightbulb" style="color:var(--accent);flex-shrink:0;margin-top:1px"></i>
+            <span style="font-size:var(--fs-sm);color:var(--text-soft)"><strong style="color:var(--text)">Fransızca:</strong> Hedef URL belirleyin ve hreflang değerini <code style="font-size:var(--fs-xs);background:var(--surface-2);padding:1px 5px;border-radius:3px">fr-FR</code> olarak güncelleyin.</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:var(--sp-2)">
+            <i class="ph ph-warning" style="color:#ef4444;flex-shrink:0;margin-top:1px"></i>
+            <span style="font-size:var(--fs-sm);color:var(--text-soft)"><strong style="color:var(--text)">İspanyolca:</strong> <code style="font-size:var(--fs-xs);background:var(--surface-2);padding:1px 5px;border-radius:3px">esp</code> geçersiz ISO 639-1 kodu. <code style="font-size:var(--fs-xs);background:var(--surface-2);padding:1px 5px;border-radius:3px">es</code> veya <code style="font-size:var(--fs-xs);background:var(--surface-2);padding:1px 5px;border-radius:3px">es-ES</code> kullanın.</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Download Button -->
       <div class="fade-in-d3" style="text-align:center;margin-bottom:var(--sp-6)">
         <button class="btn-primary" style="font-size:var(--fs-sm);padding:var(--sp-3) var(--sp-6)"><i class="ph ph-file-pdf"></i> Tum Onerileri Indir (PDF)</button>
