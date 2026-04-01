@@ -6,7 +6,8 @@
  */
 
 import { KEY_MAP, MENU } from './navigation-config';
-import { togglePageFav, toggleFav } from './favorites';
+import { togglePageFav, toggleFav, toggleFavDropdown, closeFavDropdown, initFavBackdrop } from './favorites';
+import { initAiChatModal, toggleAiModal, closeAiModal } from './ai-chat-modal';
 import { renderTopbar } from './topbar';
 import { renderSidebar, isSidebarLocked } from './sidebar';
 import { renderBreadcrumb } from './breadcrumb';
@@ -82,6 +83,8 @@ export function initShell(pageKey?: string): void {
   keyboardManager.register({ key: 'Escape' }, () => {
     document.getElementById('spotlight-backdrop')?.classList.remove('open');
     document.getElementById('ud-backdrop')?.classList.remove('show');
+    closeFavDropdown();
+    closeAiModal();
     tmCloseAll();
     const np = document.getElementById('np-panel');
     if (np && np.classList.contains('open')) toggleNotifPanel();
@@ -107,6 +110,8 @@ export function initShell(pageKey?: string): void {
   buildTopMenu();
   renderSidebar(base, key);
   renderBreadcrumb(base, key);
+  initFavBackdrop();
+  initAiChatModal();
   renderBottomNav(base, key);
   renderSpotlight(base);
   initSpotlightNav(base);
@@ -210,6 +215,9 @@ window.railClick = function windowRailClick(btn: HTMLElement): void {
 window.toggleNotifPanel = toggleNotifPanel;
 window.togglePageFav = togglePageFav;
 window.toggleFav = toggleFav;
+window.toggleFavDropdown = toggleFavDropdown;
+window.toggleAiModal = toggleAiModal;
+window.closeAiModal = closeAiModal;
 window.showToast = showToast;
 window.tmCloseAll = tmCloseAll;
 window.buildTopMenu = buildTopMenu;

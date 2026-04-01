@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cTrend.setOption({
     tooltip:{trigger:'axis',...tooltipStyle},
     legend:{data:['Genel','Deneyim','Uzmanlik','Otorite','Guvenilirlik'],bottom:0,textStyle:{color:'#7B7269',fontSize:11},itemWidth:12,itemHeight:8},
-    grid:{left:'40px',right:'20px',top:'20px',bottom:'50px'},
+    grid:chartGrid({bottom:'3.125rem'}),
     xAxis:{type:'category',data:weeks,axisLabel:{color:'#7B7269',fontSize:11},axisLine:{lineStyle:{color:'rgba(123,114,105,0.3)'}},axisTick:{show:false}},
     yAxis:{type:'value',min:40,max:100,axisLabel:{color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
     series:[

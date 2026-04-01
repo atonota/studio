@@ -119,6 +119,9 @@ function applyThemeTokens(): void {
     ? `rgba(30,26,20,${panelOp.toFixed(2)})`
     : `rgba(255,255,255,${panelOp.toFixed(2)})`);
 
+  // Charts
+  R.style.setProperty('--chart-clear-space', gf('chart_clear_space', 0.25) + 'rem');
+
   // Component style data attributes
   R.setAttribute('data-card-style', g('card_style', 'elevated'));
   R.setAttribute('data-button-style', g('button_style', 'rounded'));

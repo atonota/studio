@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
   anchor.setOption({
     tooltip: { ...t.tooltip, trigger: 'axis', axisPointer: { type: 'shadow' } },
-    grid: { left: 120, right: 40, top: 16, bottom: 16 },
+    grid: chartGrid({left:'7.5rem',right:'2.5rem',bottom:'1rem'}),
     xAxis: { type: 'value', max: 50, axisLabel: { color: t.muted, fontSize: 10, formatter: v => v + '%' }, splitLine: { lineStyle: { color: t.border, type: 'dashed' } } },
     yAxis: { type: 'category', data: anchorData.map(d => d.name).reverse(), axisLabel: { color: t.text, fontSize: 11 }, axisLine: { lineStyle: { color: t.border } } },
     series: [{

@@ -19,30 +19,156 @@
   }
 }
 
+// ── Favorites Double-Button Group ──
+.bc-fav-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
 .bc-star {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--muted);
-  font-size: 1rem;
-  padding: 4px 8px;
-  border-radius: var(--r-sm);
+  color: var(--text);
+  padding: 6px 10px;
   transition: color 0.15s, background 0.15s;
   flex-shrink: 0;
   display: flex;
   align-items: center;
 
+  i { font-size: 1.25rem; }
+
   &:hover {
     color: var(--accent);
-    background: var(--surface-2);
+    background: var(--card-bg);
   }
 }
 
-.bc-star-active {
+.bc-star.bc-star-active {
   color: var(--accent);
+
+  i { color: var(--accent); }
 
   &:hover {
     color: var(--muted);
+    i { color: var(--muted); }
+  }
+}
+
+.bc-fav-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.bc-fav-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  transition: color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+
+  i { font-size: 0.625rem; }
+
+  &:hover {
+    color: var(--accent);
+    background: var(--card-bg);
+  }
+}
+
+// ── Favorites Backdrop ──
+#fav-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 201;
+  backdrop-filter: blur(var(--blur-level)) brightness(0.75);
+  -webkit-backdrop-filter: blur(var(--blur-level)) brightness(0.75);
+  background: rgba(0, 0, 0, var(--backdrop-opacity));
+
+  &.show {
+    display: block;
+  }
+}
+
+// ── Favorites Dropdown ──
+@keyframes favDropDown {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#fav-dropdown {
+  position: fixed;
+  min-width: 240px;
+  max-width: 320px;
+  background: var(--color-glass-panel);
+  backdrop-filter: blur(var(--blur-level)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-level)) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 4px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, calc(0.25 * var(--shadow-scale)));
+  z-index: 202;
+  animation: favDropDown 0.18s cubic-bezier(0.34, 1.2, 0.64, 1);
+  max-height: 50vh;
+  overflow-y: auto;
+  display: none;
+
+  &.show { display: block; }
+}
+
+.fav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  color: var(--text-soft);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  transition: background 0.1s, color 0.1s;
+
+  &:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    i { color: var(--accent); }
+  }
+
+  i {
+    font-size: 0.75rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+}
+
+.fav-empty {
+  padding: 20px 16px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+// ── Mobile: bottom-nav always on top of backdrop ──
+@media (max-width: 767px) {
+  #fav-backdrop {
+    bottom: var(--bnav-h);
+  }
+
+  #fav-dropdown {
+    min-width: 200px;
+    right: -8px;
   }
 }
 

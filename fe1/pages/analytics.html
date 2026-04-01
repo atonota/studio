@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mkArea = (name,color,data) => ({name,type:'line',stack:'total',smooth:true,symbol:'none',lineStyle:{width:0},areaStyle:{color},data});
   cStacked.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
-    grid:{left:40,right:16,top:16,bottom:28},
+    grid:chartGrid(),
     xAxis:{type:'category',data:days,boundaryGap:false,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     series:[

@@ -133,6 +133,7 @@ export interface ThemeState {
   backdropOpacity: number;
   panelOpacity: number;
   customCss: string;
+  chartClearSpace: number;
 }
 
 export interface ImportResult {
@@ -264,6 +265,9 @@ declare global {
     toggleNotifPanel: () => void;
     togglePageFav: () => void;
     toggleFav: (btn: HTMLElement) => void;
+    toggleFavDropdown: () => void;
+    toggleAiModal: () => void;
+    closeAiModal: () => void;
     showToast: (msg: string, duration?: number) => void;
     tmCloseAll: () => void;
     buildTopMenu: () => void;
@@ -280,6 +284,8 @@ declare global {
     MOCK: unknown;
     getChartTheme: () => ChartTheme;
     refreshAllCharts: () => void;
+    chartGrid: (overrides?: Record<string, unknown>) => Record<string, unknown>;
+    chartClearPos: () => Record<string, unknown>;
     exportToCSV: (headers: string[], rows: string[][], filename?: string) => void;
     paginate: <T>(data: T[], page: number, perPage?: number) => unknown;
     generateTimeSeriesForRange: (rangeDays: string | number, seriesConfigs: unknown[]) => unknown;

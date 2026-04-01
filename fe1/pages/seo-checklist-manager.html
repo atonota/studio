@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>SEO Checklist Yonetimi — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="table" x-data="seoChecklist()">
+
+  <!-- Baslik + Tenant + Export -->
+  <div class="fade-in" style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-4)">
+    <div>
+      <h1 class="page-title">SEO Checklist Yonetimi</h1>
+      <p class="page-sub">Drupal SEO Checklist entegrasyonu — otomatik & manuel denetim</p>
+    </div>
+    <div style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
+      <select x-model="tenant" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:var(--fs-sm);cursor:pointer">
+        <option value="tumu">Tum Tenantlar</option>
+        <option value="astor">Astor Tekstil</option>
+        <option value="demo">Demo Site</option>
+        <option value="test">Test Workspace</option>
+      </select>
+      <button style="display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-2) var(--sp-4);background:var(--accent);color:#fff;border:none;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;cursor:pointer">
+        <i class="ph ph-export"></i> Toplu Disa Aktar
+      </button>
+    </div>
+  </div>
+
+  <!-- Genel Tamamlanma Orani -->
+  <div class="fade-in card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3);flex-wrap:wrap;gap:var(--sp-2)">
+      <div>
+        <span style="font-weight:600;color:var(--text);font-size:var(--fs-base)">Genel Tamamlanma Orani</span>
+        <span style="font-size:var(--fs-sm);color:var(--muted);margin-left:var(--sp-2)">15/32 madde tamamlandi</span>
+      </div>
+      <span style="font-size:var(--fs-2xl);font-weight:300;color:var(--accent)">%47</span>
+    </div>
+    <div style="height:8px;background:var(--border);border-radius:var(--r-full);overflow:hidden">
+      <div style="height:100%;width:47%;background:var(--accent);border-radius:var(--r-full);transition:width .4s"></div>
+    </div>
+    <div style="display:flex;gap:var(--sp-5);margin-top:var(--sp-3);flex-wrap:wrap">
+      <span style="font-size:var(--fs-sm);color:var(--muted);display:flex;align-items:center;gap:var(--sp-1)"><span style="color:#22c55e;font-size:var(--fs-base)">✅</span> 15 Tamamlandi</span>
+      <span style="font-size:var(--fs-sm);color:var(--muted);display:flex;align-items:center;gap:var(--sp-1)"><span style="color:#eab308;font-size:var(--fs-base)">⚠️</span> 10 Eksik/Uyari</span>
+      <span style="font-size:var(--fs-sm);color:var(--muted);display:flex;align-items:center;gap:var(--sp-1)"><span style="color:#ef4444;font-size:var(--fs-base)">❌</span> 7 Hata</span>
+    </div>
+  </div>
+
+  <!-- Kategori filtre -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
+    <template x-for="c in categories">
+      <button @click="activeCategory=c.key" class="pill" :class="activeCategory===c.key ? 'active' : ''" x-text="c.label"></button>
+    </template>
+  </div>
+
+  <!-- Checklist Kategorileri -->
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-4)">
+    <template x-for="cat in filteredCategories()" :key="cat.key">
+      <div class="card" style="overflow:hidden">
+
+        <!-- Kategori Baslik -->
+        <div @click="cat.open = !cat.open" style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-5);cursor:pointer;border-bottom:1px solid var(--border)" :style="cat.open ? '' : 'border-bottom:none'">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <div :style="`width:36px;height:36px;border-radius:var(--r-md);background:${cat.color}20;display:flex;align-items:center;justify-content:center;flex-shrink:0`">
+              <i :class="'ph ' + cat.icon" :style="`font-size:var(--fs-lg);color:${cat.color}`"></i>
+            </div>
+            <div>
+              <span style="font-weight:600;color:var(--text);font-size:var(--fs-base)" x-text="cat.label"></span>
+              <span style="font-size:var(--fs-xs);color:var(--muted);margin-left:var(--sp-2)" x-text="completionText(cat)"></span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <div style="width:80px;height:6px;background:var(--border);border-radius:var(--r-full);overflow:hidden">
+              <div :style="`height:100%;width:${completionPct(cat)}%;background:${cat.color};border-radius:var(--r-full)`"></div>
+            </div>
+            <span style="font-size:var(--fs-sm);font-weight:600" :style="`color:${cat.color}`" x-text="completionPct(cat) + '%'"></span>
+            <i class="ph" :class="cat.open ? 'ph-caret-up' : 'ph-caret-down'" style="font-size:var(--fs-sm);color:var(--muted)"></i>
+          </div>
+        </div>
+
+        <!-- Madde Listesi -->
+        <div x-show="cat.open" x-transition style="padding:var(--sp-2) 0">
+          <template x-for="(item, idx) in cat.items" :key="idx">
+            <div style="display:flex;align-items:center;gap:var(--sp-4);padding:var(--sp-3) var(--sp-5);border-bottom:1px solid var(--border)" :style="idx === cat.items.length-1 ? 'border-bottom:none' : ''">
+
+              <!-- Durum ikonu -->
+              <span style="font-size:var(--fs-lg);flex-shrink:0" x-text="item.status === 'ok' ? '✅' : item.status === 'warn' ? '⚠️' : '❌'"></span>
+
+              <!-- Aciklama -->
+              <div style="flex:1;min-width:0">
+                <div style="font-size:var(--fs-sm);color:var(--text);font-weight:500" x-text="item.label"></div>
+                <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:2px" x-text="item.desc"></div>
+              </div>
+
+              <!-- Badge: Otomatik / Manuel -->
+              <span class="badge" :style="item.auto ? 'background:rgba(59,130,246,0.1);color:#3b82f6' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="item.auto ? 'Otomatik' : 'Manuel'" style="flex-shrink:0"></span>
+
+              <!-- Son kontrol -->
+              <span style="font-size:var(--fs-xs);color:var(--muted);flex-shrink:0;min-width:80px;text-align:right" x-text="item.checked"></span>
+
+            </div>
+          </template>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>
+function seoChecklist() {
+  return {
+    tenant: 'tumu',
+    activeCategory: 'tumu',
+    categories: [
+      { key:'tumu', label:'Tumu' },
+      { key:'clean-urls', label:'Clean URLs' },
+      { key:'meta-tags', label:'Meta Tags' },
+      { key:'search-engines', label:'Search Engines' },
+      { key:'content', label:'Icerik' },
+      { key:'on-page', label:'On-Page' },
+      { key:'security', label:'Guvenlik' },
+      { key:'mobile', label:'Mobil' },
+      { key:'geo-ai', label:'GEO / AI' },
+    ],
+    data: [
+      {
+        key: 'clean-urls', label: 'Clean URLs', icon: 'ph-link-simple', color: '#3b82f6', open: true,
+        items: [
+          { label:'URL yapisi kisa ve anlamli', desc:'Tum sayfa URL\'leri SEO dostu format kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'URL\'lerde ozel karakter yok', desc:'Bosluk, Turkce karakter ve ozel sembol kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Canonical tag dogru tanimli', desc:'Duplicate icerik riski olan sayfalarda canonical etiket', auto:true, status:'warn', checked:'2026-03-29' },
+          { label:'301 yonlendirmeleri duzenli', desc:'Kirık link ve eski URL yonlendirme zinciri kontrolu', auto:true, status:'error', checked:'2026-03-28' },
+        ]
+      },
+      {
+        key: 'meta-tags', label: 'Meta Tags', icon: 'ph-tag', color: '#a855f7', open: false,
+        items: [
+          { label:'Title tag 60 karakter altinda', desc:'Tum sayfalarda title uzunlugu sinir kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Meta description 160 karakter altinda', desc:'Uzun meta description kırpılma kontrolu', auto:true, status:'warn', checked:'2026-03-30' },
+          { label:'Open Graph etiketleri eksiksiz', desc:'og:title, og:description, og:image kontrolu', auto:true, status:'error', checked:'2026-03-29' },
+          { label:'Duplicate title yok', desc:'Sitede ayni title kullanan sayfa kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+        ]
+      },
+      {
+        key: 'search-engines', label: 'Search Engines', icon: 'ph-magnifying-glass', color: '#22c55e', open: false,
+        items: [
+          { label:'sitemap.xml mevcut ve gecerli', desc:'XML sitemap varligi ve format dogrulugu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'robots.txt dogru yapilandirilmis', desc:'Tarayici izin ve engel kuralları kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Google Search Console bagli', desc:'GSC dogrulama ve veri akisi aktif mi', auto:false, status:'ok', checked:'2026-03-25' },
+          { label:'Bing Webmaster Tools bagli', desc:'Bing indexleme ve performans takibi', auto:false, status:'warn', checked:'2026-03-20' },
+        ]
+      },
+      {
+        key: 'content', label: 'Icerik', icon: 'ph-article', color: '#f97316', open: false,
+        items: [
+          { label:'H1 etiketi tum sayfalarda mevcut', desc:'Eksik veya birden fazla H1 kullanan sayfa kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Icerik 300 kelime uzerinde', desc:'Ince icerik (thin content) sayfa kontrolu', auto:true, status:'warn', checked:'2026-03-29' },
+          { label:'Tum gorsellerde alt text var', desc:'Eksik img alt attribute kontrolu', auto:true, status:'error', checked:'2026-03-28' },
+          { label:'Icerik guncellik kontrolu', desc:'Son 6 ayda guncellenmemis sayfalar', auto:false, status:'warn', checked:'2026-03-15' },
+        ]
+      },
+      {
+        key: 'on-page', label: 'On-Page SEO', icon: 'ph-text-align-left', color: '#06b6d4', open: false,
+        items: [
+          { label:'Keyword yogunlugu uygun araliginda', desc:'Hedef sayfalarda %1-3 araliginda keyword yogunlugu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Internal linking yeterli duzeyde', desc:'Sayfa basına min. 3 ic link kontrolu', auto:true, status:'warn', checked:'2026-03-29' },
+          { label:'Breadcrumb navigasyon mevcut', desc:'Strukturel breadcrumb markup ve gosterim kontrolu', auto:true, status:'error', checked:'2026-03-28' },
+        ]
+      },
+      {
+        key: 'security', label: 'Guvenlik', icon: 'ph-shield-check', color: '#22c55e', open: false,
+        items: [
+          { label:'HTTPS aktif ve zorunlu', desc:'HTTP -> HTTPS yonlendirme kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'SSL sertifikasi gecerli', desc:'Sertifika tarihi ve CN eslesme kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Mixed content bulunmuyor', desc:'HTTP kaynakli resim/script kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'HTTP guvenlik headerlari dogru', desc:'HSTS, CSP, X-Frame-Options kontrolu', auto:true, status:'warn', checked:'2026-03-29' },
+        ]
+      },
+      {
+        key: 'mobile', label: 'Mobil', icon: 'ph-device-mobile', color: '#8b5cf6', open: false,
+        items: [
+          { label:'Responsive tasarim aktif', desc:'Viewport ve media query kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Core Web Vitals geciyor', desc:'LCP < 2.5s, INP < 200ms, CLS < 0.1 kontrolu', auto:true, status:'warn', checked:'2026-03-29' },
+          { label:'Mobile-first indexleme hazir', desc:'Mobil ve masaustu icerik uyumu kontrolu', auto:true, status:'ok', checked:'2026-03-30' },
+          { label:'Touch target boyutlari yeterli', desc:'Minimum 44x44px dokunma hedef alanı kontrolu', auto:true, status:'warn', checked:'2026-03-28' },
+        ]
+      },
+      {
+        key: 'geo-ai', label: 'GEO / AI', icon: 'ph-robot', color: '#C2410C', open: true,
+        items: [
+          { label:'llms.txt dosyasi mevcut', desc:'AI tarayicilari icin makine-okunakli bilgi dosyasi', auto:true, status:'error', checked:'2026-03-28' },
+          { label:'JSON-LD Organization schema var', desc:'Kurumsal kimlik yapilandirilmis veri markup\'i', auto:true, status:'error', checked:'2026-03-28' },
+          { label:'AI crawler robots.txt izni verilmis', desc:'GPTBot, ClaudeBot, PerplexityBot izin kontrolu', auto:true, status:'warn', checked:'2026-03-29' },
+          { label:'AI platform mention izleme aktif', desc:'ChatGPT, Gemini vb. marka bahis takibi', auto:false, status:'ok', checked:'2026-03-25' },
+          { label:'Citability skoru 60 uzerinde', desc:'AI platformlarinda kaynak gosterilme orani', auto:true, status:'warn', checked:'2026-03-29' },
+        ]
+      },
+    ],
+
+    filteredCategories() {
+      if (this.activeCategory === 'tumu') return this.data;
+      return this.data.filter(c => c.key === this.activeCategory);
+    },
+    completionText(cat) {
+      const ok = cat.items.filter(i => i.status === 'ok').length;
+      return `${ok}/${cat.items.length}`;
+    },
+    completionPct(cat) {
+      const ok = cat.items.filter(i => i.status === 'ok').length;
+      return Math.round((ok / cat.items.length) * 100);
+    },
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => initShell('seo'));
+</script>
+</body>
+</html>

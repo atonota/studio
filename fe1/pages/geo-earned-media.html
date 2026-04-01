@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cSource = echarts.init(document.getElementById('chart-ai-source'));
   cSource.setOption({
     tooltip:{trigger:'axis',axisPointer:{type:'shadow'},...tooltipStyle},
-    grid:{left:'110px',right:'60px',top:'10px',bottom:'30px'},
+    grid:chartGrid({left:'6.875rem',right:'3.75rem',bottom:'1.875rem'}),
     xAxis:{type:'value',max:45,axisLabel:{formatter:'{value}%',color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
     yAxis:{type:'category',data:['GitHub','Quora','LinkedIn','YouTube','Wikipedia','Reddit'],axisLabel:{color:'#F2EDE5',fontSize:12},axisLine:{show:false},axisTick:{show:false}},
     series:[{
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cCorr = echarts.init(document.getElementById('chart-correlation'));
   cCorr.setOption({
     tooltip:{trigger:'item',formatter:function(p){return p.data[2]+'<br/>Mention: '+p.data[0]+'<br/>AI Gorunurluk: '+p.data[1]+'%'},...tooltipStyle},
-    grid:{left:'50px',right:'20px',top:'10px',bottom:'40px'},
+    grid:chartGrid({left:'3.125rem',bottom:'2.5rem'}),
     xAxis:{type:'value',name:'Earned Mention',nameLocation:'center',nameGap:25,nameTextStyle:{color:'#7B7269',fontSize:11},axisLabel:{color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
     yAxis:{type:'value',name:'AI Gorunurluk %',nameTextStyle:{color:'#7B7269',fontSize:11},axisLabel:{color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
     series:[{

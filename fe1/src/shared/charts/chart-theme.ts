@@ -108,11 +108,37 @@ const CHART_COLORS: ChartColors = {
 };
 
 const CHART_DEFAULTS = {
-  grid: { left: 40, right: 16, top: 10, bottom: 36 },
   axisLabel: { color: CHART_COLORS.muted, fontSize: 10 },
   axisLine: { lineStyle: { color: CHART_COLORS.border } },
   splitLine: { lineStyle: { color: CHART_COLORS.border, opacity: 0.3 } },
 };
+
+// ── Chart Clear Space — central CSS var driven ──────────────────────────
+
+/** Read --chart-clear-space CSS custom property (rem value with unit) */
+function getChartClearSpace(): string {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue('--chart-clear-space').trim() || '0.25rem';
+}
+
+/**
+ * Build ECharts grid config for axis charts (line, bar, area, heatmap).
+ * Uses --chart-clear-space for right padding; left reserved for y-axis labels.
+ * Overrides let pages customize specific sides (e.g. dual y-axis needs wider right).
+ */
+export function chartGrid(overrides?: Record<string, unknown>): Record<string, unknown> {
+  const cs = getChartClearSpace();
+  return { left: '2.25rem', right: cs, top: '0.5rem', bottom: '1.5rem', containLabel: false, ...overrides };
+}
+
+/**
+ * Build ECharts positioning for no-axis charts (treemap, pie, gauge, radar).
+ * All sides use --chart-clear-space equally.
+ */
+export function chartClearPos(): Record<string, string> {
+  const cs = getChartClearSpace();
+  return { left: cs, right: cs, top: cs, bottom: cs };
+}
 
 // ── Chart Registry ──────────────────────────
 
@@ -143,7 +169,7 @@ export function createLineChart(el: HTMLElement | null, config: LineChartConfig)
       textStyle: { color: CHART_COLORS.muted, fontSize: 11 },
       bottom: 0,
     } : undefined,
-    grid: CHART_DEFAULTS.grid,
+    grid: chartGrid(),
     xAxis: {
       type: 'category', data: config.xData,
       axisLabel: CHART_DEFAULTS.axisLabel,
@@ -167,7 +193,7 @@ export function createBarChart(el: HTMLElement | null, config: BarChartConfig): 
   const c = _reg(echarts.init(el, null, { renderer: 'canvas' }));
   c.setOption({
     tooltip: { trigger: 'axis' },
-    grid: CHART_DEFAULTS.grid,
+    grid: chartGrid(),
     xAxis: {
       type: 'category', data: config.xData,
       axisLabel: CHART_DEFAULTS.axisLabel,
@@ -264,7 +290,7 @@ export function createStackedArea(el: HTMLElement | null, config: StackedAreaCon
       textStyle: { color: CHART_COLORS.muted, fontSize: 10 },
       bottom: 0,
     },
-    grid: CHART_DEFAULTS.grid,
+    grid: chartGrid(),
     xAxis: {
       type: 'category', data: config.xData,
       axisLabel: CHART_DEFAULTS.axisLabel,
@@ -291,7 +317,7 @@ export function createDualYLine(el: HTMLElement | null, config: DualYLineConfig)
       textStyle: { color: CHART_COLORS.muted, fontSize: 10 },
       bottom: 0,
     },
-    grid: CHART_DEFAULTS.grid,
+    grid: chartGrid(),
     xAxis: {
       type: 'category', data: config.xData,
       axisLabel: CHART_DEFAULTS.axisLabel,
@@ -405,6 +431,8 @@ declare global {
 
 window.getChartTheme = getChartTheme;
 window.refreshAllCharts = refreshAllCharts;
+window.chartGrid = chartGrid;
+window.chartClearPos = chartClearPos;
 window.createLineChart = createLineChart;
 window.createBarChart = createBarChart;
 window.createDoughnut = createDoughnut;

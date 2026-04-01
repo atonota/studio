@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tooltip:{backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12},formatter:function(p){return p.name+': ₺'+p.value.toLocaleString('tr-TR')}},
     series:[{
       type:'treemap',
+      ...chartClearPos(),
       roam:false,
       breadcrumb:{show:false},
       levels:[{itemStyle:{borderColor:borderColor,borderWidth:2,gapWidth:2}},{itemStyle:{borderColor:borderColor,borderWidth:1,gapWidth:1},colorSaturation:[0.4,0.7]}],

@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const paid = [220,240,230,260,250,210,200,280,290,300,310,280,270,300,320,340,310,330,350,320,300,360,380,370,340,390,410,400,380,420];
   cTraffic.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
-    grid:{left:40,right:16,top:16,bottom:28},
+    grid:chartGrid({top:'0.75rem'}),
     xAxis:{type:'category',data:days,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     series:[
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cDaily = echarts.init(document.getElementById('chart-daily'));
   cDaily.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
-    grid:{left:40,right:16,top:8,bottom:28},
+    grid:chartGrid(),
     xAxis:{type:'category',data:['Pzt','Sal','Car','Per','Cum','Cmt','Paz'],axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:11}},
     yAxis:{type:'value',splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},
     series:[{type:'bar',data:[1240,1380,1190,1420,1510,980,860],barWidth:'40%',itemStyle:{color:'#C2410C',borderRadius:[4,4,0,0]}}]

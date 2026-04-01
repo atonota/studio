@@ -21,102 +21,261 @@
 <div id="wide-overlay"></div>
 <div id="sidebar-wide"></div>
 
-<div id="main" data-skeleton="table" x-data="{ priority:'tumu' }">
+<div id="main" data-skeleton="table" x-data="{ priority:'tumu', category:'tumu' }">
   <div class="fade-in" style="margin-bottom:var(--sp-6)">
     <h1 class="page-title">GEO Optimizasyon Onerileri</h1>
-    <p class="page-sub">AI gorunurlugunuzu artirmak icin oneriler</p>
+    <p class="page-sub">AI gorunurlugunuzu artirmak icin oncelikli adimlar</p>
   </div>
-  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+
+  <!-- Kategori filtre -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-3);flex-wrap:wrap">
+    <template x-for="c in [{v:'tumu',l:'Tumu'},{v:'ai-indexability',l:'AI Indexability'},{v:'citability',l:'Citability'},{v:'genel',l:'Genel GEO'}]">
+      <button @click="category=c.v" class="pill" :class="category===c.v ? 'active' : ''" x-text="c.l"></button>
+    </template>
+  </div>
+
+  <!-- Oncelik filtre -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
     <template x-for="p in [{v:'tumu',l:'Tumu'},{v:'kritik',l:'Kritik'},{v:'yuksek',l:'Yuksek'},{v:'orta',l:'Orta'}]">
       <button @click="priority=p.v" class="pill" :class="priority===p.v ? 'active' : ''" x-text="p.l"></button>
     </template>
   </div>
 
-  <!-- Recommendation Cards -->
-  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-4)">
-    <!-- 1 -->
-    <div class="card" style="padding:var(--sp-5)">
-      <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
-        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-warning" style="font-size:var(--fs-xl);color:#ef4444"></i>
-        </div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
-            <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
-            <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Yapilandirilmis Veri Eksikligi</span>
-          </div>
-          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Ana sayfa ve urun sayfalarinda Organization ve Product schema markup eksik. AI platformlari yapilandirilmis veriden faydalanarak daha dogru referanslar olusturur.</p>
-          <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +15 mention/ay</span>
-        </div>
-      </div>
+  <!-- ── AI Indexability ─────────────────────────── -->
+  <div x-show="category==='tumu' || category==='ai-indexability'" class="fade-in-d1" style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+      <span class="section-label" style="margin-bottom:0">AI Indexability</span>
+      <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Yeni</span>
     </div>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
 
-    <!-- 2 -->
-    <div class="card" style="padding:var(--sp-5)">
-      <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
-        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-file-text" style="font-size:var(--fs-xl);color:#ef4444"></i>
-        </div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
-            <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
-            <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">llms.txt Dosyasi Olusturun</span>
+      <!-- llms.txt eksik/hatali -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='kritik'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-file-text" style="font-size:var(--fs-xl);color:#ef4444"></i>
           </div>
-          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">AI tarayicilari icin llms.txt dosyasi olusturarak platformunuzun dogru bir sekilde taninmasini saglayin. Bu dosya marka bilgisi, urun ozellikleri ve referans linkleri icermelidir.</p>
-          <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +10 citation/ay</span>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">llms.txt Dosyasi Eksik veya Hatali</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">AI tarayicilarinin sitenizi dogru anlamasi icin llms.txt dosyasi olusturulmalı. Bu dosya marka bilgisi, urun ozellikleri ve referans linklerini icerir. Eksik oldugunda AI platformlari sitenizi yanlis siniflandirabilir.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +10 citation/ay</span>
+              <a href="content-llmstxt.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- robots.txt AI crawler engellemesi -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='yuksek'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(249,115,22,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-shield-slash" style="font-size:var(--fs-xl);color:#f97316"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316">Yuksek</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">robots.txt'te AI Crawler Engellemesi</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">robots.txt dosyasinda GPTBot, ClaudeBot, PerplexityBot gibi AI tarayicilari engelleniyor. Bu tarayicilara izin vermek AI platformlarindaki gorunurlugunuzu dogrudan arttirir.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +12 mention/ay</span>
+              <a href="seo-audit.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JSON-LD eksikligi -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='kritik'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-code" style="font-size:var(--fs-xl);color:#ef4444"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">JSON-LD Yapilandirilmis Veri Eksikligi</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">Ana sayfa ve kritik sayfalarda JSON-LD yapilandirilmis veri tanimlari eksik. AI modelleri schema.org verilerini referans alarak markanizi kategorize eder ve sorulan sorulara yanit uretir.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +18 citation/ay</span>
+              <a href="content-schema.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <!-- 3 -->
-    <div class="card" style="padding:var(--sp-5)">
-      <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
-        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-quotes" style="font-size:var(--fs-xl);color:#eab308"></i>
-        </div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
-            <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
-            <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Citability Skorunu Artirin</span>
-          </div>
-          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Blog iceriklerinizde istatistikler, karsilastirmalar ve net tanimlar kullanarak AI platformlarinin sizi kaynak olarak gostermesini kolaylastirin.</p>
-          <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +8 citation/ay</span>
-        </div>
-      </div>
+  <!-- ── Citability ──────────────────────────────── -->
+  <div x-show="category==='tumu' || category==='citability'" class="fade-in-d1" style="margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+      <span class="section-label" style="margin-bottom:0">Citability</span>
+      <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Yeni</span>
     </div>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
 
-    <!-- 4 -->
-    <div class="card" style="padding:var(--sp-5)">
-      <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
-        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-globe" style="font-size:var(--fs-xl);color:#eab308"></i>
-        </div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
-            <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
-            <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Grok Platformu Optimizasyonu</span>
+      <!-- Organization schema eksikligi -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='kritik'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-buildings" style="font-size:var(--fs-xl);color:#ef4444"></i>
           </div>
-          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Grok platformunda henuz marka bahsi yok. X/Twitter uzerinde marka gorunurlugunuzu artirarak Grok'un veri kaynaklarinda yer alin.</p>
-          <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +3 mention/ay</span>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Organization Schema Eksikligi</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">Organization schema.org markup'i eksik. Bu markup AI platformlarinin markanizin kurumsal kimligini, iletisim bilgilerini ve faaliyet alanini dogru sekilde tanimlamasi icin zorunludur.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +15 mention/ay</span>
+              <a href="content-schema.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- FAQ/HowTo schema -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='yuksek'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(249,115,22,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-question" style="font-size:var(--fs-xl);color:#f97316"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(249,115,22,0.1);color:#f97316">Yuksek</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">FAQ / HowTo Schema Onerisi</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">Sss ve rehber sayfalariniza FAQ ve HowTo schema ekleyerek AI platformlarinin sorulara dogrudan sitenizden yanit vermesini saglayin. Alinti yapilabilirlik (citability) skorunuz anlik artis gosterir.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +9 citation/ay</span>
+              <a href="schema-generator.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Author Person schema -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='orta'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-user-circle" style="font-size:var(--fs-xl);color:#eab308"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Author / Person Schema Eksikligi</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">Icerik yazarlarina ait Person schema tanimlamasi eksik. Yazar otoritesi AI platformlari icin guvenilirlik sinyali olup E-E-A-T skorunuzu dogrudan etkiler. Ozellikle saglik, finans ve hukuk iceriklerinde kritiktir.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +6 citation/ay</span>
+              <a href="schema-generator.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wikipedia/Wikidata entity -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='orta'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-book-open" style="font-size:var(--fs-xl);color:#eab308"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Wikipedia / Wikidata Entity Durumu</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)">Markanizin Wikipedia sayfasi veya Wikidata entity kaydı mevcut degil ya da yetersiz. Buyuk AI modelleri Wikipedia ve Wikidata verilerini egitim verisi olarak kullanir; entity kaydı olan markalar daha sik ve dogru referans gosterilir.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+              <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +7 mention/ay</span>
+              <a href="seo-entities.html" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm);color:var(--accent);text-decoration:none;font-weight:600;padding:var(--sp-1) var(--sp-3);border:1px solid var(--accent);border-radius:var(--r-sm)">Duzelt <i class="ph ph-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <!-- 5 -->
-    <div class="card" style="padding:var(--sp-5)">
-      <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
-        <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ph ph-link" style="font-size:var(--fs-xl);color:#22c55e"></i>
-        </div>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
-            <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Dusuk</span>
-            <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Backlink Profili Guclendir</span>
+  <!-- ── Genel GEO ────────────────────────────────── -->
+  <div x-show="category==='tumu' || category==='genel'" class="fade-in-d2" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Genel GEO</span>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+
+      <!-- Yapilandirilmis Veri -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='kritik'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-warning" style="font-size:var(--fs-xl);color:#ef4444"></i>
           </div>
-          <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Yuksek otorite sitelerden backlink alarak AI platformlarinda guvenilirlik skorunuzu yukseltin. Ozellikle .edu ve .gov uzantili siteler oncelikli hedef olmalidir.</p>
-          <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +5 mention/ay</span>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+              <span class="badge" style="background:rgba(239,68,68,0.1);color:#ef4444">Kritik</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Yapilandirilmis Veri Eksikligi</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Ana sayfa ve urun sayfalarinda Organization ve Product schema markup eksik. AI platformlari yapilandirilmis veriden faydalanarak daha dogru referanslar olusturur.</p>
+            <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +15 mention/ay</span>
+          </div>
         </div>
       </div>
+
+      <!-- Citability Skoru -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='orta'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-quotes" style="font-size:var(--fs-xl);color:#eab308"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+              <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Citability Skorunu Artirin</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Blog iceriklerinizde istatistikler, karsilastirmalar ve net tanimlar kullanarak AI platformlarinin sizi kaynak olarak gostermesini kolaylastirin.</p>
+            <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +8 citation/ay</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grok Platformu -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu' || priority==='orta'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(234,179,8,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-globe" style="font-size:var(--fs-xl);color:#eab308"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+              <span class="badge" style="background:rgba(234,179,8,0.1);color:#eab308">Orta</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Grok Platformu Optimizasyonu</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Grok platformunda henuz marka bahsi yok. X/Twitter uzerinde marka gorunurlugunuzu artirarak Grok'un veri kaynaklarinda yer alin.</p>
+            <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +3 mention/ay</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backlink -->
+      <div class="card" style="padding:var(--sp-5)" x-show="priority==='tumu'">
+        <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+          <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="ph ph-link" style="font-size:var(--fs-xl);color:#22c55e"></i>
+          </div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+              <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e">Dusuk</span>
+              <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)">Backlink Profili Guclendir</span>
+            </div>
+            <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-2)">Yuksek otorite sitelerden backlink alarak AI platformlarinda guvenilirlik skorunuzu yukseltin. Ozellikle .edu ve .gov uzantili siteler oncelikli hedef olmalidir.</p>
+            <span style="font-size:var(--fs-sm);color:var(--accent)">Tahmini etki: +5 mention/ay</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

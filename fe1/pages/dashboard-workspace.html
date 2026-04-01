@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const chart = echarts.init(document.getElementById('trafficChart'));
   chart.setOption({
     tooltip: { trigger: 'axis', backgroundColor: '#201C18', borderColor: border, textStyle: { color: text, fontSize: 12 } },
-    grid: { left: 48, right: 16, top: 16, bottom: 32 },
+    grid: chartGrid({left:'3rem',bottom:'2rem'}),
     xAxis: { type: 'category', data: days, axisLine: { lineStyle: { color: border } }, axisLabel: { color: muted, fontSize: 11 }, axisTick: { show: false } },
     yAxis: { type: 'value', splitLine: { lineStyle: { color: border, type: 'dashed' } }, axisLabel: { color: muted, fontSize: 11 } },
     series: [{

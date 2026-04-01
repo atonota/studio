@@ -120,6 +120,23 @@ handlers[key]?.()
 - Named export only
 - AbortController — her `fetch` çağrısına
 
+### UI Direction Contracts (DEGİSTİRME)
+Aşağıdaki yön/ikon kararları birçok kez düzeltilmiştir. Bir daha değiştirilmemeli:
+
+**Sidebar Toggle Butonu** (`#wide-toggle-tb`):
+- İkon: `ph-caret-right` (her zaman)
+- Sidebar **kapalı** → ok sağa gösterir → "aç" anlamı
+- Sidebar **açık** → CSS `rotate(180deg)` → ok sola döner → "kapat" anlamı
+- Dosyalar: `sidebar.ts` (ensureToggleButton) + `_sidebar.scss` (body.wide-open)
+
+**Sidebar Accordion Chevron** (`.ws-l1 .chevron`):
+- İkon: `ph-caret-right` (her zaman)
+- Grup **kapalı** → ok sağa
+- Grup **açık** → CSS `rotate(90deg)` → ok aşağı
+- Dosya: `sidebar.ts` (renderSidebar) + `_sidebar.scss` (.ws-l1.open .chevron)
+
+**Kural:** İkon adını değiştirme. Yönü CSS transform ile kontrol et. `ph-caret-left` KULLANMA.
+
 ---
 
 ## 3. Hedef Klasör Yapısı

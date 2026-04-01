@@ -300,6 +300,18 @@
             <div class="to-select-grid" id="toInputStyle"></div>
           </div>
         </div>
+
+        <div class="to-section">
+          <div class="to-section-label"><i class="ph ph-chart-bar"></i> Grafik Bosluk</div>
+          <div class="to-card">
+            <div class="to-card-label">Clear Space</div>
+            <div class="to-card-desc">ECharts ic kenar boslugu (rem)</div>
+            <div class="to-slider-row">
+              <input type="range" class="to-slider" id="toChartClearSpace" min="0" max="1.5" step="0.05" value="0.25">
+              <span class="to-slider-val" id="toChartClearSpaceVal">0.25rem</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ════════════════════════════════════════ -->
@@ -657,9 +669,12 @@ document.addEventListener('DOMContentLoaded', function() {
     selectGrid('toInputStyle', [
       { key: 'bordered', label: 'Kenarlikli' }, { key: 'filled', label: 'Dolgulu' }, { key: 'underline', label: 'Alt Cizgi' }
     ], ts.inputStyle, function(k) { T.set('inputStyle', k); });
+    document.getElementById('toChartClearSpace').value = ts.chartClearSpace;
+    document.getElementById('toChartClearSpaceVal').textContent = ts.chartClearSpace + 'rem';
   }
   bindSlider('toRadius', 'toRadiusVal', 'radius', 'px', function(v) { return parseInt(v); });
   bindSlider('toShadow', 'toShadowVal', 'shadowScale', 'x', parseFloat);
+  bindSlider('toChartClearSpace', 'toChartClearSpaceVal', 'chartClearSpace', 'rem', parseFloat);
 
   // ═══ TAB 5: ANİMASYON ═══
   function buildMotion() {

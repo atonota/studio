@@ -54,13 +54,14 @@ const DEFAULTS: ThemeState = {
   compact: false, sidebarDefault: 'collapsed',
   radius: 10, shadowScale: 1, cardStyle: 'elevated', buttonStyle: 'rounded', inputStyle: 'bordered',
   motionScale: 1, motionEasing: 'material', reducedMotion: false, skeletonAnim: true, entranceAnim: true,
-  glassOpacity: 0.04, backdropOpacity: 0.5, panelOpacity: 0.55, customCss: '',
+  glassOpacity: 0.04, backdropOpacity: 0.5, panelOpacity: 0.55,
+  chartClearSpace: 0.25, customCss: '',
 };
 
 const CATEGORIES: Record<ThemeCategory, string[]> = {
   typography: ['fontFamily', 'fontSize', 'fontWeightBody', 'fontWeightHeading', 'letterSpacing', 'lineHeight', 'fontCode'],
   layout: ['railW', 'wideW', 'topH', 'contentPadding', 'contentMaxW', 'compact', 'sidebarDefault'],
-  components: ['radius', 'shadowScale', 'cardStyle', 'buttonStyle', 'inputStyle'],
+  components: ['radius', 'shadowScale', 'cardStyle', 'buttonStyle', 'inputStyle', 'chartClearSpace'],
   motion: ['motionScale', 'motionEasing', 'reducedMotion', 'skeletonAnim', 'entranceAnim'],
   glass: ['glassOpacity', 'backdropOpacity', 'panelOpacity'],
 };
@@ -182,6 +183,7 @@ function load(): void {
     state.glassOpacity = gf('glass_opacity', DEFAULTS.glassOpacity);
     state.backdropOpacity = gf('backdrop_opacity', DEFAULTS.backdropOpacity);
     state.panelOpacity = gf('panel_opacity', DEFAULTS.panelOpacity);
+    state.chartClearSpace = gf('chart_clear_space', DEFAULTS.chartClearSpace);
     state.customCss = g('custom_css', '');
   } catch {
     console.warn('ThemeStore: localStorage read failed');
@@ -218,6 +220,7 @@ function save(): void {
     localStorage.setItem(PREFIX + 'glass_opacity', String(s.glassOpacity));
     localStorage.setItem(PREFIX + 'backdrop_opacity', String(s.backdropOpacity));
     localStorage.setItem(PREFIX + 'panel_opacity', String(s.panelOpacity));
+    localStorage.setItem(PREFIX + 'chart_clear_space', String(s.chartClearSpace));
     if (s.customCss) localStorage.setItem(PREFIX + 'custom_css', s.customCss);
     else localStorage.removeItem(PREFIX + 'custom_css');
   } catch { /* ignore */ }
@@ -284,6 +287,9 @@ function applyAll(): void {
   R.style.setProperty('--color-glass-panel', isDark
     ? `rgba(30,26,20,${s.panelOpacity.toFixed(2)})`
     : `rgba(255,255,255,${s.panelOpacity.toFixed(2)})`);
+
+  // Charts
+  R.style.setProperty('--chart-clear-space', s.chartClearSpace + 'rem');
 
   // Custom CSS
   let styleEl = document.getElementById('ap-custom-css');

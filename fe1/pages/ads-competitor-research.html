@@ -86,7 +86,7 @@
     c.setOption({
       tooltip:{trigger:'axis', backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11},
         formatter: params => params[0].name + '<br/>' + params[0].marker + ' Tahmini Harcama: <b>' + params[0].value + 'K &#8378;</b>/ay'},
-      grid:{left:50,right:20,top:16,bottom:30},
+      grid:chartGrid({left:'3.125rem',bottom:'1.875rem'}),
       xAxis:{type:'category', data:months, axisLabel:{color:t.muted,fontSize:10}, axisLine:{lineStyle:{color:t.border}}},
       yAxis:{type:'value', axisLabel:{color:t.muted,fontSize:10, formatter:v=>v+'K'}, splitLine:{lineStyle:{color:t.border,opacity:0.3}}},
       series:[{

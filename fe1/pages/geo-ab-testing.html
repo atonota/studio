@@ -578,7 +578,7 @@ function geoABTesting() {
       chart.setOption({
         tooltip: { trigger:'axis' },
         legend: { data:['Kontrol','Test'], bottom:0, textStyle:{ color:'#a8a29e', fontSize:12 } },
-        grid: { top:10, right:20, bottom:40, left:40 },
+        grid: chartGrid({bottom:'2.5rem'}),
         xAxis: { type:'category', data:weeks.slice(0, test.chartData.control.length), axisLine:{ lineStyle:{ color:'#44403c' } }, axisLabel:{ color:'#a8a29e', fontSize:11 } },
         yAxis: { type:'value', axisLine:{ show:false }, splitLine:{ lineStyle:{ color:'#292524' } }, axisLabel:{ color:'#a8a29e', fontSize:11 } },
         series: [

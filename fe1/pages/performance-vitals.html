@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
   chart.setOption({
     tooltip: { trigger: 'axis' },
     legend: { data: ['LCP (s)', 'INP (ms/10)', 'CLS (x100)'], bottom: 0, textStyle: { fontSize: 11 } },
-    grid: { top: 20, right: 20, bottom: 40, left: 50 },
+    grid: chartGrid({left:'3.125rem',bottom:'2.5rem'}),
     xAxis: { type: 'category', data: init.labels, axisLabel: { fontSize: 10, interval: 4 } },
     yAxis: { type: 'value', axisLabel: { fontSize: 10 } },
     series: [

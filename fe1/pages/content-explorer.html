@@ -111,7 +111,7 @@
     const colors = ['#C2410C','#3b82f6','#a855f7','#eab308','#22c55e'];
     this._topicsChart.setOption({
       tooltip:{ trigger:'axis', axisPointer:{type:'shadow'}, backgroundColor:t.bg, borderColor:t.border, textStyle:{color:t.text,fontSize:11} },
-      grid:{ left:140, right:40, top:8, bottom:8 },
+      grid:chartGrid({left:'8.75rem',right:'2.5rem',bottom:'0.5rem'}),
       xAxis:{ type:'value', axisLabel:{color:t.muted,fontSize:10}, splitLine:{lineStyle:{color:t.border,type:'dashed'}} },
       yAxis:{ type:'category', data:names, axisLabel:{color:t.text,fontSize:11}, axisLine:{lineStyle:{color:t.border}} },
       series:[{

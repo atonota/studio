@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cCwv.setOption({
     tooltip:{trigger:'axis',backgroundColor:'#201C18',borderColor:borderColor,textStyle:{color:txtColor,fontSize:12}},
     legend:{bottom:0,textStyle:{color:mutedColor,fontSize:11},itemWidth:12,itemHeight:3},
-    grid:{left:50,right:50,top:16,bottom:40},
+    grid:chartGrid({left:'2.5rem',right:'2.25rem',top:'0.75rem',bottom:'2.25rem'}),
     xAxis:{type:'category',data:initData.labels,axisLine:{lineStyle:{color:borderColor}},axisLabel:{color:mutedColor,fontSize:10,interval:4}},
     yAxis:[
       {type:'value',name:'LCP (s) / CLS',nameTextStyle:{color:mutedColor,fontSize:10},splitLine:{lineStyle:{color:borderColor,type:'dashed'}},axisLabel:{color:mutedColor,fontSize:10}},

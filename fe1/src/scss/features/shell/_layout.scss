@@ -11,7 +11,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--base);
-  padding: 24px 16px;
+  padding: 24px 10px;
   transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   max-width: var(--content-max-w);
 }
@@ -20,12 +20,19 @@
   #main {
     left: var(--rail-w);
     bottom: var(--foot-h);
-    padding: 32px 28px;
+    padding: 32px 20px;
+  }
+
+  // Sidebar kapalıyken: content aynı genişlikte kalır, ortlanır
+  // Boşluk eşit şekilde iki yana dağılır (her yan = wide-w / 2)
+  body:not(.wide-open) #main {
+    left: calc(var(--rail-w) + var(--wide-w) / 2);
+    right: calc(var(--wide-w) / 2);
   }
 }
 
 @media (max-width: 374px) {
   #main {
-    padding: 16px 12px;
+    padding: 16px 8px;
   }
 }

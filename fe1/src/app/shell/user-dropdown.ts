@@ -22,12 +22,30 @@ export function bindUserDropdownEvents(): void {
   const udBd = document.getElementById('ud-backdrop');
   if (!udBd) return;
 
-  const trigger = document.getElementById('user-trigger');
-  if (trigger) {
-    trigger.onclick = () => udBd.classList.toggle('show');
-  }
+  // Track trigger intent — prevents same-tick close
+  let justOpened = false;
 
-  udBd.onclick = (e: MouseEvent) => {
-    if (e.target === udBd) udBd.classList.remove('show');
-  };
+  // Event delegation — works even after sidebar re-renders #user-trigger
+  // Uses capture phase to fire before other document listeners
+  document.addEventListener('click', (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const trigger = target.closest('#user-trigger');
+
+    if (trigger) {
+      e.preventDefault();
+      justOpened = true;
+      udBd.classList.toggle('show');
+      // Reset flag after event loop completes
+      requestAnimationFrame(() => { justOpened = false; });
+      return;
+    }
+
+    // Click outside dropdown → close (skip if just opened)
+    if (udBd.classList.contains('show') && !justOpened) {
+      const dropdown = target.closest('#user-dropdown');
+      if (!dropdown) {
+        udBd.classList.remove('show');
+      }
+    }
+  }, true); // ← capture phase
 }

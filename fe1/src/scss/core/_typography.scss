@@ -51,6 +51,16 @@ pre {
   text-transform: uppercase;
 }
 
+// Mobile: reserve 2-line height for page-sub to prevent layout shift
+@media (max-width: 767px) {
+  .page-sub {
+    min-height: 2.5em; // fallback for older browsers
+    min-height: calc(2lh);
+    display: flex;
+    align-items: center;
+  }
+}
+
 .section-label {
   font-size: 0.6875rem;
   color: var(--muted);
