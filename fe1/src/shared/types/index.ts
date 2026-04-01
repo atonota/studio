@@ -267,6 +267,7 @@ declare global {
     showToast: (msg: string, duration?: number) => void;
     tmCloseAll: () => void;
     buildTopMenu: () => void;
+    __toggleSidebarLock: () => void;
 
     // Stores
     AppearanceStore?: AppearanceStoreAPI;

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI Bot Analitik — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/mock-data.js"></script>
+<style>
+.alert-card{display:flex;align-items:flex-start;gap:var(--sp-3);padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);font-size:var(--fs-sm);line-height:1.5}
+.alert-card.critical{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15)}
+.alert-card.warning{background:rgba(234,179,8,0.08);border:1px solid rgba(234,179,8,0.15)}
+.alert-card.info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15)}
+.compliance-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+</style>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="botAnalytics()">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-robot" style="color:#C2410C;font-size:var(--fs-xl)"></i>
+      </div>
+      <div>
+        <h1 class="page-title">AI Bot Analitik</h1>
+        <p class="page-sub">AI tarayici bot ziyaretlerini izleyin ve analiz edin</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:var(--sp-2)">
+      <button class="btn-secondary" @click="$store.toast.show('Rapor indiriliyor...','info')">
+        <i class="ph ph-download-simple"></i> Rapor Indir
+      </button>
+    </div>
+  </div>
+
+  <!-- Time Range Filter -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
+    <template x-for="r in [{v:'7',l:'7 Gun'},{v:'30',l:'30 Gun'},{v:'90',l:'90 Gun'}]">
+      <button @click="range=r.v; updateCharts()" class="pill" :class="range===r.v ? 'active' : ''" x-text="r.l"></button>
+    </template>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div class="stat-card" style="--stripe:#C2410C">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Toplam Bot Ziyareti</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--accent);margin-top:var(--sp-2)" x-text="totalVisits.toLocaleString('tr-TR')"></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Bu hafta</div>
+    </div>
+    <div class="stat-card" style="--stripe:#3b82f6">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Benzersiz Bot</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)" x-text="bots.length"></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Tanimlanan tarayici</div>
+    </div>
+    <div class="stat-card" style="--stripe:#22c55e">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">En Aktif Bot</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">GPTBot</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">523 ziyaret</div>
+    </div>
+    <div class="stat-card" style="--stripe:#a855f7">
+      <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Ort. Crawl Derinligi</span>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text);margin-top:var(--sp-2)">4.2 <span style="font-size:var(--fs-lg);color:var(--muted);font-weight:300">sayfa</span></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">Oturum basina</div>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-6)" x-show="alerts.length > 0">
+    <span class="section-label">Uyarilar ve Anomaliler</span>
+    <template x-for="alert in alerts" :key="alert.message">
+      <div class="alert-card" :class="alert.severity">
+        <i class="ph" :class="alert.severity==='critical' ? 'ph-warning-octagon' : alert.severity==='warning' ? 'ph-warning' : 'ph-info'" :style="'font-size:var(--fs-lg);flex-shrink:0;margin-top:2px;color:' + (alert.severity==='critical' ? '#ef4444' : alert.severity==='warning' ? '#eab308' : '#3b82f6')"></i>
+        <div>
+          <div style="font-weight:500;color:var(--text)" x-text="alert.title"></div>
+          <div style="color:var(--muted);margin-top:2px" x-text="alert.message"></div>
+          <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)" x-text="alert.time"></div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:2fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <!-- Stacked Area Chart -->
+    <div class="card">
+      <span class="section-label">Bot Trafik Trendi</span>
+      <div id="chart-bot-trend" style="width:100%;height:360px"></div>
+    </div>
+    <!-- Crawl Depth Bar Chart -->
+    <div class="card">
+      <span class="section-label">Crawl Derinlik Dagilimi</span>
+      <div id="chart-crawl-depth" style="width:100%;height:360px"></div>
+    </div>
+  </div>
+
+  <!-- Bot Breakdown Table -->
+  <div class="fade-in-d2 card" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Bot Detay Tablosu</span>
+    <div style="overflow-x:auto">
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th>Bot Adi</th>
+            <th>Ziyaret</th>
+            <th>Sayfa</th>
+            <th>Ort. Sure</th>
+            <th>Son Ziyaret</th>
+            <th>robots.txt</th>
+            <th>Durum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="bot in bots" :key="bot.name">
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                  <div style="width:28px;height:28px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="'background:' + bot.color + '18'">
+                    <i class="ph ph-robot" :style="'color:' + bot.color + ';font-size:var(--fs-md)'"></i>
+                  </div>
+                  <span style="font-weight:500" x-text="bot.name"></span>
+                </div>
+              </td>
+              <td style="font-variant-numeric:tabular-nums" x-text="bot.visits.toLocaleString('tr-TR')"></td>
+              <td style="font-variant-numeric:tabular-nums" x-text="bot.pages.toLocaleString('tr-TR')"></td>
+              <td x-text="bot.avgDuration"></td>
+              <td style="font-size:var(--fs-xs);color:var(--muted)" x-text="bot.lastVisit"></td>
+              <td>
+                <div style="display:flex;align-items:center;gap:var(--sp-1)">
+                  <span class="compliance-dot" :style="'background:' + (bot.robotsCompliance==='izinli' ? '#22c55e' : '#ef4444')"></span>
+                  <span :style="'color:' + (bot.robotsCompliance==='izinli' ? '#22c55e' : '#ef4444')" x-text="bot.robotsCompliance === 'izinli' ? 'Uyumlu' : 'Engelli'"></span>
+                </div>
+              </td>
+              <td>
+                <span class="badge" :style="bot.status==='aktif' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(239,68,68,0.1);color:#ef4444'" x-text="bot.status==='aktif' ? 'Izin Var' : 'Engelli'"></span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top Crawled Pages Table -->
+  <div class="fade-in-d3 card" style="margin-bottom:var(--sp-4)">
+    <span class="section-label">En Cok Taranan Sayfalar</span>
+    <div style="overflow-x:auto">
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Bot Ziyareti</th>
+            <th>Son Taranan</th>
+            <th>HTTP Kodu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="page in topPages" :key="page.url">
+            <tr>
+              <td>
+                <code style="font-family:'SF Mono',monospace;font-size:var(--fs-xs);color:var(--accent)" x-text="page.url"></code>
+              </td>
+              <td style="font-variant-numeric:tabular-nums" x-text="page.visits.toLocaleString('tr-TR')"></td>
+              <td style="font-size:var(--fs-xs);color:var(--muted)" x-text="page.lastCrawled"></td>
+              <td>
+                <span class="badge" :style="page.httpCode===200 ? 'background:rgba(34,197,94,0.1);color:#22c55e' : page.httpCode===301 ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(239,68,68,0.1);color:#ef4444'" x-text="page.httpCode"></span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('geo'));</script>
+<script>
+function botAnalytics() {
+  return {
+    range: '7',
+    totalVisits: 1247,
+    bots: [
+      { name: 'GPTBot', visits: 523, pages: 2184, avgDuration: '1.8s', lastVisit: '31 Mar 2026, 09:14', color: '#22c55e', robotsCompliance: 'izinli', status: 'aktif' },
+      { name: 'Googlebot', visits: 312, pages: 1456, avgDuration: '0.9s', lastVisit: '31 Mar 2026, 08:47', color: '#3b82f6', robotsCompliance: 'izinli', status: 'aktif' },
+      { name: 'PerplexityBot', visits: 198, pages: 743, avgDuration: '2.1s', lastVisit: '30 Mar 2026, 22:31', color: '#a855f7', robotsCompliance: 'izinli', status: 'aktif' },
+      { name: 'ClaudeBot', visits: 89, pages: 412, avgDuration: '1.4s', lastVisit: '30 Mar 2026, 18:05', color: '#C2410C', robotsCompliance: 'engelli', status: 'engelli' },
+      { name: 'Bingbot', visits: 78, pages: 298, avgDuration: '0.7s', lastVisit: '31 Mar 2026, 07:22', color: '#eab308', robotsCompliance: 'izinli', status: 'aktif' },
+      { name: 'Applebot', visits: 47, pages: 156, avgDuration: '1.1s', lastVisit: '29 Mar 2026, 14:58', color: '#7B7269', robotsCompliance: 'izinli', status: 'aktif' }
+    ],
+    topPages: [
+      { url: '/', visits: 347, lastCrawled: '31 Mar 2026, 09:14', httpCode: 200 },
+      { url: '/fiyatlandirma', visits: 218, lastCrawled: '31 Mar 2026, 08:52', httpCode: 200 },
+      { url: '/urunler/seo-analitigi', visits: 183, lastCrawled: '31 Mar 2026, 07:30', httpCode: 200 },
+      { url: '/blog/seo-rehberi-2026', visits: 156, lastCrawled: '30 Mar 2026, 22:14', httpCode: 200 },
+      { url: '/docs/api-referans', visits: 124, lastCrawled: '30 Mar 2026, 19:45', httpCode: 200 },
+      { url: '/hakkimizda', visits: 98, lastCrawled: '30 Mar 2026, 16:33', httpCode: 200 },
+      { url: '/blog/reklam-butce', visits: 67, lastCrawled: '29 Mar 2026, 11:20', httpCode: 301 },
+      { url: '/urunler/eski-modul', visits: 54, lastCrawled: '28 Mar 2026, 08:15', httpCode: 404 }
+    ],
+    alerts: [
+      { severity: 'critical', title: 'GPTBot Trafik Sivrilmesi', message: 'GPTBot ziyaretleri son 24 saatte %340 artti. Normal dagilimin disinda bir tarama paterni tespit edildi.', time: '31 Mar 2026, 06:12' },
+      { severity: 'warning', title: 'Bilinmeyen Bot Tespit Edildi', message: 'Tanimlanamayan bir bot (UA: "AI-Research-Bot/1.0") son 3 gunde 23 sayfa taradi. robots.txt kurallarina uymuyor.', time: '30 Mar 2026, 14:45' },
+      { severity: 'info', title: 'ClaudeBot Engellendi', message: 'ClaudeBot robots.txt tarafindan engellenmis durumda. Bu bot son 7 gunde 89 erisim denemesi yapti. Izin vermek icin robots.txt dosyasini guncelleyin.', time: '29 Mar 2026, 09:30' }
+    ],
+
+    updateCharts() {
+      // Charts are initialized in DOMContentLoaded below
+    }
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const theme = window.getChartTheme ? getChartTheme() : {
+    text: '#F2EDE5', muted: '#7B7269', border: '#3C342C', bg: '#201C18',
+    tooltip: { backgroundColor: '#201C18', borderColor: '#3C342C', textStyle: { color: '#F2EDE5', fontSize: 12 } }
+  };
+
+  // Generate 7-day labels
+  const dayLabels = ['25 Mar','26 Mar','27 Mar','28 Mar','29 Mar','30 Mar','31 Mar'];
+  const botSeries = [
+    { name:'GPTBot',   color:'#22c55e', data:[58,62,71,65,74,82,111] },
+    { name:'Googlebot', color:'#3b82f6', data:[42,45,44,48,43,46,44] },
+    { name:'PerplexityBot', color:'#a855f7', data:[24,28,31,27,29,32,27] },
+    { name:'ClaudeBot', color:'#C2410C', data:[11,14,12,13,15,12,12] },
+    { name:'Bingbot',  color:'#eab308', data:[10,12,11,13,10,11,11] },
+    { name:'Applebot', color:'#7B7269', data:[5,7,8,6,7,8,6] }
+  ];
+
+  // Stacked Area Chart
+  if (window.createStackedArea) {
+    const c = createStackedArea(document.getElementById('chart-bot-trend'), {
+      xData: dayLabels,
+      series: botSeries
+    });
+    window._chartInstances = window._chartInstances || {};
+    window._chartInstances.botTrend = c;
+  }
+
+  // Crawl Depth Bar Chart
+  if (window.createBarChart) {
+    const c = createBarChart(document.getElementById('chart-crawl-depth'), {
+      xData: ['1 sayfa','2 sayfa','3 sayfa','4 sayfa','5 sayfa','6+ sayfa'],
+      data: [
+        { value: 187, itemStyle: { color: '#C2410C' } },
+        { value: 312, itemStyle: { color: '#C2410C' } },
+        { value: 278, itemStyle: { color: '#C2410C' } },
+        { value: 234, itemStyle: { color: '#a855f7' } },
+        { value: 145, itemStyle: { color: '#a855f7' } },
+        { value: 91, itemStyle: { color: '#7B7269' } }
+      ],
+      color: '#C2410C'
+    });
+    window._chartInstances = window._chartInstances || {};
+    window._chartInstances.crawlDepth = c;
+  }
+});
+</script>
+</body>
+</html>

@@ -969,6 +969,53 @@ pre {
   gap: 6px;
 }
 
+#wide-lock-btn {
+  position: fixed;
+  top: calc(var(--top-h) + 12px);
+  left: calc(var(--rail-w) + var(--wide-w) - 20px);
+  z-index: 160;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s, opacity 0.22s;
+  opacity: 0;
+  pointer-events: none;
+}
+#wide-lock-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+#wide-lock-btn.active {
+  color: var(--accent);
+}
+#wide-lock-btn.active:hover {
+  background: var(--accent-soft);
+}
+#wide-lock-btn i {
+  font-size: 1.25rem;
+  transform: rotate(45deg);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#wide-lock-btn.active i {
+  transform: rotate(0deg);
+}
+
+@media (min-width: 768px) {
+  body.wide-open #wide-lock-btn {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
 .ws-dash {
   display: flex;
   align-items: center;
@@ -1012,6 +1059,10 @@ pre {
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 0;
   cursor: pointer;
   color: var(--text-soft);
   font-size: 0.6875rem;
@@ -1019,6 +1070,9 @@ pre {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   user-select: none;
+  font-family: inherit;
+  line-height: inherit;
+  text-align: left;
 }
 .ws-l1:hover {
   color: var(--text);

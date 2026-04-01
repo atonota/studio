@@ -8,7 +8,7 @@
 import { KEY_MAP, MENU } from './navigation-config';
 import { togglePageFav, toggleFav } from './favorites';
 import { renderTopbar } from './topbar';
-import { renderSidebar } from './sidebar';
+import { renderSidebar, isSidebarLocked } from './sidebar';
 import { renderBreadcrumb } from './breadcrumb';
 import { renderSpotlight, initSpotlightNav, bindSpotlightEvents } from './spotlight';
 import { initNotificationPanel, toggleNotifPanel } from './notification-panel';
@@ -169,7 +169,10 @@ export function initShell(pageKey?: string): void {
     const sidebarOpen = document.body.classList.contains('wide-open');
 
     if (p.key === currentSidebarKey && sidebarOpen) {
-      document.body.classList.remove('wide-open');
+      // Kilitliyse kapatma, sadece farklı section'a geçişte render et
+      if (!isSidebarLocked()) {
+        document.body.classList.remove('wide-open');
+      }
       return;
     }
     renderSidebar(p.base, p.key);

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Earned Media Dashboard — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="earnedMedia()">
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <h1 class="page-title">Earned Media Dashboard</h1>
+    <p class="page-sub">AI motorlarinin kaynak olarak kullandigi ucuncu parti platformlardaki marka varliginiz</p>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in" style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+        <i class="ph ph-megaphone" style="font-size:var(--fs-lg);color:var(--accent)"></i>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Toplam Earned Mention</span>
+      </div>
+      <span style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">87</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-1);margin-top:var(--sp-1)">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+        <span style="font-size:var(--fs-xs);color:#22c55e">+14% bu ay</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+        <i class="ph ph-book-open" style="font-size:var(--fs-lg);color:#3b82f6"></i>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Wikipedia Durumu</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--sp-2)">
+        <span style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">Yayinda</span>
+        <i class="ph ph-check-circle" style="color:#22c55e;font-size:var(--fs-xl)"></i>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+        <i class="ph ph-reddit-logo" style="font-size:var(--fs-lg);color:#f97316"></i>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">Reddit Karma</span>
+      </div>
+      <span style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">1,240</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-1);margin-top:var(--sp-1)">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+        <span style="font-size:var(--fs-xs);color:#22c55e">+180 bu ay</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+        <i class="ph ph-youtube-logo" style="font-size:var(--fs-lg);color:#ef4444"></i>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">YouTube Abone</span>
+      </div>
+      <span style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">3,800</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-1);margin-top:var(--sp-1)">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+        <span style="font-size:var(--fs-xs);color:#22c55e">+220 bu ay</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2)">
+        <i class="ph ph-linkedin-logo" style="font-size:var(--fs-lg);color:#0a66c2"></i>
+        <span style="font-size:var(--fs-sm);color:var(--muted)">LinkedIn Takipci</span>
+      </div>
+      <span style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">12.5K</span>
+      <div style="display:flex;align-items:center;gap:var(--sp-1);margin-top:var(--sp-1)">
+        <i class="ph ph-trend-up" style="color:#22c55e;font-size:var(--fs-sm)"></i>
+        <span style="font-size:var(--fs-xs);color:#22c55e">+340 bu ay</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform Filter -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-5);flex-wrap:wrap">
+    <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'wikipedia',l:'Wikipedia'},{v:'reddit',l:'Reddit'},{v:'youtube',l:'YouTube'},{v:'linkedin',l:'LinkedIn'},{v:'quora',l:'Quora'},{v:'github',l:'GitHub'}]">
+      <button @click="platformFilter=f.v" class="pill" :class="platformFilter===f.v ? 'active' : ''" x-text="f.l"></button>
+    </template>
+  </div>
+
+  <!-- Platform Cards -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <template x-for="p in filteredPlatforms" :key="p.id">
+      <div class="card" style="padding:var(--sp-5)">
+        <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+          <div style="width:44px;height:44px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="'background:'+p.bgColor">
+            <i :class="'ph ph-'+p.icon" style="font-size:var(--fs-xl)" :style="'color:'+p.color"></i>
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:500;color:var(--text)" x-text="p.name"></div>
+            <div style="font-size:var(--fs-sm);color:var(--muted)" x-text="'Son aktivite: '+p.lastActivity"></div>
+          </div>
+          <span class="badge" :style="p.status==='Aktif'||p.status==='Yayinda' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : p.status==='Pasif' ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(239,68,68,0.1);color:#ef4444'" x-text="p.status"></span>
+        </div>
+
+        <!-- Metrics grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+          <template x-for="m in p.metrics" :key="m.label">
+            <div>
+              <span style="font-size:var(--fs-xs);color:var(--muted);display:block" x-text="m.label"></span>
+              <span style="font-size:var(--fs-lg);font-weight:300;color:var(--text)" x-text="m.value"></span>
+            </div>
+          </template>
+        </div>
+
+        <!-- AI Kaynak Payi -->
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-3);padding:var(--sp-3);background:var(--accent-soft);border-radius:var(--r-sm)">
+          <i class="ph ph-robot" style="font-size:var(--fs-md);color:var(--accent)"></i>
+          <span style="font-size:var(--fs-sm);color:var(--text);flex:1">AI Kaynak Payi</span>
+          <span style="font-size:var(--fs-lg);font-weight:600;color:var(--accent)" x-text="'%'+p.aiSourceShare"></span>
+        </div>
+
+        <!-- Trend -->
+        <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+          <i :class="p.trend==='up' ? 'ph ph-trend-up' : p.trend==='down' ? 'ph ph-trend-down' : 'ph ph-minus'" :style="p.trend==='up' ? 'color:#22c55e' : p.trend==='down' ? 'color:#ef4444' : 'color:var(--muted)'" style="font-size:var(--fs-lg)"></i>
+          <span style="font-size:var(--fs-sm)" :style="p.trend==='up' ? 'color:#22c55e' : p.trend==='down' ? 'color:#ef4444' : 'color:var(--muted)'" x-text="p.trendLabel"></span>
+        </div>
+
+        <!-- Action Button -->
+        <button class="btn-primary" style="width:100%;justify-content:center;font-size:var(--fs-sm)" x-text="p.action"></button>
+      </div>
+    </template>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <!-- AI Kaynak Dagilimi -->
+    <div class="card">
+      <span class="section-label">AI Kaynak Dagilimi</span>
+      <div id="chart-ai-source" style="width:100%;height:320px"></div>
+    </div>
+
+    <!-- Brand Mentions vs AI Visibility -->
+    <div class="card">
+      <span class="section-label">Marka Bahisleri vs AI Gorunurlugu</span>
+      <p style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-3)">Korelasyon katsayisi: r = 0.664</p>
+      <div id="chart-correlation" style="width:100%;height:280px"></div>
+    </div>
+  </div>
+
+  <!-- Activity Timeline -->
+  <div class="fade-in-d2" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Son Aktiviteler</span>
+    <div class="card" data-paginate="10" style="padding:0;overflow:hidden">
+      <table class="r-table">
+        <thead>
+          <tr>
+            <th>Tarih</th>
+            <th>Platform</th>
+            <th>Aksiyon</th>
+            <th>Detay</th>
+            <th style="text-align:center">Durum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="a in activities" :key="a.id">
+            <tr>
+              <td :data-label="'Tarih'"><span style="font-size:var(--fs-sm);color:var(--muted)" x-text="a.date"></span></td>
+              <td :data-label="'Platform'">
+                <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                  <i :class="'ph ph-'+a.icon" style="font-size:var(--fs-md)" :style="'color:'+a.color"></i>
+                  <span style="font-weight:500;color:var(--text)" x-text="a.platform"></span>
+                </div>
+              </td>
+              <td :data-label="'Aksiyon'"><span style="font-size:var(--fs-sm);color:var(--text)" x-text="a.action"></span></td>
+              <td :data-label="'Detay'"><span style="font-size:var(--fs-sm);color:var(--muted)" x-text="a.detail"></span></td>
+              <td :data-label="'Durum'" style="text-align:center">
+                <span class="badge" :style="a.statusColor" x-text="a.status"></span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="fade-in-d3" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Oncelikli Oneriler</span>
+    <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+      <template x-for="r in recommendations" :key="r.id">
+        <div class="card" style="padding:var(--sp-5)">
+          <div style="display:flex;align-items:flex-start;gap:var(--sp-4)">
+            <div style="width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="'background:'+r.bgColor">
+              <i :class="'ph ph-'+r.icon" style="font-size:var(--fs-xl)" :style="'color:'+r.color"></i>
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+                <span class="badge" :style="'background:'+r.badgeBg+';color:'+r.badgeColor" x-text="r.priority"></span>
+                <span style="font-weight:500;color:var(--text);font-size:var(--fs-base)" x-text="r.title"></span>
+              </div>
+              <p style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-3)" x-text="r.description"></p>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2)">
+                <span style="font-size:var(--fs-sm);color:var(--accent)" x-text="r.impact"></span>
+                <button class="btn-secondary" style="font-size:var(--fs-sm);gap:var(--sp-1);padding:var(--sp-1) var(--sp-3)" x-text="r.actionLabel">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('seo'));</script>
+<script>
+function earnedMedia() {
+  return {
+    platformFilter: 'tumu',
+    platforms: [
+      {
+        id:'wikipedia', name:'Wikipedia', icon:'book-open', color:'#3b82f6', bgColor:'rgba(59,130,246,0.1)',
+        status:'Yayinda', aiSourceShare:26.3, trend:'up', trendLabel:'+3 referans bu ay',
+        lastActivity:'28 Mar 2026', action:'Incele',
+        metrics:[
+          {label:'Entity Durumu', value:'Tam'},
+          {label:'Wikidata', value:'Mevcut'},
+          {label:'Referanslar', value:'8'},
+          {label:'Goruntulenme', value:'2.4K'}
+        ]
+      },
+      {
+        id:'reddit', name:'Reddit', icon:'reddit-logo', color:'#f97316', bgColor:'rgba(249,115,22,0.1)',
+        status:'Aktif', aiSourceShare:40.1, trend:'up', trendLabel:'+12 post bu ay',
+        lastActivity:'30 Mar 2026', action:'Optimize',
+        metrics:[
+          {label:'Subreddit', value:'4'},
+          {label:'Gonderi', value:'23'},
+          {label:'Yorum', value:'67'},
+          {label:'Karma', value:'1,240'}
+        ]
+      },
+      {
+        id:'youtube', name:'YouTube', icon:'youtube-logo', color:'#ef4444', bgColor:'rgba(239,68,68,0.1)',
+        status:'Aktif', aiSourceShare:23.5, trend:'up', trendLabel:'+2 video bu ay',
+        lastActivity:'29 Mar 2026', action:'Optimize',
+        metrics:[
+          {label:'Video', value:'18'},
+          {label:'Abone', value:'3,800'},
+          {label:'Izlenme', value:'45K'},
+          {label:'Ort. Sure', value:'6:42'}
+        ]
+      },
+      {
+        id:'linkedin', name:'LinkedIn', icon:'linkedin-logo', color:'#0a66c2', bgColor:'rgba(10,102,194,0.1)',
+        status:'Aktif', aiSourceShare:2.79, trend:'up', trendLabel:'+4.2% etkilesim orani',
+        lastActivity:'30 Mar 2026', action:'Optimize',
+        metrics:[
+          {label:'Makale', value:'12'},
+          {label:'Takipci', value:'12.5K'},
+          {label:'Etkilesim', value:'%4.2'},
+          {label:'Paylasilma', value:'86'}
+        ]
+      },
+      {
+        id:'quora', name:'Quora', icon:'chat-circle-text', color:'#a855f7', bgColor:'rgba(168,85,247,0.1)',
+        status:'Pasif', aiSourceShare:1.8, trend:'down', trendLabel:'-15% etkilesim dususu',
+        lastActivity:'14 Feb 2026', action:'Olustur',
+        metrics:[
+          {label:'Yanit', value:'5'},
+          {label:'Goruntulenme', value:'2.3K'},
+          {label:'Oy', value:'34'},
+          {label:'Takipci', value:'89'}
+        ]
+      },
+      {
+        id:'github', name:'GitHub', icon:'github-logo', color:'#7B7269', bgColor:'rgba(123,114,105,0.1)',
+        status:'Aktif', aiSourceShare:1.2, trend:'up', trendLabel:'+8 yildiz bu ay',
+        lastActivity:'30 Mar 2026', action:'Incele',
+        metrics:[
+          {label:'Repo', value:'3'},
+          {label:'Yildiz', value:'156'},
+          {label:'Fork', value:'23'},
+          {label:'Katki', value:'412'}
+        ]
+      }
+    ],
+    activities: [
+      {id:1, date:'30 Mar 2026', platform:'Reddit', icon:'reddit-logo', color:'#f97316', action:'Yeni gonderi', detail:'r/turkishtech subreddit\'inde marka bahsi', status:'Aktif', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:2, date:'30 Mar 2026', platform:'LinkedIn', icon:'linkedin-logo', color:'#0a66c2', action:'Makale paylasimi', detail:'AI ve SEO: 2026 Trendleri makalesi', status:'Yayinda', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:3, date:'30 Mar 2026', platform:'GitHub', icon:'github-logo', color:'#7B7269', action:'Yeni release', detail:'atonota-sdk v2.4.0 yayinlandi', status:'Aktif', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:4, date:'29 Mar 2026', platform:'YouTube', icon:'youtube-logo', color:'#ef4444', action:'Video yukleme', detail:'GEO Optimizasyon Rehberi #12', status:'Yayinda', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:5, date:'28 Mar 2026', platform:'Wikipedia', icon:'book-open', color:'#3b82f6', action:'Sayfa guncelleme', detail:'Referans listesi genisletildi (8 kaynak)', status:'Onaylandi', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:6, date:'27 Mar 2026', platform:'Reddit', icon:'reddit-logo', color:'#f97316', action:'Yorum yaniti', detail:'r/SEO subreddit\'inde 23 upvote', status:'Aktif', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:7, date:'25 Mar 2026', platform:'LinkedIn', icon:'linkedin-logo', color:'#0a66c2', action:'Anket paylasimi', detail:'AI arac tercihleri anketi - 340 katilimci', status:'Tamamlandi', statusColor:'background:rgba(59,130,246,0.1);color:#3b82f6'},
+      {id:8, date:'22 Mar 2026', platform:'YouTube', icon:'youtube-logo', color:'#ef4444', action:'Video yukleme', detail:'Schema Markup Rehberi video serisi', status:'Yayinda', statusColor:'background:rgba(34,197,94,0.1);color:#22c55e'},
+      {id:9, date:'20 Mar 2026', platform:'Reddit', icon:'reddit-logo', color:'#f97316', action:'AMA etkinligi', detail:'r/digitalmarketing AMA - 45 soru', status:'Tamamlandi', statusColor:'background:rgba(59,130,246,0.1);color:#3b82f6'},
+      {id:10, date:'14 Feb 2026', platform:'Quora', icon:'chat-circle-text', color:'#a855f7', action:'Yanit yazildi', detail:'SEO vs GEO farklari sorusuna yanit', status:'Pasif', statusColor:'background:rgba(234,179,8,0.1);color:#eab308'}
+    ],
+    recommendations: [
+      {
+        id:1, icon:'reddit-logo', color:'#f97316', bgColor:'rgba(249,115,22,0.1)',
+        priority:'Kritik', badgeBg:'rgba(239,68,68,0.1)', badgeColor:'#ef4444',
+        title:'Reddit Icerik Stratejisini Guclendir',
+        description:'Reddit, AI motorlarinin %40.1 oraninda kaynak olarak kullandigi en buyuk platformdur. Haftalik gonderi sayisini 3\'ten 5\'e cikarin ve r/SEO, r/digitalmarketing, r/turkishtech subreddit\'lerinde duzenli katilim saglayin. AMA etkinlikleri duzenleyerek topluluk otoritesi olusturun.',
+        impact:'Tahmini etki: +25 AI mention/ay',
+        actionLabel:'Reddit Plani Olustur'
+      },
+      {
+        id:2, icon:'youtube-logo', color:'#ef4444', bgColor:'rgba(239,68,68,0.1)',
+        priority:'Yuksek', badgeBg:'rgba(249,115,22,0.1)', badgeColor:'#f97316',
+        title:'YouTube Icerik Sikligi Artir',
+        description:'YouTube, AI kaynaklarinin %23.5\'ini olusturuyor. Mevcut 18 videoyu ayda 4 yeni video ekleyerek buyutun. Video aciklamalarinda schema markup kullanin, altyazi dosyalarini optimize edin ve playlist yapisini guclendir.',
+        impact:'Tahmini etki: +15 AI mention/ay',
+        actionLabel:'Video Takvimi Planla'
+      },
+      {
+        id:3, icon:'chat-circle-text', color:'#a855f7', bgColor:'rgba(168,85,247,0.1)',
+        priority:'Orta', badgeBg:'rgba(234,179,8,0.1)', badgeColor:'#eab308',
+        title:'Quora Hesabini Yeniden Aktiflesir',
+        description:'Quora hesabiniz 45 gundur pasif durumda. AI motorlari Quora\'yi %1.8 oraninda kaynak aliyor ve bu oran yanit kalitesiyle artabilir. Haftada en az 3 detayli yanit yazarak uzmanlik otoritesi olusturun.',
+        impact:'Tahmini etki: +8 AI mention/ay',
+        actionLabel:'Quora Stratejisi Baslat'
+      }
+    ],
+    get filteredPlatforms() {
+      if (this.platformFilter === 'tumu') return this.platforms;
+      return this.platforms.filter(p => p.id === this.platformFilter);
+    }
+  }
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tooltipStyle = {backgroundColor:'#201C18',borderColor:'#3C342C',textStyle:{color:'#F2EDE5',fontSize:12}};
+
+  // AI Kaynak Dagilimi - Horizontal Bar
+  const cSource = echarts.init(document.getElementById('chart-ai-source'));
+  cSource.setOption({
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},...tooltipStyle},
+    grid:{left:'110px',right:'60px',top:'10px',bottom:'30px'},
+    xAxis:{type:'value',max:45,axisLabel:{formatter:'{value}%',color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
+    yAxis:{type:'category',data:['GitHub','Quora','LinkedIn','YouTube','Wikipedia','Reddit'],axisLabel:{color:'#F2EDE5',fontSize:12},axisLine:{show:false},axisTick:{show:false}},
+    series:[{
+      type:'bar',
+      barWidth:20,
+      data:[
+        {value:1.2, itemStyle:{color:'#7B7269'}},
+        {value:1.8, itemStyle:{color:'#a855f7'}},
+        {value:2.79, itemStyle:{color:'#0a66c2'}},
+        {value:23.5, itemStyle:{color:'#ef4444'}},
+        {value:26.3, itemStyle:{color:'#3b82f6'}},
+        {value:40.1, itemStyle:{color:'#f97316'}}
+      ],
+      label:{show:true,position:'right',formatter:'{c}%',color:'#F2EDE5',fontSize:11}
+    }]
+  });
+
+  // Correlation Scatter
+  const cCorr = echarts.init(document.getElementById('chart-correlation'));
+  cCorr.setOption({
+    tooltip:{trigger:'item',formatter:function(p){return p.data[2]+'<br/>Mention: '+p.data[0]+'<br/>AI Gorunurluk: '+p.data[1]+'%'},...tooltipStyle},
+    grid:{left:'50px',right:'20px',top:'10px',bottom:'40px'},
+    xAxis:{type:'value',name:'Earned Mention',nameLocation:'center',nameGap:25,nameTextStyle:{color:'#7B7269',fontSize:11},axisLabel:{color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
+    yAxis:{type:'value',name:'AI Gorunurluk %',nameTextStyle:{color:'#7B7269',fontSize:11},axisLabel:{color:'#7B7269',fontSize:11},splitLine:{lineStyle:{color:'rgba(123,114,105,0.15)'}}},
+    series:[{
+      type:'scatter',
+      symbolSize:16,
+      data:[
+        [90,40.1,'Reddit'],
+        [35,26.3,'Wikipedia'],
+        [45,23.5,'YouTube'],
+        [98,2.79,'LinkedIn'],
+        [5,1.8,'Quora'],
+        [156,1.2,'GitHub'],
+        [120,35.2,'Rakip A - Reddit'],
+        [50,28.1,'Rakip A - Wikipedia'],
+        [30,18.4,'Rakip B - YouTube'],
+        [75,3.5,'Rakip B - LinkedIn']
+      ],
+      itemStyle:{color:'var(--accent)',opacity:0.8},
+      emphasis:{itemStyle:{shadowBlur:10,shadowColor:'rgba(0,0,0,0.3)'}}
+    }]
+  });
+
+  window.addEventListener('resize', () => { cSource.resize(); cCorr.resize(); });
+});
+</script>
+</body>
+</html>

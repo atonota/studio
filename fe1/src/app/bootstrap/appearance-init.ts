@@ -149,9 +149,10 @@ function applyThemeTokens(): void {
   const a11yCursor = g('a11y_cursor', 'default');
   if (a11yCursor !== 'default') R.setAttribute('data-cursor', a11yCursor);
 
-  // Sidebar default state
+  // Sidebar default state — also respect pin/lock
   const sidebarPref = g('sidebar_default', 'collapsed');
-  if (sidebarPref === 'open') {
+  const sidebarLocked = localStorage.getItem('sidebar_locked') === '1';
+  if (sidebarPref === 'open' || sidebarLocked) {
     if (document.body) {
       document.body.classList.add('wide-open');
     } else {

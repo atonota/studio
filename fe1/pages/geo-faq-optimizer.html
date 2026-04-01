@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>FAQ Optimizatoru — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="faqOptimizer()">
+
+  <!-- Baslik -->
+  <div class="fade-in" style="margin-bottom:var(--sp-6);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3)">
+    <div>
+      <h1 class="page-title">FAQ Optimizatoru</h1>
+      <p class="page-sub">FAQ bolumleri analiz edin, AI gorunurluk icin optimize edin</p>
+    </div>
+    <button class="btn-primary" @click="showBulkModal=true" style="display:inline-flex;align-items:center;gap:var(--sp-2)">
+      <i class="ph ph-magic-wand"></i> Toplu FAQ Olustur
+    </button>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-files" style="font-size:var(--fs-xl);color:#3b82f6"></i>
+        </div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Toplam Sayfa</span>
+      </div>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">124</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">taranan icerik sayfalari</div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-warning-circle" style="font-size:var(--fs-xl);color:#ef4444"></i>
+        </div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">FAQ Eksik</span>
+      </div>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:#ef4444">47</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">FAQ bolumu olmayan sayfalar</div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-gauge" style="font-size:var(--fs-xl);color:#C2410C"></i>
+        </div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Ortalama FAQ Skoru</span>
+      </div>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--accent)">62<span style="font-size:var(--fs-base);color:var(--muted)">/100</span></div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">iyilestirme potansiyeli yuksek</div>
+    </div>
+  </div>
+
+  <!-- URL Tarayici -->
+  <div class="fade-in card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <span class="section-label">URL Analiz Et</span>
+    <div style="display:flex;gap:var(--sp-2);margin-top:var(--sp-2)">
+      <input type="url" x-model="scanUrl" placeholder="https://ornek.com/sayfa-adi" style="flex:1;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:var(--fs-sm)">
+      <button class="btn-primary" @click="scanUrl=''" style="display:inline-flex;align-items:center;gap:var(--sp-1)">
+        <i class="ph ph-magnifying-glass"></i> Analiz Et
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtre -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
+    <template x-for="f in [{v:'tumu',l:'Tumu (12)'},{v:'optimal',l:'Optimal (3)'},{v:'iyilestir',l:'Iyilestir (4)'},{v:'eksik',l:'Eksik (4)'},{v:'fazla',l:'Fazla (1)'}]">
+      <button @click="statusFilter=f.v" class="pill" :class="statusFilter===f.v ? 'active' : ''" x-text="f.l"></button>
+    </template>
+  </div>
+
+  <!-- Sayfa Tablosu -->
+  <div class="fade-in-d1 card" style="padding:0;overflow:hidden;margin-bottom:var(--sp-6)" x-show="!selectedPage">
+    <table class="r-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th style="text-align:center">Kelime</th>
+          <th style="text-align:center">Mevcut FAQ</th>
+          <th style="text-align:center">Onerilen</th>
+          <th style="text-align:center">Skor</th>
+          <th style="text-align:center">Schema</th>
+          <th style="text-align:center">Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="page in filteredPages()" :key="page.id">
+          <tr style="cursor:pointer" @click="selectedPage=page">
+            <td data-label="URL">
+              <div style="display:flex;flex-direction:column">
+                <span style="font-weight:500;color:var(--text);font-size:var(--fs-sm)" x-text="page.title"></span>
+                <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="page.url"></span>
+              </div>
+            </td>
+            <td data-label="Kelime" style="text-align:center"><span style="font-size:var(--fs-sm);color:var(--text)" x-text="page.wordCount.toLocaleString('tr-TR')"></span></td>
+            <td data-label="Mevcut FAQ" style="text-align:center"><span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)" x-text="page.currentFaq"></span></td>
+            <td data-label="Onerilen" style="text-align:center"><span style="font-size:var(--fs-sm);color:var(--accent);font-weight:600" x-text="page.recommendedFaq"></span></td>
+            <td data-label="Skor" style="text-align:center">
+              <div style="display:flex;align-items:center;justify-content:center;gap:var(--sp-2)">
+                <div style="width:40px;height:4px;background:var(--border);border-radius:var(--r-full);overflow:hidden">
+                  <div :style="`width:${page.score}%;height:100%;border-radius:var(--r-full);background:${page.score>=80?'#22c55e':page.score>=50?'#eab308':'#ef4444'}`"></div>
+                </div>
+                <span style="font-size:var(--fs-sm);font-weight:600" :style="`color:${page.score>=80?'#22c55e':page.score>=50?'#eab308':'#ef4444'}`" x-text="page.score"></span>
+              </div>
+            </td>
+            <td data-label="Schema" style="text-align:center">
+              <span x-show="page.hasSchema" style="color:#22c55e;font-size:var(--fs-sm);font-weight:600"><i class="ph ph-check-circle"></i> Var</span>
+              <span x-show="!page.hasSchema" style="color:#ef4444;font-size:var(--fs-sm);font-weight:600"><i class="ph ph-x-circle"></i> Yok</span>
+            </td>
+            <td data-label="Durum" style="text-align:center">
+              <span class="badge" :style="page.status==='optimal' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : page.status==='iyilestir' ? 'background:rgba(234,179,8,0.1);color:#eab308' : page.status==='eksik' ? 'background:rgba(239,68,68,0.1);color:#ef4444' : 'background:rgba(249,115,22,0.1);color:#f97316'" x-text="page.status==='optimal' ? 'Optimal' : page.status==='iyilestir' ? 'Iyilestir' : page.status==='eksik' ? 'Eksik' : 'Fazla'"></span>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Sayfa Detay Gorunumu -->
+  <div x-show="selectedPage" class="fade-in-d1">
+    <div style="margin-bottom:var(--sp-4)">
+      <button class="btn-secondary" @click="selectedPage=null" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm)">
+        <i class="ph ph-arrow-left"></i> Listeye Don
+      </button>
+    </div>
+
+    <template x-if="selectedPage">
+      <div>
+        <!-- Detay Baslik -->
+        <div class="card" style="padding:var(--sp-5);margin-bottom:var(--sp-4)">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+            <div>
+              <h2 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin:0 0 var(--sp-1) 0" x-text="selectedPage.title"></h2>
+              <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="selectedPage.url"></span>
+            </div>
+            <span class="badge" style="font-size:var(--fs-sm);padding:var(--sp-1) var(--sp-3)" :style="selectedPage.status==='optimal' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : selectedPage.status==='iyilestir' ? 'background:rgba(234,179,8,0.1);color:#eab308' : selectedPage.status==='eksik' ? 'background:rgba(239,68,68,0.1);color:#ef4444' : 'background:rgba(249,115,22,0.1);color:#f97316'" x-text="selectedPage.status==='optimal' ? 'Optimal' : selectedPage.status==='iyilestir' ? 'Iyilestir' : selectedPage.status==='eksik' ? 'Eksik' : 'Fazla'"></span>
+          </div>
+
+          <!-- Metrikler -->
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-3)">
+            <div style="text-align:center;padding:var(--sp-3);background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+              <div style="font-size:var(--fs-xs);color:var(--muted)">Kelime Sayisi</div>
+              <div style="font-size:var(--fs-lg);font-weight:600;color:var(--text)" x-text="selectedPage.wordCount.toLocaleString('tr-TR')"></div>
+            </div>
+            <div style="text-align:center;padding:var(--sp-3);background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+              <div style="font-size:var(--fs-xs);color:var(--muted)">Mevcut FAQ</div>
+              <div style="font-size:var(--fs-lg);font-weight:600;color:var(--text)" x-text="selectedPage.currentFaq"></div>
+            </div>
+            <div style="text-align:center;padding:var(--sp-3);background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+              <div style="font-size:var(--fs-xs);color:var(--muted)">Onerilen FAQ</div>
+              <div style="font-size:var(--fs-lg);font-weight:600;color:var(--accent)" x-text="selectedPage.recommendedFaq"></div>
+            </div>
+            <div style="text-align:center;padding:var(--sp-3);background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+              <div style="font-size:var(--fs-xs);color:var(--muted)">FAQ Skoru</div>
+              <div style="font-size:var(--fs-lg);font-weight:600" :style="`color:${selectedPage.score>=80?'#22c55e':selectedPage.score>=50?'#eab308':'#ef4444'}`" x-text="selectedPage.score + '/100'"></div>
+            </div>
+            <div style="text-align:center;padding:var(--sp-3);background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+              <div style="font-size:var(--fs-xs);color:var(--muted)">Okunabilirlik</div>
+              <div style="font-size:var(--fs-lg);font-weight:600;color:var(--text)" x-text="selectedPage.readability || '72'"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-4)">
+
+          <!-- Mevcut FAQ Sorulari -->
+          <div class="card" style="padding:var(--sp-5)">
+            <span class="section-label">Mevcut FAQ Sorulari</span>
+            <div x-show="selectedPage.currentQuestions && selectedPage.currentQuestions.length > 0" style="display:flex;flex-direction:column;gap:var(--sp-3);margin-top:var(--sp-2)">
+              <template x-for="(q, qi) in selectedPage.currentQuestions || []" :key="qi">
+                <div style="padding:var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+                  <div style="display:flex;align-items:flex-start;gap:var(--sp-2)">
+                    <i class="ph ph-chat-circle-text" style="color:var(--accent);margin-top:2px;flex-shrink:0"></i>
+                    <div>
+                      <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)" x-text="q.question"></div>
+                      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)" x-text="q.answerLength + ' kelime cevap'"></div>
+                      <span class="badge" style="margin-top:var(--sp-1)" :style="q.answerLength >= 40 && q.answerLength <= 60 ? 'background:rgba(34,197,94,0.1);color:#22c55e' : q.answerLength < 40 ? 'background:rgba(234,179,8,0.1);color:#eab308' : 'background:rgba(249,115,22,0.1);color:#f97316'" x-text="q.answerLength >= 40 && q.answerLength <= 60 ? 'Ideal uzunluk' : q.answerLength < 40 ? 'Cok kisa' : 'Cok uzun'"></span>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div x-show="!selectedPage.currentQuestions || selectedPage.currentQuestions.length === 0" style="text-align:center;padding:var(--sp-6) 0;color:var(--muted)">
+              <i class="ph ph-question" style="font-size:var(--fs-3xl);display:block;margin-bottom:var(--sp-2)"></i>
+              <span style="font-size:var(--fs-sm)">Bu sayfada FAQ bolumu bulunamadi</span>
+            </div>
+          </div>
+
+          <!-- Onerilen FAQ Sorulari -->
+          <div class="card" style="padding:var(--sp-5)">
+            <span class="section-label">AI Onerisi — Yeni FAQ Sorulari</span>
+            <div style="display:flex;flex-direction:column;gap:var(--sp-3);margin-top:var(--sp-2)">
+              <template x-for="(sq, sqi) in selectedPage.suggestedQuestions || []" :key="sqi">
+                <div style="padding:var(--sp-3);background:rgba(194,65,12,0.04);border:1px dashed var(--accent);border-radius:var(--r-md)">
+                  <div style="display:flex;align-items:flex-start;gap:var(--sp-2)">
+                    <i class="ph ph-sparkle" style="color:var(--accent);margin-top:2px;flex-shrink:0"></i>
+                    <div>
+                      <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)" x-text="sq.question"></div>
+                      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)" x-text="'Kaynak: ' + sq.source"></div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Kalite Kontrol Listesi -->
+        <div class="card" style="padding:var(--sp-5);margin-bottom:var(--sp-4)">
+          <span class="section-label">FAQ Kalite Kriterleri</span>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3);margin-top:var(--sp-3)">
+            <template x-for="c in selectedPage.qualityCriteria || defaultCriteria" :key="c.label">
+              <div style="display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md)">
+                <i :class="c.pass ? 'ph ph-check-circle' : 'ph ph-x-circle'" :style="c.pass ? 'color:#22c55e;font-size:var(--fs-lg)' : 'color:#ef4444;font-size:var(--fs-lg)'"></i>
+                <span style="font-size:var(--fs-sm);color:var(--text)" x-text="c.label"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+  <!-- FAQ Sablon Kutuphanesi -->
+  <div class="fade-in-d2 card" style="padding:var(--sp-5)" x-show="!selectedPage">
+    <span class="section-label">FAQ Sablon Kutuphanesi</span>
+    <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Sektorunuze uygun hazir FAQ sablonlari</p>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-3)">
+      <template x-for="tmpl in templates" :key="tmpl.name">
+        <div class="card" style="padding:var(--sp-4);text-align:center;cursor:pointer">
+          <div style="width:44px;height:44px;border-radius:var(--r-lg);margin:0 auto var(--sp-3);display:flex;align-items:center;justify-content:center" :style="`background:${tmpl.color}18`">
+            <i :class="'ph ' + tmpl.icon" :style="`font-size:var(--fs-xl);color:${tmpl.color}`"></i>
+          </div>
+          <div style="font-size:var(--fs-sm);font-weight:500;color:var(--text)" x-text="tmpl.name"></div>
+          <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)" x-text="tmpl.count + ' soru'"></div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Toplu FAQ Olustur Modal -->
+  <template x-if="showBulkModal">
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:center;justify-content:center;padding:var(--sp-4)" @click.self="showBulkModal=false">
+      <div class="card" style="width:100%;max-width:520px;padding:var(--sp-6)" @click.stop>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-5)">
+          <h2 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin:0">Toplu FAQ Olustur</h2>
+          <button @click="showBulkModal=false" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:var(--fs-xl)"><i class="ph ph-x"></i></button>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);margin-bottom:var(--sp-4)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-3)">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">FAQ eksik sayfalar</span>
+            <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">47 sayfa</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--sp-3)">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">Iyilestirme gereken</span>
+            <span style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">31 sayfa</span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:var(--fs-sm);color:var(--muted)">Toplam olusturulacak FAQ</span>
+            <span style="font-size:var(--fs-sm);font-weight:600;color:var(--accent)">~234 soru</span>
+          </div>
+        </div>
+        <p style="font-size:var(--fs-xs);color:var(--muted);line-height:1.6;margin-bottom:var(--sp-4)">AI, her sayfanin kelime sayisina ve icerik konusuna uygun FAQ sorulari olusturacaktir. Olusturulan sorular incelemeniz icin taslak olarak kaydedilir.</p>
+        <div style="display:flex;justify-content:flex-end;gap:var(--sp-2)">
+          <button class="btn-secondary" @click="showBulkModal=false">Iptal</button>
+          <button class="btn-primary" @click="showBulkModal=false" style="display:inline-flex;align-items:center;gap:var(--sp-1)">
+            <i class="ph ph-magic-wand"></i> Olusturmaya Basla
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>
+function faqOptimizer() {
+  return {
+    statusFilter: 'tumu',
+    selectedPage: null,
+    scanUrl: '',
+    showBulkModal: false,
+
+    defaultCriteria: [
+      { label:'Soru bazli baslik (H2/H3)', pass:false },
+      { label:'Dogrudan cevap (ilk cumle)', pass:false },
+      { label:'40-60 kelime cevap uzunlugu', pass:false },
+      { label:'FAQPage schema markup', pass:false },
+      { label:'Ic linkler', pass:false },
+      { label:'Kaynak referansi', pass:false },
+    ],
+
+    templates: [
+      { name:'E-Ticaret', icon:'ph-storefront', color:'#3b82f6', count:15 },
+      { name:'SaaS / Teknoloji', icon:'ph-code', color:'#a855f7', count:12 },
+      { name:'Saglik', icon:'ph-first-aid', color:'#22c55e', count:10 },
+      { name:'Finans', icon:'ph-bank', color:'#eab308', count:14 },
+      { name:'Egitim', icon:'ph-graduation-cap', color:'#C2410C', count:11 },
+    ],
+
+    pages: [
+      {
+        id:1, title:'SEO Nedir? Kapsamli Rehber', url:'/blog/seo-nedir',
+        wordCount:2450, currentFaq:8, recommendedFaq:9, score:92, hasSchema:true, status:'optimal', readability:'78',
+        currentQuestions:[
+          { question:'SEO nedir ve neden onemlidir?', answerLength:52 },
+          { question:'SEO turleri nelerdir?', answerLength:48 },
+          { question:'SEO ne kadar surede sonuc verir?', answerLength:44 },
+          { question:'SEO maliyeti ne kadardir?', answerLength:55 },
+          { question:'On-page SEO nedir?', answerLength:42 },
+          { question:'Backlink nedir?', answerLength:38 },
+          { question:'Teknik SEO neleri kapsar?', answerLength:50 },
+          { question:'Yerel SEO nedir?', answerLength:45 },
+        ],
+        suggestedQuestions:[
+          { question:'2026 yilinda en etkili SEO stratejileri nelerdir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:true },
+          { label:'40-60 kelime cevap uzunlugu', pass:true },
+          { label:'FAQPage schema markup', pass:true },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:true },
+        ]
+      },
+      {
+        id:2, title:'Dijital Pazarlama Stratejileri', url:'/blog/dijital-pazarlama',
+        wordCount:1820, currentFaq:6, recommendedFaq:7, score:85, hasSchema:true, status:'optimal', readability:'74',
+        currentQuestions:[
+          { question:'Dijital pazarlama nedir?', answerLength:50 },
+          { question:'Dijital pazarlama kanallari nelerdir?', answerLength:58 },
+          { question:'Sosyal medya pazarlamasi nasil yapilir?', answerLength:45 },
+          { question:'Icerik pazarlamasi neden onemlidir?', answerLength:42 },
+          { question:'E-posta pazarlamasi etkili midir?', answerLength:48 },
+          { question:'Dijital pazarlama butcesi nasil belirlenir?', answerLength:53 },
+        ],
+        suggestedQuestions:[
+          { question:'Kucuk isletmeler icin en uygun dijital pazarlama stratejisi hangisidir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:true },
+          { label:'40-60 kelime cevap uzunlugu', pass:true },
+          { label:'FAQPage schema markup', pass:true },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:3, title:'Google Analytics 4 Kullanim Kilavuzu', url:'/blog/ga4-kilavuz',
+        wordCount:2100, currentFaq:8, recommendedFaq:8, score:88, hasSchema:true, status:'optimal', readability:'70',
+        currentQuestions:[
+          { question:'GA4 nedir?', answerLength:46 },
+          { question:'UA ile GA4 arasindaki farklar nelerdir?', answerLength:55 },
+          { question:'GA4 nasil kurulur?', answerLength:42 },
+          { question:'GA4 etkinlik takibi nasil yapilir?', answerLength:50 },
+          { question:'GA4 donusum olcumu nasil ayarlanir?', answerLength:48 },
+          { question:'GA4 raporlari nasil olusturulur?', answerLength:44 },
+          { question:'GA4 BigQuery entegrasyonu nedir?', answerLength:52 },
+          { question:'GA4 ucretsiz mi?', answerLength:38 },
+        ],
+        suggestedQuestions:[
+          { question:'GA4 ile gelismis segment analizi nasil yapilir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:true },
+          { label:'40-60 kelime cevap uzunlugu', pass:true },
+          { label:'FAQPage schema markup', pass:true },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:true },
+        ]
+      },
+      {
+        id:4, title:'Backlink Stratejileri', url:'/blog/backlink-stratejileri',
+        wordCount:1400, currentFaq:3, recommendedFaq:5, score:58, hasSchema:false, status:'iyilestir', readability:'72',
+        currentQuestions:[
+          { question:'Backlink nedir?', answerLength:35 },
+          { question:'Kaliteli backlink nasil alinir?', answerLength:28 },
+          { question:'Backlink tipleri nelerdir?', answerLength:62 },
+        ],
+        suggestedQuestions:[
+          { question:'Zarali backlink nasil tespit edilir?', source:'People Also Ask' },
+          { question:'Backlink disavow nedir ve nasil yapilir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:false },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:5, title:'Teknik SEO Kontrol Listesi', url:'/blog/teknik-seo-checklist',
+        wordCount:1100, currentFaq:2, recommendedFaq:5, score:45, hasSchema:false, status:'iyilestir', readability:'68',
+        currentQuestions:[
+          { question:'Teknik SEO nedir?', answerLength:72 },
+          { question:'Site hizi neden onemlidir?', answerLength:30 },
+        ],
+        suggestedQuestions:[
+          { question:'Core Web Vitals nelerdir?', source:'People Also Ask' },
+          { question:'XML sitemap nasil olusturulur?', source:'Ahrefs KW Data' },
+          { question:'Robots.txt dosyasi nasil yapilandirilir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:false },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:false },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:6, title:'E-Ticaret SEO Rehberi', url:'/blog/e-ticaret-seo',
+        wordCount:1650, currentFaq:3, recommendedFaq:6, score:52, hasSchema:true, status:'iyilestir', readability:'75',
+        currentQuestions:[
+          { question:'E-ticaret SEO nedir?', answerLength:40 },
+          { question:'Urun sayfasi nasil optimize edilir?', answerLength:55 },
+          { question:'Kategori sayfasi SEO onerileri nelerdir?', answerLength:48 },
+        ],
+        suggestedQuestions:[
+          { question:'E-ticaret sitesinde canonical URL nasil kullanilir?', source:'People Also Ask' },
+          { question:'Urun yorumlari SEO icin neden onemlidir?', source:'Ahrefs KW Data' },
+          { question:'E-ticarette schema markup nasil uygulanir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:true },
+          { label:'40-60 kelime cevap uzunlugu', pass:true },
+          { label:'FAQPage schema markup', pass:true },
+          { label:'Ic linkler', pass:false },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:7, title:'Icerik Pazarlamasi Temelleri', url:'/blog/icerik-pazarlamasi',
+        wordCount:980, currentFaq:2, recommendedFaq:4, score:48, hasSchema:false, status:'iyilestir', readability:'80',
+        currentQuestions:[
+          { question:'Icerik pazarlamasi nedir?', answerLength:45 },
+          { question:'Icerik takvimi nasil olusturulur?', answerLength:33 },
+        ],
+        suggestedQuestions:[
+          { question:'Icerik pazarlamasi ROI nasil olculur?', source:'People Also Ask' },
+          { question:'Blog yazisi uzunlugu ne olmalidir?', source:'Ahrefs KW Data' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:true },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:8, title:'Google Ads Kampanya Yonetimi', url:'/blog/google-ads-yonetimi',
+        wordCount:1300, currentFaq:0, recommendedFaq:5, score:12, hasSchema:false, status:'eksik', readability:'71',
+        currentQuestions:[],
+        suggestedQuestions:[
+          { question:'Google Ads nedir ve nasil calisir?', source:'People Also Ask' },
+          { question:'Google Ads maliyeti nasil belirlenir?', source:'People Also Ask' },
+          { question:'Kalite skoru nedir?', source:'Ahrefs KW Data' },
+          { question:'Google Ads donusum takibi nasil kurulur?', source:'People Also Ask' },
+          { question:'Negatif anahtar kelime nedir?', source:'Ahrefs KW Data' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:false },
+          { label:'Dogrudan cevap (ilk cumle)', pass:false },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:false },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:9, title:'Sosyal Medya Yonetim Araci Karsilastirmasi', url:'/blog/sosyal-medya-araclari',
+        wordCount:850, currentFaq:0, recommendedFaq:3, score:8, hasSchema:false, status:'eksik', readability:'76',
+        currentQuestions:[],
+        suggestedQuestions:[
+          { question:'En iyi sosyal medya yonetim araci hangisidir?', source:'People Also Ask' },
+          { question:'Sosyal medya planlama araci neden kullanilir?', source:'People Also Ask' },
+          { question:'Ucretsiz sosyal medya araclari nelerdir?', source:'Ahrefs KW Data' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:false },
+          { label:'Dogrudan cevap (ilk cumle)', pass:false },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:10, title:'Web Sitesi Hiz Optimizasyonu', url:'/blog/site-hizi',
+        wordCount:1150, currentFaq:0, recommendedFaq:5, score:10, hasSchema:false, status:'eksik', readability:'69',
+        currentQuestions:[],
+        suggestedQuestions:[
+          { question:'Site hizi neden onemlidir?', source:'People Also Ask' },
+          { question:'Core Web Vitals nasil iyilestirilir?', source:'People Also Ask' },
+          { question:'Gorsel optimizasyonu nasil yapilir?', source:'Ahrefs KW Data' },
+          { question:'CDN nedir ve ne ise yarar?', source:'People Also Ask' },
+          { question:'Lazy loading nedir?', source:'Ahrefs KW Data' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:false },
+          { label:'Dogrudan cevap (ilk cumle)', pass:false },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:false },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:11, title:'Email Pazarlama Otomasyonu', url:'/blog/email-otomasyon',
+        wordCount:720, currentFaq:0, recommendedFaq:3, score:5, hasSchema:false, status:'eksik', readability:'82',
+        currentQuestions:[],
+        suggestedQuestions:[
+          { question:'Email pazarlama otomasyonu nedir?', source:'People Also Ask' },
+          { question:'Drip kampanya nedir?', source:'Ahrefs KW Data' },
+          { question:'Email acilma orani nasil arttirilir?', source:'People Also Ask' },
+        ],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:false },
+          { label:'Dogrudan cevap (ilk cumle)', pass:false },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:false },
+          { label:'Ic linkler', pass:false },
+          { label:'Kaynak referansi', pass:false },
+        ]
+      },
+      {
+        id:12, title:'Anahtar Kelime Arastirmasi Mega Rehber', url:'/blog/anahtar-kelime-arastirmasi',
+        wordCount:3200, currentFaq:14, recommendedFaq:10, score:55, hasSchema:true, status:'fazla', readability:'65',
+        currentQuestions:[
+          { question:'Anahtar kelime arastirmasi nedir?', answerLength:52 },
+          { question:'Long-tail anahtar kelime nedir?', answerLength:44 },
+          { question:'Arama hacmi nedir?', answerLength:38 },
+          { question:'Anahtar kelime zorlugu ne anlama gelir?', answerLength:50 },
+          { question:'Rakip anahtar kelime analizi nasil yapilir?', answerLength:58 },
+          { question:'LSI anahtar kelimeler nedir?', answerLength:42 },
+          { question:'Anahtar kelime gruplama nedir?', answerLength:35 },
+          { question:'Arama niyeti nedir?', answerLength:48 },
+          { question:'Ucretsiz anahtar kelime araclari nelerdir?', answerLength:65 },
+          { question:'Anahtar kelime haritalama nedir?', answerLength:40 },
+          { question:'Mevsimsel anahtar kelimeler nedir?', answerLength:32 },
+          { question:'Anahtar kelime kannibalizasyonu nedir?', answerLength:46 },
+          { question:'Featured snippet icin nasil optimize edilir?', answerLength:55 },
+          { question:'Voice search icin anahtar kelime nasil secilir?', answerLength:48 },
+        ],
+        suggestedQuestions:[],
+        qualityCriteria:[
+          { label:'Soru bazli baslik (H2/H3)', pass:true },
+          { label:'Dogrudan cevap (ilk cumle)', pass:true },
+          { label:'40-60 kelime cevap uzunlugu', pass:false },
+          { label:'FAQPage schema markup', pass:true },
+          { label:'Ic linkler', pass:true },
+          { label:'Kaynak referansi', pass:true },
+        ]
+      },
+    ],
+
+    filteredPages() {
+      if (this.statusFilter === 'tumu') return this.pages;
+      return this.pages.filter(p => p.status === this.statusFilter);
+    },
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => initShell('seo'));
+</script>
+</body>
+</html>

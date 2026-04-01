@@ -11,6 +11,28 @@ import { MENU, SIDEBAR_DATA, SIDEBAR_HIDDEN } from './navigation-config';
 import { isFavorite } from './favorites';
 import { getCurrentFile, isInPages } from './helpers';
 
+// ── Sidebar lock (pin) state ──────────────────────────
+
+const LOCK_KEY = 'sidebar_locked';
+
+export function isSidebarLocked(): boolean {
+  return localStorage.getItem(LOCK_KEY) === '1';
+}
+
+function toggleSidebarLock(): void {
+  const locked = !isSidebarLocked();
+  localStorage.setItem(LOCK_KEY, locked ? '1' : '0');
+  updateLockButton(locked);
+}
+
+function updateLockButton(locked: boolean): void {
+  const btn = document.getElementById('wide-lock-btn');
+  if (!btn) return;
+  btn.classList.toggle('active', locked);
+  btn.setAttribute('aria-pressed', locked ? 'true' : 'false');
+  btn.title = locked ? 'Sidebar sabitlendi (kilidi ac)' : 'Sidebar sabitle (kilitle)';
+}
+
 function findSectionInfo(key: string): MenuItem | undefined {
   return MENU.flatMap((g) => g.items).find((i) => i.key === key);
 }
@@ -94,10 +116,12 @@ export function renderSidebar(base: string, key: string): void {
 
   sidebarEl.innerHTML = html;
 
-  // Sidebar 2'de bir item tıklandığında sidebar'ı otomatik kapat
+  // Sidebar 2'de bir item tıklandığında sidebar'ı otomatik kapat (kilitli değilse)
   sidebarEl.querySelectorAll<HTMLAnchorElement>('a.ws-l2, a.ws-dash').forEach((link) => {
     link.addEventListener('click', () => {
-      document.body.classList.remove('wide-open');
+      if (!isSidebarLocked()) {
+        document.body.classList.remove('wide-open');
+      }
     });
   });
 
@@ -127,6 +151,9 @@ function renderUserCard(): string {
   );
 }
 
+// Expose lock toggle for inline onclick
+window.__toggleSidebarLock = toggleSidebarLock;
+
 function ensureToggleButton(): void {
   if (document.getElementById('wide-toggle-tb')) return;
   const toggleBtn = document.createElement('button');
@@ -134,6 +161,27 @@ function ensureToggleButton(): void {
   toggleBtn.title = 'Sidebar toggle';
   toggleBtn.setAttribute('aria-label', 'Alt navigasyonu ac/kapat');
   toggleBtn.setAttribute('aria-expanded', document.body.classList.contains('wide-open') ? 'true' : 'false');
-  toggleBtn.innerHTML = '<span class="toggle-arrow"><i class="ph ph-caret-left" aria-hidden="true"></i></span>';
+  // SIDEBAR TOGGLE BUTTON — Direction Contract (DO NOT CHANGE):
+  // Icon: ph-caret-right → points RIGHT when sidebar CLOSED (= "click to open")
+  // CSS: body.wide-open .toggle-arrow { rotate(180deg) } → points LEFT when OPEN (= "click to close")
+  // Arrow shows WHERE the sidebar will go. This is correct UX.
+  toggleBtn.innerHTML = '<span class="toggle-arrow"><i class="ph ph-caret-right" aria-hidden="true"></i></span>';
   document.body.appendChild(toggleBtn);
+
+  // Lock/pin button — floating, same style as toggle but at top
+  ensureLockButton();
+}
+
+function ensureLockButton(): void {
+  if (document.getElementById('wide-lock-btn')) return;
+  const locked = isSidebarLocked();
+  const btn = document.createElement('button');
+  btn.id = 'wide-lock-btn';
+  btn.className = locked ? 'active' : '';
+  btn.title = locked ? 'Sidebar sabitlendi (kilidi ac)' : 'Sidebar sabitle (kilitle)';
+  btn.setAttribute('aria-label', btn.title);
+  btn.setAttribute('aria-pressed', locked ? 'true' : 'false');
+  btn.innerHTML = '<i class="ph ph-push-pin" aria-hidden="true"></i>';
+  btn.onclick = () => toggleSidebarLock();
+  document.body.appendChild(btn);
 }

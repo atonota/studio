@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>GEO A/B Test Yonetimi — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="geoABTesting()">
+
+  <!-- Baslik -->
+  <div class="fade-in" style="margin-bottom:var(--sp-6);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3)">
+    <div>
+      <h1 class="page-title">GEO A/B Test Yonetimi</h1>
+      <p class="page-sub">Icerik degisikliklerini test edin, AI gorunurluk etkisini olcun</p>
+    </div>
+    <button class="btn-primary" @click="showWizard=true;wizardStep=1" style="display:inline-flex;align-items:center;gap:var(--sp-2)">
+      <i class="ph ph-plus"></i> Yeni Test Olustur
+    </button>
+  </div>
+
+  <!-- Stat Cards -->
+  <div class="fade-in" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-flask" style="font-size:var(--fs-xl);color:#22c55e"></i>
+        </div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Aktif Test</span>
+      </div>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">2</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">su an devam eden</div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-check-circle" style="font-size:var(--fs-xl);color:#3b82f6"></i>
+        </div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Tamamlanan</span>
+      </div>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--text)">5</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">son 90 gunde</div>
+    </div>
+    <div class="stat-card">
+      <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)">
+        <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(194,65,12,0.1);display:flex;align-items:center;justify-content:center">
+          <i class="ph ph-trend-up" style="font-size:var(--fs-xl);color:#C2410C"></i>
+        </div>
+        <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Ortalama Etki</span>
+      </div>
+      <div style="font-size:var(--fs-3xl);font-weight:300;color:var(--accent)">+18%</div>
+      <div style="font-size:var(--fs-xs);color:var(--muted);margin-top:var(--sp-1)">visibility artisi</div>
+    </div>
+  </div>
+
+  <!-- Filtre -->
+  <div class="fade-in" style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap">
+    <template x-for="f in [{v:'tumu',l:'Tumu'},{v:'aktif',l:'Aktif'},{v:'tamamlandi',l:'Tamamlandi'},{v:'taslak',l:'Taslak'}]">
+      <button @click="statusFilter=f.v" class="pill" :class="statusFilter===f.v ? 'active' : ''" x-text="f.l"></button>
+    </template>
+  </div>
+
+  <!-- Test Listesi -->
+  <div class="fade-in-d1" style="display:flex;flex-direction:column;gap:var(--sp-3)" x-show="!selectedTest">
+    <template x-for="test in filteredTests()" :key="test.id">
+      <div class="card" style="padding:var(--sp-5);cursor:pointer" @click="selectedTest=test;$nextTick(()=>{if(test.status==='tamamlandi')initDetailChart(test)})">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap">
+
+          <!-- Sol: Test Bilgileri -->
+          <div style="flex:1;min-width:240px">
+            <div style="display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-2);flex-wrap:wrap">
+              <span style="font-weight:600;color:var(--text);font-size:var(--fs-base)" x-text="test.name"></span>
+              <span class="badge" :style="test.status==='aktif' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : test.status==='tamamlandi' ? 'background:rgba(59,130,246,0.1);color:#3b82f6' : test.status==='taslak' ? 'background:rgba(168,162,158,0.15);color:var(--muted)' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="test.status==='aktif' ? 'Aktif' : test.status==='tamamlandi' ? 'Tamamlandi' : test.status==='taslak' ? 'Taslak' : 'Durduruldu'"></span>
+            </div>
+            <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap;margin-bottom:var(--sp-3)">
+              <span style="font-size:var(--fs-xs);color:var(--muted)"><i class="ph ph-tag" style="margin-right:var(--sp-1)"></i><span x-text="test.type"></span></span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)" x-show="test.startDate"><i class="ph ph-calendar" style="margin-right:var(--sp-1)"></i><span x-text="test.startDate"></span></span>
+              <span style="font-size:var(--fs-xs);color:var(--muted)" x-show="test.duration"><i class="ph ph-clock" style="margin-right:var(--sp-1)"></i><span x-text="test.duration"></span></span>
+            </div>
+            <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap">
+              <span style="font-size:var(--fs-sm);color:var(--muted)">Kontrol: <strong style="color:var(--text)" x-text="test.controlPages + ' sayfa'"></strong></span>
+              <span style="font-size:var(--fs-sm);color:var(--muted)">Test: <strong style="color:var(--text)" x-text="test.testPages + ' sayfa'"></strong></span>
+            </div>
+          </div>
+
+          <!-- Sag: Sonuclar -->
+          <div style="display:flex;align-items:center;gap:var(--sp-6);flex-wrap:wrap" x-show="test.status!=='taslak'">
+            <div style="text-align:center">
+              <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-1)">Sonuc</div>
+              <div style="font-size:var(--fs-lg);font-weight:600" :style="test.resultValue.startsWith('+') ? 'color:#22c55e' : 'color:#ef4444'" x-text="test.resultValue"></div>
+              <div style="font-size:var(--fs-xs);color:var(--muted)" x-text="test.resultMetric"></div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-1)">Guven</div>
+              <div style="font-size:var(--fs-lg);font-weight:600" :style="test.confidence >= 95 ? 'color:#22c55e' : test.confidence >= 90 ? 'color:#3b82f6' : test.confidence >= 85 ? 'color:#eab308' : 'color:var(--muted)'" x-text="'%' + test.confidence"></div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--sp-1)">Platformlar</div>
+              <div style="display:flex;gap:var(--sp-1)">
+                <template x-for="p in test.platforms" :key="p">
+                  <span class="badge" style="font-size:10px;padding:2px 6px" x-text="p"></span>
+                </template>
+              </div>
+            </div>
+          </div>
+          <div x-show="test.status==='taslak'" style="display:flex;align-items:center">
+            <span style="font-size:var(--fs-sm);color:var(--muted);font-style:italic">Henuz baslamadi</span>
+          </div>
+
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Test Detay Gorunumu -->
+  <div x-show="selectedTest" class="fade-in-d1">
+    <div style="margin-bottom:var(--sp-4)">
+      <button class="btn-secondary" @click="selectedTest=null" style="display:inline-flex;align-items:center;gap:var(--sp-1);font-size:var(--fs-sm)">
+        <i class="ph ph-arrow-left"></i> Listeye Don
+      </button>
+    </div>
+
+    <template x-if="selectedTest">
+      <div>
+        <!-- Detay Baslik -->
+        <div class="card" style="padding:var(--sp-5);margin-bottom:var(--sp-4)">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+            <div>
+              <h2 style="font-size:var(--fs-xl);font-weight:600;color:var(--text);margin:0 0 var(--sp-1) 0" x-text="selectedTest.name"></h2>
+              <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap">
+                <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="selectedTest.type"></span>
+                <span style="font-size:var(--fs-sm);color:var(--muted)" x-text="selectedTest.duration"></span>
+                <span class="badge" :style="selectedTest.status==='aktif' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : selectedTest.status==='tamamlandi' ? 'background:rgba(59,130,246,0.1);color:#3b82f6' : 'background:rgba(168,162,158,0.15);color:var(--muted)'" x-text="selectedTest.status==='aktif' ? 'Aktif' : selectedTest.status==='tamamlandi' ? 'Tamamlandi' : 'Taslak'"></span>
+              </div>
+            </div>
+            <div style="display:flex;gap:var(--sp-3)">
+              <div class="stat-card" style="padding:var(--sp-3) var(--sp-5);text-align:center;min-width:100px">
+                <div style="font-size:var(--fs-xs);color:var(--muted)">Kontrol</div>
+                <div style="font-size:var(--fs-xl);font-weight:300;color:var(--text)" x-text="selectedTest.controlPages + ' sayfa'"></div>
+              </div>
+              <div class="stat-card" style="padding:var(--sp-3) var(--sp-5);text-align:center;min-width:100px">
+                <div style="font-size:var(--fs-xs);color:var(--muted)">Test</div>
+                <div style="font-size:var(--fs-xl);font-weight:300;color:var(--text)" x-text="selectedTest.testPages + ' sayfa'"></div>
+              </div>
+              <div class="stat-card" style="padding:var(--sp-3) var(--sp-5);text-align:center;min-width:100px">
+                <div style="font-size:var(--fs-xs);color:var(--muted)">Guven</div>
+                <div style="font-size:var(--fs-xl);font-weight:300" :style="selectedTest.confidence >= 95 ? 'color:#22c55e' : selectedTest.confidence >= 90 ? 'color:#3b82f6' : 'color:#eab308'" x-text="'%' + selectedTest.confidence"></div>
+              </div>
+            </div>
+          </div>
+          <div x-show="selectedTest.hypothesis" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3) var(--sp-4)">
+            <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Hipotez</span>
+            <p style="font-size:var(--fs-sm);color:var(--text);margin:var(--sp-1) 0 0 0;line-height:1.6" x-text="selectedTest.hypothesis"></p>
+          </div>
+        </div>
+
+        <!-- Sonuc Karsilastirma -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-4)" x-show="selectedTest.status!=='taslak'">
+
+          <!-- Before/After Chart -->
+          <div class="card" style="padding:var(--sp-5)">
+            <span class="section-label">Kontrol vs Test Sonuclari</span>
+            <div id="detail-chart" style="width:100%;height:280px"></div>
+          </div>
+
+          <!-- Platform Kirilim -->
+          <div class="card" style="padding:var(--sp-5)">
+            <span class="section-label">Platform Bazinda Kirilim</span>
+            <div style="display:flex;flex-direction:column;gap:var(--sp-3);margin-top:var(--sp-3)">
+              <template x-for="pb in selectedTest.platformBreakdown" :key="pb.platform">
+                <div style="display:flex;align-items:center;gap:var(--sp-3)">
+                  <span style="font-size:var(--fs-sm);font-weight:500;color:var(--text);min-width:90px" x-text="pb.platform"></span>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:var(--sp-1)">
+                    <div style="display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--muted)">
+                      <span>Visibility</span>
+                      <span :style="pb.visibility.startsWith('+') ? 'color:#22c55e' : 'color:#ef4444'" x-text="pb.visibility"></span>
+                    </div>
+                    <div style="height:4px;background:var(--border);border-radius:var(--r-full);overflow:hidden">
+                      <div :style="`width:${pb.visibilityPct}%;background:${pb.visibility.startsWith('+') ? '#22c55e' : '#ef4444'};height:100%;border-radius:var(--r-full)`"></div>
+                    </div>
+                  </div>
+                  <div style="min-width:60px;text-align:right">
+                    <div style="font-size:var(--fs-xs);color:var(--muted)">Citation</div>
+                    <div style="font-size:var(--fs-sm);font-weight:600" :style="pb.citation.startsWith('+') ? 'color:#22c55e' : 'color:#ef4444'" x-text="pb.citation"></div>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+            <!-- Ozet Metrikler -->
+            <div style="margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3)">
+              <div style="text-align:center">
+                <div style="font-size:var(--fs-xs);color:var(--muted)">Visibility Degisimi</div>
+                <div style="font-size:var(--fs-lg);font-weight:600;color:#22c55e" x-text="selectedTest.resultValue"></div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:var(--fs-xs);color:var(--muted)">Citation Degisimi</div>
+                <div style="font-size:var(--fs-lg);font-weight:600;color:#22c55e" x-text="selectedTest.citationChange || '+14%'"></div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:var(--fs-xs);color:var(--muted)">Impwc Degisimi</div>
+                <div style="font-size:var(--fs-lg);font-weight:600;color:#22c55e" x-text="selectedTest.impwcChange || '+19%'"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Yeni Test Wizard Overlay -->
+  <template x-if="showWizard">
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:center;justify-content:center;padding:var(--sp-4)" @click.self="showWizard=false">
+      <div class="card" style="width:100%;max-width:640px;padding:var(--sp-6);max-height:90vh;overflow-y:auto" @click.stop>
+
+        <!-- Wizard Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-5)">
+          <h2 style="font-size:var(--fs-lg);font-weight:600;color:var(--text);margin:0">Yeni A/B Test Olustur</h2>
+          <button @click="showWizard=false" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:var(--fs-xl)"><i class="ph ph-x"></i></button>
+        </div>
+
+        <!-- Step Indicator -->
+        <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-6)">
+          <template x-for="s in [1,2,3]" :key="s">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:var(--sp-2)">
+              <div style="width:32px;height:32px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);font-weight:600" :style="wizardStep >= s ? 'background:var(--accent);color:#fff' : 'background:var(--border);color:var(--muted)'" x-text="s"></div>
+              <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="s===1 ? 'Test Tipi' : s===2 ? 'Sayfa Gruplari' : 'Hipotez'"></span>
+            </div>
+          </template>
+        </div>
+
+        <!-- Step 1: Test Tipi -->
+        <div x-show="wizardStep===1">
+          <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Uygulamak istediginiz test tipini secin:</p>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+            <template x-for="tt in testTypes" :key="tt.id">
+              <div @click="newTest.type=tt.name" class="card" style="padding:var(--sp-4);cursor:pointer;transition:border-color .15s" :style="newTest.type===tt.name ? 'border-color:var(--accent)' : ''">
+                <div style="display:flex;align-items:center;gap:var(--sp-3)">
+                  <div style="width:36px;height:36px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0" :style="`background:${tt.color}18`">
+                    <i :class="'ph ' + tt.icon" :style="`font-size:var(--fs-base);color:${tt.color}`"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight:500;color:var(--text);font-size:var(--fs-sm)" x-text="tt.name"></div>
+                    <div style="font-size:var(--fs-xs);color:var(--muted)" x-text="tt.desc"></div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Step 2: Sayfa Gruplari -->
+        <div x-show="wizardStep===2">
+          <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Kontrol ve test gruplarini belirleyin:</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)">
+            <div>
+              <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Kontrol Grubu (sayfa sayisi)</label>
+              <input type="number" x-model="newTest.controlPages" value="10" style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:var(--fs-sm)">
+            </div>
+            <div>
+              <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Test Grubu (sayfa sayisi)</label>
+              <input type="number" x-model="newTest.testPages" value="10" style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:var(--fs-sm)">
+            </div>
+          </div>
+          <div style="margin-top:var(--sp-4)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Test Suresi</label>
+            <select x-model="newTest.duration" style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:var(--fs-sm)">
+              <option value="2 hafta">2 hafta</option>
+              <option value="3 hafta">3 hafta</option>
+              <option value="4 hafta" selected>4 hafta</option>
+              <option value="6 hafta">6 hafta</option>
+              <option value="8 hafta">8 hafta</option>
+            </select>
+          </div>
+          <div style="margin-top:var(--sp-4)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Olcum Platformlari</label>
+            <div style="display:flex;gap:var(--sp-2);flex-wrap:wrap">
+              <template x-for="pl in ['ChatGPT','Perplexity','Google AIO','Gemini','Claude']" :key="pl">
+                <button @click="togglePlatform(pl)" class="pill" :class="newTest.platforms.includes(pl) ? 'active' : ''" x-text="pl"></button>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Hipotez -->
+        <div x-show="wizardStep===3">
+          <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Testiniz icin bir hipotez yazin:</p>
+          <div style="margin-bottom:var(--sp-4)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Test Adi</label>
+            <input type="text" x-model="newTest.name" placeholder="orn. FAQ Bolumu Etkisi Testi" style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:var(--fs-sm)">
+          </div>
+          <div>
+            <label style="font-size:var(--fs-sm);color:var(--muted);display:block;margin-bottom:var(--sp-2)">Hipotez</label>
+            <textarea x-model="newTest.hypothesis" rows="4" placeholder="orn. FAQ bolumu eklenen sayfalar, kontrol grubuna kiyasla %15 daha fazla AI visibility elde edecektir." style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:var(--fs-sm);resize:vertical;line-height:1.6"></textarea>
+          </div>
+
+          <!-- Ozet -->
+          <div style="margin-top:var(--sp-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4)">
+            <span style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em">Test Ozeti</span>
+            <div style="margin-top:var(--sp-2);display:flex;flex-direction:column;gap:var(--sp-1)">
+              <span style="font-size:var(--fs-sm);color:var(--text)">Tip: <strong x-text="newTest.type || '—'"></strong></span>
+              <span style="font-size:var(--fs-sm);color:var(--text)">Gruplar: <strong x-text="(newTest.controlPages||0)+' kontrol / '+(newTest.testPages||0)+' test'"></strong></span>
+              <span style="font-size:var(--fs-sm);color:var(--text)">Sure: <strong x-text="newTest.duration||'—'"></strong></span>
+              <span style="font-size:var(--fs-sm);color:var(--text)">Platformlar: <strong x-text="newTest.platforms.length ? newTest.platforms.join(', ') : '—'"></strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Actions -->
+        <div style="display:flex;justify-content:space-between;margin-top:var(--sp-6)">
+          <button class="btn-secondary" x-show="wizardStep>1" @click="wizardStep--" style="display:inline-flex;align-items:center;gap:var(--sp-1)">
+            <i class="ph ph-arrow-left"></i> Geri
+          </button>
+          <div x-show="wizardStep===1"></div>
+          <button class="btn-primary" x-show="wizardStep<3" @click="wizardStep++" style="display:inline-flex;align-items:center;gap:var(--sp-1)">
+            Devam <i class="ph ph-arrow-right"></i>
+          </button>
+          <button class="btn-primary" x-show="wizardStep===3" @click="createTest()" style="display:inline-flex;align-items:center;gap:var(--sp-1)">
+            <i class="ph ph-flask"></i> Testi Baslat
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </template>
+
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>
+function geoABTesting() {
+  return {
+    statusFilter: 'tumu',
+    selectedTest: null,
+    showWizard: false,
+    wizardStep: 1,
+
+    newTest: {
+      name: '',
+      type: '',
+      controlPages: 10,
+      testPages: 10,
+      duration: '4 hafta',
+      platforms: ['ChatGPT', 'Perplexity'],
+      hypothesis: ''
+    },
+
+    testTypes: [
+      { id:1, name:'FAQ Ekleme Testi', desc:'Sayfalara FAQ bolumu ekleyerek AI gorunurluk etkisini olcun', icon:'ph-question', color:'#3b82f6' },
+      { id:2, name:'Istatistik Ekleme', desc:'Icerige istatistik ve veri ekleyerek citability artisini test edin', icon:'ph-chart-bar', color:'#22c55e' },
+      { id:3, name:'Uzman Alintisi', desc:'Uzman gorusleri ekleyerek E-E-A-T sinyali etkisini olcun', icon:'ph-user-circle', color:'#a855f7' },
+      { id:4, name:'Schema Markup', desc:'Yapilandirilmis veri ekleme/degistirme etkisini test edin', icon:'ph-code', color:'#C2410C' },
+      { id:5, name:'Atif Yogunlugu', desc:'Kaynak referans yogunlugunu artirarak citation etkisini olcun', icon:'ph-quotes', color:'#eab308' },
+      { id:6, name:'Baslik Yapisi', desc:'H1-H6 baslik hiyerarsisini yeniden yapilandirma etkisi', icon:'ph-text-h-one', color:'#ec4899' },
+    ],
+
+    tests: [
+      {
+        id: 1,
+        name: 'FAQ Bolumu Etkisi',
+        type: 'FAQ Ekleme Testi',
+        status: 'aktif',
+        startDate: '10 Mar 2026',
+        duration: '3 hafta',
+        controlPages: 12,
+        testPages: 12,
+        resultValue: '+22%',
+        resultMetric: 'visibility',
+        confidence: 92,
+        platforms: ['ChatGPT', 'Perplexity', 'Google AIO'],
+        hypothesis: 'FAQ bolumu eklenen sayfalar, kontrol grubuna kiyasla en az %15 daha fazla AI visibility elde edecektir. FAQ sorulari kullanici arama niyetiyle uyumlu olacak sekilde optimize edilecektir.',
+        citationChange: '+18%',
+        impwcChange: '+25%',
+        platformBreakdown: [
+          { platform:'ChatGPT', visibility:'+28%', visibilityPct:85, citation:'+20%' },
+          { platform:'Perplexity', visibility:'+19%', visibilityPct:65, citation:'+15%' },
+          { platform:'Google AIO', visibility:'+18%', visibilityPct:60, citation:'+12%' },
+        ],
+        chartData: { control:[42, 44, 41, 45], test:[43, 51, 56, 62] }
+      },
+      {
+        id: 2,
+        name: 'Schema Markup Genisletme',
+        type: 'Schema Markup',
+        status: 'tamamlandi',
+        startDate: '3 Feb 2026',
+        duration: '4 hafta',
+        controlPages: 8,
+        testPages: 8,
+        resultValue: '+31%',
+        resultMetric: 'citation',
+        confidence: 97,
+        platforms: ['ChatGPT', 'Perplexity', 'Gemini'],
+        hypothesis: 'Genisletilmis schema markup (FAQ, HowTo, Article) eklenen sayfalarda AI citation orani kontrol grubuna gore en az %20 artacaktir.',
+        citationChange: '+31%',
+        impwcChange: '+27%',
+        platformBreakdown: [
+          { platform:'ChatGPT', visibility:'+35%', visibilityPct:90, citation:'+33%' },
+          { platform:'Perplexity', visibility:'+28%', visibilityPct:75, citation:'+29%' },
+          { platform:'Gemini', visibility:'+24%', visibilityPct:68, citation:'+22%' },
+        ],
+        chartData: { control:[38, 40, 39, 41], test:[39, 48, 55, 61] }
+      },
+      {
+        id: 3,
+        name: 'Istatistik Zenginlestirme',
+        type: 'Istatistik Ekleme',
+        status: 'aktif',
+        startDate: '17 Mar 2026',
+        duration: '2 hafta',
+        controlPages: 10,
+        testPages: 10,
+        resultValue: '+15%',
+        resultMetric: 'visibility',
+        confidence: 78,
+        platforms: ['ChatGPT', 'Perplexity'],
+        hypothesis: 'Guncel istatistik ve veri tablolari eklenen sayfalarin AI platformlarinda daha sik kaynak gosterilecegi ongoruluyor.',
+        citationChange: '+11%',
+        impwcChange: '+14%',
+        platformBreakdown: [
+          { platform:'ChatGPT', visibility:'+18%', visibilityPct:55, citation:'+13%' },
+          { platform:'Perplexity', visibility:'+12%', visibilityPct:42, citation:'+9%' },
+        ],
+        chartData: { control:[50, 52, 51, 53], test:[51, 55, 58, 62] }
+      },
+      {
+        id: 4,
+        name: 'Uzman Alintisi Ekleme',
+        type: 'Uzman Alintisi',
+        status: 'tamamlandi',
+        startDate: '1 Feb 2026',
+        duration: '4 hafta',
+        controlPages: 6,
+        testPages: 6,
+        resultValue: '+18%',
+        resultMetric: 'mention',
+        confidence: 94,
+        platforms: ['ChatGPT', 'Gemini', 'Claude'],
+        hypothesis: 'Alaninda uzman kisilerin gorusleri eklenen iceriklerde E-E-A-T sinyali guclenecek ve AI mention orani artacaktir.',
+        citationChange: '+16%',
+        impwcChange: '+20%',
+        platformBreakdown: [
+          { platform:'ChatGPT', visibility:'+22%', visibilityPct:70, citation:'+19%' },
+          { platform:'Gemini', visibility:'+16%', visibilityPct:55, citation:'+14%' },
+          { platform:'Claude', visibility:'+13%', visibilityPct:45, citation:'+11%' },
+        ],
+        chartData: { control:[30, 31, 32, 30], test:[31, 35, 38, 42] }
+      },
+      {
+        id: 5,
+        name: 'Baslik Yeniden Yapilandirma',
+        type: 'Baslik Yapisi',
+        status: 'tamamlandi',
+        startDate: '10 Feb 2026',
+        duration: '3 hafta',
+        controlPages: 15,
+        testPages: 15,
+        resultValue: '+12%',
+        resultMetric: 'visibility',
+        confidence: 89,
+        platforms: ['ChatGPT', 'Perplexity', 'Google AIO'],
+        hypothesis: 'Soru formatinda H2 basliklari ve daha net hiyerarsik yapilandirma, AI platformlarinin icerigi daha kolay anlamasini saglayacaktir.',
+        citationChange: '+9%',
+        impwcChange: '+15%',
+        platformBreakdown: [
+          { platform:'ChatGPT', visibility:'+14%', visibilityPct:50, citation:'+10%' },
+          { platform:'Perplexity', visibility:'+11%', visibilityPct:40, citation:'+8%' },
+          { platform:'Google AIO', visibility:'+10%', visibilityPct:38, citation:'+7%' },
+        ],
+        chartData: { control:[55, 56, 54, 57], test:[56, 60, 63, 67] }
+      },
+      {
+        id: 6,
+        name: 'Atif Yogunlugu Artirma',
+        type: 'Atif Yogunlugu',
+        status: 'tamamlandi',
+        startDate: '15 Jan 2026',
+        duration: '4 hafta',
+        controlPages: 10,
+        testPages: 10,
+        resultValue: '+28%',
+        resultMetric: 'citation',
+        confidence: 96,
+        platforms: ['ChatGPT', 'Perplexity', 'Google AIO', 'Gemini'],
+        hypothesis: 'Icerik icindeki kaynak referans yogunlugu arttirildiginda AI platformlarinin bu sayfalari alinti kaynagi olarak gosterme orani yuksekecektir.',
+        citationChange: '+28%',
+        impwcChange: '+24%',
+        platformBreakdown: [
+          { platform:'ChatGPT', visibility:'+30%', visibilityPct:88, citation:'+32%' },
+          { platform:'Perplexity', visibility:'+27%', visibilityPct:78, citation:'+26%' },
+          { platform:'Google AIO', visibility:'+22%', visibilityPct:65, citation:'+20%' },
+          { platform:'Gemini', visibility:'+25%', visibilityPct:72, citation:'+24%' },
+        ],
+        chartData: { control:[35, 36, 37, 35], test:[36, 44, 50, 55] }
+      },
+      {
+        id: 7,
+        name: 'H2 Soru Formati',
+        type: 'Baslik Yapisi',
+        status: 'taslak',
+        startDate: null,
+        duration: null,
+        controlPages: 8,
+        testPages: 8,
+        resultValue: '—',
+        resultMetric: '',
+        confidence: 0,
+        platforms: ['ChatGPT', 'Perplexity'],
+        hypothesis: 'Tum H2 basliklarinin soru formatina donusturulmesinin AI cevaplarinda dogrudan alintilanma oranini artirmasi beklenmektedir.',
+        citationChange: '—',
+        impwcChange: '—',
+        platformBreakdown: [],
+        chartData: null
+      }
+    ],
+
+    filteredTests() {
+      if (this.statusFilter === 'tumu') return this.tests;
+      return this.tests.filter(t => t.status === this.statusFilter);
+    },
+
+    togglePlatform(p) {
+      const idx = this.newTest.platforms.indexOf(p);
+      if (idx > -1) this.newTest.platforms.splice(idx, 1);
+      else this.newTest.platforms.push(p);
+    },
+
+    createTest() {
+      if (!this.newTest.name || !this.newTest.type) return;
+      this.tests.unshift({
+        id: this.tests.length + 1,
+        name: this.newTest.name,
+        type: this.newTest.type,
+        status: 'taslak',
+        startDate: null,
+        duration: this.newTest.duration,
+        controlPages: parseInt(this.newTest.controlPages) || 10,
+        testPages: parseInt(this.newTest.testPages) || 10,
+        resultValue: '—',
+        resultMetric: '',
+        confidence: 0,
+        platforms: [...this.newTest.platforms],
+        hypothesis: this.newTest.hypothesis,
+        citationChange: '—',
+        impwcChange: '—',
+        platformBreakdown: [],
+        chartData: null
+      });
+      this.showWizard = false;
+      this.wizardStep = 1;
+      this.newTest = { name:'', type:'', controlPages:10, testPages:10, duration:'4 hafta', platforms:['ChatGPT','Perplexity'], hypothesis:'' };
+    },
+
+    initDetailChart(test) {
+      if (!test.chartData) return;
+      const el = document.getElementById('detail-chart');
+      if (!el) return;
+      const chart = echarts.init(el);
+      const weeks = ['Hafta 1','Hafta 2','Hafta 3','Hafta 4'];
+      chart.setOption({
+        tooltip: { trigger:'axis' },
+        legend: { data:['Kontrol','Test'], bottom:0, textStyle:{ color:'#a8a29e', fontSize:12 } },
+        grid: { top:10, right:20, bottom:40, left:40 },
+        xAxis: { type:'category', data:weeks.slice(0, test.chartData.control.length), axisLine:{ lineStyle:{ color:'#44403c' } }, axisLabel:{ color:'#a8a29e', fontSize:11 } },
+        yAxis: { type:'value', axisLine:{ show:false }, splitLine:{ lineStyle:{ color:'#292524' } }, axisLabel:{ color:'#a8a29e', fontSize:11 } },
+        series: [
+          { name:'Kontrol', type:'bar', data:test.chartData.control, itemStyle:{ color:'#44403c', borderRadius:[4,4,0,0] }, barGap:'20%' },
+          { name:'Test', type:'bar', data:test.chartData.test, itemStyle:{ color:'#C2410C', borderRadius:[4,4,0,0] } }
+        ]
+      });
+      window.addEventListener('resize', () => chart.resize());
+    }
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => initShell('seo'));
+</script>
+</body>
+</html>

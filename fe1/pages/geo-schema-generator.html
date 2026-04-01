@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>GEO Schema Olusturucu — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="dashboard" x-data="schemaGenerator()">
+
+  <!-- Baslik -->
+  <div class="fade-in" style="margin-bottom:var(--sp-6)">
+    <h1 class="page-title">GEO Schema Olusturucu</h1>
+    <p class="page-sub">AI gorunurluk odakli yapilandirilmis veri uretici — JSON-LD markup olusturun</p>
+  </div>
+
+  <!-- Sayfa URL Tarama -->
+  <div class="fade-in card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <span class="section-label">Sayfa Tara</span>
+    <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-4)">
+      <input type="text" x-model="pageUrl" placeholder="https://ornek.com/hakkimizda" style="flex:1;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-md);outline:none" @keydown.enter="scanPage()">
+      <button class="btn-primary" style="white-space:nowrap" @click="scanPage()"><i class="ph ph-scan" style="margin-right:var(--sp-1)"></i>Tara</button>
+    </div>
+    <template x-if="existingSchemas.length > 0">
+      <div>
+        <span class="section-label">Mevcut Schema Tespitleri</span>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+          <template x-for="s in existingSchemas" :key="s.type">
+            <div style="display:flex;align-items:center;gap:var(--sp-2)">
+              <i class="ph" :class="s.found ? 'ph-check-circle' : 'ph-x-circle'" :style="s.found ? 'color:#22c55e' : 'color:#ef4444'"></i>
+              <span style="font-size:var(--fs-sm);color:var(--text-soft)" x-text="s.type + (s.found ? ' — algilandi' : ' — eksik')"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Schema Tip Secimi -->
+  <div class="fade-in-d1" style="margin-bottom:var(--sp-6)">
+    <span class="section-label">Schema Tipi Secin</span>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)">
+      <template x-for="t in schemaTypes" :key="t.key">
+        <button @click="selectType(t.key)" class="card" style="padding:var(--sp-4);cursor:pointer;text-align:center;border:2px solid transparent;transition:all .2s" :style="selectedType === t.key ? 'border-color:var(--accent);background:var(--accent-soft)' : ''">
+          <div style="width:44px;height:44px;border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-3)" :style="`background:${t.color}18`">
+            <i class="ph" :class="t.icon" :style="`font-size:var(--fs-xl);color:${t.color}`"></i>
+          </div>
+          <div style="font-weight:600;color:var(--text);font-size:var(--fs-sm);margin-bottom:var(--sp-1)" x-text="t.label"></div>
+          <div style="font-size:var(--fs-xs);color:var(--muted)" x-text="t.desc"></div>
+          <div style="margin-top:var(--sp-2)">
+            <span class="badge" style="font-size:10px" :style="`background:${t.color}18;color:${t.color}`" x-text="'AI Etki: ' + t.relevance + '/10'"></span>
+          </div>
+        </button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Form + Onizleme -->
+  <template x-if="selectedType">
+    <div class="fade-in-d2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5);margin-bottom:var(--sp-6)">
+
+      <!-- Sol: Dinamik Form -->
+      <div class="card" style="padding:var(--sp-5)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
+          <span class="section-label" style="margin-bottom:0" x-text="currentTypeConfig().label + ' Alanlari'"></span>
+          <button style="font-size:var(--fs-xs);color:var(--accent);cursor:pointer;background:none;border:none;text-decoration:underline" @click="fillExample()">Ornek Doldur</button>
+        </div>
+
+        <!-- Organization -->
+        <template x-if="selectedType === 'Organization'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Kurum Adi *</label>
+            <input type="text" x-model="formData.name" @input="generateJson()" placeholder="atonota" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Web Sitesi *</label>
+            <input type="text" x-model="formData.url" @input="generateJson()" placeholder="https://atonota.com" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Logo URL *</label>
+            <input type="text" x-model="formData.logo" @input="generateJson()" placeholder="https://atonota.com/logo.png" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Aciklama</label>
+            <textarea x-model="formData.description" @input="generateJson()" rows="2" placeholder="Kurum hakkinda kisa aciklama" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;resize:vertical"></textarea>
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Kurucu</label>
+            <input type="text" x-model="formData.founder" @input="generateJson()" placeholder="Ad Soyad" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Sosyal Medya (sameAs)</label>
+            <template x-for="(link, i) in formData.sameAs" :key="i">
+              <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+                <input type="text" x-model="formData.sameAs[i]" @input="generateJson()" placeholder="https://twitter.com/atonota" style="flex:1;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-xs);outline:none">
+                <button @click="formData.sameAs.splice(i, 1); generateJson()" style="padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:#ef4444;cursor:pointer;font-size:var(--fs-xs)"><i class="ph ph-trash"></i></button>
+              </div>
+            </template>
+            <button @click="formData.sameAs.push('')" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px dashed var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:var(--fs-xs);text-align:center"><i class="ph ph-plus" style="margin-right:var(--sp-1)"></i>Sosyal Medya Ekle</button>
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Iletisim Telefonu</label>
+            <input type="text" x-model="formData.contactPhone" @input="generateJson()" placeholder="+90 212 000 0000" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Iletisim E-posta</label>
+            <input type="text" x-model="formData.contactEmail" @input="generateJson()" placeholder="info@atonota.com" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+          </div>
+        </template>
+
+        <!-- LocalBusiness -->
+        <template x-if="selectedType === 'LocalBusiness'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Isletme Adi *</label>
+            <input type="text" x-model="formData.name" @input="generateJson()" placeholder="atonota Istanbul Ofisi" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Adres *</label>
+            <input type="text" x-model="formData.address" @input="generateJson()" placeholder="Levent Mah. No:42, Istanbul" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Telefon *</label>
+            <input type="text" x-model="formData.telephone" @input="generateJson()" placeholder="+90 212 000 0000" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Calisma Saatleri</label>
+            <input type="text" x-model="formData.openingHours" @input="generateJson()" placeholder="Mo-Fr 09:00-18:00" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Fiyat Araligi</label>
+            <input type="text" x-model="formData.priceRange" @input="generateJson()" placeholder="$$" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Web Sitesi</label>
+            <input type="text" x-model="formData.url" @input="generateJson()" placeholder="https://atonota.com" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+          </div>
+        </template>
+
+        <!-- FAQPage -->
+        <template x-if="selectedType === 'FAQPage'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <template x-for="(pair, i) in formData.questions" :key="i">
+              <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2)">
+                  <span style="font-size:var(--fs-xs);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em" x-text="'Soru ' + (i+1)"></span>
+                  <button @click="formData.questions.splice(i, 1); generateJson()" style="padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:#ef4444;cursor:pointer;font-size:var(--fs-xs)" x-show="formData.questions.length > 1"><i class="ph ph-trash"></i></button>
+                </div>
+                <input type="text" x-model="formData.questions[i].question" @input="generateJson()" placeholder="Soru metni..." style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:var(--fs-sm);outline:none;margin-bottom:var(--sp-2);box-sizing:border-box">
+                <textarea x-model="formData.questions[i].answer" @input="generateJson()" rows="2" placeholder="Cevap metni..." style="width:100%;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:var(--fs-sm);outline:none;resize:vertical;box-sizing:border-box"></textarea>
+              </div>
+            </template>
+            <button @click="formData.questions.push({question:'',answer:''}); generateJson()" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px dashed var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:var(--fs-sm);text-align:center"><i class="ph ph-plus" style="margin-right:var(--sp-1)"></i>Soru-Cevap Ekle</button>
+          </div>
+        </template>
+
+        <!-- HowTo -->
+        <template x-if="selectedType === 'HowTo'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Baslik *</label>
+            <input type="text" x-model="formData.name" @input="generateJson()" placeholder="SEO Denetimi Nasil Yapilir" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Aciklama</label>
+            <textarea x-model="formData.description" @input="generateJson()" rows="2" placeholder="Bu rehber ile..." style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;resize:vertical"></textarea>
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Tahmini Sure</label>
+            <input type="text" x-model="formData.totalTime" @input="generateJson()" placeholder="PT30M (30 dakika)" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <span class="section-label">Adimlar</span>
+            <template x-for="(step, i) in formData.steps" :key="i">
+              <div style="display:flex;gap:var(--sp-2);align-items:center">
+                <span style="font-size:var(--fs-xs);font-weight:700;color:var(--muted);min-width:24px" x-text="(i+1) + '.'"></span>
+                <input type="text" x-model="formData.steps[i].text" @input="generateJson()" placeholder="Adim aciklamasi..." style="flex:1;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+                <button @click="formData.steps.splice(i, 1); generateJson()" style="padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:#ef4444;cursor:pointer;font-size:var(--fs-xs)" x-show="formData.steps.length > 1"><i class="ph ph-trash"></i></button>
+              </div>
+            </template>
+            <button @click="formData.steps.push({text:''}); generateJson()" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px dashed var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:var(--fs-xs);text-align:center"><i class="ph ph-plus" style="margin-right:var(--sp-1)"></i>Adim Ekle</button>
+          </div>
+        </template>
+
+        <!-- Article -->
+        <template x-if="selectedType === 'Article'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Baslik *</label>
+            <input type="text" x-model="formData.headline" @input="generateJson()" placeholder="SEO Rehberi 2026" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Yazar *</label>
+            <input type="text" x-model="formData.author" @input="generateJson()" placeholder="Yazar adi" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Yayin Tarihi *</label>
+            <input type="date" x-model="formData.datePublished" @input="generateJson()" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Guncelleme Tarihi</label>
+            <input type="date" x-model="formData.dateModified" @input="generateJson()" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Aciklama</label>
+            <textarea x-model="formData.description" @input="generateJson()" rows="2" placeholder="Makale ozeti" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;resize:vertical"></textarea>
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Gorsel URL</label>
+            <input type="text" x-model="formData.image" @input="generateJson()" placeholder="https://..." style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Yayinci</label>
+            <input type="text" x-model="formData.publisher" @input="generateJson()" placeholder="atonota" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+          </div>
+        </template>
+
+        <!-- Product -->
+        <template x-if="selectedType === 'Product'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Urun Adi *</label>
+            <input type="text" x-model="formData.name" @input="generateJson()" placeholder="atonota Studio Pro" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Aciklama *</label>
+            <textarea x-model="formData.description" @input="generateJson()" rows="2" placeholder="Urun aciklamasi" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;resize:vertical"></textarea>
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Gorsel URL</label>
+            <input type="text" x-model="formData.image" @input="generateJson()" placeholder="https://..." style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Fiyat</label>
+            <input type="text" x-model="formData.price" @input="generateJson()" placeholder="299" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Para Birimi</label>
+            <input type="text" x-model="formData.currency" @input="generateJson()" placeholder="TRY" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Marka</label>
+            <input type="text" x-model="formData.brand" @input="generateJson()" placeholder="atonota" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Stok Durumu</label>
+            <select x-model="formData.availability" @change="generateJson()" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+              <option value="InStock">Stokta</option>
+              <option value="OutOfStock">Tukendi</option>
+              <option value="PreOrder">On Siparis</option>
+            </select>
+          </div>
+        </template>
+
+        <!-- Person -->
+        <template x-if="selectedType === 'Person'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Ad Soyad *</label>
+            <input type="text" x-model="formData.name" @input="generateJson()" placeholder="Ahmet Yilmaz" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Unvan *</label>
+            <input type="text" x-model="formData.jobTitle" @input="generateJson()" placeholder="SEO Uzmani" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Web Sitesi</label>
+            <input type="text" x-model="formData.url" @input="generateJson()" placeholder="https://..." style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Gorsel URL</label>
+            <input type="text" x-model="formData.image" @input="generateJson()" placeholder="https://..." style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Calistigi Kurum</label>
+            <input type="text" x-model="formData.worksFor" @input="generateJson()" placeholder="atonota" style="padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+            <label style="font-size:var(--fs-sm);color:var(--muted);font-weight:600">Sosyal Medya (sameAs)</label>
+            <template x-for="(link, i) in formData.sameAs" :key="i">
+              <div style="display:flex;gap:var(--sp-2);margin-bottom:var(--sp-1)">
+                <input type="text" x-model="formData.sameAs[i]" @input="generateJson()" placeholder="https://linkedin.com/in/..." style="flex:1;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-xs);outline:none">
+                <button @click="formData.sameAs.splice(i, 1); generateJson()" style="padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:#ef4444;cursor:pointer;font-size:var(--fs-xs)"><i class="ph ph-trash"></i></button>
+              </div>
+            </template>
+            <button @click="formData.sameAs.push('')" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px dashed var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:var(--fs-xs);text-align:center"><i class="ph ph-plus" style="margin-right:var(--sp-1)"></i>Sosyal Medya Ekle</button>
+          </div>
+        </template>
+
+        <!-- BreadcrumbList -->
+        <template x-if="selectedType === 'BreadcrumbList'">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-3)">
+            <template x-for="(item, i) in formData.items" :key="i">
+              <div style="display:flex;gap:var(--sp-2);align-items:center">
+                <span style="font-size:var(--fs-xs);font-weight:700;color:var(--muted);min-width:24px" x-text="(i+1) + '.'"></span>
+                <input type="text" x-model="formData.items[i].name" @input="generateJson()" placeholder="Sayfa adi" style="flex:1;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+                <input type="text" x-model="formData.items[i].url" @input="generateJson()" placeholder="URL" style="flex:1;padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+                <button @click="formData.items.splice(i, 1); generateJson()" style="padding:var(--sp-1) var(--sp-2);border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;color:#ef4444;cursor:pointer;font-size:var(--fs-xs)" x-show="formData.items.length > 1"><i class="ph ph-trash"></i></button>
+              </div>
+            </template>
+            <button @click="formData.items.push({name:'',url:''}); generateJson()" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px dashed var(--border);background:transparent;color:var(--accent);cursor:pointer;font-size:var(--fs-xs);text-align:center"><i class="ph ph-plus" style="margin-right:var(--sp-1)"></i>Sayfa Ekle</button>
+          </div>
+        </template>
+      </div>
+
+      <!-- Sag: Onizleme + Dogrulama -->
+      <div style="display:flex;flex-direction:column;gap:var(--sp-5)">
+        <!-- AI Etki Tahmini -->
+        <div class="card" style="padding:var(--sp-4);background:var(--accent-soft);border-color:var(--accent)">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <div style="width:40px;height:40px;border-radius:var(--r-lg);background:rgba(194,65,12,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-lightning" style="font-size:var(--fs-xl);color:var(--accent)"></i>
+            </div>
+            <div style="flex:1">
+              <div style="font-weight:600;color:var(--text);font-size:var(--fs-sm)">AI Gorunurluk Etkisi</div>
+              <div style="font-size:var(--fs-xs);color:var(--muted);line-height:1.5" x-text="'Bu schema eklenmesi tahmini ' + currentTypeConfig().impact + ' saglayabilir'"></div>
+            </div>
+            <span class="badge" style="background:rgba(34,197,94,0.1);color:#22c55e;font-size:var(--fs-xs)" x-text="'Alaka: ' + currentTypeConfig().relevance + '/10'"></span>
+          </div>
+        </div>
+
+        <!-- JSON-LD Onizleme -->
+        <div class="card" style="padding:var(--sp-5)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+            <span class="section-label" style="margin-bottom:0">JSON-LD Ciktisi</span>
+            <div style="display:flex;gap:var(--sp-2)">
+              <button @click="copyToClipboard()" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:transparent;color:var(--text-soft);cursor:pointer;font-size:var(--fs-xs)"><i class="ph ph-copy" style="margin-right:var(--sp-1)"></i><span x-text="copied ? 'Kopyalandi!' : 'Kopyala'"></span></button>
+              <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener" style="padding:var(--sp-2) var(--sp-3);border-radius:var(--r-md);border:1px solid var(--border);background:transparent;color:var(--text-soft);font-size:var(--fs-xs);text-decoration:none;display:inline-flex;align-items:center;gap:var(--sp-1)"><i class="ph ph-arrow-square-out"></i>Rich Results Test</a>
+            </div>
+          </div>
+          <pre style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);font-size:var(--fs-xs);color:var(--text-soft);overflow-x:auto;line-height:1.6;font-family:'SF Mono',Consolas,monospace;max-height:400px;overflow-y:auto;white-space:pre-wrap" x-text="jsonOutput"></pre>
+        </div>
+
+        <!-- Dogrulama -->
+        <div class="card" style="padding:var(--sp-5)">
+          <span class="section-label">Dogrulama</span>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+            <template x-for="v in validations" :key="v.message">
+              <div style="display:flex;align-items:flex-start;gap:var(--sp-2);font-size:var(--fs-sm)">
+                <i class="ph" :class="v.type === 'error' ? 'ph-x-circle' : v.type === 'warning' ? 'ph-warning' : 'ph-check-circle'" :style="v.type === 'error' ? 'color:#ef4444' : v.type === 'warning' ? 'color:#eab308' : 'color:#22c55e'" style="margin-top:2px;flex-shrink:0"></i>
+                <span :style="v.type === 'error' ? 'color:#ef4444' : v.type === 'warning' ? 'color:#eab308' : 'color:#22c55e'" x-text="v.message"></span>
+              </div>
+            </template>
+            <template x-if="validations.length === 0">
+              <div style="display:flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm);color:var(--muted)">
+                <i class="ph ph-info" style="color:var(--muted)"></i>
+                <span>Formu doldurun, dogrulama otomatik calisacak</span>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </template>
+
+  <!-- Bulk Uretim -->
+  <div class="fade-in-d3 card" style="padding:var(--sp-5);margin-bottom:var(--sp-6)">
+    <span class="section-label">Toplu Schema Uretimi</span>
+    <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:var(--sp-4)">Birden fazla sayfa icin ayni anda schema markup uretin. URL listesi girin ve schema tipini secin.</p>
+    <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:var(--sp-3);align-items:end">
+      <div>
+        <label style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-1)">URL Listesi (her satira bir URL)</label>
+        <textarea x-model="bulkUrls" rows="3" placeholder="https://ornek.com/sayfa-1&#10;https://ornek.com/sayfa-2&#10;https://ornek.com/sayfa-3" style="width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none;resize:vertical;box-sizing:border-box"></textarea>
+      </div>
+      <div>
+        <label style="font-size:var(--fs-xs);color:var(--muted);font-weight:600;display:block;margin-bottom:var(--sp-1)">Schema Tipi</label>
+        <select x-model="bulkType" style="width:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--r-md);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:var(--fs-sm);outline:none">
+          <template x-for="t in schemaTypes" :key="t.key">
+            <option :value="t.key" x-text="t.label"></option>
+          </template>
+        </select>
+      </div>
+      <button class="btn-primary" style="white-space:nowrap"><i class="ph ph-stack" style="margin-right:var(--sp-1)"></i>Toplu Uret</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>
+function schemaGenerator() {
+  return {
+    selectedType: null,
+    formData: {},
+    jsonOutput: '',
+    validations: [],
+    pageUrl: '',
+    existingSchemas: [],
+    copied: false,
+    bulkUrls: '',
+    bulkType: 'Organization',
+
+    schemaTypes: [
+      { key:'Organization', label:'Organization', desc:'Kurum bilgileri', icon:'ph-buildings', color:'#22c55e', relevance:9, impact:'+15 citation/ay' },
+      { key:'LocalBusiness', label:'LocalBusiness', desc:'Yerel isletme', icon:'ph-storefront', color:'#3b82f6', relevance:8, impact:'+12 citation/ay' },
+      { key:'FAQPage', label:'FAQPage', desc:'Soru-Cevap', icon:'ph-question', color:'#a855f7', relevance:9, impact:'+18 citation/ay' },
+      { key:'HowTo', label:'HowTo', desc:'Adim adim rehber', icon:'ph-list-numbers', color:'#eab308', relevance:7, impact:'+10 citation/ay' },
+      { key:'Article', label:'Article', desc:'Blog / Makale', icon:'ph-article', color:'#C2410C', relevance:8, impact:'+14 citation/ay' },
+      { key:'Product', label:'Product', desc:'Urun', icon:'ph-package', color:'#f97316', relevance:7, impact:'+9 citation/ay' },
+      { key:'Person', label:'Person', desc:'Yazar / Uzman', icon:'ph-user-circle', color:'#06b6d4', relevance:8, impact:'+11 citation/ay' },
+      { key:'BreadcrumbList', label:'BreadcrumbList', desc:'Sayfa yolu', icon:'ph-path', color:'#7B7269', relevance:5, impact:'+4 citation/ay' },
+    ],
+
+    defaultForms: {
+      Organization:   { name:'', url:'', logo:'', description:'', founder:'', sameAs:[''], contactPhone:'', contactEmail:'' },
+      LocalBusiness:  { name:'', address:'', telephone:'', openingHours:'', priceRange:'', url:'' },
+      FAQPage:        { questions:[{question:'',answer:''},{question:'',answer:''}] },
+      HowTo:          { name:'', description:'', totalTime:'', steps:[{text:''},{text:''}] },
+      Article:        { headline:'', author:'', datePublished:'', dateModified:'', description:'', image:'', publisher:'' },
+      Product:        { name:'', description:'', image:'', price:'', currency:'TRY', brand:'', availability:'InStock' },
+      Person:         { name:'', jobTitle:'', url:'', image:'', worksFor:'', sameAs:[''] },
+      BreadcrumbList: { items:[{name:'',url:''},{name:'',url:''}] },
+    },
+
+    exampleData: {
+      Organization: { name:'atonota', url:'https://atonota.com', logo:'https://atonota.com/logo.png', description:'AI destekli SEO ve dijital pazarlama platformu. GEO optimizasyonu, reklam orkestrasyon ve icerik analizi araclarini tek catida sunar.', founder:'Karaca', sameAs:['https://twitter.com/atonota','https://linkedin.com/company/atonota','https://github.com/atonota'], contactPhone:'+90 212 555 0000', contactEmail:'info@atonota.com' },
+      LocalBusiness: { name:'atonota Istanbul Ofisi', address:'Levent Mah. Buyukdere Cad. No:42, Besiktas, Istanbul', telephone:'+90 212 555 0000', openingHours:'Mo-Fr 09:00-18:00', priceRange:'$$', url:'https://atonota.com' },
+      FAQPage: { questions:[{question:'atonota nedir?',answer:'atonota, AI destekli SEO ve dijital pazarlama platformudur. GEO optimizasyonu, reklam yonetimi ve icerik analizi araclarini tek catida sunar.'},{question:'GEO nedir ve neden onemlidir?',answer:'GEO (Generative Engine Optimization), AI arama motorlarinda markanizin gorunurlugunu artirma suresidir. Geleneksel SEO\'dan farkli olarak AI platformlarinda bahsedilme ve kaynak gosterilme odaklidir.'},{question:'atonota hangi AI platformlarini destekler?',answer:'ChatGPT, Gemini, Perplexity, Claude, Copilot ve Grok platformlarini destekler.'}] },
+      HowTo: { name:'Web Sitesine Schema Markup Nasil Eklenir', description:'Bu rehber ile web sitenize JSON-LD forminda yapilandirilmis veri ekleyerek AI gorunurlugunuzu artirabilirsiniz.', totalTime:'PT15M', steps:[{text:'atonota Studio Schema Olusturucu sayfasini acin'},{text:'Uygun schema tipini secin (orn. Organization, FAQ)'},{text:'Gerekli alanlari doldurun veya ornek veriyi kullanin'},{text:'Olusan JSON-LD kodunu kopyalayin'},{text:'Kodunuzu sitenizin <head> bolumune yapistirin'}] },
+      Article: { headline:'2026 SEO Trendleri ve AI Gorunurluk Rehberi', author:'Karaca', datePublished:'2026-03-15', dateModified:'2026-03-28', description:'2026 yilinda SEO dunyasindaki en onemli degisimler, GEO stratejileri ve AI platformlarinda gorunurluk artirma teknikleri.', image:'https://atonota.com/blog/seo-trendleri-2026.jpg', publisher:'atonota' },
+      Product: { name:'atonota Studio Pro', description:'Profesyonel SEO ve GEO analiz paketi. AI gorunurluk izleme, rakip analizi, schema olusturucu ve icerik optimizasyonu araclari dahil.', image:'https://atonota.com/product/studio-pro.png', price:'2990', currency:'TRY', brand:'atonota', availability:'InStock' },
+      Person: { name:'Karaca', jobTitle:'Kurucu & CEO', url:'https://atonota.com/team/karaca', image:'https://atonota.com/team/karaca.jpg', worksFor:'atonota', sameAs:['https://linkedin.com/in/karaca','https://twitter.com/karaca'] },
+      BreadcrumbList: { items:[{name:'Ana Sayfa',url:'https://atonota.com'},{name:'Blog',url:'https://atonota.com/blog'},{name:'SEO Rehberi',url:'https://atonota.com/blog/seo-rehberi'}] },
+    },
+
+    currentTypeConfig() {
+      return this.schemaTypes.find(t => t.key === this.selectedType) || this.schemaTypes[0];
+    },
+
+    selectType(key) {
+      this.selectedType = key;
+      this.formData = JSON.parse(JSON.stringify(this.defaultForms[key]));
+      this.generateJson();
+    },
+
+    fillExample() {
+      if (!this.selectedType) return;
+      this.formData = JSON.parse(JSON.stringify(this.exampleData[this.selectedType]));
+      this.generateJson();
+    },
+
+    scanPage() {
+      if (!this.pageUrl.trim()) return;
+      this.existingSchemas = [
+        { type:'Organization', found: Math.random() > 0.5 },
+        { type:'Article', found: Math.random() > 0.4 },
+        { type:'BreadcrumbList', found: Math.random() > 0.3 },
+        { type:'FAQPage', found: Math.random() > 0.7 },
+        { type:'Person', found: Math.random() > 0.6 },
+        { type:'Product', found: Math.random() > 0.8 },
+      ];
+    },
+
+    generateJson() {
+      if (!this.selectedType) { this.jsonOutput = ''; this.validations = []; return; }
+      const d = this.formData;
+      let schema = { '@context': 'https://schema.org' };
+      this.validations = [];
+
+      if (this.selectedType === 'Organization') {
+        schema['@type'] = 'Organization';
+        if (d.name) schema.name = d.name; else this.validations.push({type:'error',message:'Kurum adi zorunludur'});
+        if (d.url) { if (!d.url.startsWith('http')) this.validations.push({type:'warning',message:'URL http:// veya https:// ile baslamali'}); schema.url = d.url; } else this.validations.push({type:'error',message:'Web sitesi zorunludur'});
+        if (d.logo) schema.logo = d.logo; else this.validations.push({type:'error',message:'Logo URL zorunludur'});
+        if (d.description) schema.description = d.description; else this.validations.push({type:'warning',message:'Aciklama eklemek AI gorunurlugunu arttirir'});
+        if (d.founder) schema.founder = { '@type':'Person', name:d.founder };
+        const links = (d.sameAs||[]).filter(s => s.trim());
+        if (links.length) schema.sameAs = links; else this.validations.push({type:'warning',message:'En az bir sosyal medya linki ekleyin'});
+        if (d.contactPhone || d.contactEmail) { schema.contactPoint = { '@type':'ContactPoint' }; if (d.contactPhone) schema.contactPoint.telephone = d.contactPhone; if (d.contactEmail) schema.contactPoint.email = d.contactEmail; schema.contactPoint.contactType = 'customer service'; }
+      }
+
+      if (this.selectedType === 'LocalBusiness') {
+        schema['@type'] = 'LocalBusiness';
+        if (d.name) schema.name = d.name; else this.validations.push({type:'error',message:'Isletme adi zorunludur'});
+        if (d.address) schema.address = { '@type':'PostalAddress', streetAddress:d.address }; else this.validations.push({type:'error',message:'Adres zorunludur'});
+        if (d.telephone) schema.telephone = d.telephone; else this.validations.push({type:'error',message:'Telefon zorunludur'});
+        if (d.openingHours) schema.openingHours = d.openingHours;
+        if (d.priceRange) schema.priceRange = d.priceRange;
+        if (d.url) schema.url = d.url;
+      }
+
+      if (this.selectedType === 'FAQPage') {
+        schema['@type'] = 'FAQPage';
+        const valid = (d.questions||[]).filter(q => q.question.trim() && q.answer.trim());
+        if (valid.length) {
+          schema.mainEntity = valid.map(q => ({ '@type':'Question', name:q.question, acceptedAnswer:{ '@type':'Answer', text:q.answer } }));
+        }
+        if (valid.length === 0) this.validations.push({type:'error',message:'En az bir soru-cevap cifti gereklidir'});
+        const incomplete = (d.questions||[]).filter(q => (q.question.trim() && !q.answer.trim()) || (!q.question.trim() && q.answer.trim()));
+        if (incomplete.length) this.validations.push({type:'warning',message:incomplete.length + ' soru-cevap cifti eksik'});
+        if (valid.length >= 3) this.validations.push({type:'success',message:'3+ soru-cevap: AI gorunurluk icin ideal'});
+      }
+
+      if (this.selectedType === 'HowTo') {
+        schema['@type'] = 'HowTo';
+        if (d.name) schema.name = d.name; else this.validations.push({type:'error',message:'Baslik zorunludur'});
+        if (d.description) schema.description = d.description;
+        if (d.totalTime) schema.totalTime = d.totalTime;
+        const validSteps = (d.steps||[]).filter(s => s.text.trim());
+        if (validSteps.length) { schema.step = validSteps.map((s, i) => ({ '@type':'HowToStep', position:i+1, text:s.text })); } else this.validations.push({type:'error',message:'En az bir adim gereklidir'});
+      }
+
+      if (this.selectedType === 'Article') {
+        schema['@type'] = 'Article';
+        if (d.headline) schema.headline = d.headline; else this.validations.push({type:'error',message:'Baslik zorunludur'});
+        if (d.author) schema.author = { '@type':'Person', name:d.author }; else this.validations.push({type:'error',message:'Yazar zorunludur'});
+        if (d.datePublished) schema.datePublished = d.datePublished; else this.validations.push({type:'error',message:'Yayin tarihi zorunludur'});
+        if (d.dateModified) schema.dateModified = d.dateModified;
+        if (d.description) schema.description = d.description; else this.validations.push({type:'warning',message:'Aciklama eklemek onerilir'});
+        if (d.image) schema.image = d.image;
+        if (d.publisher) schema.publisher = { '@type':'Organization', name:d.publisher };
+      }
+
+      if (this.selectedType === 'Product') {
+        schema['@type'] = 'Product';
+        if (d.name) schema.name = d.name; else this.validations.push({type:'error',message:'Urun adi zorunludur'});
+        if (d.description) schema.description = d.description; else this.validations.push({type:'error',message:'Urun aciklamasi zorunludur'});
+        if (d.image) schema.image = d.image;
+        if (d.brand) schema.brand = { '@type':'Brand', name:d.brand };
+        if (d.price) { schema.offers = { '@type':'Offer', price:d.price, priceCurrency:d.currency||'TRY', availability:'https://schema.org/' + (d.availability||'InStock') }; }
+      }
+
+      if (this.selectedType === 'Person') {
+        schema['@type'] = 'Person';
+        if (d.name) schema.name = d.name; else this.validations.push({type:'error',message:'Ad soyad zorunludur'});
+        if (d.jobTitle) schema.jobTitle = d.jobTitle; else this.validations.push({type:'error',message:'Unvan zorunludur'});
+        if (d.url) schema.url = d.url;
+        if (d.image) schema.image = d.image; else this.validations.push({type:'warning',message:'Gorsel eklemek E-E-A-T sinyalini guclendirir'});
+        if (d.worksFor) schema.worksFor = { '@type':'Organization', name:d.worksFor };
+        const links = (d.sameAs||[]).filter(s => s.trim());
+        if (links.length) schema.sameAs = links; else this.validations.push({type:'warning',message:'Sosyal medya baglantilari AI dogrulama icin onemlidir'});
+      }
+
+      if (this.selectedType === 'BreadcrumbList') {
+        schema['@type'] = 'BreadcrumbList';
+        const valid = (d.items||[]).filter(it => it.name.trim());
+        if (valid.length) {
+          schema.itemListElement = valid.map((it, i) => ({ '@type':'ListItem', position:i+1, name:it.name, item:it.url||undefined }));
+        } else this.validations.push({type:'error',message:'En az bir sayfa ogeleri gereklidir'});
+      }
+
+      const errors = this.validations.filter(v => v.type === 'error');
+      if (errors.length === 0 && this.validations.length > 0) {
+        this.validations.push({type:'success',message:'Schema gecerli — uygulamaya hazir'});
+      }
+
+      this.jsonOutput = JSON.stringify(schema, null, 2);
+    },
+
+    copyToClipboard() {
+      if (!this.jsonOutput) return;
+      const wrapper = '<script type="application/ld+json">\n' + this.jsonOutput + '\n<\/script>';
+      navigator.clipboard.writeText(wrapper).then(() => {
+        this.copied = true;
+        setTimeout(() => this.copied = false, 2000);
+      });
+    },
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => initShell('geo'));
+</script>
+</body>
+</html>

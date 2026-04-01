@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>llms.txt Yonetici — atonota Studio</title>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<link rel="stylesheet" href="../css/primitives.css">
+<link rel="stylesheet" href="../css/tokens.css">
+<script src="../js/appearance-store.js"></script>
+<script src="../js/appearance-init.js"></script>
+<style>
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.editor-textarea{width:100%;min-height:420px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-4);font-family:'SF Mono','Fira Code',monospace;font-size:var(--fs-sm);color:var(--text);line-height:1.7;resize:vertical;outline:none}
+.editor-textarea:focus{border-color:var(--accent)}
+.validation-item{display:flex;align-items:flex-start;gap:var(--sp-2);padding:var(--sp-2) var(--sp-3);border-radius:var(--r-sm);font-size:var(--fs-sm);line-height:1.5}
+.validation-item.error{background:rgba(239,68,68,0.08);color:#ef4444}
+.validation-item.warn{background:rgba(234,179,8,0.08);color:#eab308}
+.validation-item.info{background:rgba(59,130,246,0.08);color:#3b82f6}
+.score-ring{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--fs-2xl);font-weight:600;position:relative}
+.score-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:4px solid var(--border)}
+.version-row{display:flex;align-items:center;justify-content:space-between;padding:var(--sp-3) 0;border-bottom:1px solid var(--border);font-size:var(--fs-sm)}
+.version-row:last-child{border-bottom:none}
+.bot-crawl-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3) 0;border-bottom:1px solid var(--border);font-size:var(--fs-sm)}
+.bot-crawl-row:last-child{border-bottom:none}
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+<script src="../js/components.js"></script>
+</head>
+<body>
+<div id="topbar"></div>
+<div id="spotlight-backdrop"></div>
+<div id="ud-backdrop"></div>
+<nav id="rail" role="navigation" aria-label="Ana navigasyon"></nav>
+<div id="wide-overlay"></div>
+<div id="sidebar-wide"></div>
+
+<div id="main" data-skeleton="table" x-data="llmsTxtEditor()">
+  <!-- Header -->
+  <div class="fade-in" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3)">
+      <div style="width:40px;height:40px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center">
+        <i class="ph ph-file-text" style="color:#a855f7;font-size:var(--fs-xl)"></i>
+      </div>
+      <div>
+        <h1 class="page-title">llms.txt Yonetici</h1>
+        <p class="page-sub">AI tarayicilari icin site rehberi dosyasini duzenleyin ve yayinlayin</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+      <span class="badge" :style="status==='published' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="status==='published' ? 'Yayinda' : 'Taslak'"></span>
+      <button class="btn-secondary" @click="autoGenerate()">
+        <i class="ph" :class="generating ? 'ph-spinner' : 'ph-magic-wand'" :style="generating ? 'animation:spin 1s linear infinite' : ''"></i>
+        <span x-text="generating ? 'Uretiliyor...' : 'Otomatik Uret'"></span>
+      </button>
+      <button class="btn-primary" @click="deploy()">
+        <i class="ph ph-rocket-launch"></i> Yayinla
+      </button>
+    </div>
+  </div>
+
+  <!-- Score + Stats Row -->
+  <div class="fade-in-d1" style="display:grid;grid-template-columns:1fr 3fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <!-- Score Card -->
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sp-5)">
+      <span style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-3)">Kalite Skoru</span>
+      <div class="score-ring" :style="'color:' + (score >= 80 ? '#22c55e' : score >= 50 ? '#eab308' : '#ef4444') + ';border-color:' + (score >= 80 ? '#22c55e' : score >= 50 ? '#eab308' : '#ef4444')">
+        <span x-text="score"></span>
+      </div>
+      <span style="font-size:var(--fs-sm);color:var(--muted);margin-top:var(--sp-2)">/100</span>
+    </div>
+    <!-- Stat Cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)">
+      <div class="stat-card" style="--stripe:#a855f7">
+        <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Satir Sayisi</div>
+        <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)" x-text="content.split('\\n').length"></div>
+      </div>
+      <div class="stat-card" style="--stripe:#3b82f6">
+        <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">URL Sayisi</div>
+        <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)" x-text="(content.match(/^- \\//gm) || []).length"></div>
+      </div>
+      <div class="stat-card" style="--stripe:#22c55e">
+        <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Dosya Boyutu</div>
+        <div style="font-size:var(--fs-2xl);font-weight:500;color:var(--text)" x-text="(new Blob([content]).size / 1024).toFixed(1) + ' KB'"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Selector -->
+  <div class="fade-in-d1" style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+    <span style="font-size:var(--fs-sm);color:var(--muted);font-weight:500">Sablon:</span>
+    <template x-for="t in [{v:'custom',l:'Ozel'},{v:'ecommerce',l:'E-Ticaret'},{v:'saas',l:'SaaS'},{v:'local',l:'Yerel Isletme'},{v:'blog',l:'Blog'}]">
+      <button @click="applyTemplate(t.v)" class="pill" :class="template===t.v ? 'active' : ''" x-text="t.l"></button>
+    </template>
+  </div>
+
+  <!-- Tabs -->
+  <div class="fade-in-d1" style="display:flex;gap:var(--sp-1);margin-bottom:var(--sp-4);border-bottom:1px solid var(--border);padding-bottom:0">
+    <template x-for="tab in [{v:'editor',l:'Editor',icon:'ph-code'},{v:'preview',l:'Onizleme',icon:'ph-eye'},{v:'history',l:'Gecmis',icon:'ph-clock-counter-clockwise'}]">
+      <button @click="activeTab=tab.v" class="tab-btn" :class="activeTab===tab.v ? 'active' : ''">
+        <i class="ph" :class="tab.icon"></i>
+        <span x-text="tab.l"></span>
+      </button>
+    </template>
+  </div>
+
+  <!-- Editor Tab -->
+  <div x-show="activeTab==='editor'" class="fade-in-d2" style="display:grid;grid-template-columns:2fr 1fr;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <!-- Editor -->
+    <div class="card" style="padding:var(--sp-4)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3)">
+        <span class="section-label" style="margin-bottom:0">llms.txt Icerik</span>
+        <button class="btn-secondary" style="font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-2)" @click="navigator.clipboard.writeText(content);$store.toast.show('Panoya kopyalandi!','success')">
+          <i class="ph ph-copy"></i> Kopyala
+        </button>
+      </div>
+      <textarea class="editor-textarea" x-model="content" @input="validateContent()"></textarea>
+    </div>
+
+    <!-- Validation Panel -->
+    <div style="display:flex;flex-direction:column;gap:var(--sp-4)">
+      <div class="card" style="padding:var(--sp-4)">
+        <span class="section-label">Dogrulama Sonuclari</span>
+        <div style="display:flex;flex-direction:column;gap:var(--sp-2)">
+          <template x-for="v in validations" :key="v.message">
+            <div class="validation-item" :class="v.type">
+              <i class="ph" :class="v.type==='error' ? 'ph-x-circle' : v.type==='warn' ? 'ph-warning' : 'ph-info'" style="font-size:var(--fs-lg);flex-shrink:0;margin-top:1px"></i>
+              <span x-text="v.message"></span>
+            </div>
+          </template>
+          <div x-show="validations.length===0" style="font-size:var(--fs-sm);color:#22c55e;display:flex;align-items:center;gap:var(--sp-2)">
+            <i class="ph ph-check-circle" style="font-size:var(--fs-lg)"></i> Tum dogrulamalar basarili!
+          </div>
+        </div>
+      </div>
+
+      <!-- Bot Crawl Status -->
+      <div class="card" style="padding:var(--sp-4)">
+        <span class="section-label">Bot Tarama Durumu</span>
+        <template x-for="bot in botCrawls" :key="bot.bot">
+          <div class="bot-crawl-row">
+            <i class="ph ph-robot" :style="'color:' + bot.color"></i>
+            <div style="flex:1">
+              <div style="font-weight:500;color:var(--text)" x-text="bot.bot"></div>
+              <div style="font-size:var(--fs-xs);color:var(--muted)" x-text="'Son: ' + bot.lastCrawl"></div>
+            </div>
+            <span style="font-size:var(--fs-xs);color:var(--muted)" x-text="bot.pages + ' sayfa'"></span>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Tab -->
+  <div x-show="activeTab==='preview'" class="fade-in-d2" style="margin-bottom:var(--sp-6)">
+    <div class="card" style="padding:var(--sp-5)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-4)">
+        <span class="section-label" style="margin-bottom:0">AI Bot Gorunumu</span>
+        <span class="badge" style="background:rgba(168,85,247,0.1);color:#a855f7">Canli Onizleme</span>
+      </div>
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-5)">
+        <div style="margin-bottom:var(--sp-4)">
+          <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-1)">Site Adi</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)">atonota.com</div>
+        </div>
+        <div style="margin-bottom:var(--sp-4)">
+          <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Tanimlanan Bolumler</div>
+          <div style="display:flex;flex-wrap:wrap;gap:var(--sp-2)">
+            <template x-for="section in parsedSections" :key="section">
+              <span class="badge" style="background:var(--accent-soft);color:var(--accent)" x-text="section"></span>
+            </template>
+          </div>
+        </div>
+        <div style="margin-bottom:var(--sp-4)">
+          <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-2)">Sayfa Haritasi</div>
+          <template x-for="entry in parsedEntries" :key="entry.url">
+            <div style="display:flex;align-items:baseline;gap:var(--sp-2);padding:var(--sp-1) 0;font-size:var(--fs-sm)">
+              <code style="color:var(--accent);font-family:'SF Mono',monospace;font-size:var(--fs-xs)" x-text="entry.url"></code>
+              <span style="color:var(--muted)" x-text="entry.desc"></span>
+            </div>
+          </template>
+        </div>
+        <div>
+          <div style="font-size:var(--fs-xs);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--sp-1)">Toplam Kayit</div>
+          <div style="font-size:var(--fs-lg);font-weight:500;color:var(--text)" x-text="parsedEntries.length + ' sayfa tanimli'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Tab -->
+  <div x-show="activeTab==='history'" class="fade-in-d2" style="margin-bottom:var(--sp-6)">
+    <div class="card" style="padding:var(--sp-4)">
+      <span class="section-label">Versiyon Gecmisi</span>
+      <template x-for="v in versions" :key="v.date">
+        <div class="version-row">
+          <div style="display:flex;align-items:center;gap:var(--sp-3)">
+            <div style="width:32px;height:32px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <i class="ph ph-git-commit" style="color:#a855f7;font-size:var(--fs-md)"></i>
+            </div>
+            <div>
+              <div style="font-weight:500;color:var(--text)" x-text="v.summary"></div>
+              <div style="font-size:var(--fs-xs);color:var(--muted)" x-text="v.date"></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--sp-2)">
+            <span class="badge" :style="v.status==='published' ? 'background:rgba(34,197,94,0.1);color:#22c55e' : 'background:rgba(234,179,8,0.1);color:#eab308'" x-text="v.status==='published' ? 'Yayinda' : 'Taslak'"></span>
+            <button class="btn-secondary" style="font-size:var(--fs-xs);padding:var(--sp-1) var(--sp-2)" @click="content=v.content;validateContent();$store.toast.show('Versiyon geri yuklendi','info')">
+              <i class="ph ph-arrow-counter-clockwise"></i> Geri Yukle
+            </button>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Info Card -->
+  <div class="fade-in-d3 card" style="margin-bottom:var(--sp-4)">
+    <div style="display:flex;align-items:flex-start;gap:var(--sp-3)">
+      <div style="width:36px;height:36px;border-radius:var(--r-md);background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="ph ph-info" style="color:#a855f7;font-size:var(--fs-lg)"></i>
+      </div>
+      <div>
+        <div style="font-size:var(--fs-md);font-weight:500;color:var(--text);margin-bottom:var(--sp-1)">llms.txt Nedir?</div>
+        <div style="font-size:var(--fs-sm);color:var(--muted);line-height:1.6">llms.txt, AI tarayicilarina ve buyuk dil modellerine sitenizin yapisini ve icerigini tanimlar. robots.txt dosyasinin AI versiyonu olarak dusunebilirsiniz. Bu dosya sitenizin kok dizinine yerlestirilir ve ChatGPT, Claude, Gemini gibi AI araclarina hangi sayfalarin onemli oldugunu, nasil bir icerik sundugunuzu bildirir. Kalite skoru ne kadar yuksekse, AI platformlarinda o kadar dogru temsil edilirsiniz.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footbar"></div>
+<script src="../js/shell.js"></script>
+<script>document.addEventListener('DOMContentLoaded', () => initShell('geo'));</script>
+<script>
+function llmsTxtEditor() {
+  const defaultContent = `# atonota.com
+# llms.txt — AI tarayicilari icin site rehberi
+# Olusturulma: 2026-03-28T14:32:00+03:00
+
+## Ana Sayfalar
+- / : Ana sayfa — Pazarlama zekasi ve reklam orkestrasyonu platformu
+- /hakkimizda : Sirket hakkinda bilgi, vizyon ve misyon
+- /iletisim : Iletisim formu ve ofis adresi
+- /fiyatlandirma : Abonelik planlari ve fiyat karsilastirmasi
+
+## Urunler
+- /urunler/seo-analitigi : SEO denetim, anahtar kelime takip ve site analizi
+- /urunler/reklam-yonetimi : Cok kanalli reklam orkestrasyonu (Google, Meta, TikTok)
+- /urunler/icerik-optimizasyonu : AI destekli icerik analizi ve oneriler
+- /urunler/geo-intelligence : Generative Engine Optimization araci
+
+## Blog
+- /blog : Tum blog yazilari listesi
+- /blog/seo-rehberi-2026 : Kapsamli SEO baslangic rehberi
+- /blog/reklam-butce-optimizasyonu : Reklam butce optimizasyonu ipuclari
+- /blog/ai-seo-gelecegi : Yapay zeka ve SEO'nun gelecegi
+
+## Dokumantasyon
+- /docs : API dokumantasyonu ana sayfa
+- /docs/baslangic : Hizli baslangic rehberi
+- /docs/api-referans : REST API referansi
+
+## Yasal
+- /gizlilik : Gizlilik politikasi
+- /kullanim-sartlari : Kullanim kosullari`;
+
+  return {
+    content: defaultContent,
+    template: 'custom',
+    score: 68,
+    status: 'draft',
+    activeTab: 'editor',
+    generating: false,
+    validations: [
+      { type: 'warn', message: 'SSS (FAQ) bolumu eksik — AI botlari sikca sorulan sorulari oncelikle tariyorlar' },
+      { type: 'warn', message: '/blog/seo-rehberi URL\'i guncel degil, 2025 tarihli icerik tespiti' },
+      { type: 'error', message: 'Iletisim bilgileri (e-posta, telefon) tanimlanmamis — schema.org uyumlulugu dusuk' },
+    ],
+    botCrawls: [
+      { bot: 'GPTBot', lastCrawl: '2 saat once', pages: 14, color: '#22c55e' },
+      { bot: 'Google-Extended', lastCrawl: '6 saat once', pages: 22, color: '#3b82f6' },
+      { bot: 'PerplexityBot', lastCrawl: '1 gun once', pages: 8, color: '#a855f7' },
+      { bot: 'ClaudeBot', lastCrawl: '3 gun once', pages: 11, color: '#C2410C' },
+      { bot: 'Applebot-Extended', lastCrawl: '5 gun once', pages: 6, color: '#7B7269' },
+    ],
+    versions: [
+      { date: '28 Mart 2026, 14:32', summary: 'Urun sayfalari ve blog eklendi', status: 'draft', content: defaultContent },
+      { date: '21 Mart 2026, 09:15', summary: 'Dokumantasyon bolumu guncellendi', status: 'published', content: '# atonota.com\n# llms.txt\n\n## Ana Sayfalar\n- / : Ana sayfa\n- /hakkimizda : Sirket bilgisi\n\n## Dokumantasyon\n- /docs : API dokumantasyonu\n- /docs/baslangic : Hizli baslangic' },
+      { date: '14 Mart 2026, 16:48', summary: 'Ilk llms.txt dosyasi olusturuldu', status: 'published', content: '# atonota.com\n# llms.txt\n\n## Ana Sayfalar\n- / : Ana sayfa\n- /hakkimizda : Sirket bilgisi' },
+    ],
+
+    get parsedSections() {
+      const sections = [];
+      this.content.split('\n').forEach(line => {
+        if (line.startsWith('## ')) sections.push(line.replace('## ', ''));
+      });
+      return sections;
+    },
+
+    get parsedEntries() {
+      const entries = [];
+      this.content.split('\n').forEach(line => {
+        const m = line.match(/^- (\/\S*)\s*:\s*(.+)$/);
+        if (m) entries.push({ url: m[1], desc: m[2] });
+      });
+      return entries;
+    },
+
+    validateContent() {
+      const v = [];
+      if (!this.content.includes('## SSS') && !this.content.includes('## FAQ'))
+        v.push({ type: 'warn', message: 'SSS (FAQ) bolumu eksik — AI botlari sikca sorulan sorulari oncelikle tariyorlar' });
+      if (!this.content.includes('/iletisim') && !this.content.includes('e-posta'))
+        v.push({ type: 'error', message: 'Iletisim bilgileri tanimlanmamis — schema.org uyumlulugu dusuk' });
+      if (this.content.includes('2025'))
+        v.push({ type: 'warn', message: 'Guncel olmayan tarih referansi tespit edildi (2025)' });
+      if ((this.content.match(/^## /gm) || []).length < 3)
+        v.push({ type: 'warn', message: 'En az 4 bolum tanimlanmasi onerilir' });
+      if (this.content.length < 200)
+        v.push({ type: 'error', message: 'Icerik cok kisa — minimum 200 karakter onerilir' });
+      if (!this.content.includes('# ') || !this.content.split('\n')[0].includes('#'))
+        v.push({ type: 'error', message: 'Dosya basliginda site adi (#) eksik' });
+
+      const urlCount = (this.content.match(/^- \//gm) || []).length;
+      this.validations = v;
+      // Calculate score
+      let s = 100;
+      v.forEach(item => { s -= item.type === 'error' ? 15 : 8; });
+      if (urlCount < 5) s -= 10;
+      if (urlCount < 10) s -= 5;
+      this.score = Math.max(0, Math.min(100, s));
+    },
+
+    applyTemplate(t) {
+      this.template = t;
+      const templates = {
+        ecommerce: `# siteniz.com
+# llms.txt — E-Ticaret sitesi icin AI rehberi
+# Olusturulma: ${new Date().toISOString()}
+
+## Ana Sayfalar
+- / : Ana sayfa — Online alisveris platformu
+- /hakkimizda : Sirket hakkinda
+- /iletisim : Musteri hizmetleri ve iletisim
+
+## Kategoriler
+- /kategoriler : Tum urun kategorileri
+- /kategoriler/elektronik : Elektronik urunler
+- /kategoriler/giyim : Giyim ve moda
+- /kategoriler/ev-yasam : Ev ve yasam urunleri
+
+## Bilgi Sayfalari
+- /kargo-takip : Kargo takip sayfasi
+- /iade-politikasi : Iade ve degisim kosullari
+- /odeme-secenekleri : Odeme yontemleri
+
+## SSS
+- /sss : Sikca sorulan sorular
+- /sss/kargo : Kargo ile ilgili sorular
+- /sss/iade : Iade sureci hakkinda`,
+        saas: `# siteniz.com
+# llms.txt — SaaS platformu icin AI rehberi
+# Olusturulma: ${new Date().toISOString()}
+
+## Ana Sayfalar
+- / : Ana sayfa — SaaS platform tanitimi
+- /hakkimizda : Sirket ve takim bilgisi
+- /fiyatlandirma : Abonelik planlari
+
+## Urun
+- /ozellikler : Tum ozellikler listesi
+- /entegrasyonlar : Ucuncu parti entegrasyonlar
+- /guvenlik : Guvenlik ve uyumluluk
+
+## Kaynaklar
+- /blog : Blog yazilari
+- /docs : API dokumantasyonu
+- /docs/baslangic : Hizli baslangic rehberi
+- /changelog : Degisiklik gunlugu
+
+## SSS
+- /sss : Sikca sorulan sorular`,
+        local: `# siteniz.com
+# llms.txt — Yerel isletme icin AI rehberi
+# Olusturulma: ${new Date().toISOString()}
+
+## Ana Sayfalar
+- / : Ana sayfa — Isletme tanitimi
+- /hakkimizda : Isletme gecmisi ve hikayesi
+- /iletisim : Adres, telefon, calisma saatleri
+
+## Hizmetler
+- /hizmetler : Sunulan tum hizmetler
+- /fiyatlar : Hizmet fiyat listesi
+
+## Konum
+- /konum : Harita ve ulasim bilgileri
+- /bolgeler : Hizmet verilen bolgeler
+
+## SSS
+- /sss : Sikca sorulan sorular
+- /yorumlar : Musteri degerlendirmeleri`,
+        blog: `# siteniz.com
+# llms.txt — Blog sitesi icin AI rehberi
+# Olusturulma: ${new Date().toISOString()}
+
+## Ana Sayfalar
+- / : Ana sayfa — Blog ana sayfasi
+- /hakkimda : Yazar hakkinda
+- /iletisim : Iletisim bilgileri
+
+## Kategoriler
+- /kategori/teknoloji : Teknoloji yazilari
+- /kategori/yasam : Yasam ve kultur
+- /kategori/is-dunyasi : Is dunyasi ve kariyer
+
+## Populer Yazilar
+- /en-cok-okunanlar : En cok okunan yazilar
+- /editorun-secimi : Editor secimleri
+
+## SSS
+- /sss : Sikca sorulan sorular`
+      };
+      if (t !== 'custom' && templates[t]) {
+        this.content = templates[t];
+        this.validateContent();
+        if (window.$store?.toast) $store.toast.show(t.charAt(0).toUpperCase() + t.slice(1) + ' sablonu uygulandi', 'success');
+      }
+    },
+
+    autoGenerate() {
+      this.generating = true;
+      setTimeout(() => {
+        this.generating = false;
+        this.status = 'draft';
+        this.validateContent();
+        if (window.$store?.toast) $store.toast.show('llms.txt sitemap verilerinden yeniden olusturuldu!', 'success');
+      }, 1800);
+    },
+
+    deploy() {
+      this.status = 'published';
+      if (window.$store?.toast) $store.toast.show('llms.txt basariyla yayinlandi!', 'success');
+    }
+  };
+}
+</script>
+</body>
+</html>
